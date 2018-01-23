@@ -2,6 +2,7 @@
 
 We build on the shoulders of giants with the following technologies:
 
+
 **Frontend**
 
 * [React](https://github.com/facebook/react)
@@ -44,22 +45,6 @@ We build on the shoulders of giants with the following technologies:
 
 * If the command line starts with $, the command should run with user privileges
 * If the command line starts with #, the command should run with root privileges
-
-
-## Retrieve code
-
-* `$ git clone https://github.com/seedstars/django-react-redux-base.git`
-* `$ cd django-react-redux-base`
-* `$ git submodule init`
-* `$ git submodule update`
-* `$ ./scripts/get_static_validation.sh`
-
-
-Remember that when you copy this repository for a new project you need to add the scripts external module using:
-
-* `$ git submodule add https://github.com/Seedstars/culture-scripts scripts`
-
-NOTE: This is only needed in case you copy this code to a new project. If you only clone or fork the repository, the submodule is already configured
 
 
 ## Installation
