@@ -5,6 +5,8 @@ DEBUG = True
 
 PAGE_CACHE_SECONDS = 1
 
+ALLOWED_HOSTS = ['52.14.12.34']
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
