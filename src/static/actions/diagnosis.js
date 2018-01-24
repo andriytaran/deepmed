@@ -45,7 +45,7 @@ export function submitDiagnosisData(token, values) {
                 dispatch(push('/diagnosis'));
             })
             .catch((error) => {
-                dispatch(submitDiagnosisDataFailure(error.response));
+                dispatch(submitDiagnosisDataFailure());
                 if (error && typeof error.response !== 'undefined' && error.response.status === 401) {
                     // Invalid authentication credentials
                     return error.response.json().then((data) => {

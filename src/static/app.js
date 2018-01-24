@@ -109,7 +109,7 @@ class App extends React.Component {
                                 <Link onClick={() => {
                                     this.goToIndex();
                                 }}>
-                                    <img src={logo} width="136" height="auto" alt="presentation"/>
+                                    <img src={logo} width="136" height="auto" alt="presentation" style={{top: '15.5px'}} />
                                 </Link>
                             </div>
 
@@ -125,7 +125,7 @@ class App extends React.Component {
                                         Diagnosis
                                     </Link>
                                 </li>
-                                <li>
+                                <li className={this.props.location && this.props.location.pathname === '/national-states' && 'active'}>
                                     <Link onClick={() => {
                                         this.goToNationalStates();
                                     }}>
@@ -135,7 +135,7 @@ class App extends React.Component {
                                         National Stats
                                     </Link>
                                 </li>
-                                <li>
+                                <li className={this.props.location && this.props.location.pathname === '/specific-states' && 'active'}>
                                     <Link onClick={() => {
                                         this.goToSpecificStates();
                                     }}>
@@ -145,7 +145,7 @@ class App extends React.Component {
                                         Specific Stats
                                     </Link>
                                 </li>
-                                <li>
+                                <li className={this.props.location && this.props.location.pathname === '/similar-diagnosis' && 'active'}>
                                     <Link onClick={() => {
                                         this.goToSimilarDiagnosis();
                                     }}>
@@ -155,7 +155,7 @@ class App extends React.Component {
                                         Similar Diagnoses
                                     </Link>
                                 </li>
-                                <li>
+                                <li className={this.props.location && this.props.location.pathname === '/resources' && 'active'}>
                                     <Link onClick={() => {
                                         this.goToResources();
                                     }}>
@@ -249,9 +249,7 @@ class App extends React.Component {
                                     </div>
                                 </div>
 
-                                <div className="container container-full text-center">
-                                    {this.props.children}
-                                </div>
+                                {this.props.children}
                             </div>
                         </div>
                     </div>
