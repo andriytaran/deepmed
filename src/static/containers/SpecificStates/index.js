@@ -5,7 +5,7 @@ import {Field, reduxForm} from 'redux-form';
 import {bindActionCreators} from 'redux';
 import PropTypes from 'prop-types';
 
-import { Line, Bar } from 'react-chartjs-2';
+import { Line, Bar, Pie, HorizontalBar } from 'react-chartjs-2';
 
 import './style.scss';
 
@@ -27,10 +27,19 @@ class SpecificStatesView extends React.Component {
         const color_4 = '#b8e8f5';
         const color_5 = '#1ac6ff';
 
+        const chartsLabelsOptions = {
+                                        boxWidth: 10,
+                                        fontSize: 10,
+                                        padding: 8
+                                    };
+
         // const ctx = this.refs.chart.getContext('2d');
         // const gradient = ctx.createLinearGradient(0, 0, 0, 100);
 		// gradient.addColorStop(1, color_3);
 		// gradient.addColorStop(0, color_1);
+		// const horizontal_gradient = ctx.createLinearGradient(250, 0, 0, 0);
+		// horizontal_gradient.addColorStop(1, color_3);
+		// horizontal_gradient.addColorStop(0, color_1);
 
         return (
             <div className="container container-full" data-children="same-height">
@@ -114,22 +123,32 @@ class SpecificStatesView extends React.Component {
                                             labels: ['Grade 1', 'Grade 2', 'Grade 3'],
                                             datasets: [{
                                                     data: [30,40,20],
-                                                    // backgroundColor: gradient,
-                                                    // hoverBackgroundColor: gradient
+                                                    backgroundColor: color_1,
+                                                    hoverBackgroundColor: color_3
                                                 }
                                             ]
                                         }} options={{
                                             legend: {
                                                 display: false,
                                                 position: 'bottom',
-                                                labels: {
-                                                    boxWidth: 10,
-                                                    fontSize: 10,
-                                                    padding: 8
-                                                }
+                                                labels: chartsLabelsOptions
                                             }
                                         }} width={200} height={100} ref="chart" />
-                                        <canvas id="breastCancer30_40_by_Size" width="200" height="100"></canvas>
+                                        <Bar data={{
+                                            labels: ['< 2cm', '< 5cm', '> 5cm'],
+                                            datasets: [{
+                                                    data: [29.5,34.4,34.4],
+                                                    backgroundColor: color_1,
+                                                    hoverBackgroundColor: color_3
+                                                }
+                                            ]
+                                        }} options={{
+                                            legend: {
+                                                display: false,
+                                                position: 'bottom',
+                                                labels: chartsLabelsOptions
+                                            }
+                                        }} width={200} height={100} />
                                     </div>
                                 </div>
                                 <div className="col-xl-5ths col-lg-4 col-md-6">
@@ -137,7 +156,19 @@ class SpecificStatesView extends React.Component {
                                          data-adjust="height">
                                         <h4 className="push-top-1 push-bot-2 text-center" data-type="title"><strong>Distribution
                                             of Stage of Cancer for Women Ages 30-40</strong></h4>
-                                        <canvas id="breastCancer30_40_distribution" width="400" height="400"></canvas>
+                                        <Pie data={{
+                                            labels: ["Stage 0. 30%", "Stage 1. 25%", "Stage 2. 30%", "Stage 3. 10%", "Stage 4. 5%"],
+                                            datasets: [{
+                                                backgroundColor: [color_1, color_3, color_4, color_2, color_5],
+                                                data: [30,25,30,10,5]
+                                            }]
+                                        }} options={{
+                                            legend: {
+                                                display: true,
+                                                position: 'bottom',
+                                                    labels: chartsLabelsOptions
+                                            }
+                                        }} width={400} height={400} />
                                     </div>
                                 </div>
                                 <div className="col-xl-5ths col-lg-4 col-md-6">
@@ -146,11 +177,34 @@ class SpecificStatesView extends React.Component {
                                         <h4 className="push-top-1 push-bot-2 text-center" data-type="title"><strong>% of
                                             Women with Cancer by Race</strong></h4>
                                         <p className="no-margin pad-left-1 small"><strong>Overall</strong></p>
-                                        <canvas id="breastCancer30_40_by_race_overall" width="200" height="75"></canvas>
+                                        <Pie data={{
+                                            labels: ["White", "Asian", "African Am.", "Other"],
+                                            datasets: [{
+                                                backgroundColor: [color_1, color_3, color_4, color_2],
+                                                data: [62,11,9,9]
+                                            }]
+                                        }} options={{
+                                            legend: {
+                                                display: true,
+                                                position: 'right',
+                                                labels: chartsLabelsOptions
+                                            }
+                                        }} width={200} height={75} />
                                         <p className="push-bot-0 push-top-3 pad-left-1 small"><strong>Within Your<br/>Age
                                             Bracket</strong></p>
-                                        <canvas id="breastCancer30_40_by_race_within_your" width="200"
-                                                height="75"></canvas>
+                                        <Pie data={{
+                                            labels: ["White", "Asian", "African Am.", "Other"],
+                                            datasets: [{
+                                                backgroundColor: [color_1, color_3, color_4, color_2],
+                                                data: [62,11,9,9]
+                                            }]
+                                        }} options={{
+                                            legend: {
+                                                display: true,
+                                                position: 'right',
+                                                labels: chartsLabelsOptions
+                                            }
+                                        }} width={200} height={75} />
                                     </div>
                                 </div>
                             </div>
@@ -163,8 +217,19 @@ class SpecificStatesView extends React.Component {
                                          data-adjust="height">
                                         <h4 className="push-top-1 push-bot-2 text-center" data-type="title"><strong>Surgery
                                             Decisions for Women Within Ages 30-40</strong></h4>
-                                        <canvas id="breastCancer30_40_surgery_decision" width="400"
-                                                height="400"></canvas>
+                                        <Pie data={{
+                                            labels: ["Single Mastectomy", "Bi-Lateral Mastectomy", "Lumpectomy", "Other", "None"],
+                                            datasets: [{
+                                                backgroundColor: [color_1, color_3, color_4, color_2, color_5],
+                                                data: [30,25,30,10,5]
+                                            }]
+                                        }} options={{
+                                            legend: {
+                                                display: true,
+                                                position: 'bottom',
+                                                labels: chartsLabelsOptions
+                                            }
+                                        }} width={400} height={400} />
                                     </div>
                                 </div>
                                 <div className="col-xl-5ths col-lg-4 col-md-6">
@@ -173,10 +238,34 @@ class SpecificStatesView extends React.Component {
                                         <h4 className="push-top-1 push-bot-2 text-center" data-type="title"><strong>Chemotherapy
                                             for Women Ages 30-40</strong></h4>
                                         <p className="no-margin pad-left-1 small"><strong>Overall</strong></p>
-                                        <canvas id="breastCancer30_40_chemo_overall" width="200" height="75"></canvas>
+                                        <Pie data={{
+                                            labels: ["No 75%", "Yes 25%"],
+                                            datasets: [{
+                                                backgroundColor: [color_1, color_3],
+                                                data: [75,25]
+                                            }]
+                                        }} options={{
+                                            legend: {
+                                                display: true,
+                                                position: 'right',
+                                                labels: chartsLabelsOptions
+                                            }
+                                        }} width={200} height={75} />
                                         <p className="push-bot-0 push-top-3 pad-left-1 small"><strong>Breakout<br/>by Stage</strong>
                                         </p>
-                                        <canvas id="breastCancer30_40_chemo_by_stage" width="200" height="75"></canvas>
+                                        <Pie data={{
+                                            labels: ["Stage 0. 10%", "Stage 1. 25%", "Stage 2. 10%", "Stage 3. 30%"],
+                                            datasets: [{
+                                                backgroundColor: [color_1, color_3, color_4, color_2, color_5],
+                                                data: [10,25,30,10,30]
+                                            }]
+                                        }} options={{
+                                            legend: {
+                                                display: true,
+                                                position: 'right',
+                                                labels: chartsLabelsOptions
+                                            }
+                                        }} width={200} height={75} />
                                     </div>
                                 </div>
                                 <div className="col-xl-5ths col-lg-4 col-md-6">
@@ -185,12 +274,34 @@ class SpecificStatesView extends React.Component {
                                         <h4 className="push-top-1 push-bot-2 text-center" data-type="title"><strong>Radiation
                                             for Women Ages 30-40</strong></h4>
                                         <p className="no-margin pad-left-1 small"><strong>Overall</strong></p>
-                                        <canvas id="breastCancer30_40_radiation_overall" width="200"
-                                                height="75"></canvas>
+                                        <Pie data={{
+                                            labels: ["No 75%", "Yes 25%"],
+                                            datasets: [{
+                                                backgroundColor: [color_1, color_3],
+                                                data: [75,25]
+                                            }]
+                                        }} options={{
+                                            legend: {
+                                                display: true,
+                                                position: 'right',
+                                                labels: chartsLabelsOptions
+                                            }
+                                        }} width={200} height={75} />
                                         <p className="push-bot-0 push-top-3 pad-left-1 small"><strong>Breakout<br/>by Stage</strong>
                                         </p>
-                                        <canvas id="breastCancer30_40_radiation_by_stage" width="200"
-                                                height="75"></canvas>
+                                        <Pie data={{
+                                            labels: ["Stage 0. 30%", "Stage 1. 25%", "Stage 2. 30%", "Stage 3. 10%"],
+                                            datasets: [{
+                                                backgroundColor: [color_1, color_3, color_4, color_2, color_5],
+                                                data: [30,25,30,10,5]
+                                            }]
+                                        }} options={{
+                                            legend: {
+                                                display: true,
+                                                position: 'right',
+                                                labels: chartsLabelsOptions
+                                            }
+                                        }} width={200} height={75} />
                                     </div>
                                 </div>
                                 <div className="col-xl-5ths col-lg-4 col-md-6">
@@ -198,8 +309,27 @@ class SpecificStatesView extends React.Component {
                                          data-adjust="height">
                                         <h4 className="push-top-1 push-bot-2 text-center" data-type="title"><strong>Survival
                                             Months for Women Ages 30-40</strong></h4>
-                                        <canvas id="breastCancer30_40_survival_months" width="400"
-                                                height="400"></canvas>
+                                        <HorizontalBar data={{
+                                            labels: ['> 120 months', '> 96 months', '> 48 months', '> 24 months'],
+                                            datasets: [{
+                                                    data: [80,85,95,99],
+                                                    backgroundColor: color_1,
+                                                    hoverBackgroundColor: color_3,
+                                                }
+                                            ],
+                                        }} options={{
+                                            legend: {
+                                                display: false,
+                                                position: 'bottom'
+                                            },
+                                            scales: {
+                                                 xAxes: [{
+                                                    ticks: {
+                                                        beginAtZero: true
+                                                    }
+                                                }]
+                                            }
+                                        }} width={400} height={400} />
                                     </div>
                                 </div>
                                 <div className="col-xl-5ths col-lg-4 col-md-6">
@@ -208,12 +338,34 @@ class SpecificStatesView extends React.Component {
                                         <h4 className="push-top-1 push-bot-2 text-center" data-type="title"><strong>Cause of
                                             Death</strong></h4>
                                         <p className="no-margin pad-left-1 small"><strong>Overall</strong></p>
-                                        <canvas id="breastCancer30_40_cause_death_overall" width="200"
-                                                height="75"></canvas>
+                                        <Pie data={{
+                                            labels: ["Breastcancer 55%", "Other 45%"],
+                                            datasets: [{
+                                                backgroundColor: [color_1, color_3],
+                                                data: [55,45]
+                                            }]
+                                        }} options={{
+                                            legend: {
+                                                display: true,
+                                                position: 'right',
+                                                labels: chartsLabelsOptions
+                                            }
+                                        }} width={200} height={75} />
                                         <p className="push-bot-0 push-top-3 pad-left-1 small">
                                             <strong>Ages<br/>30-40</strong></p>
-                                        <canvas id="breastCancer30_40_cause_death_30_40" width="200"
-                                                height="75"></canvas>
+                                        <Pie data={{
+                                            labels: ["Breastcancer 65%", "Other 35%"],
+                                            datasets: [{
+                                                backgroundColor: [color_1, color_3],
+                                                data: [65,35]
+                                            }]
+                                        }} options={{
+                                            legend: {
+                                                display: true,
+                                                position: 'right',
+                                                labels: chartsLabelsOptions
+                                            }
+                                        }} width={200} height={75} />
                                     </div>
                                 </div>
                             </div>
