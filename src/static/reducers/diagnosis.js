@@ -19,7 +19,6 @@ export default function dataReducer(state = initialState, action) {
 
         case SUBMIT_DIAGNOSIS_DATA_FAILURE:
             return Object.assign({}, state, {
-                data: action.payload.data,
                 isFetching: false
             });
 
