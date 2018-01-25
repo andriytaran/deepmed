@@ -55,8 +55,8 @@ class App extends React.Component {
         this.props.dispatch(push('/specific-states'));
     };
 
-    goToSimilarDiagnosis = () => {
-        this.props.dispatch(push('/similar-diagnosis'));
+    goToSimilarDiagnoses = () => {
+        this.props.dispatch(push('/similar-diagnoses'));
     };
 
     goToResources = () => {
@@ -145,9 +145,9 @@ class App extends React.Component {
                                         Specific Stats
                                     </Link>
                                 </li>
-                                <li className={this.props.location && this.props.location.pathname === '/similar-diagnosis' && 'active'}>
+                                <li className={this.props.location && this.props.location.pathname === '/similar-diagnoses' && 'active'}>
                                     <Link onClick={() => {
-                                        this.goToSimilarDiagnosis();
+                                        this.goToSimilarDiagnoses();
                                     }}>
                                         <span className="icon-container">
                                             <i className="fa fa-files-o"/>

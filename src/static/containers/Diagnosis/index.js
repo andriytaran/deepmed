@@ -74,8 +74,9 @@ class DiagnosisView extends React.Component {
                                         </select>
                                     </div>
                                     <div className="col-sm-2 col-xs-6 push-top-2-xs">
-                                        <label><span className="hidden-xs">Number</span><span
-                                            className="visible-xs display-inline">#</span> of Positive Nodes</label>
+                                        <label className="visible-xs">
+                                            <span className="hidden-xs">Number</span>
+                                            <span className="visible-xs display-inline">#</span> of Positive Nodes</label>
                                         <select className="form-control text-input-sm">
                                             {Array.from(new Array(24), (val, index) => { return <option key={index} value={index + 1}>{index + 1}</option>; })}
                                         </select>
