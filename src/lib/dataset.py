@@ -63,7 +63,7 @@ if __name__ == '__main__':
             "count": {"$sum": 1}}},
         {"$sort": SON([("_id", 1)])}]
 
-    breast_cancer_by_grade_and_size__age_30_40 = [
+    breast_cancer_by_size_age_30_40 = [
         {"$match": {
             "$or": [
                 {"age-recode-with-1-year-olds": "35-39 years"},
@@ -72,6 +72,18 @@ if __name__ == '__main__':
         }},
         {"$group": {
             "_id": "$t-size-cm",
+            "count": {"$sum": 1}}},
+        {"$sort": SON([("_id", 1)])}]
+
+    breast_cancer_by_grade_age_30_40 = [
+        {"$match": {
+            "$or": [
+                {"age-recode-with-1-year-olds": "35-39 years"},
+                {"age-recode-with-1-year-olds": "30-34 years"}
+            ]
+        }},
+        {"$group": {
+            "_id": "$grade",
             "count": {"$sum": 1}}},
         {"$sort": SON([("_id", 1)])}]
 
@@ -208,7 +220,7 @@ if __name__ == '__main__':
         }},
         {"$sort": SON([("count", -1)])}]
 
-    request = cause_of_death_overall
+    request = breast_cancer_by_grade_age_30_40
 
     json_output = dataset(request)
     pprint(json_output)
