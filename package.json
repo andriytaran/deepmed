@@ -60,6 +60,7 @@
     "react-bootstrap": "^0.32.0",
     "react-chartjs-2": "^2.7.0",
     "react-dom": "15.6.1",
+    "react-jvectormap": "0.0.2",
     "react-mixin": "3.1.0",
     "react-redux": "5.0.6",
     "react-router": "4.2.0",
