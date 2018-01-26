@@ -20,6 +20,53 @@ def dataset(request):
     return json.dumps(response)
 
 
+def get_breast_cancer_by_grade():
+    """
+    Custom func for cancer_by_grade
+    :return:
+    """
+    r = breast_cancer_by_grade_age_30_40
+    j = dataset(r)
+    l = json.loads(j)
+    # pprint(l)
+    res = {'Grade-3': 0}
+    for i in l:
+        if isinstance(i['_id'], float) and i['_id'] == 1.0:
+            res['Grade-1'] = i['count']
+        elif isinstance(i['_id'], float) and i['_id'] == 2.0:
+            res['Grade-2'] = i['count']
+        elif isinstance(i['_id'], float) and i['_id'] == 3.0:
+            res['Grade-3'] = i['count']
+        elif isinstance(i['_id'], float) and i['_id'] == 4.0:
+            res['Grade-3'] = res['Grade-3'] + i['count']
+    return json.dumps(res)
+
+
+def get_breast_cancer_by_size():
+    """
+    Custom func for cancer_by_size
+    :return:
+    """
+    r = breast_cancer_by_size_age_30_40
+    j = dataset(r)
+    l = json.loads(j)
+    res = {'<1cm': 0}
+    for i in l:
+        if i['_id'] == '<1cm':
+            res['<1cm'] =  res['<1cm'] + i['count']
+        elif i['_id'] == '<2cm':
+            res['<2cm'] = i['count']
+        elif i['_id'] == '<3cm':
+            res['<3cm'] = i['count']
+        elif i['_id'] == '>3cm':
+            res['>3cm'] = i['count']
+        elif i['_id'] == '>5cm':
+            res['>5cm'] = i['count']
+        elif i['_id'] == 'Micro':
+            res['<1cm'] = res['<1cm'] + i['count']
+    return json.dumps(res)
+
+
 if __name__ == '__main__':
     breast_cancer_by_state = [{"$group": {
         "_id": "$state",
@@ -63,29 +110,7 @@ if __name__ == '__main__':
             "count": {"$sum": 1}}},
         {"$sort": SON([("_id", 1)])}]
 
-    breast_cancer_by_size_age_30_40 = [
-        {"$match": {
-            "$or": [
-                {"age-recode-with-1-year-olds": "35-39 years"},
-                {"age-recode-with-1-year-olds": "30-34 years"}
-            ]
-        }},
-        {"$group": {
-            "_id": "$t-size-cm",
-            "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}]
 
-    breast_cancer_by_grade_age_30_40 = [
-        {"$match": {
-            "$or": [
-                {"age-recode-with-1-year-olds": "35-39 years"},
-                {"age-recode-with-1-year-olds": "30-34 years"}
-            ]
-        }},
-        {"$group": {
-            "_id": "$grade",
-            "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}]
 
     distribution_of_stage_of_cancer_for_ages_30_40 = [
         {"$match": {
@@ -220,7 +245,40 @@ if __name__ == '__main__':
         }},
         {"$sort": SON([("count", -1)])}]
 
-    request = breast_cancer_by_grade_age_30_40
+    breast_cancer_by_size_age_30_40 = [
+        {"$match": {
+            "$or": [
+                {"age-recode-with-1-year-olds": "35-39 years"},
+                {"age-recode-with-1-year-olds": "30-34 years"}
+            ]
+        }},
+        {"$group": {
+            "_id": "$t-size-cm",
+            "count": {"$sum": 1}}},
+        {"$sort": SON([("_id", 1)])}]
+
+    breast_cancer_by_grade_age_30_40 = [
+        {"$match": {
+            "$or": [
+                {"age-recode-with-1-year-olds": "35-39 years"},
+                {"age-recode-with-1-year-olds": "30-34 years"}
+            ]
+        }},
+        {"$group": {
+            "_id": "$grade",
+            "count": {"$sum": 1}}},
+        {"$sort": SON([("_id", 1)])}]
+
+    request = breast_cancer_by_size_age_30_40
 
     json_output = dataset(request)
     pprint(json_output)
+
+    custom_by_size = get_breast_cancer_by_size()
+    pprint(custom_by_size)
+
+    custom_by_grade = get_breast_cancer_by_grade()
+    pprint(custom_by_grade)
+
+
+
