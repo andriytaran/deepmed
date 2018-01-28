@@ -114,7 +114,7 @@ class LoginView extends React.Component {
                         />
                         <button disabled={this.props.isAuthenticating}
                             type="submit"
-                            className="btn btn-default btn-block"
+                            className="btn btn-primary btn-block"
                         >
                             Submit
                         </button>

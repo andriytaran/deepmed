@@ -8,6 +8,73 @@ MONGODB_PORT = 27017
 DBS_NAME = 'bcancer'
 COLLECTION_NAME = 'dataset'
 
+STATES_NAME_ABRS = {
+    "Alabama": "AL",
+    "Alaska": "AK",
+    "American Samoa": "AS",
+    "Arizona": "AZ",
+    "Arkansas": "AR",
+    "California": "CA",
+    "Colorado": "CO",
+    "Connecticut": "CT",
+    "Delaware": "DE",
+    "District Of Columbia": "DC",
+    "Federated States Of Micronesia": "FM",
+    "Florida": "FL",
+    "Georgia": "GA",
+    "Guam": "GU",
+    "Hawaii": "HI",
+    "Idaho": "ID",
+    "Illinois": "IL",
+    "Indiana": "IN",
+    "Iowa": "IA",
+    "Kansas": "KS",
+    "Kentucky": "KY",
+    "Louisiana": "LA",
+    "Maine": "ME",
+    "Marshall Islands": "MH",
+    "Maryland": "MD",
+    "Massachusetts": "MA",
+    "Michigan": "MI",
+    "Minnesota": "MN",
+    "Mississippi": "MS",
+    "Missouri": "MO",
+    "Montana": "MT",
+    "Nebraska": "NE",
+    "Nevada": "NV",
+    "New Hampshire": "NH",
+    "New Jersey": "NJ",
+    "New Mexico": "NM",
+    "New York": "NY",
+    "North Carolina": "NC",
+    "North Dakota": "ND",
+    "Northern Mariana Islands": "MP",
+    "Ohio": "OH",
+    "Oklahoma": "OK",
+    "Oregon": "OR",
+    "Palau": "PW",
+    "Pennsylvania": "PA",
+    "Puerto Rico": "PR",
+    "Rhode Island": "RI",
+    "South Carolina": "SC",
+    "South Dakota": "SD",
+    "Tennessee": "TN",
+    "Texas": "TX",
+    "Utah": "UT",
+    "Vermont": "VT",
+    "Virgin Islands": "VI",
+    "Virginia": "VA",
+    "Washington": "WA",
+    "West Virginia": "WV",
+    "Wisconsin": "WI",
+    "Wyoming": "WY"
+    }
+
+STATES_ABRS = ["AL", "AK", "AS", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FM", "FL", "GA", "GU", "HI", "ID", "IL", "IN",
+          "IA", "KS", "KY", "LA", "ME", "MH", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM",
+          "NY", "NC", "ND", "MP", "OH", "OK", "OR", "PW", "PA", "PR", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VI",
+          "VA", "WA", "WV", "WI", "WY"]
+
 
 def dataset(request):
     mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
@@ -52,6 +119,32 @@ def breast_cancer_by_age():
             'label': "Deaths",
             'borderColor': '#48ccf5',
             'fill': False
+        }]
+    }
+
+
+def breast_cancer_by_state():
+
+    result = json.loads(dataset([{"$group": {
+        "_id": "$state",
+        "count": {"$sum": 1}}},
+        {"$sort": SON([("count", -1), ("_id", -1)])}]))
+
+    values = {}
+    for state in STATES_ABRS:
+        match = filter(lambda x: STATES_NAME_ABRS[x['_id']] in STATES_ABRS, result)
+        if count(match) > 0:
+            values["US-" + state] = match[0]['count']
+        else:
+            values["US-" + state] = 0
+
+    pprint(values)
+
+    return {
+        'regions': [{
+            'scale': ['#47cfd1', '#48ccf5', '#88d0d1', '#b8e8f5'],
+            'attribute': 'fill',
+            'values': values
         }]
     }
 
