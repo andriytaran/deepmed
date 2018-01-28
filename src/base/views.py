@@ -10,7 +10,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from lib.dataset import breast_cancer_at_a_glance
+from lib.dataset import breast_cancer_at_a_glance, breast_cancer_by_age
 
 
 class IndexView(View):
@@ -109,7 +109,8 @@ class ReportDataView(GenericAPIView):
                     }
                 }]
             },
-            'breast_cancer_at_a_glance': breast_cancer_at_a_glance()
+            'breast_cancer_at_a_glance': breast_cancer_at_a_glance(),
+            'breast_cancer_by_age': breast_cancer_by_age()
         }
 
         return Response(data, status=status.HTTP_200_OK)

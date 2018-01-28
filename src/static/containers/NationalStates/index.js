@@ -240,21 +240,14 @@ class NationalStatesView extends React.Component {
                                     <div className="custom-panel custom-panel-condensed push-bot-0">
                                         <p className="push-top-1 push-bot-2 text-center"><strong>Age-Specific Rates of
                                             Breast Cancer in the United States</strong></p>
-                                        <Line data={{
-                                            labels: ['0-14','15-19', '20-14', '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60-64', '65-69', '70-74', '75-79', '80-84', '85'],
-                                            datasets: [{
-                                                    data: [7,14,20,248,70,148,190,200,250,300,350,400,450,450,400,350,300],
-                                                    label: "Deaths",
-                                                    borderColor: color_1,
-                                                    fill: false
-                                                }
-                                            ]
-                                        }} options={{
+                                        {this.props.data &&
+                                        <Line data={this.props.data.breast_cancer_by_age} options={{
                                             legend: {
                                                 display: false,
                                                 position: 'bottom'
                                             }
                                         }} width={275} height={100} />
+                                        }
                                     </div>
                                 </div>
                                 <div className="col-md-6 push-top-1-sm">
