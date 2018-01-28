@@ -21,7 +21,7 @@ def dataset(request):
 
 
 def breast_cancer_at_a_glance():
-    result = json.load(dataset([
+    result = json.loads(dataset([
         {"$group": {
             "_id": "$year-of-diagnosis",
             "count": {"$sum": 1}}},
