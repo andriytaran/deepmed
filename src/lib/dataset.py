@@ -20,6 +20,24 @@ def dataset(request):
     return json.dumps(response)
 
 
+def breast_cancer_at_a_glance():
+    result = json.load(dataset([
+        {"$group": {
+            "_id": "$year-of-diagnosis",
+            "count": {"$sum": 1}}},
+        {"$sort": SON([("_id", 1)])}]))
+
+    return {
+        'labels': list(map(lambda x: x['_id'], result)),
+        'datasets': [{
+            'data': list(map(lambda x: x['count'], result)),
+            'label': "Deaths",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
 def get_breast_cancer_by_grade():
     """
     Custom func for cancer_by_grade

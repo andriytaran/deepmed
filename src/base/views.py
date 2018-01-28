@@ -10,6 +10,8 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from lib.dataset import breast_cancer_at_a_glance
+
 
 class IndexView(View):
     """Render main page."""
@@ -107,21 +109,7 @@ class ReportDataView(GenericAPIView):
                     }
                 }]
             },
-            'breast_cancer_at_a_glance': {
-                'labels': [1192,1995,1998,2001,2004,2007,2010,2014],
-                'datasets': [{
-                        'data': [50,49,48,47,46,45,44,43,42,41],
-                        'label': "Deaths",
-                        'borderColor': '#48ccf5',
-                        'fill': False
-                    }, {
-                        'data': [147,144,148,142,149,147,145,140,146,147],
-                        'label': "New Cases",
-                        'borderColor': '#47cfd1',
-                        'fill': False
-                    }
-                ]
-            }
+            'breast_cancer_at_a_glance': breast_cancer_at_a_glance()
         }
 
         return Response(data, status=status.HTTP_200_OK)
