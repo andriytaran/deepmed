@@ -326,14 +326,25 @@ def surgery_decisions_within_ages_30_40():
         ]
     }},
         {"$group": {
-            "_id": "$surgery",
-            "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}]))
+            "_id": "",
+            "total": {"$sum": 1},
+            "surgery_set": {"$push": "$surgery"}
+        }},
+        {"$unwind": "$surgery_set"},
+        {"$group": {
+            "_id": {"surgery": "$surgery_set", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}]))
 
     return {
-        'labels': list(map(lambda x: x['_id'], result)),
+        'labels': list(map(lambda x: x['_id']['surgery'], result)),
         'datasets': [{
-            'data': list(map(lambda x: x['count'], result)),
+            'data': list(map(lambda x: x['percentage'], result)),
             'label': "Diagnosed",
             'borderColor': '#48ccf5',
             'fill': False
@@ -511,5 +522,5 @@ if __name__ == '__main__':
     # json_output = dataset(request)
     # pprint(json_output)
 
-    test = breast_cancer_by_size_age_30_40()
+    test = surgery_decisions_within_ages_30_40()
     pprint(test)
