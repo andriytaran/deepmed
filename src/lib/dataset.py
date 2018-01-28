@@ -133,7 +133,7 @@ def breast_cancer_by_state():
     values = {}
     for state in STATES_ABRS:
         match = filter(lambda x: STATES_NAME_ABRS[x['_id']] in STATES_ABRS, result)
-        if count(match) > 0:
+        if match.count() > 0:
             values["US-" + state] = match[0]['count']
         else:
             values["US-" + state] = 0
