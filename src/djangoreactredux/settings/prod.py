@@ -8,22 +8,15 @@ PAGE_CACHE_SECONDS = 60
 
 # TODO: n a real production server this should have a proper url
 ALLOWED_HOSTS = ['*']
-#
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'djangoreactredux_prod',
-#         'USER': 'djangoreactredux',
-#         'PASSWORD': 'password',
-#         'HOST': 'postgres',
-#         'PORT': 5432,
-#     }
-# }
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite'),  # NOQA (ignore all errors on this line)
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'djangoreactredux_prod',
+        'USER': 'deepmed',
+        'PASSWORD': 'deepmed',
+        'HOST': 'localhost',
+        'PORT': 5432,
     }
 }
 
