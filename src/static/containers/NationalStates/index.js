@@ -9,16 +9,30 @@ import { VectorMap } from 'react-jvectormap';
 import { Line } from 'react-chartjs-2';
 
 import './style.scss';
+import * as actionCreators from '../../actions/report';
 
 class NationalStatesView extends React.Component {
     static propTypes = {
+        isFetching: PropTypes.bool.isRequired,
+        data: PropTypes.object,
         token: PropTypes.string.isRequired,
         dispatch: PropTypes.func.isRequired,
+        actions: PropTypes.shape({
+            fetchReportData: PropTypes.func.isRequired
+        }).isRequired
+    };
+
+    static defaultProps = {
+        data: null
     };
 
     state = {
         showDetails: false
     };
+
+    componentWillMount() {
+        this.props.actions.fetchReportData(this.props.token);
+    }
 
     render() {
         // Colors
@@ -38,71 +52,15 @@ class NationalStatesView extends React.Component {
                             <h2 className="no-margin text-center">Breast Cancer by State</h2>
 
                             <div className="text-center">
+                                {this.props.data &&
                                 <VectorMap map="us_aea"
-                                    backgroundColor="transparent"
-                                    borderColor="#fb0000"
-                                    borderWidth={2}
-                                    series={{
-                                        regions: [{
-                                            scale: ['#47cfd1', '#48ccf5', '#88d0d1', '#b8e8f5'],
-                                            attribute: 'fill',
-                                            values: {
-                                                "US-AL": 0,
-                                                "US-AK": 1,
-                                                "US-AZ": 3,
-                                                "US-AR": 3,
-                                                "US-CA": 0,
-                                                "US-CO": 0,
-                                                "US-CT": 0,
-                                                "US-DE": 0,
-                                                "US-DC": 0,
-                                                "US-FL": 3,
-                                                "US-GA": 0,
-                                                "US-HI": 2,
-                                                "US-ID": 0,
-                                                "US-IL": 2,
-                                                "US-IN": 0,
-                                                "US-IA": 1,
-                                                "US-KS": 0,
-                                                "US-KY": 1,
-                                                "US-LA": 0,
-                                                "US-ME": 1,
-                                                "US-MD": 0,
-                                                "US-MA": 2,
-                                                "US-MI": 3,
-                                                "US-MN": 1,
-                                                "US-MS": 3,
-                                                "US-MO": 1,
-                                                "US-MT": 1,
-                                                "US-NE": 0,
-                                                "US-NV": 3,
-                                                "US-NH": 0,
-                                                "US-NJ": 0,
-                                                "US-NM": 3,
-                                                "US-NY": 2,
-                                                "US-NC": 1,
-                                                "US-ND": 3,
-                                                "US-OH": 1,
-                                                "US-OK": 0,
-                                                "US-OR": 3,
-                                                "US-PA": 1,
-                                                "US-RI": 0,
-                                                "US-SC": 0,
-                                                "US-SD": 0,
-                                                "US-TN": 3,
-                                                "US-TX": 3,
-                                                "US-UT": 3,
-                                                "US-VT": 0,
-                                                "US-VA": 1,
-                                                "US-WA": 2,
-                                                "US-WV": 0,
-                                                "US-WI": 1,
-                                                "US-WY": 0
-                                            }
-                                        }]
-                                    }}
-                                    containerStyle={{ width: '100%', height: 400 }}
+                                           backgroundColor="transparent"
+                                           borderColor="#fb0000"
+                                           borderWidth={2}
+                                           series={this.props.data.breast_cancer_by_state}
+                                           containerStyle={{width: '100%', height: 400}}
                                 />
+                                }
                             </div>
 
                             <div className="row push-top-5">
@@ -170,26 +128,10 @@ class NationalStatesView extends React.Component {
                                     <div className="col-sm-12">
                                         <p className="push-top-1 push-bot-2 text-center"><strong>Number per 100,000
                                             females</strong></p>
-                                        <Line data={{
-                                            labels: [1192,1995,1998,2001,2004,2007,2010,2014],
-                                            datasets: [{
-                                                    data: [50,49,48,47,46,45,44,43,42,41],
-                                                    label: "Deaths",
-                                                    borderColor: color_1,
-                                                    fill: false
-                                                }, {
-                                                    data: [147,144,148,142,149,147,145,140,146,147],
-                                                    label: "New Cases",
-                                                    borderColor: color_3,
-                                                    fill: false
-                                                }
-                                            ]
-                                        }} options={{
-                                            legend: {
-                                                display: false,
-                                                position: 'bottom'
-                                            }
-                                        }} width={500} height={100} />
+                                        {this.props.data &&
+                                        <Line data={this.props.data.breast_cancer_at_a_glance}
+                                              width={500} height={100}/>
+                                        }
                                     </div>
                                 </div>
                                 <div className="row row-condensed push-top-2">
@@ -377,11 +319,14 @@ class NationalStatesView extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
+        isFetching: state.report.isFetching,
+        data: state.report.data
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        actions: bindActionCreators(actionCreators, dispatch)
     };
 };
 

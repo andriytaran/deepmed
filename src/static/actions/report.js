@@ -3,35 +3,35 @@ import { push } from 'react-router-redux';
 
 import { SERVER_URL } from '../utils/config';
 import { checkHttpStatus, parseJSON } from '../utils';
-import { SUBMIT_DIAGNOSIS_DATA_REQUEST, SUBMIT_DIAGNOSIS_DATA_SUCCESS, SUBMIT_DIAGNOSIS_DATA_FAILURE } from '../constants';
+import { FETCH_REPORT_DATA_REQUEST, FETCH_REPORT_DATA_SUCCESS, FETCH_REPORT_DATA_FAILURE } from '../constants';
 import { authLoginUserFailure } from './auth';
 
 
-export function submitDiagnosisDataSuccess(data) {
+export function fetchReportDataSuccess(data) {
     return {
-        type: SUBMIT_DIAGNOSIS_DATA_SUCCESS,
+        type: FETCH_REPORT_DATA_SUCCESS,
         payload: {
             data
         }
     };
 }
 
-export function submitDiagnosisDataRequest() {
+export function fetchReportDataRequest() {
     return {
-        type: SUBMIT_DIAGNOSIS_DATA_REQUEST
+        type: FETCH_REPORT_DATA_REQUEST
     };
 }
 
-export function submitDiagnosisDataFailure() {
+export function fetchReportDataFailure() {
     return {
-        type: SUBMIT_DIAGNOSIS_DATA_FAILURE
+        type: FETCH_REPORT_DATA_FAILURE
     };
 }
 
-export function submitDiagnosisData(token, values) {
+export function fetchReportData(token, values) {
     return (dispatch, state) => {
-        dispatch(submitDiagnosisDataRequest());
-        return fetch(`${SERVER_URL}/api/v1/diagnosis/`, {
+        dispatch(fetchReportDataRequest());
+        return fetch(`${SERVER_URL}/api/v1/diagnosis/reports/`, {
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
@@ -41,11 +41,10 @@ export function submitDiagnosisData(token, values) {
             .then(checkHttpStatus)
             .then(parseJSON)
             .then((response) => {
-                dispatch(submitDiagnosisDataSuccess(response.data));
-                dispatch(push('/diagnosis'));
+                dispatch(fetchReportDataSuccess(response));
             })
             .catch((error) => {
-                dispatch(submitDiagnosisDataFailure());
+                dispatch(fetchReportDataFailure());
                 if (error && typeof error.response !== 'undefined' && error.response.status === 401) {
                     // Invalid authentication credentials
                     return error.response.json().then((data) => {
