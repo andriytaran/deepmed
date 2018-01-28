@@ -151,7 +151,7 @@ def breast_cancer_by_state():
     }
 
 
-def get_breast_cancer_by_grade_age_30_40():
+def breast_cancer_by_grade_age_30_40():
     j = dataset([{"$match": {
         "$or": [
             {"age-recode-with-1-year-olds": "35-39 years"},
@@ -162,10 +162,8 @@ def get_breast_cancer_by_grade_age_30_40():
             "_id": "$grade",
             "count": {"$sum": 1}}},
         {"$sort": SON([("_id", 1)])}])
-    l = json.loads(j)
-    # pprint(l)
     res = {'Grade 3': 0}
-    for i in l:
+    for i in json.loads(j):
         if isinstance(i['_id'], float) and i['_id'] == 1.0:
             res['Grade 1'] = i['count']
         elif isinstance(i['_id'], float) and i['_id'] == 2.0:
@@ -173,11 +171,20 @@ def get_breast_cancer_by_grade_age_30_40():
         elif isinstance(i['_id'], float) and i['_id'] == 3.0:
             res['Grade 3'] = i['count']
         elif isinstance(i['_id'], float) and i['_id'] == 4.0:
-            res['Grade 3'] = res['Grade-3'] + i['count']
-    return json.dumps(res)
+            res['Grade 3'] += i['count']
+
+    return {
+        'labels': list(map(lambda x: x, res.keys())),
+        'datasets': [{
+            'data': list(map(lambda x: x, res.values())),
+            'label': "Diagnosed",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
 
 
-def get_breast_cancer_by_size_age_30_40():
+def breast_cancer_by_size_age_30_40():
     """
     Custom func for cancer_by_size
     :return:
@@ -196,7 +203,7 @@ def get_breast_cancer_by_size_age_30_40():
     res = {'< 1cm': 0}
     for i in l:
         if i['_id'] == '<1cm':
-            res['< 1cm'] = res['<1cm'] + i['count']
+            res['< 1cm'] += i['count']
         elif i['_id'] == '<2cm':
             res['< 2cm'] = i['count']
         elif i['_id'] == '<3cm':
@@ -206,8 +213,17 @@ def get_breast_cancer_by_size_age_30_40():
         elif i['_id'] == '>5cm':
             res['> 5cm'] = i['count']
         elif i['_id'] == 'Micro':
-            res['< 1cm'] = res['<1cm'] + i['count']
-    return json.dumps(res)
+            res['< 1cm'] += i['count']
+
+    return {
+        'labels': list(map(lambda x: x, res.keys())),
+        'datasets': [{
+            'data': list(map(lambda x: x, res.values())),
+            'label': "Diagnosed",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
 
 
 def woman_age_30_40_annualy_diagnosed():
@@ -495,5 +511,5 @@ if __name__ == '__main__':
     # json_output = dataset(request)
     # pprint(json_output)
 
-    test = cause_of_death_within_ages_30_40()
+    test = breast_cancer_by_size_age_30_40()
     pprint(test)
