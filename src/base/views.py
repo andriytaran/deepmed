@@ -10,7 +10,9 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from lib.dataset import breast_cancer_at_a_glance, breast_cancer_by_age, breast_cancer_by_state
+from serializers import DiagnosisSerializer
+
+from lib.dataset import breast_cancer_at_a_glance, breast_cancer_by_age, breast_cancer_by_state, breast_cancer_by_grade
 
 
 class IndexView(View):
@@ -24,13 +26,11 @@ class IndexView(View):
 
 
 class ProtectedDataView(GenericAPIView):
-    """Return protected data main page."""
 
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        """Process GET request and return protected data."""
 
         data = {
             'data': 'THIS IS THE PROTECTED STRING FROM SERVER',
@@ -41,18 +41,26 @@ class ProtectedDataView(GenericAPIView):
 
 
 class ReportDataView(GenericAPIView):
-    """Return protected data main page."""
 
+    serializer_class = DiagnosisSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request):
-        """Process GET request and return protected data."""
+    def post(self, request):
 
-        data = {
-            'breast_cancer_by_state': breast_cancer_by_state(),
-            'breast_cancer_at_a_glance': breast_cancer_at_a_glance(),
-            'breast_cancer_by_age': breast_cancer_by_age()
-        }
+        serializer = self.get_serializer(data=request.data)
 
-        return Response(data, status=status.HTTP_200_OK)
+        if serializer.is_valid():
+            age = serializer.validated_data['age']
+            race = serializer.validated_data['race']
+
+            data = {
+                # 'breast_cancer_by_state': breast_cancer_by_state(),
+                'breast_cancer_at_a_glance': breast_cancer_at_a_glance(),
+                'breast_cancer_by_age': breast_cancer_by_age(),
+                'breast_cancer_by_grade': breast_cancer_by_grade(age)
+            }
+
+            return Response(data, status=status.HTTP_200_OK)
+        else:
+            return Response({}, status=status.HTTP_200_OK)

@@ -151,11 +151,15 @@ def breast_cancer_by_state():
     }
 
 
-def breast_cancer_by_grade_age_30_40():
+def breast_cancer_by_grade(age):
+    dec_age = age - age % 10
+    age_filter1 = "%s-%s years" % (dec_age, dec_age + 4)
+    age_filter2 = "%s-%s years" % (dec_age + 5, dec_age + 9)
+
     j = dataset([{"$match": {
         "$or": [
-            {"age-recode-with-1-year-olds": "35-39 years"},
-            {"age-recode-with-1-year-olds": "30-34 years"}
+            {"age-recode-with-1-year-olds": age_filter1},
+            {"age-recode-with-1-year-olds": age_filter2}
         ]
     }},
         {"$group": {
