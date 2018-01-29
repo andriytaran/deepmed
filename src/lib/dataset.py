@@ -579,16 +579,19 @@ def diagnosis(input_json):
 
     # Find request must be dict
 
-    r = find(SON([
+    filter_list = [
         ("age-recode-with-1-year-olds", age),
         ("grade", input["tumor_grade"]),
         ("er-status-recode-breast-cancer-1990", input["er_status"]),
         ("pr-status-recode-breast-cancer-1990", input["pr_status"]),
         ("derived-her2-recode-2010", input['her2_status']),
         ("t-size-cm", t_size_cm),
-        ("regional-nodes-positive-1988", input['num_pos_nodes']),
-        ("race-recode-w-b-ai-api", input["ethnicity"])
-    ]), limit=10)
+        ("regional-nodes-positive-1988", input['num_pos_nodes'])
+    ]
+    if input["ethnicity"]:
+        filter_list.append(("race-recode-w-b-ai-api", input["ethnicity"]))
+
+    r = find(SON(filter_list), limit=10)
 
     return r
 
@@ -597,12 +600,12 @@ if __name__ == '__main__':
     # test1 = cause_of_death_within_ages_30_40()
     # pprint(test1)
 
-    test2 = diagnosis('{"age": 39, '
+    test2 = diagnosis('{"age": 48, '
                       '"tumor_grade": 1, '
                       '"er_status": "+", '
                       '"pr_status": "+", '
                       '"tumor_size_in_mm": 22, '
-                      '"num_pos_nodes": 1, '
+                      '"num_pos_nodes": 0, '
                       '"her2_status": "+", '
                       '"ethnicity": "White"}')
     pprint(test2)
