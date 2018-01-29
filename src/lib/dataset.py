@@ -527,7 +527,7 @@ def cause_of_death_within_ages_30_40():
     }
 
 
-def diagnosis(input_json):
+def diagnosis(input_json, limit=0):
     input = json.loads(input_json)
     if input['age'] >= 85:
         age = "85+ years"
@@ -577,8 +577,6 @@ def diagnosis(input_json):
     elif input['tumor_size_in_mm'] < 10:
         t_size_cm = "<1cm"
 
-    # Find request must be dict
-
     filter_list = [
         ("age-recode-with-1-year-olds", age),
         ("grade", input["tumor_grade"]),
@@ -591,7 +589,7 @@ def diagnosis(input_json):
     if input["ethnicity"]:
         filter_list.append(("race-recode-w-b-ai-api", input["ethnicity"]))
 
-    r = find(SON(filter_list), limit=10)
+    r = find(SON(filter_list), limit=limit)
 
     return r
 
