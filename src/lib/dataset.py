@@ -186,24 +186,27 @@ def create_filter(input_data, operator='$and'):
 
 def diagnosis(input_json, limit=0):
     input_data = json.loads(input_json)
-    age = get_age_group(input_data['age'])
-    t_size_cm = get_t_size_cm(input_data['tumor_size_in_mm'])
-
-    filter_list = [
-        ("age-recode-with-1-year-olds", age),
-        ("grade", input_data["tumor_grade"]),
-        ("er-status-recode-breast-cancer-1990", input_data["er_status"]),
-        ("pr-status-recode-breast-cancer-1990", input_data["pr_status"]),
-        ("derived-her2-recode-2010", input_data['her2_status']),
-        ("t-size-cm", t_size_cm),
-        ("regional-nodes-positive-1988", input_data['num_pos_nodes'])
-    ]
-    if input_data["ethnicity"]:
+    filter_list = []
+    if 'age' in input_data.keys():
+        age = get_age_group(input_data['age'])
+        filter_list.append(("age-recode-with-1-year-olds", age))
+    if 'tumor_size_in_mm' in input_data.keys():
+        t_size_cm = get_t_size_cm(input_data['tumor_size_in_mm'])
+        filter_list.append(("t-size-cm", t_size_cm))
+    if 'tumor_grade' in input_data.keys():
+        filter_list.append(("grade", input_data["tumor_grade"]))
+    if 'er_status' in input_data.keys():
+        filter_list.append(("er-status-recode-breast-cancer-1990", input_data["er_status"]))
+    if 'pr_status' in input_data.keys():
+        filter_list.append(("pr-status-recode-breast-cancer-1990", input_data["pr_status"]))
+    if 'her2_status' in input_data.keys():
+        filter_list.append(("derived-her2-recode-2010", input_data["her2_status"]))
+    if 'num_pos_nodes' in input_data.keys():
+        filter_list.append(("regional-nodes-positive-1988", input_data["num_pos_nodes"]))
+    if 'ethnicity' in input_data.keys():
         filter_list.append(("race-recode-w-b-ai-api", input_data["ethnicity"]))
 
-    r = find(SON(filter_list), limit=10)
-
-    return r
+    return find(SON(filter_list), limit=limit)
 
 
 def breast_cancer_at_a_glance():
@@ -841,3 +844,6 @@ if __name__ == '__main__':
     diag_request_age_only = '{"age": 48}'
 
     pprint(surgery_decisions(diag_request_age_only))
+
+    d = diagnosis(diag_request, limit=25)
+    pprint(d)
