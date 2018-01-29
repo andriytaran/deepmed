@@ -30,13 +30,16 @@ export function submitDiagnosisDataFailure() {
 
 export function submitDiagnosisData(token, values) {
     return (dispatch, state) => {
+        console.log(values)
         dispatch(submitDiagnosisDataRequest());
         return fetch(`${SERVER_URL}/api/v1/diagnosis/`, {
+            method: 'post',
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 Authorization: `Token ${token}`
-            }
+            },
+            body: values
         })
             .then(checkHttpStatus)
             .then(parseJSON)
