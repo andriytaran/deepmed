@@ -527,67 +527,80 @@ def cause_of_death_within_ages_30_40():
     }
 
 
-def diagnosis(input_json, limit=0):
-    input = json.loads(input_json)
-    if input['age'] >= 85:
-        age = "85+ years"
-    elif input['age'] >= 80:
-        age = "80-84 years"
-    elif input['age'] >= 75:
-        age = "75-79 years"
-    elif input['age'] >= 70:
-        age = "70-74 years"
-    elif input['age'] >= 65:
-        age = "65-69 years"
-    elif input['age'] >= 60:
-        age = "60-64 years"
-    elif input['age'] >= 55:
-        age = "55-59 years"
-    elif input['age'] >= 50:
-        age = "50-54 years"
-    elif input['age'] >= 45:
-        age = "45-49 years"
-    elif input['age'] >= 40:
-        age = "40-44 years"
-    elif input['age'] >= 35:
-        age = "35-39 years"
-    elif input['age'] >= 30:
-        age = "30-34 years"
-    elif input['age'] >= 25:
-        age = "25-29 years"
-    elif input['age'] >= 20:
-        age = "20-24 years"
-    elif input['age'] >= 15:
-        age = "15-19 years"
-    elif input['age'] >= 10:
-        age = "10-14 years"
-    elif input['age'] >= 5:
-        age = "05-09 years"
-    elif input['age'] >= 1:
-        age = "01-04 years"
+def get_age_group(age):
+    age_group = None
+    if age >= 85:
+        age_group = "85+ years"
+    elif age >= 80:
+        age_group = "80-84 years"
+    elif age >= 75:
+        age_group = "75-79 years"
+    elif age >= 70:
+        age_group = "70-74 years"
+    elif age >= 65:
+        age_group = "65-69 years"
+    elif age >= 60:
+        age_group = "60-64 years"
+    elif age >= 55:
+        age_group = "55-59 years"
+    elif age >= 50:
+        age_group = "50-54 years"
+    elif age >= 45:
+        age_group = "45-49 years"
+    elif age >= 40:
+        age_group = "40-44 years"
+    elif age >= 35:
+        age_group = "35-39 years"
+    elif age >= 30:
+        age_group = "30-34 years"
+    elif age >= 25:
+        age_group = "25-29 years"
+    elif age >= 20:
+        age_group = "20-24 years"
+    elif age >= 15:
+        age_group = "15-19 years"
+    elif age >= 10:
+        age_group = "10-14 years"
+    elif age >= 5:
+        age_group = "05-09 years"
+    elif age >= 1:
+        age_group = "01-04 years"
 
-    if input['tumor_size_in_mm'] >= 50:
+    return age_group
+
+
+def get_t_size_cm(size_mm):
+    t_size_cm = None
+    if size_mm >= 50:
         t_size_cm = ">5cm"
-    elif input['tumor_size_in_mm'] >= 30:
+    elif size_mm >= 30:
         t_size_cm = ">3cm"
-    elif input['tumor_size_in_mm'] >= 20:
+    elif size_mm >= 20:
         t_size_cm = "<3cm"
-    elif input['tumor_size_in_mm'] >= 10:
+    elif size_mm >= 10:
         t_size_cm = "<2cm"
-    elif input['tumor_size_in_mm'] < 10:
+    elif size_mm < 10:
         t_size_cm = "<1cm"
+
+    return t_size_cm
+
+
+def diagnosis(input_json, limit=0):
+    input_data = json.loads(input_json)
+    age = get_age_group(input_data['age'])
+    t_size_cm = get_t_size_cm(input_data['tumor_size_in_mm'])
 
     filter_list = [
         ("age-recode-with-1-year-olds", age),
-        ("grade", input["tumor_grade"]),
-        ("er-status-recode-breast-cancer-1990", input["er_status"]),
-        ("pr-status-recode-breast-cancer-1990", input["pr_status"]),
-        ("derived-her2-recode-2010", input['her2_status']),
-        ("t-size-cm", t_size_cm),
-        ("regional-nodes-positive-1988", input['num_pos_nodes'])
+        # ("grade", input_data["tumor_grade"]),
+        # ("er-status-recode-breast-cancer-1990", input_data["er_status"]),
+        # ("pr-status-recode-breast-cancer-1990", input_data["pr_status"]),
+        # ("derived-her2-recode-2010", input_data['her2_status']),
+        # ("t-size-cm", t_size_cm),
+        # ("regional-nodes-positive-1988", input_data['num_pos_nodes'])
     ]
-    if input["ethnicity"]:
-        filter_list.append(("race-recode-w-b-ai-api", input["ethnicity"]))
+    if input_data["ethnicity"]:
+        filter_list.append(("race-recode-w-b-ai-api", input_data["ethnicity"]))
 
     r = find(SON(filter_list), limit=limit)
 
