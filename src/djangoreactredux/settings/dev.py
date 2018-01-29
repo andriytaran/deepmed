@@ -5,7 +5,7 @@ DEBUG = True
 
 PAGE_CACHE_SECONDS = 1
 
-ALLOWED_HOSTS = ['localhost', '52.14.12.34']
+ALLOWED_HOSTS = ['localhost', '52.14.12.34', '127.0.0.1']
 
 DATABASES = {
     'default': {

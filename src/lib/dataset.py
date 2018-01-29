@@ -79,7 +79,7 @@ STATES_ABRS = ["AL", "AK", "AS", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FM",
                "VA", "WA", "WV", "WI", "WY"]
 
 
-def dataset(request):
+def aggregate(request):
     mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
     collection = mongo_client[DBS_NAME][COLLECTION_NAME]
     response = []
@@ -90,8 +90,19 @@ def dataset(request):
     return json.dumps(response)
 
 
+def find(request, **kwargs):
+    mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
+    collection = mongo_client[DBS_NAME][COLLECTION_NAME]
+    response = []
+    data = collection.find(request, **kwargs)
+    for row in data:
+        response.append(row)
+    mongo_client.close()
+    return response
+
+
 def breast_cancer_at_a_glance():
-    result = json.loads(dataset([
+    result = json.loads(aggregate([
         {"$group": {
             "_id": "$year-of-diagnosis",
             "count": {"$sum": 1}}},
@@ -109,7 +120,7 @@ def breast_cancer_at_a_glance():
 
 
 def breast_cancer_by_age():
-    result = json.loads(dataset([
+    result = json.loads(aggregate([
         {"$group": {
             "_id": "$age-recode-with-1-year-olds",
             "count": {"$sum": 1}}},
@@ -127,7 +138,7 @@ def breast_cancer_by_age():
 
 
 def breast_cancer_by_state():
-    result = json.loads(dataset([{"$group": {
+    result = json.loads(aggregate([{"$group": {
         "_id": "$state",
         "count": {"$sum": 1}}},
         {"$sort": SON([("count", -1), ("_id", -1)])}]))
@@ -156,7 +167,7 @@ def breast_cancer_by_grade(age):
     age_filter1 = "%s-%s years" % (dec_age, dec_age + 4)
     age_filter2 = "%s-%s years" % (dec_age + 5, dec_age + 9)
 
-    j = dataset([{"$match": {
+    j = aggregate([{"$match": {
         "$or": [
             {"age-recode-with-1-year-olds": age_filter1},
             {"age-recode-with-1-year-olds": age_filter2}
@@ -193,7 +204,7 @@ def breast_cancer_by_size_age_30_40():
     Custom func for cancer_by_size
     :return:
     """
-    j = dataset([{"$match": {
+    j = aggregate([{"$match": {
         "$or": [
             {"age-recode-with-1-year-olds": "35-39 years"},
             {"age-recode-with-1-year-olds": "30-34 years"}
@@ -231,7 +242,7 @@ def breast_cancer_by_size_age_30_40():
 
 
 def woman_age_30_40_annualy_diagnosed():
-    result = json.loads(dataset([{"$match": {
+    result = json.loads(aggregate([{"$match": {
         "$or": [
             {"age-recode-with-1-year-olds": "35-39 years"},
             {"age-recode-with-1-year-olds": "30-34 years"}
@@ -254,7 +265,7 @@ def woman_age_30_40_annualy_diagnosed():
 
 
 def er_pos_pr_neg_her2_neg_annual_diagnoses():
-    result = json.loads(dataset([{"$match": {
+    result = json.loads(aggregate([{"$match": {
         "$and": [
             {"er-status-recode-breast-cancer-1990": "+"},
             {"pr-status-recode-breast-cancer-1990": "-"},
@@ -278,7 +289,7 @@ def er_pos_pr_neg_her2_neg_annual_diagnoses():
 
 
 def distribution_of_stage_of_cancer_for_ages_30_40():
-    result = json.loads(dataset([{"$match": {
+    result = json.loads(aggregate([{"$match": {
         "$or": [
             {"age-recode-with-1-year-olds": "35-39 years"},
             {"age-recode-with-1-year-olds": "30-34 years"}
@@ -301,7 +312,7 @@ def distribution_of_stage_of_cancer_for_ages_30_40():
 
 
 def percent_of_women_with_cancer_by_race():
-    result = json.loads(dataset([{"$group": {
+    result = json.loads(aggregate([{"$group": {
         "_id": "$race-recode-w-b-ai-api",
         "count": {"$sum": 1},
     }},
@@ -323,7 +334,7 @@ def percent_of_women_with_cancer_by_race():
 
 
 def surgery_decisions_within_ages_30_40():
-    result = json.loads(dataset([{"$match": {
+    result = json.loads(aggregate([{"$match": {
         "$or": [
             {"age-recode-with-1-year-olds": "35-39 years"},
             {"age-recode-with-1-year-olds": "30-34 years"}
@@ -357,7 +368,7 @@ def surgery_decisions_within_ages_30_40():
 
 
 def chemotherapy_for_ages_30_40():
-    result = json.loads(dataset([{"$match": {
+    result = json.loads(aggregate([{"$match": {
         "$or": [
             {"age-recode-with-1-year-olds": "35-39 years"},
             {"age-recode-with-1-year-olds": "30-34 years"}
@@ -390,7 +401,7 @@ def chemotherapy_for_ages_30_40():
 
 
 def radiation_for_ages_30_40():
-    result = json.loads(dataset([{"$match": {
+    result = json.loads(aggregate([{"$match": {
         "$or": [
             {"age-recode-with-1-year-olds": "35-39 years"},
             {"age-recode-with-1-year-olds": "30-34 years"}
@@ -423,7 +434,7 @@ def radiation_for_ages_30_40():
 
 
 def survival_months_within_ages_30_40():
-    result = json.loads(dataset([{"$match": {
+    result = json.loads(aggregate([{"$match": {
         "$or": [
             {"age-recode-with-1-year-olds": "35-39 years"},
             {"age-recode-with-1-year-olds": "30-34 years"}
@@ -457,7 +468,7 @@ def survival_months_within_ages_30_40():
 
 
 def cause_of_death_overall():
-    result = json.loads(dataset([{"$match": {
+    result = json.loads(aggregate([{"$match": {
         "cod-to-site-recode": {"$nin": ["Alive"]}}
     },
         {"$group": {
@@ -487,7 +498,7 @@ def cause_of_death_overall():
 
 
 def cause_of_death_within_ages_30_40():
-    result = json.loads(dataset([{"$match": {
+    result = json.loads(aggregate([{"$match": {
         "$and": [{"cod-to-site-recode": {"$nin": ["Alive"]}},
                  {"$or": [
                      {"age-recode-with-1-year-olds": "35-39 years"},
@@ -520,11 +531,84 @@ def cause_of_death_within_ages_30_40():
     }
 
 
-if __name__ == '__main__':
-    # request = cause_of_death_within_ages_30_40
-    #
-    # json_output = dataset(request)
-    # pprint(json_output)
+def diagnosis(input_json, limit=0):
+    input = json.loads(input_json)
+    if input['age'] >= 85:
+        age = "85+ years"
+    elif input['age'] >= 80:
+        age = "80-84 years"
+    elif input['age'] >= 75:
+        age = "75-79 years"
+    elif input['age'] >= 70:
+        age = "70-74 years"
+    elif input['age'] >= 65:
+        age = "65-69 years"
+    elif input['age'] >= 60:
+        age = "60-64 years"
+    elif input['age'] >= 55:
+        age = "55-59 years"
+    elif input['age'] >= 50:
+        age = "50-54 years"
+    elif input['age'] >= 45:
+        age = "45-49 years"
+    elif input['age'] >= 40:
+        age = "40-44 years"
+    elif input['age'] >= 35:
+        age = "35-39 years"
+    elif input['age'] >= 30:
+        age = "30-34 years"
+    elif input['age'] >= 25:
+        age = "25-29 years"
+    elif input['age'] >= 20:
+        age = "20-24 years"
+    elif input['age'] >= 15:
+        age = "15-19 years"
+    elif input['age'] >= 10:
+        age = "10-14 years"
+    elif input['age'] >= 5:
+        age = "05-09 years"
+    elif input['age'] >= 1:
+        age = "01-04 years"
 
-    test = surgery_decisions_within_ages_30_40()
-    pprint(test)
+    if input['tumor_size_in_mm'] >= 50:
+        t_size_cm = ">5cm"
+    elif input['tumor_size_in_mm'] >= 30:
+        t_size_cm = ">3cm"
+    elif input['tumor_size_in_mm'] >= 20:
+        t_size_cm = "<3cm"
+    elif input['tumor_size_in_mm'] >= 10:
+        t_size_cm = "<2cm"
+    elif input['tumor_size_in_mm'] < 10:
+        t_size_cm = "<1cm"
+
+    filter_list = [
+        ("age-recode-with-1-year-olds", age),
+        ("grade", input["tumor_grade"]),
+        ("er-status-recode-breast-cancer-1990", input["er_status"]),
+        ("pr-status-recode-breast-cancer-1990", input["pr_status"]),
+        ("derived-her2-recode-2010", input['her2_status']),
+        ("t-size-cm", t_size_cm),
+        ("regional-nodes-positive-1988", input['num_pos_nodes'])
+    ]
+    if input["ethnicity"]:
+        filter_list.append(("race-recode-w-b-ai-api", input["ethnicity"]))
+
+    r = find(SON(filter_list), limit=limit)
+
+    return r
+
+
+if __name__ == '__main__':
+    # test1 = cause_of_death_within_ages_30_40()
+    # pprint(test1)
+
+    test2 = diagnosis('{"age": 48, '
+                      '"tumor_grade": 1, '
+                      '"er_status": "+", '
+                      '"pr_status": "+", '
+                      '"tumor_size_in_mm": 22, '
+                      '"num_pos_nodes": 0, '
+                      '"her2_status": "+", '
+                      '"ethnicity": "White"}')
+    pprint(test2)
+    print(len(test2))
