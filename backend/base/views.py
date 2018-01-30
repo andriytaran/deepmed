@@ -1,10 +1,6 @@
-import os
 from pprint import pprint
-from time import sleep
 
 from django.conf import settings
-from django.http import HttpResponse
-from django.views.generic import View
 from pymongo import MongoClient
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
@@ -16,61 +12,28 @@ from lib.dataset import breast_cancer_at_a_glance, breast_cancer_by_age, \
     breast_cancer_by_grade
 
 
-class IndexView(View):
-    """Render main page."""
-
-    def get(self, request):
-        """Return html for main application page."""
-
-        abspath = open(os.path.join(settings.BASE_DIR, 'static/index.html'),
-                       'r')
-        return HttpResponse(content=abspath.read())
-
-
 class ProtectedDataView(GenericAPIView):
     serializer_class = DiagnosisSerializer
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request):
-
-        data = {
-            'data': 'THIS IS THE PROTECTED STRING FROM SERVER',
-        }
-        sleep(10)
-
-        return Response(data, status=status.HTTP_200_OK)
-
     def post(self, request):
 
-        pprint(request.data)
         serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
             diagnosis = serializer.validated_data
 
-            MONGODB_HOST = 'localhost'
-            MONGODB_PORT = 27017
-            DBS_NAME = 'bcancer'
-            COLLECTION_NAME = 'dataset'
+            mongo_client = MongoClient(settings.MONGODB_HOST,
+                                       settings.MONGODB_PORT)
+            collection = mongo_client[settings.DBS_NAME][
+                settings.COLLECTION_NAME]
 
-            mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
-            collection = mongo_client[DBS_NAME][COLLECTION_NAME]
-            pprint(diagnosis)
-            new_d = collection.insert_one(diagnosis)
+            collection.insert_one(diagnosis)
 
-            pprint(new_d)
-
-            data = {
-                # 'breast_cancer_by_state': breast_cancer_by_state(),
-                'breast_cancer_at_a_glance': breast_cancer_at_a_glance(),
-                'breast_cancer_by_age': breast_cancer_by_age(),
-                'breast_cancer_by_grade': breast_cancer_by_grade(
-                    diagnosis['age'])
-            }
-
-            return Response(new_d, status=status.HTTP_200_OK)
+            return Response(data=serializer.data,
+                            status=status.HTTP_201_CREATED)
         else:
-            return Response({}, status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class ReportDataView(GenericAPIView):

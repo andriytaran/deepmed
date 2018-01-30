@@ -47,7 +47,6 @@ MIDDLEWARE_CLASSES = [
     'oauth2_provider.middleware.OAuth2TokenMiddleware',
 ]
 
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -82,7 +81,6 @@ AUTH_USER_MODEL = 'accounts.User'
 
 ACCOUNT_ACTIVATION_DAYS = 7  # days
 
-
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
@@ -112,7 +110,10 @@ REST_FRAMEWORK = {
     'UNAUTHENTICATED_TOKEN': None,
 }
 
-
+MONGODB_HOST = 'localhost'
+MONGODB_PORT = 27017
+DBS_NAME = 'bcancer'
+COLLECTION_NAME = 'dataset'
 
 # -----------------------
 # Local setting overwrite

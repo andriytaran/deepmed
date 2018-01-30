@@ -25,6 +25,6 @@ class UserAdmin(admin.ModelAdmin):
         }),
         ('Permissions', {
             'classes': ('collapse',),
-            'fields': ('groups', 'is_superuser', 'is_staff', 'is_active'),
+            'fields': ('is_superuser', 'is_staff', 'is_active'),
         }),
     )
