@@ -1,153 +1,121 @@
-# Thrax DeepMed Project
+# What's inside?
+ * [Django](https://github.com/django/django) 1.11 /[Django REST framework](https://github.com/tomchristie/django-rest-framework)
+ * [Redis](https://github.com/antirez/redis)
+ * [PostgreSQL](https://github.com/postgres/postgres)
+ * [Gunicorn](https://github.com/benoitc/gunicorn) WSGI HTTP Server
+ * [Nginx](https://nginx.org/)
+ * [Celery](https://github.com/celery/celery) Distributed Task Queue
+ * [Flower](http://flower.readthedocs.io/en/latest/) is a tool for monitoring and administrating [Celery](https://github.com/celery/celery) clusters.
+ * [Supervisor](https://github.com/Supervisor/supervisor) - client/server process management system
+ * Config samples for each tool from above
+ * and more...
 
-We build on the shoulders of giants with the following technologies:
+# How to start:
+ 1. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads) if not installed.
+ 2. Install [Vagrant](https://www.vagrantup.com/downloads.html) if not installed.
+ 3. Install  [Ansible (2.0.0+)](http://docs.ansible.com/ansible/intro_installation.html) if not installed.
+ 4. Run `sudo ansible-galaxy install -r ./ansible/requirements.yml` from root project directory for installing Ansible role dependencies.
+ 5. Run `sudo -- sh -c "echo '192.168.44.77 deepmed.local flower.deepmed.local api.deepmed.local' >> /etc/hosts"` for simple accessing to Vagrant machine in your browser.
+ 6. Run `vagrant up` from root project directory for start the Vagrant machine. At first time machine will be automatically provisioned.
+ 7. Configure PyCharm (if you are using it):
+     - Configuring Python interpreter: File > Settings > Project Interpreter > Add Remote > Vagrant > Python interpreter path: `/home/ubuntu/deepmed/venv/bin/python` > OK
+     - Configuring Django support: File > Settings > Languages & Frameworks > Django > Enable Django support; Django project root: `{project_dir}`; Settings: `deepmed/settings.py`
+     - Configuring Django run/debug configurations: Run > Edit configurations… > Add new configuration > Django server > Name: Django Development Server; Host: 0.0.0.0; Port: 8000; Run browser: http://api.deepmed.local:8000/; Path mapping: `Local path - path to project on host system : Remote path - path to project on vagrant machine`
+     - Configuring database: Database > Add > Data Source > PostgreSQL > Download Driver > Host: `localhost`; Port: `5432`; Database: `deepmed`; User: `deepmed`; Password: `{password}` > Configure SSH > Check use SSH tunnel; Proxy host: `127.0.0.1`; Port: `2222`; Proxy user: `vagrant`; Auth type: Key pair; Private key file: `./.vagrant/machines/default/virtualbox/private_key` > OK > Test Connection > OK
 
+# Project structure:
+## Directories
+Directory structure in the deployed virtual machine.
 
-**Frontend**
+ *  `/home/{deploy user}/{project name}/` - Main director.
+ *  `/home/{deploy user}/{project name}/etc/` - Directory contains configuration files.
+ *  `/home/{deploy user}/{project name}/log/` - Directory contains logs.
+ *  `/home/{deploy user}/{project name}/run/` - Directory contains unix sockets and pid files.
+ *  `/home/{deploy user}/{project name}/src/` - Directory contains source code of project.
+ *  `/home/{deploy user}/{project name}/bin/` - Directory contains scripts.
+ *  `/home/{deploy user}/{project name}/venv/` - Directory with virtualenv.
 
-* [React](https://github.com/facebook/react)
-* [React Router](https://github.com/ReactTraining/react-router) Declarative routing for React
-* [Babel](http://babeljs.io) for ES6 and ES7 magic
-* [Webpack](http://webpack.github.io) for bundling
-* [Webpack Dev Middleware](http://webpack.github.io/docs/webpack-dev-middleware.html)
-* [Clean Webpack Plugin](https://github.com/johnagan/clean-webpack-plugin)
-* [Redux](https://github.com/reactjs/redux) Predictable state container for JavaScript apps 
-* [Redux Dev Tools](https://github.com/gaearon/redux-devtools) DevTools for Redux with hot reloading, action replay, and customizable UI. Watch [Dan Abramov's talk](https://www.youtube.com/watch?v=xsSnOQynTHs)
-* [Redux Thunk](https://github.com/gaearon/redux-thunk) Thunk middleware for Redux - used in async actions
-* [React Router Redux](https://github.com/reactjs/react-router-redux) Ruthlessly simple bindings to keep react-router and redux in sync
-* [fetch](https://github.com/github/fetch) A window.fetch JavaScript polyfill
-* [tcomb form](https://github.com/gcanti/tcomb-form) Forms library for react
-* [style-loader](https://github.com/webpack/style-loader), [sass-loader](https://github.com/jtangelder/sass-loader) and [less-loader](https://github.com/webpack/less-loader) to allow import of stylesheets in plain css, sass and less,
-* [font-awesome-webpack](https://github.com/gowravshekar/font-awesome-webpack) to customize FontAwesome
-* [bootstrap-loader](https://github.com/shakacode/bootstrap-loader) to customize Bootstrap
-* [ESLint](http://eslint.org), [Airbnb Javascript/React Styleguide](https://github.com/airbnb/javascript), [Airbnb CSS / Sass Styleguide](https://github.com/airbnb/css) to maintain a consistent code style and [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) to make sure all imports are correct
-* [mocha](https://mochajs.org/) to allow writing unit tests for the project
-* [Enzyme](http://airbnb.io/enzyme/) JavaScript Testing utilities for React
-* [redux-mock-store](https://github.com/arnaudbenard/redux-mock-store) a mock store for your testing your redux async action creators and middleware
-* [expect](https://github.com/mjackson/expect) Write better assertions
-* [Nock](https://github.com/pgte/nock) HTTP mocking and expectations library
-* [istanbul](https://github.com/gotwarlost/istanbul) to generate coverage when running mocha
+## Manage services
+>   `./ansible/group_vars/` directory contains files with variables for generation configuration files of Supervisor and Systemd.
 
-**Backend**
+### List services
+ List of services which installed and configured by Ansible.
 
-* [Django](https://www.djangoproject.com/)
-* [Django REST framework](http://www.django-rest-framework.org/) Django REST framework is a powerful and flexible toolkit for building Web APIs
-* [Django REST Knox](https://github.com/James1345/django-rest-knox) Token based authentication for API endpoints
-* [WhiteNoise](http://whitenoise.evans.io/en/latest/django.html) to serve files efficiently from Django
-* [Prospector](http://prospector.landscape.io/en/master/) a complete Python static analysis tool
-* [Bandit](https://github.com/openstack/bandit) a security linter from OpenStack Security
-* [pytest](http://pytest.org/latest/) a mature full-featured Python testing tool
-* [Mock](http://www.voidspace.org.uk/python/mock/) mocking and testing Library
-* [Responses](https://github.com/getsentry/responses) a utility for mocking out the Python Requests library
+> Names of service could be changed in `./ansible/group_vars/`
 
+ -  Nginx - `sudo service nginx start|stop|restart|reload|force-reload|status`
+ -  Postgresql - `sudo service postgresql start|stop|restart|reload|force-reload|status`
+ -  Redis - `sudo service redis_6379 start|stop|restart|reload|force-reload|status`
+ -  Celery worker - `sudo service {project_name}-worker start|stop|restart|reload|force-reload|status`
+ -  Celery beat - `sudo service {project_name}-beat start|stop|restart|reload|force-reload|status`
+ -  Gunicorn (WSGI HTTP Server) for Django - `sudo supervisorctl {actions: start|restart|stop|status|...} {gunicorn_supervisor_name|default({project_name}-gunicorn)}`
+ -  Flower (Monitoring&Management of Celery) for Django - `sudo supervisorctl {actions: start|restart|stop|status|...} {flower_supervisor_name|default({project_name}-flower)}`
 
-## Readme Notes
+## Nginx configurations
+Domain initialized in `./ansible/group_vars/project.yml`|`./ansible/host_vars/staging/vars.yaml`|`./ansible/host_vars/production/vars.yaml` files and used by default NGINX configs (`./ansible/group_vars/nginx.yaml`).
 
-* If the command line starts with $, the command should run with user privileges
-* If the command line starts with #, the command should run with root privileges
+Default structure of domains:
+ -  {site_domain} - default `project.local`. Main domain (which could used for frontend application).
+ -  {api_domain} - default `api.{site_domain}.local`. sub-domain which uses for Django application.
+ -  {flower_domain} - default `flower.{site_domain}.local`. sub-domain for Flower (monitoring and management tool for Celery)
 
+> By default WebSocket connection is available by `api.{site_domain}.local/ws/` address.
 
-## Installation
+## Notices of Django application structure
+Source code of Django application is in `project` directory of boilerplate.
+> All configuration and code of stuff such as ansible|vagrant|docker|other should be in root directory of boilerplate at the same level as `project` and `ansible` directories.
 
-You have two ways of running this project: Using the Dockers scripts or running directly in the console.
+#### oAuth2 & Fixtures
+This boilerplate has implemented oAuth2 authorization by using [Django OAuth Toolkit](https://django-oauth-toolkit.readthedocs.io/en/latest/) library.
+During setup of server Ansible will load fixtures to create default superuser and oAuth application (You could find credentials in `/home/{deploy user}/{project name}/src/project/fixtures/`) also you could disable loading fixtures in `./ansible/group_vars/backend.yml` or `./ansible/host_vars/vagrant|develop|staging|production`.
 
-### Running NO DOCKER
+#### Django settings file
+Ansible creates local_settings.py file (by template (`./ansible/roles/webtier/templates/local_settings.py`) and variables in `./ansible/group_vars/` and `./ansible/host_vars/`) which contains configs to services and libraries (DB/Redis/python libraries and etc) according to environment (vagrant/develop/staging/production - values are defined in `./ansible/host_vars/vagrant|develop|stating|production`).
+ The local_settings.py is re-created every time after deploying with Ansible and is in the root directory of Django code at the same level as `manage.py` file.
 
-**NodeJS tooling**
+***
+##### _Notice!_ In this project is used Ansible Vault!
+Files `./ansible/host_vars/staging/vault.yml` and `./ansible/host_vars/staging/vault.yml` are encrypted by default (Default password is `Ulumulu88`).
+They're used to store sensitive data as db names, passwords, keys, secrets etc.
+Before deploying to public servers as production or staging you must:
 
-* `$ wget -qO- https://deb.nodesource.com/setup_6.x | sudo bash -`
-* `$ apt-get install --yes nodejs`
-* `$ curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -`
-* `$ echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list`
-* `$ sudo apt-get update && sudo apt-get install yarn`
+ 1. Decrypt necessary files by command `ansible-vault decrypt ./ansible/host_vars/staging/vault.yml ./ansible/host_vars/production/vault.yml --ask-vault-pass` (run it from ansible directory) using default password.
+ 2. Edit configuration in those files as needed.
+    Also if it's first edition of those files you _SHOULD_ edit:
+     - database name, user and password;
+     - django secret key (http://www.miniwebtool.com/django-secret-key-generator/);
+    For passwords better to use generated (http://passwordsgenerator.net/).
+ 3. Encrypt files again with your _NEW AND SECURE_ password using command `ansible-vault encrypt ./ansible/host_vars/staging/vault.yml ./ansible/host_vars/production/vault.yml --ask-vault-pass`.
+ 4. Have fun!
+***
 
-**Compile and run project**
+## How to deploy the project to remote server(s)
+ 1. Edit respective files in a `host_vars` directory, as well as inventory files. This repo includes default configuration samples for production and staging environments.
+ 2. Execute `./deploy <inventory name> <tags>` command in the project's root directory, where <inventory name> is the name of your inventory (e.g. "staging" or "production"), and <tags> are optional tags that will execute only the tasks that were marked by this tag (e.g. "provision" tag, which will skip installing most part of the setup and only update the code from a repo and restart services).
+ 3. Give password to decrypt necessary vault data.
+ 3. Enjoy deployment :)
 
-There are commands you need to compile javascript and run project. Ideally `yarn run dev` should be run in another console because it blocks it.
+# Useful commands
 
-* `$ yarn `
-* `$ yarn run dev`  # will run webpack with watch and compile code as it changes
+## Deploy.sh script
+ - `./deploy {environment} {tags}` - Deploy to {environment} servers by chosen tags. Example: `./deploy vagrant` - will run all deploy process to vagrant machine, `./deploy vagrant backend` - will run backend part of deploy process to vagrant machine.
 
-* `$ virtualenv -p /usr/bin/python3 virtualenv`
-* `$ source virtualenv/bin/activate`
-* `$ pip install -r py-requirements/dev.txt`
+## Ansible
+ - `bin/ansible-playbook -i ./ansible/{environment}.ini ./ansible/site.yml` - Deploy to {environment} servers.
 
-* `$ cd src`
-* `$ python manage.py migrate`
-* `$ python manage.py loaddata fixtures.json`
-* `$ python manage.py runserver`
+## Vagrant
+ - `vagrant up` - Start the virtual machine.
+ - `vagrant halt` - Shutdown the virtual machine.
+ - `vagrant destroy` - Destroy the virtual machine.
+ - `vagrant provision` - Triggers provisioning on a running virtual machine.
+ - `vagrant ssh` - Create an ssh connection with the virtual machine.
+ - `vagrant reload` - Restarts vagrant machine, loads new Vagrantfile configuration.
+ - `vagrant status` - Outputs status of the vagrant machine.
+ - `vagrant suspend` - Suspends the machine.
+ - `vagrant resume` - Resume a suspended vagrant machine.
+ - `vagrant share` - Share your Vagrant environment with anyone in the world.
 
-Then open your browser the page: http://localhost:8000/ If all goes ok you should see a React single page app. 
-
-
-### Running DOCKER
-
-We use Docker as a development environment. For production, we leave you to set it up the way you feel better,
-although it is trivial to extrapolate a production environment from the current docker-compose.yml.
-
-* Install [Docker](https://www.docker.com/products/overview) and [Docker Compose](https://docs.docker.com/compose/install/).
-* `$ docker-compose build`
-* `$ docker-compose up`
-
-To stop the development server:
-
-* `$ docker-compose stop`
-
-Stop Docker development server and remove containers, networks, volumes, and images created by up.
-
-* `$ docker-compose down`
-
-You can access shell in a container
-
-* `$ docker ps  # get the name from the list of running containers`
-* `$ docker exec -i -t djangoreactreduxbase_frontend_1 /bin/bash`
-
-The database can be accessed @localhost:5433
-
-* `$ psql -h localhost -p 5433 -U djangoreactredux djangoreactredux_dev`
-
-
-## Accessing Website
-
-The project has CORS enabled and the URL is hard-coded in javascript to http://localhost:8000 
-For login to work you will to use this URL in your browser.
-
-
-## Testing
-
-To make sure the code respects all coding guidelines you should run the statics analysis and test scripts before pushing any code.
-
-Frontend (javascript tests)
-
-* `$ ./scripts/test_local_frontend.sh`
-
-Backend (django/python tests)
-
-* `$ ./scripts/test_local_backend.sh`
-
-Please take into account that test_local_backend.sh runs py.test with `--nomigrations --reuse-db` flags to allow it be performant. Any time you add a migration please remove those flags next time you run the script.
-
-### Static analysis
-
-
-Frontend (javascript static analysis)
-
-* `$ ./scripts/static_validate_frontend.sh`
-
-Backend (django/python static analysis)
-
-* `$ ./scripts/static_validate_backend.sh`
-
-## Deployment in Production
-
-We deploy all our production code using Kubernetes. Explaining how to do deployments is beyond the scope of this boilerplate. 
-
-Here's a great article from digital ocean on how to deploy django project in a VM: https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-16-04 
-
-
-## Gotchas in Docker
-
-* This project uses NodeJS v6.x (stable) and yarn
-* The development server takes longer than the django server to start, as it has to install the javascript dependencies (if not already installed) and fire webpack. This means that after the django server starts, you should wait that webpack finishes compiling the .js files.
-* If your IDE has builtin language support for python with auto-imports (e.g. PyCharm), you can create a virtualenv and install the py-requirements.
-* If you are annoyed by docker creating files belonging to root (which is Docker's intended behaviour), you can run `# chown -hR $(whoami) .` before firing up the server.
+### SSH
+ - `ssh-keygen -t rsa -f ~/.ssh/id_rsa -C "your_email@example.com"` - Generate a new SSH key (https://help.github.com/articles/generating-ssh-keys/).
+ - `cat ~/.ssh/id_rsa.pub` - Show SSH public key.
+ - `cat ~/.ssh/id_rsa` - Show SSH private key.

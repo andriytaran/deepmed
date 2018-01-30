@@ -1,0 +1,22 @@
+---
+### Vault ###
+vaulted_database_name: 'vagrant'
+vaulted_database_user: 'vagrant'
+vaulted_database_password: 'qwe123'
+
+### Deploy ###
+deploy_env: development
+force_upgrade: yes
+
+### Project ###
+skip_checkout: yes
+
+### Local settings ###
+debug: True
+secret_key: 'super-secure-hash'
+
+environment_config:
+  DJANGO_SETTINGS_MODULE: '{{ django_settings }}'
+  LC_ALL: en_US.UTF-8
+  LANG: en_US.UTF-8
+  LANGUAGE: en_US.UTF-8

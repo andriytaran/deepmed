@@ -1,0 +1,29 @@
+---
+supervisor_programs:
+# Django
+  dm-gunicorn:
+    name: '{{ deploy_project_name }}-gunicorn'
+    command: '{{ gunicorn_virtualenv }}/bin/gunicorn {{ django_app_name }}.wsgi --config {{ deploy_etc_dir }}/{{ gunicorn_app_name }}_gunicorn.py'
+    directory: '{{ django_dir }}'
+    environment: 'DJANGO_SETTINGS_MODULE={{ django_settings }}'
+    autostart: true
+    autorestart: true
+    user: '{{ deploy_user }}'
+# React
+  dm-webapp:
+    name: '{{ deploy_project_name }}-webapp'
+    command: 'node server.js'
+    directory: '{{ frontend_src_dir }}/build'
+    environment: 'PORT={{ webapp_port }},NODE_ENV=production,API_URL={{ site_protocol }}://{{ api_domain }}/api'
+    autostart: true
+    autorestart: true
+    user: '{{ deploy_user }}'
+  # Flower
+  dm-flower:
+    name: "{{ deploy_project_name }}-flower"
+    command: "{{ virtualenv_dir }}/bin/flower -A {{ deploy_project_name }} --app={{ celery_app_module }} --address={{ flower_host }} --port={{ flower_port }}"
+    directory: "{{ django_dir }}"
+    environment: "DJANGO_SETTINGS_MODULE={{ django_settings }}"
+    autostart: true
+    autorestart: true
+    user: "{{ deploy_user }}"
