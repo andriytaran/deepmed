@@ -180,6 +180,8 @@ def create_filter(input_data, operator='$and'):
         filter_list.append({"regional-nodes-positive-1988": input_data['num_pos_nodes']})
     if 'ethnicity' in input_data.keys():
         filter_list.append({"race-recode-w-b-ai-api": input_data["ethnicity"]})
+    if 'type' in input_data.keys():
+        filter_list.append({"type": input_data["type"]})
 
     return {operator: filter_list}
 
@@ -831,6 +833,26 @@ def woman_annualy_diagnosed(input_json):
     }
 
 
+def growth_by_specific_type(input_json, operator="$and"):
+    filters = create_filter(input_json, operator)
+    result = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "$year-of-diagnosis",
+            "count": {"$sum": 1}}},
+        {"$sort": SON([("_id", 1)])}]))
+
+    return {
+        'labels': list(map(lambda x: x['_id'], result)),
+        'datasets': [{
+            'data': list(map(lambda x: x['count'], result)),
+            'label': "Diagnosed",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
 if __name__ == '__main__':
     diag_request = '{"age": 48, ' \
                    '"tumor_grade": 1, ' \
@@ -843,7 +865,13 @@ if __name__ == '__main__':
 
     diag_request_age_only = '{"age": 48}'
 
-    pprint(surgery_decisions(diag_request_age_only))
+    # pprint(surgery_decisions(diag_request_age_only))
 
-    d = diagnosis(diag_request, limit=25)
-    pprint(d)
+    # d = diagnosis(diag_request, limit=25)
+    # pprint(d)
+    type_idc = '{"type": "IDC"}'
+    type_insitu = '{"type": "In-Situ"}'
+    type_ilc = '{"type": "ILC"}'
+    type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
+
+    pprint(growth_by_specific_type(type_others, "$or"))
