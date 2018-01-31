@@ -28,7 +28,6 @@ nginx_sites:
     - server_tokens off
     - server_name {{ site_domain }}
     - auth_basic "Restricted"
-    - auth_basic_user_file auth_basic/ph
     - access_log {{ deploy_log_dir }}/nginx-access.log
     - error_log {{ deploy_log_dir }}/nginx-error.log
     - client_max_body_size 10M # Max upload size

@@ -1,22 +1,19 @@
 import json
 
-from django.conf import settings
-from pymongo import MongoClient
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from base.serializers import DiagnosisSerializer
-from dataset import woman_age_30_40_annualy_diagnosed, \
+from lib.dataset import breast_cancer_by_grade, diagnosis, surgery_decisions
+from lib.dataset import woman_age_30_40_annualy_diagnosed, \
     er_pos_pr_neg_her2_neg_annual_diagnoses, breast_cancer_by_size_age_30_40, \
     distribution_of_stage_of_cancer_for_ages_30_40, \
     percent_of_women_with_cancer_by_race, surgery_decisions_within_ages_30_40, \
     chemotherapy_for_ages_30_40, radiation_for_ages_30_40, \
     survival_months_within_ages_30_40, cause_of_death_overall, \
     cause_of_death_within_ages_30_40
-
-from lib.dataset import breast_cancer_by_grade, diagnosis, surgery_decisions
 
 
 class ReportDataView(GenericAPIView):

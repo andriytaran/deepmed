@@ -14,8 +14,6 @@ SECRET_KEY = 'b1(52uohj^!drmb(3oubrmat_j09_+(egxa5r=i0n1$bg)&k$n'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-CORS_ORIGIN_ALLOW_ALL = True
-
 ALLOWED_HOSTS = ['*']
 
 APPEND_SLASH = True
@@ -80,6 +78,50 @@ USE_TZ = True
 AUTH_USER_MODEL = 'accounts.User'
 
 ACCOUNT_ACTIVATION_DAYS = 7  # days
+
+
+# -----------------
+# CORS
+# -----------------
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_REPLACE_HTTPS_REFERER = True
+CORS_URLS_REGEX = '^.*$'
+
+CORS_ALLOW_METHODS = (
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS'
+)
+CORS_ALLOW_HEADERS = (
+    'cookie',
+    'content-type',
+    'content-range',
+    'content-length',
+    'content-disposition',
+    'cache-control',
+    'connection',
+    'accept',
+    'accept-encoding',
+    'accept-language',
+    'host',
+    'origin',
+    'referer',
+    'authorization',
+    'user-agent',
+    'x-requested-with',
+    'x-csrftoken',
+    'x-requested-with',
+    'lang',
+    'currency',
+)
+
+CORS_EXPOSE_HEADERS = ()
+CORS_ORIGIN_WHITELIST = ()
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (

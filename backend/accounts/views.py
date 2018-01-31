@@ -22,6 +22,7 @@ class UsersViewSet(ActionPermissionClassesMixin,
         'retrieve': [permissions.IsAuthenticated],
         'update': [permissions.IsAuthenticated],
         'partial_update': [permissions.IsAuthenticated],
+        'me': [permissions.AllowAny],
         'confirm_email': [permissions.AllowAny],
         'email_status': [permissions.AllowAny],
     }
@@ -32,7 +33,12 @@ class UsersViewSet(ActionPermissionClassesMixin,
     def get_serializer_class(self):
         return super(UsersViewSet, self).get_serializer_class()
 
-    @list_route(methods='GET', url_path='confirm-email')
+    @list_route(methods=['GET'])
+    def me(self, request, *args, **kwargs):
+        return Response(self.get_serializer(request.user).data,
+                        status=status.HTTP_200_OK)
+
+    @list_route(methods=['GET'], url_path='confirm-email')
     def confirm_email(self, request, *args, **kwargs):
         """
         View for confirm email.
@@ -45,11 +51,9 @@ class UsersViewSet(ActionPermissionClassesMixin,
         if user.confirm_email():
             return Response(status=status.HTTP_200_OK)
 
-        log.warning(message='Email confirmation key not found.',
-                    details={'http_status_code': status.HTTP_404_NOT_FOUND})
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    @list_route(methods='GET', url_path='email-status')
+    @list_route(methods=['GET'], url_path='email-status')
     def email_status(self, request, *args, **kwargs):
         """Retrieve user current confirmed_email status."""
         user = self.request.user

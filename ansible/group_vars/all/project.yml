@@ -22,6 +22,8 @@ deploy_dir_skip: []
 ### Domains ###
 site_domain: 'deepmed.local'
 api_domain: 'api.{{ site_domain }}'
+site_port: 80
+api_port: 80
 flower_domain: 'flower.{{ site_domain }}'
 
 site_protocol: http
