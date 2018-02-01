@@ -44,7 +44,6 @@ class SpecificStates extends React.Component {
                             },
                             ticks: {
                               beginAtZero: true,
-                              max: 500
                             }
                           }]
                         }
