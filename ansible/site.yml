@@ -40,10 +40,10 @@
       become: true
       tags: [database]
 
-    - role: mongodb
-      become: true
-      when: run_mongo
-      tags: [mongo]
+#    - role: mongodb
+#      become: true
+#      when: run_mongo
+#      tags: [mongo]
 
     - role: DavidWittman.redis
       become: true

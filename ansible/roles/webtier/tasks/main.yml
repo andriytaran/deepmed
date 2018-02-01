@@ -7,6 +7,7 @@
    force: yes
    update: yes
    accept_hostkey: yes
+   key_file: ~/.ssh/id_rsa_erik
   when: not skip_checkout
   register: site_git_clone
   tags: [backend, frontend]

@@ -30,9 +30,15 @@ class ReportDataView(GenericAPIView):
 
             data = {
                 'woman_age_30_40_annualy_diagnosed': woman_age_30_40_annualy_diagnosed(),
-                'growth_by_specific_type': growth_by_specific_type(
-                    '{"type": "Other", "type": "ILC", "type": "In Situ", "type": "IDC"}',
-                    "$or"),
+                'growth_by_specific_type': {
+                    'other': growth_by_specific_type(
+                        '{"type": "Other", "type": "Mixed", "type": "IBC"}',
+                        "$or"),
+                    'idc': growth_by_specific_type('{"type": "IDC"}', "$or"),
+                    'ilc': growth_by_specific_type('{"type": "ILC"}', "$or"),
+                    'in_situ': growth_by_specific_type('{"type": "In-Situ"}',
+                                                       "$or")
+                },
                 'breast_cancer_by_grade_and_size_age_30_40': {
                     'grade': breast_cancer_by_grade(diagnosis_data.get('age')),
                     'size': breast_cancer_by_size_age_30_40()
