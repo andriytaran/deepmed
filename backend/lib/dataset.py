@@ -885,6 +885,11 @@ def percent_race_with_cancer_by_age(input_json):
 
 
 def breakout_by_stage2(input_json):
+    """
+    Do not use this func it is only for comparation
+    :param input_json:
+    :return:
+    """
     filters = create_filter(input_json)
     result = json.loads(aggregate([
         {"$match": filters},
