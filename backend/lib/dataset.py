@@ -884,6 +884,81 @@ def percent_race_with_cancer_by_age(input_json):
     }
 
 
+def breakout_by_stage2(input_json):
+    filters = create_filter(input_json)
+    result = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "subset": {"$push": "$1998-stage"}
+        }},
+        {"$unwind": "$subset"},
+        {"$group": {
+            "_id": {"1998-stage": "$subset", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}]))
+
+    return {
+        'labels': list(map(lambda x: x['_id']['1998-stage'], result)),
+        'datasets': [{
+            'data': list(map(lambda x: x['percentage'], result)),
+            'label': "Diagnosed",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
+def breakout_by_stage(input_json):
+    filters = create_filter(input_json)
+    result = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "subset": {"$push": "$breast-adjusted-ajcc-6th-stage-1988"}
+        }},
+        {"$unwind": "$subset"},
+        {"$group": {
+            "_id": {"breast-adjusted-ajcc-6th-stage-1988": "$subset", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}]))
+
+    data = {"II": 0, "III": 0, "0": 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['breast-adjusted-ajcc-6th-stage-1988'], result))):
+        if label == 'I':
+            data['I'] = result[i]['percentage']
+        elif label in ['IIA', 'IIB']:
+            data['II'] += result[i]['percentage']
+        elif label in ['IIIA', 'IIIB', 'IIIC', 'IIINOS']:
+            data['III'] += result[i]['percentage']
+        elif label == 'IV':
+            data['IV'] = result[i]['percentage']
+        elif label in [0, 'UNK Stage', 'Blank(s)'] or label is None:
+            data['0'] += result[i]['percentage']
+
+    return {
+        'labels': list(map(lambda x: x, data.keys())),
+        'datasets': [{
+            'data': list(map(lambda x: x, data.values())),
+            'label': "Diagnosed",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
 if __name__ == '__main__':
     diag_request = '{"age": 48, ' \
                    '"tumor_grade": 1, ' \
@@ -907,4 +982,4 @@ if __name__ == '__main__':
 
     # pprint(growth_by_specific_type(type_others, "$or"))
 
-    pprint(percent_race_with_cancer_by_age(diag_request_age_only))
+    pprint(breakout_by_stage(diag_request_age_only))
