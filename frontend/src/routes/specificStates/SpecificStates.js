@@ -11,6 +11,10 @@ class SpecificStates extends React.Component {
     const color_3 = '#47cfd1'
     const color_4 = '#b8e8f5'
     const color_5 = '#1ac6ff'
+    const color_6 = '#8f61ec'
+    const color_7 = '#9df51d'
+    const color_8 = '#ff9200'
+    const color_9 = '#f51431'
 
     const chartsLabelsOptions = {
       boxWidth: 10,
@@ -60,17 +64,29 @@ class SpecificStates extends React.Component {
                     <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
                          data-adjust="height">
                       <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>ER+ / PR- / HER2- Annual Diagnoses</strong>
+                        <strong>Growth by Specific Type</strong>
                       </h4>
                       <Line
                         data={{
                           ...data.growth_by_specific_type.other,
                           datasets: [
-                            ...data.growth_by_specific_type.other.datasets,
-                            ...data.growth_by_specific_type.idc.datasets,
-                            ...data.growth_by_specific_type.ilc.datasets,
-                            ...data.growth_by_specific_type.in_situ.datasets,
-                          ]
+                            ...data.growth_by_specific_type.other.datasets.map(item => ({
+                              ...item,
+                              borderColor: color_5,
+                            })),
+                            ...data.growth_by_specific_type.idc.datasets.map(item => ({
+                              ...item,
+                              borderColor: color_6,
+                            })),
+                            ...data.growth_by_specific_type.ilc.datasets.map(item => ({
+                              ...item,
+                              borderColor: color_7,
+                            })),
+                            ...data.growth_by_specific_type.in_situ.datasets.map(item => ({
+                              ...item,
+                              borderColor: color_8,
+                            })),
+                          ],
                         }}
                         options={{
                           legend: {
@@ -154,7 +170,7 @@ class SpecificStates extends React.Component {
                           ...data.distribution_of_stage_of_cancer_for_ages_30_40,
                           datasets: data.distribution_of_stage_of_cancer_for_ages_30_40.datasets.map(item => ({
                             ...item,
-                            backgroundColor: [color_1, color_3, color_4, color_2, color_5],
+                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           }))
                         }}
                         options={{
@@ -182,7 +198,7 @@ class SpecificStates extends React.Component {
                           ...data.percent_of_women_with_cancer_by_race.overall,
                           datasets: data.percent_of_women_with_cancer_by_race.overall.datasets.map(item => ({
                             ...item,
-                            backgroundColor: [color_1, color_3, color_4, color_2],
+                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           }))
                         }}
                         options={{
@@ -202,7 +218,7 @@ class SpecificStates extends React.Component {
                           ...data.percent_of_women_with_cancer_by_race.by_age,
                           datasets: data.percent_of_women_with_cancer_by_race.by_age.datasets.map(item => ({
                             ...item,
-                            backgroundColor: [color_1, color_3, color_4, color_2],
+                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           }))
                         }}
                         options={{
@@ -233,7 +249,7 @@ class SpecificStates extends React.Component {
                           ...data.surgery_decisions_within_ages_30_40,
                           datasets: data.surgery_decisions_within_ages_30_40.datasets.map(item => ({
                             ...item,
-                            backgroundColor: [color_1, color_3, color_4, color_2, color_5],
+                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           }))
                         }}
                         options={{
@@ -262,7 +278,7 @@ class SpecificStates extends React.Component {
                           ...data.chemotherapy_for_ages_30_40,
                           datasets: data.chemotherapy_for_ages_30_40.datasets.map(item => ({
                             ...item,
-                            backgroundColor: [color_1, color_3],
+                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           }))
                         }}
                         options={{
@@ -280,7 +296,7 @@ class SpecificStates extends React.Component {
                       <Pie data={{
                         labels: ['Stage 0. 10%', 'Stage 1. 25%', 'Stage 2. 10%', 'Stage 3. 30%'],
                         datasets: [{
-                          backgroundColor: [color_1, color_3, color_4, color_2, color_5],
+                          backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           data: [10, 25, 30, 10, 30]
                         }]
                       }} options={{
@@ -306,7 +322,7 @@ class SpecificStates extends React.Component {
                           ...data.radiation_for_ages_30_40,
                           datasets: data.radiation_for_ages_30_40.datasets.map(item => ({
                             ...item,
-                            backgroundColor: [color_1, color_3],
+                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           }))
                         }}
                         options={{
@@ -324,7 +340,7 @@ class SpecificStates extends React.Component {
                       <Pie data={{
                         labels: ['Stage 0. 30%', 'Stage 1. 25%', 'Stage 2. 30%', 'Stage 3. 10%'],
                         datasets: [{
-                          backgroundColor: [color_1, color_3, color_4, color_2, color_5],
+                          backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           data: [30, 25, 30, 10, 5]
                         }]
                       }} options={{
@@ -384,7 +400,7 @@ class SpecificStates extends React.Component {
                           ...data.cause_of_death.cause_of_death_overall,
                           datasets: data.cause_of_death.cause_of_death_overall.datasets.map(item => ({
                             ...item,
-                            backgroundColor: [color_1, color_3],
+                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           }))
                         }}
                         options={{
@@ -405,7 +421,7 @@ class SpecificStates extends React.Component {
                           ...data.cause_of_death.cause_of_death_within_ages_30_40,
                           datasets: data.cause_of_death.cause_of_death_within_ages_30_40.datasets.map(item => ({
                             ...item,
-                            backgroundColor: [color_1, color_3],
+                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           }))
                         }}
                         options={{

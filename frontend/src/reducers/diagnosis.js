@@ -35,7 +35,6 @@ export const clear = () => ({type: CLEAR})
 // ------------------------------------
 const initialState = {
   loading: false,
-  similarDiagnosis: [],
   data: {},
 }
 
