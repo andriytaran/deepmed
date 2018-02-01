@@ -2,6 +2,7 @@
  * [Django](https://github.com/django/django) 1.11 /[Django REST framework](https://github.com/tomchristie/django-rest-framework)
  * [Redis](https://github.com/antirez/redis)
  * [PostgreSQL](https://github.com/postgres/postgres)
+ * [Mongo DB](https://www.mongodb.com/)
  * [Gunicorn](https://github.com/benoitc/gunicorn) WSGI HTTP Server
  * [Nginx](https://nginx.org/)
  * [Celery](https://github.com/celery/celery) Distributed Task Queue
