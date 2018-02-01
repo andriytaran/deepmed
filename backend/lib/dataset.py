@@ -853,6 +853,37 @@ def growth_by_specific_type(input_json, operator="$and"):
     }
 
 
+def percent_race_with_cancer_by_age(input_json):
+    filters = create_filter(input_json)
+    result = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "race_set": {"$push": "$race-recode-w-b-ai-api"}
+        }},
+        {"$unwind": "$race_set"},
+        {"$group": {
+            "_id": {"race-recode-w-b-ai-api": "$race_set", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}]))
+
+    return {
+        'labels': list(map(lambda x: x['_id']['race-recode-w-b-ai-api'], result)),
+        'datasets': [{
+            'data': list(map(lambda x: x['percentage'], result)),
+            'label': "Diagnosed",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
 if __name__ == '__main__':
     diag_request = '{"age": 48, ' \
                    '"tumor_grade": 1, ' \
@@ -874,4 +905,6 @@ if __name__ == '__main__':
     type_ilc = '{"type": "ILC"}'
     type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
 
-    pprint(growth_by_specific_type(type_others, "$or"))
+    # pprint(growth_by_specific_type(type_others, "$or"))
+
+    pprint(percent_race_with_cancer_by_age(diag_request_age_only))
