@@ -9,7 +9,7 @@ skip_checkout: no
 run_mongo: no
 site_domain: 52.14.12.34
 api_domain: 52.14.12.34
-api_port: 8085
+api_port: 8000
 
 
 ### Local settings ###
@@ -23,7 +23,7 @@ environment_config:
 
 nginx_sites:
   project_webapp:
-    - listen 8080
+    - listen 80
     - charset utf-8
     - server_tokens off
     - auth_basic "Restricted"
@@ -72,3 +72,5 @@ nginx_sites:
           proxy_set_header X-Real-IP $remote_addr;
           proxy_pass http://{{ deploy_project_name }}_api;
       }
+
+nginx_remove_sites: [default, deepmed]
