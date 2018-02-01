@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './SpecificStates.scss'
-import { Line, Bar, Pie, HorizontalBar } from 'react-chartjs-2'
+import {Bar, HorizontalBar, Line, Pie} from 'react-chartjs-2'
 
 class SpecificStates extends React.Component {
   render() {
@@ -17,10 +17,9 @@ class SpecificStates extends React.Component {
       fontSize: 10,
       padding: 8
     }
-
+    const {data} = this.props
     return (
       <div className="container container-full" data-children="same-height">
-
         <div className="row">
           <div className="col-sm-12">
             <div className="custom-panel custom-panel-condensed light-gray-bg">
@@ -28,67 +27,31 @@ class SpecificStates extends React.Component {
                 <div className="col-xl-5ths col-lg-4 col-md-6">
                   <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
                        data-adjust="height">
-                    <h4 className="push-top-1 push-bot-2 text-center" data-type="title"><strong># of
-                      Women Age 30-40 Annually Diagnosed</strong></h4>
-                    <Line data={{
-                      labels: [1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015],
-                      datasets: [{
-                        data: [200, 230, 260, 290, 320, 350, 380, 410],
-                        label: 'Diagnosed',
-                        borderColor: color_1,
-                        fill: false
-                      }
-                      ]
-                    }} options={{
-                      legend: {
-                        display: false,
-                        position: 'bottom'
-                      },
-                      scales: {
-                        yAxes: [{
-                          gridLines: {
-                            display: false
-                          },
-                          ticks: {
-                            beginAtZero: true,
-                            max: 500
-                          }
-                        }]
-                      }
-                    }} width={400} height={400}/>
-                  </div>
-                </div>
-                <div className="col-xl-5ths col-lg-4 col-md-6">
-                  <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
-                       data-adjust="height">
-                    <h4 className="push-top-1 push-bot-2 text-center" data-type="title"><strong>ER+ /
-                      PR- / HER2- Annual Diagnoses</strong></h4>
-                    <Line data={{
-                      labels: [1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015],
-                      datasets: [{
-                        data: [200, 230, 260, 290, 320, 350, 380, 410],
-                        label: 'Diagnosed',
-                        borderColor: color_1,
-                        fill: false
-                      }
-                      ]
-                    }} options={{
-                      legend: {
-                        display: false,
-                        position: 'bottom'
-                      },
-                      scales: {
-                        yAxes: [{
-                          gridLines: {
-                            display: false
-                          },
-                          ticks: {
-                            beginAtZero: true,
-                            max: 500
-                          }
-                        }]
-                      }
-                    }} width={400} height={400}/>
+                    <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
+                      <strong># ofWomen Age 30-40 Annually Diagnosed</strong>
+                    </h4>
+                    <Line
+                      data={data.woman_age_30_40_annualy_diagnosed}
+                      options={{
+                        legend: {
+                          display: false,
+                          position: 'bottom'
+                        },
+                        scales: {
+                          yAxes: [{
+                            gridLines: {
+                              display: false
+                            },
+                            ticks: {
+                              beginAtZero: true,
+                              max: 500
+                            }
+                          }]
+                        }
+                      }}
+                      width={400}
+                      height={400}
+                    />
                   </div>
                 </div>
                 <div className="col-xl-5ths col-lg-4 col-md-6">
@@ -96,30 +59,14 @@ class SpecificStates extends React.Component {
                        data-adjust="height">
                     <h4 className="push-top-1 push-bot-2 text-center" data-type="title"><strong>Breast
                       Cancer by Grade and Size (Age 30-40)</strong></h4>
-                    <Bar data={{
-                      labels: ['Grade 1', 'Grade 2', 'Grade 3'],
-                      datasets: [{
-                        data: [30, 40, 20],
-                        backgroundColor: color_1,
-                        hoverBackgroundColor: color_3
-                      }
-                      ]
-                    }} options={{
+                    <Bar data={data.breast_cancer_by_grade_and_size_age_30_40.grade} options={{
                       legend: {
                         display: false,
                         position: 'bottom',
                         labels: chartsLabelsOptions
                       }
                     }} width={200} height={100} ref="chart"/>
-                    <Bar data={{
-                      labels: ['< 2cm', '< 5cm', '> 5cm'],
-                      datasets: [{
-                        data: [29.5, 34.4, 34.4],
-                        backgroundColor: color_1,
-                        hoverBackgroundColor: color_3
-                      }
-                      ]
-                    }} options={{
+                    <Bar data={data.breast_cancer_by_grade_and_size_age_30_40.size} options={{
                       legend: {
                         display: false,
                         position: 'bottom',
@@ -133,13 +80,7 @@ class SpecificStates extends React.Component {
                        data-adjust="height">
                     <h4 className="push-top-1 push-bot-2 text-center" data-type="title"><strong>Distribution
                       of Stage of Cancer for Women Ages 30-40</strong></h4>
-                    <Pie data={{
-                      labels: ['Stage 0. 30%', 'Stage 1. 25%', 'Stage 2. 30%', 'Stage 3. 10%', 'Stage 4. 5%'],
-                      datasets: [{
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5],
-                        data: [30, 25, 30, 10, 5]
-                      }]
-                    }} options={{
+                    <Pie data={data.distribution_of_stage_of_cancer_for_ages_30_40} options={{
                       legend: {
                         display: true,
                         position: 'bottom',
@@ -154,13 +95,7 @@ class SpecificStates extends React.Component {
                     <h4 className="push-top-1 push-bot-2 text-center" data-type="title"><strong>% of
                       Women with Cancer by Race</strong></h4>
                     <p className="no-margin pad-left-1 small"><strong>Overall</strong></p>
-                    <Pie data={{
-                      labels: ['White', 'Asian', 'African Am.', 'Other'],
-                      datasets: [{
-                        backgroundColor: [color_1, color_3, color_4, color_2],
-                        data: [62, 11, 9, 9]
-                      }]
-                    }} options={{
+                    <Pie data={data.percent_of_women_with_cancer_by_race} options={{
                       legend: {
                         display: true,
                         position: 'right',
@@ -170,10 +105,10 @@ class SpecificStates extends React.Component {
                     <p className="push-bot-0 push-top-3 pad-left-1 small"><strong>Within Your<br/>Age
                       Bracket</strong></p>
                     <Pie data={{
-                      labels: ['White', 'Asian', 'African Am.', 'Other'],
+                      labels: ["White", "Asian", "African Am.", "Other"],
                       datasets: [{
                         backgroundColor: [color_1, color_3, color_4, color_2],
-                        data: [62, 11, 9, 9]
+                        data: [62,11,9,9]
                       }]
                     }} options={{
                       legend: {
@@ -194,13 +129,7 @@ class SpecificStates extends React.Component {
                        data-adjust="height">
                     <h4 className="push-top-1 push-bot-2 text-center" data-type="title"><strong>Surgery
                       Decisions for Women Within Ages 30-40</strong></h4>
-                    <Pie data={{
-                      labels: ['Single Mastectomy', 'Bi-Lateral Mastectomy', 'Lumpectomy', 'Other', 'None'],
-                      datasets: [{
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5],
-                        data: [30, 25, 30, 10, 5]
-                      }]
-                    }} options={{
+                    <Pie data={data.surgery_decisions_within_ages_30_40} options={{
                       legend: {
                         display: true,
                         position: 'bottom',
@@ -215,13 +144,7 @@ class SpecificStates extends React.Component {
                     <h4 className="push-top-1 push-bot-2 text-center" data-type="title"><strong>Chemotherapy
                       for Women Ages 30-40</strong></h4>
                     <p className="no-margin pad-left-1 small"><strong>Overall</strong></p>
-                    <Pie data={{
-                      labels: ['No 75%', 'Yes 25%'],
-                      datasets: [{
-                        backgroundColor: [color_1, color_3],
-                        data: [75, 25]
-                      }]
-                    }} options={{
+                    <Pie data={data.chemotherapy_for_ages_30_40} options={{
                       legend: {
                         display: true,
                         position: 'right',
@@ -251,13 +174,7 @@ class SpecificStates extends React.Component {
                     <h4 className="push-top-1 push-bot-2 text-center" data-type="title"><strong>Radiation
                       for Women Ages 30-40</strong></h4>
                     <p className="no-margin pad-left-1 small"><strong>Overall</strong></p>
-                    <Pie data={{
-                      labels: ['No 75%', 'Yes 25%'],
-                      datasets: [{
-                        backgroundColor: [color_1, color_3],
-                        data: [75, 25]
-                      }]
-                    }} options={{
+                    <Pie data={data.radiation_for_ages_30_40} options={{
                       legend: {
                         display: true,
                         position: 'right',
@@ -286,15 +203,7 @@ class SpecificStates extends React.Component {
                        data-adjust="height">
                     <h4 className="push-top-1 push-bot-2 text-center" data-type="title"><strong>Survival
                       Months for Women Ages 30-40</strong></h4>
-                    <HorizontalBar data={{
-                      labels: ['> 120 months', '> 96 months', '> 48 months', '> 24 months'],
-                      datasets: [{
-                        data: [80, 85, 95, 99],
-                        backgroundColor: color_1,
-                        hoverBackgroundColor: color_3,
-                      }
-                      ],
-                    }} options={{
+                    <HorizontalBar data={data.survival_months_within_ages_30_40} options={{
                       legend: {
                         display: false,
                         position: 'bottom'
@@ -315,13 +224,7 @@ class SpecificStates extends React.Component {
                     <h4 className="push-top-1 push-bot-2 text-center" data-type="title"><strong>Cause of
                       Death</strong></h4>
                     <p className="no-margin pad-left-1 small"><strong>Overall</strong></p>
-                    <Pie data={{
-                      labels: ['Breastcancer 55%', 'Other 45%'],
-                      datasets: [{
-                        backgroundColor: [color_1, color_3],
-                        data: [55, 45]
-                      }]
-                    }} options={{
+                    <Pie data={data.cause_of_death.cause_of_death_overall} options={{
                       legend: {
                         display: true,
                         position: 'right',
@@ -330,13 +233,7 @@ class SpecificStates extends React.Component {
                     }} width={200} height={75}/>
                     <p className="push-bot-0 push-top-3 pad-left-1 small">
                       <strong>Ages<br/>30-40</strong></p>
-                    <Pie data={{
-                      labels: ['Breastcancer 65%', 'Other 35%'],
-                      datasets: [{
-                        backgroundColor: [color_1, color_3],
-                        data: [65, 35]
-                      }]
-                    }} options={{
+                    <Pie data={data.cause_of_death.cause_of_death_within_ages_30_40} options={{
                       legend: {
                         display: true,
                         position: 'right',

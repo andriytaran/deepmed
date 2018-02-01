@@ -17,7 +17,7 @@ export const CLEAR = 'Diagnosis.CLEAR'
 export const getDiagnosisData = (values) => (dispatch, getState, {fetch, history}) => {
   dispatch({type: GET_DIAGNOSIS_DATA_REQUEST})
   const {token} = dispatch(getToken())
-  return fetch(`/diagnosis/reports/?${qs.stringify(values)}`, {
+  return fetch(`/diagnosis/reports/${qs.stringify(values)}`, {
     method: 'GET',
     token,
     success: (data) => {
@@ -36,6 +36,7 @@ export const clear = () => ({type: CLEAR})
 const initialState = {
   loading: false,
   similarDiagnosis: [],
+  data: {},
 }
 
 export default createReducer(initialState, {
@@ -44,7 +45,7 @@ export default createReducer(initialState, {
   }),
   [GET_DIAGNOSIS_DATA_SUCCESS]: (state, {data}) => ({
     loading: false,
-    similarDiagnosis: data.similar_diagnosis,
+    data,
   }),
   [GET_DIAGNOSIS_DATA_FAILURE]: (state, action) => ({
     loading: false,
