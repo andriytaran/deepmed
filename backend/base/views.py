@@ -23,7 +23,7 @@ class ReportDataView(GenericAPIView):
 
     def get(self, request):
 
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=request.query_params)
 
         if serializer.is_valid():
             diagnosis_data = serializer.validated_data
