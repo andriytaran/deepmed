@@ -44,8 +44,7 @@ class ReportDataView(GenericAPIView):
                     'size': breast_cancer_by_size_age_30_40()
                 },
                 'distribution_of_stage_of_cancer_for_ages_30_40': distribution_of_stage_of_cancer_for_ages_30_40(),
-                'percent_of_women_with_cancer_by_race': percent_of_women_with_cancer_by_race(),
-                'percent_of_women_with_c_by_race': {
+                'percent_of_women_with_cancer_by_race': {
                     'overall': percent_of_women_with_cancer_by_race(),
                     'by_age': percent_race_with_cancer_by_age(
                         json.dumps(diagnosis_data,
