@@ -5,7 +5,7 @@ force_upgrade: yes
 project_repo_branch: 'vagrant'
 
 ### Project ###
-skip_checkout: yes
+skip_checkout: no
 run_mongo: no
 site_domain: 52.14.12.34
 api_domain: 52.14.12.34
@@ -26,7 +26,6 @@ nginx_sites:
     - listen 8080
     - charset utf-8
     - server_tokens off
-    - server_name {{ site_domain }}
     - auth_basic "Restricted"
     - access_log {{ deploy_log_dir }}/nginx-access.log
     - error_log {{ deploy_log_dir }}/nginx-error.log
@@ -48,7 +47,6 @@ nginx_sites:
     - listen {{ api_port }}
     - charset utf-8
     - server_tokens off
-    - server_name {{ api_domain }}
     - access_log {{ deploy_log_dir }}/nginx-access.log
     - error_log {{ deploy_log_dir }}/nginx-error.log
     - client_max_body_size 10M # Max upload size
