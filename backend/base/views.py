@@ -53,9 +53,8 @@ class ReportDataView(GenericAPIView):
                     'cause_of_death_overall': cause_of_death_overall(),
                     'cause_of_death_within_ages_30_40': cause_of_death_within_ages_30_40()
                 },
-                'diagnosis': diagnosis(
-                    json.dumps(diagnosis_data.validated_data,
-                               ensure_ascii=False))
+                'diagnosis': diagnosis(json.dumps(diagnosis_data,
+                                                  ensure_ascii=False))
             }
             [o.pop('_id') for o in data['similar_diagnosis']]
 
