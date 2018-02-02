@@ -186,6 +186,10 @@ def create_filter(input_data, operator='$and'):
         filter_list.append({"type": input_data["type"]})
     if 'breast-adjusted-ajcc-6th-stage-1988' in input_data.keys():
         filter_list.append({"breast-adjusted-ajcc-6th-stage-1988": input_data["breast-adjusted-ajcc-6th-stage-1988"]})
+    if 'chemo' in input_data.keys():
+        filter_list.append({"chemo": input_data["chemo"]})
+    if 'radiation' in input_data.keys():
+        filter_list.append({"radiation": input_data["radiation"]})
 
     return {operator: filter_list}
 
