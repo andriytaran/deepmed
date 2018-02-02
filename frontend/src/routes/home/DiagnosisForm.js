@@ -80,9 +80,9 @@ class DiagnosisForm extends React.Component {
               })(
                 <SelectField>
                   <option value='' disabled hidden>Select...</option>
-                  {Array.from(new Array(24), (val, index) => {
-                    return <option key={index} value={index + 1}>{index + 1}</option>
-                  })}
+                  {Array.from(new Array(24), (val, i) =>
+                    <option key={i} value={i}>{i}</option>
+                  )}
                 </SelectField>
               )}
             </div>

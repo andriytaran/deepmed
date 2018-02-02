@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './SpecificStates.scss'
 import {Bar, HorizontalBar, Line, Pie} from 'react-chartjs-2'
+import {formatChartNumber, formatPercentage} from '../../utils'
 
 class SpecificStates extends React.Component {
   render() {
@@ -72,25 +73,32 @@ class SpecificStates extends React.Component {
                           datasets: [
                             ...data.growth_by_specific_type.other.datasets.map(item => ({
                               ...item,
+                              label: 'Other',
                               borderColor: color_5,
+                              backgroundColor: color_5,
                             })),
                             ...data.growth_by_specific_type.idc.datasets.map(item => ({
                               ...item,
+                              label: 'IDC',
                               borderColor: color_6,
+                              backgroundColor: color_6,
                             })),
                             ...data.growth_by_specific_type.ilc.datasets.map(item => ({
                               ...item,
+                              label: 'ILC',
                               borderColor: color_7,
+                              backgroundColor: color_7,
                             })),
                             ...data.growth_by_specific_type.in_situ.datasets.map(item => ({
                               ...item,
+                              label: 'In SITU',
                               borderColor: color_8,
+                              backgroundColor: color_8,
                             })),
                           ],
                         }}
                         options={{
                           legend: {
-                            display: false,
                             position: 'bottom'
                           },
                           scales: {
@@ -206,7 +214,12 @@ class SpecificStates extends React.Component {
                             display: true,
                             position: 'right',
                             labels: chartsLabelsOptions
-                          }
+                          },
+                          tooltips: {
+                            callbacks: {
+                              label: formatChartNumber
+                            }
+                          },
                         }}
                         width={200}
                         height={75}
@@ -226,7 +239,12 @@ class SpecificStates extends React.Component {
                             display: true,
                             position: 'right',
                             labels: chartsLabelsOptions
-                          }
+                          },
+                          tooltips: {
+                            callbacks: {
+                              label: formatChartNumber
+                            }
+                          },
                         }}
                         width={200}
                         height={75}
@@ -257,7 +275,12 @@ class SpecificStates extends React.Component {
                             display: true,
                             position: 'bottom',
                             labels: chartsLabelsOptions
-                          }
+                          },
+                          tooltips: {
+                            callbacks: {
+                              label: formatChartNumber
+                            }
+                          },
                         }}
                         width={400}
                         height={400}
@@ -275,8 +298,8 @@ class SpecificStates extends React.Component {
                       <p className="no-margin pad-left-1 small"><strong>Overall</strong></p>
                       <Pie
                         data={{
-                          ...data.chemotherapy_for_ages_30_40,
-                          datasets: data.chemotherapy_for_ages_30_40.datasets.map(item => ({
+                          ...data.chemotherapy_for_ages_30_40.overall,
+                          datasets: data.chemotherapy_for_ages_30_40.overall.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           }))
@@ -286,26 +309,41 @@ class SpecificStates extends React.Component {
                             display: true,
                             position: 'right',
                             labels: chartsLabelsOptions
-                          }
+                          },
+                          tooltips: {
+                            callbacks: {
+                              label: formatChartNumber
+                            }
+                          },
                         }}
                         width={200}
                         height={75}
                       />
                       <p className="push-bot-0 push-top-3 pad-left-1 small"><strong>Breakout<br/>by Stage</strong>
                       </p>
-                      <Pie data={{
-                        labels: ['Stage 0. 10%', 'Stage 1. 25%', 'Stage 2. 10%', 'Stage 3. 30%'],
-                        datasets: [{
-                          backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                          data: [10, 25, 30, 10, 30]
-                        }]
-                      }} options={{
-                        legend: {
-                          display: true,
-                          position: 'right',
-                          labels: chartsLabelsOptions
-                        }
-                      }} width={200} height={75}/>
+                      <Pie
+                        data={{
+                          ...data.chemotherapy_for_ages_30_40.breakout_by_stage,
+                          datasets: data.chemotherapy_for_ages_30_40.breakout_by_stage.datasets.map(item => ({
+                            ...item,
+                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                          }))
+                        }}
+                        options={{
+                          legend: {
+                            display: true,
+                            position: 'right',
+                            labels: chartsLabelsOptions
+                          },
+                          tooltips: {
+                            callbacks: {
+                              label: formatChartNumber
+                            }
+                          },
+                        }}
+                        width={200}
+                        height={75}
+                      />
                     </div>
                   </div>
                 )}
@@ -319,8 +357,8 @@ class SpecificStates extends React.Component {
                       <p className="no-margin pad-left-1 small"><strong>Overall</strong></p>
                       <Pie
                         data={{
-                          ...data.radiation_for_ages_30_40,
-                          datasets: data.radiation_for_ages_30_40.datasets.map(item => ({
+                          ...data.radiation_for_ages_30_40.overall,
+                          datasets: data.radiation_for_ages_30_40.overall.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           }))
@@ -330,26 +368,41 @@ class SpecificStates extends React.Component {
                             display: true,
                             position: 'right',
                             labels: chartsLabelsOptions
-                          }
+                          },
+                          tooltips: {
+                            callbacks: {
+                              label: formatChartNumber
+                            }
+                          },
                         }}
                         width={200}
                         height={75}
                       />
                       <p className="push-bot-0 push-top-3 pad-left-1 small"><strong>Breakout<br/>by Stage</strong>
                       </p>
-                      <Pie data={{
-                        labels: ['Stage 0. 30%', 'Stage 1. 25%', 'Stage 2. 30%', 'Stage 3. 10%'],
-                        datasets: [{
-                          backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                          data: [30, 25, 30, 10, 5]
-                        }]
-                      }} options={{
-                        legend: {
-                          display: true,
-                          position: 'right',
-                          labels: chartsLabelsOptions
-                        }
-                      }} width={200} height={75}/>
+                      <Pie
+                        data={{
+                          ...data.radiation_for_ages_30_40.breakout_by_stage,
+                          datasets: data.radiation_for_ages_30_40.breakout_by_stage.datasets.map(item => ({
+                            ...item,
+                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                          }))
+                        }}
+                        options={{
+                          legend: {
+                            display: true,
+                            position: 'right',
+                            labels: chartsLabelsOptions
+                          },
+                          tooltips: {
+                            callbacks: {
+                              label: formatChartNumber
+                            }
+                          },
+                        }}
+                        width={200}
+                        height={75}
+                      />
                     </div>
                   </div>
                 )}

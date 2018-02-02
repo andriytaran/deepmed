@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from base.serializers import DiagnosisSerializer
 from lib.dataset import breast_cancer_by_grade, diagnosis, \
-    growth_by_specific_type, percent_race_with_cancer_by_age
+    growth_by_specific_type, percent_race_with_cancer_by_age, breakout_by_stage
 from lib.dataset import woman_age_30_40_annualy_diagnosed, \
     breast_cancer_by_size_age_30_40, \
     distribution_of_stage_of_cancer_for_ages_30_40, \
@@ -51,8 +51,26 @@ class ReportDataView(GenericAPIView):
                                    ensure_ascii=False)),
                 },
                 'surgery_decisions_within_ages_30_40': surgery_decisions_within_ages_30_40(),
-                'chemotherapy_for_ages_30_40': chemotherapy_for_ages_30_40(),
-                'radiation_for_ages_30_40': radiation_for_ages_30_40(),
+                'chemotherapy_for_ages_30_40': {
+                    'overall': chemotherapy_for_ages_30_40(),
+                    'breakout_by_stage': breakout_by_stage(
+                        json.dumps({"age": diagnosis_data.get('age'),
+                                    "breast-adjusted-ajcc-6th-stage-1988": {
+                                        "$in": ["I", "IIA", "IIB", "IIIA",
+                                                "IIIB", "IIIC", "IIINOS", "IV",
+                                                0]
+                                    }}))
+                },
+                'radiation_for_ages_30_40': {
+                    'overall': radiation_for_ages_30_40(),
+                    'breakout_by_stage': breakout_by_stage(
+                        json.dumps({"age": diagnosis_data.get('age'),
+                                    "breast-adjusted-ajcc-6th-stage-1988": {
+                                        "$in": ["I", "IIA", "IIB", "IIIA",
+                                                "IIIB", "IIIC", "IIINOS", "IV",
+                                                0]
+                                    }}))
+                },
                 'survival_months_within_ages_30_40': survival_months_within_ages_30_40(),
                 'cause_of_death': {
                     'cause_of_death_overall': cause_of_death_overall(),
