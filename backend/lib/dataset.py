@@ -819,6 +819,7 @@ def breakout_by_stage(input_json):
     Returns breakeout by stage discarding the nulls and "Blank" fields
     example filter:
     input_json = '{"age": 48, ' \
+                 '"chemo": "yes", ' \
                  '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
                  '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
     :param input_json: json
@@ -1181,7 +1182,7 @@ if __name__ == '__main__':
 
     diag_request_age_only = '{"age": 48}'
 
-    pprint(breast_cancer_by_size(diag_request_age_only))
+    # pprint(breast_cancer_by_size(diag_request_age_only))
 
     # d = diagnosis(diag_request, limit=25)
     # pprint(d)
@@ -1197,4 +1198,9 @@ if __name__ == '__main__':
 
     # pprint(breakout_by_stage(diag_request_age_for_stage))
     # pprint(cause_of_death_within_ages_30_40())
-    # pprint(breakout_by_stage(diag_request))
+
+    input_json = '{"age": 48, ' \
+                 '"chemo": "yes", ' \
+                 '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
+                 '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
+    pprint(breakout_by_stage(diag_request))
