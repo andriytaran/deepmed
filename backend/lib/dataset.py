@@ -103,42 +103,42 @@ def find(request, **kwargs):
 
 def get_age_group(age):
     age_group = None
-    if age >= 85:
-        age_group = "85+ years"
-    elif age >= 80:
-        age_group = "80-84 years"
-    elif age >= 75:
-        age_group = "75-79 years"
+    # if age >= 85:
+    #     age_group = "85+ years"
+    if age >= 80:
+        age_group = ["80-84 years", "85+ years"]
+    # elif age >= 75:
+    #     age_group = "75-79 years"
     elif age >= 70:
-        age_group = "70-74 years"
-    elif age >= 65:
-        age_group = "65-69 years"
+        age_group = ["70-74 years", "75-79 years"]
+    # elif age >= 65:
+    #     age_group = "65-69 years"
     elif age >= 60:
-        age_group = "60-64 years"
-    elif age >= 55:
-        age_group = "55-59 years"
+        age_group = ["60-64 years", "65-69 years"]
+    # elif age >= 55:
+    #     age_group = "55-59 years"
     elif age >= 50:
-        age_group = "50-54 years"
-    elif age >= 45:
-        age_group = "45-49 years"
+        age_group = ["50-54 years", "55-59 years"]
+    # elif age >= 45:
+    #     age_group = "45-49 years"
     elif age >= 40:
-        age_group = "40-44 years"
-    elif age >= 35:
-        age_group = "35-39 years"
+        age_group = ["40-44 years", "45-49 years"]
+    # elif age >= 35:
+    #     age_group = "35-39 years"
     elif age >= 30:
-        age_group = "30-34 years"
-    elif age >= 25:
-        age_group = "25-29 years"
+        age_group = ["30-34 years", "35-39 years"]
+    # elif age >= 25:
+    #     age_group = "25-29 years"
     elif age >= 20:
-        age_group = "20-24 years"
-    elif age >= 15:
-        age_group = "15-19 years"
+        age_group = ["20-24 years", "25-29 years"]
+    # elif age >= 15:
+    #     age_group = "15-19 years"
     elif age >= 10:
-        age_group = "10-14 years"
-    elif age >= 5:
-        age_group = "05-09 years"
+        age_group = ["10-14 years", "15-19 years"]
+    # elif age >= 5:
+    #     age_group = "05-09 years"
     elif age >= 1:
-        age_group = "01-04 years"
+        age_group = ["01-04 years", "05-09 years"]
 
     return age_group
 
@@ -164,7 +164,7 @@ def create_filter(input_data, operator='$and'):
     filter_list = []
     if 'age' in input_data.keys():
         age = get_age_group(input_data['age'])
-        filter_list.append({"age-recode-with-1-year-olds": age})
+        filter_list.append({"age-recode-with-1-year-olds": {"$in": age}})
     if 'tumor_size_in_mm' in input_data.keys():
         t_size_cm = get_t_size_cm(input_data['tumor_size_in_mm'])
         filter_list.append({"t-size-cm": t_size_cm})
@@ -355,30 +355,34 @@ def breast_cancer_by_size_age_30_40():
     }
 
 
-def woman_age_30_40_annualy_diagnosed():
-    result = json.loads(aggregate([{"$match": {
-        "$or": [
-            {"age-recode-with-1-year-olds": "35-39 years"},
-            {"age-recode-with-1-year-olds": "30-34 years"}
-        ]
-    }},
-        {"$group": {
-            "_id": "$year-of-diagnosis",
-            "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}]))
-
-    return {
-        'labels': list(map(lambda x: x['_id'], result)),
-        'datasets': [{
-            'data': list(map(lambda x: x['count'], result)),
-            'label': "Diagnosed",
-            'borderColor': '#48ccf5',
-            'fill': False
-        }]
-    }
+# def woman_age_30_40_annualy_diagnosed():
+#     result = json.loads(aggregate([{"$match": {
+#         "$or": [
+#             {"age-recode-with-1-year-olds": "35-39 years"},
+#             {"age-recode-with-1-year-olds": "30-34 years"}
+#         ]
+#     }},
+#         {"$group": {
+#             "_id": "$year-of-diagnosis",
+#             "count": {"$sum": 1}}},
+#         {"$sort": SON([("_id", 1)])}]))
+#
+#     return {
+#         'labels': list(map(lambda x: x['_id'], result)),
+#         'datasets': [{
+#             'data': list(map(lambda x: x['count'], result)),
+#             'label': "Diagnosed",
+#             'borderColor': '#48ccf5',
+#             'fill': False
+#         }]
+#     }
 
 
 def er_pos_pr_neg_her2_neg_annual_diagnoses():
+    """
+    Does not needs an input parameter
+    :return: json
+    """
     result = json.loads(aggregate([{"$match": {
         "$and": [
             {"er-status-recode-breast-cancer-1990": "+"},
@@ -402,30 +406,30 @@ def er_pos_pr_neg_her2_neg_annual_diagnoses():
     }
 
 
-def distribution_of_stage_of_cancer_for_ages_30_40():
-    result = json.loads(aggregate([{"$match": {
-        "$or": [
-            {"age-recode-with-1-year-olds": "35-39 years"},
-            {"age-recode-with-1-year-olds": "30-34 years"}
-        ]
-    }},
-        {"$group": {
-            "_id": "$1998-stage",
-            "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}]))
+# def distribution_of_stage_of_cancer_for_ages_30_40():
+#     result = json.loads(aggregate([{"$match": {
+#         "$or": [
+#             {"age-recode-with-1-year-olds": "35-39 years"},
+#             {"age-recode-with-1-year-olds": "30-34 years"}
+#         ]
+#     }},
+#         {"$group": {
+#             "_id": "$1998-stage",
+#             "count": {"$sum": 1}}},
+#         {"$sort": SON([("_id", 1)])}]))
+#
+#     return {
+#         'labels': list(map(lambda x: x['_id'], result)),
+#         'datasets': [{
+#             'data': list(map(lambda x: x['count'], result)),
+#             'label': "Diagnosed",
+#             'borderColor': '#48ccf5',
+#             'fill': False
+#         }]
+#     }
 
-    return {
-        'labels': list(map(lambda x: x['_id'], result)),
-        'datasets': [{
-            'data': list(map(lambda x: x['count'], result)),
-            'label': "Diagnosed",
-            'borderColor': '#48ccf5',
-            'fill': False
-        }]
-    }
 
-
-def percent_of_women_with_cancer_by_race():
+def percent_of_women_with_cancer_by_race_overall():
     result = json.loads(aggregate([{"$group": {
         "_id": "$race-recode-w-b-ai-api",
         "count": {"$sum": 1},
@@ -447,141 +451,146 @@ def percent_of_women_with_cancer_by_race():
     }
 
 
-def surgery_decisions_within_ages_30_40():
-    result = json.loads(aggregate([{"$match": {
-        "$or": [
-            {"age-recode-with-1-year-olds": "35-39 years"},
-            {"age-recode-with-1-year-olds": "30-34 years"}
-        ]
-    }},
-        {"$group": {
-            "_id": "",
-            "total": {"$sum": 1},
-            "surgery_set": {"$push": "$surgery"}
-        }},
-        {"$unwind": "$surgery_set"},
-        {"$group": {
-            "_id": {"surgery": "$surgery_set", "total": "$total"},
-            "count": {"$sum": 1}
-        }},
-        {"$project": {
-            "count": 1,
-            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
-        }},
-        {"$sort": SON([("percentage", -1)])}]))
-
-    return {
-        'labels': list(map(lambda x: x['_id']['surgery'], result)),
-        'datasets': [{
-            'data': list(map(lambda x: x['percentage'], result)),
-            'label': "Diagnosed",
-            'borderColor': '#48ccf5',
-            'fill': False
-        }]
-    }
-
-
-def chemotherapy_for_ages_30_40():
-    result = json.loads(aggregate([{"$match": {
-        "$or": [
-            {"age-recode-with-1-year-olds": "35-39 years"},
-            {"age-recode-with-1-year-olds": "30-34 years"}
-        ]
-    }},
-        {"$group": {
-            "_id": "",
-            "total": {"$sum": 1},
-            "chemo_set": {"$push": "$chemo"}
-        }},
-        {"$unwind": "$chemo_set"},
-        {"$group": {
-            "_id": {"chemo": "$chemo_set", "total": "$total"},
-            "count": {"$sum": 1}}},
-        {"$project": {
-            "count": 1,
-            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
-        }},
-        {"$sort": SON([("_id", 1)])}]))
-
-    return {
-        'labels': list(map(lambda x: x['_id']['chemo'], result)),
-        'datasets': [{
-            'data': list(map(lambda x: x['percentage'], result)),
-            'label': "Diagnosed",
-            'borderColor': '#48ccf5',
-            'fill': False
-        }]
-    }
+# def surgery_decisions_within_ages_30_40():
+#     result = json.loads(aggregate([{"$match": {
+#         "$or": [
+#             {"age-recode-with-1-year-olds": "35-39 years"},
+#             {"age-recode-with-1-year-olds": "30-34 years"}
+#         ]
+#     }},
+#         {"$group": {
+#             "_id": "",
+#             "total": {"$sum": 1},
+#             "surgery_set": {"$push": "$surgery"}
+#         }},
+#         {"$unwind": "$surgery_set"},
+#         {"$group": {
+#             "_id": {"surgery": "$surgery_set", "total": "$total"},
+#             "count": {"$sum": 1}
+#         }},
+#         {"$project": {
+#             "count": 1,
+#             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+#         }},
+#         {"$sort": SON([("percentage", -1)])}]))
+#
+#     return {
+#         'labels': list(map(lambda x: x['_id']['surgery'], result)),
+#         'datasets': [{
+#             'data': list(map(lambda x: x['percentage'], result)),
+#             'label': "Diagnosed",
+#             'borderColor': '#48ccf5',
+#             'fill': False
+#         }]
+#     }
 
 
-def radiation_for_ages_30_40():
-    result = json.loads(aggregate([{"$match": {
-        "$or": [
-            {"age-recode-with-1-year-olds": "35-39 years"},
-            {"age-recode-with-1-year-olds": "30-34 years"}
-        ]
-    }},
-        {"$group": {
-            "_id": "",
-            "total": {"$sum": 1},
-            "data_subset": {"$push": "$radiation"}
-        }},
-        {"$unwind": "$data_subset"},
-        {"$group": {
-            "_id": {"radiation": "$data_subset", "total": "$total"},
-            "count": {"$sum": 1}}},
-        {"$project": {
-            "count": 1,
-            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
-        }},
-        {"$sort": SON([("_id", 1)])}]))
+# def chemotherapy_for_ages_30_40():
+#     result = json.loads(aggregate([{"$match": {
+#         "$or": [
+#             {"age-recode-with-1-year-olds": "35-39 years"},
+#             {"age-recode-with-1-year-olds": "30-34 years"}
+#         ]
+#     }},
+#         {"$group": {
+#             "_id": "",
+#             "total": {"$sum": 1},
+#             "chemo_set": {"$push": "$chemo"}
+#         }},
+#         {"$unwind": "$chemo_set"},
+#         {"$group": {
+#             "_id": {"chemo": "$chemo_set", "total": "$total"},
+#             "count": {"$sum": 1}}},
+#         {"$project": {
+#             "count": 1,
+#             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+#         }},
+#         {"$sort": SON([("_id", 1)])}]))
+#
+#     return {
+#         'labels': list(map(lambda x: x['_id']['chemo'], result)),
+#         'datasets': [{
+#             'data': list(map(lambda x: x['percentage'], result)),
+#             'label': "Diagnosed",
+#             'borderColor': '#48ccf5',
+#             'fill': False
+#         }]
+#     }
 
-    return {
-        'labels': list(map(lambda x: x['_id']['radiation'], result)),
-        'datasets': [{
-            'data': list(map(lambda x: x['percentage'], result)),
-            'label': "Diagnosed",
-            'borderColor': '#48ccf5',
-            'fill': False
-        }]
-    }
+
+# def radiation_for_ages_30_40():
+#     result = json.loads(aggregate([{"$match": {
+#         "$or": [
+#             {"age-recode-with-1-year-olds": "35-39 years"},
+#             {"age-recode-with-1-year-olds": "30-34 years"}
+#         ]
+#     }},
+#         {"$group": {
+#             "_id": "",
+#             "total": {"$sum": 1},
+#             "data_subset": {"$push": "$radiation"}
+#         }},
+#         {"$unwind": "$data_subset"},
+#         {"$group": {
+#             "_id": {"radiation": "$data_subset", "total": "$total"},
+#             "count": {"$sum": 1}}},
+#         {"$project": {
+#             "count": 1,
+#             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+#         }},
+#         {"$sort": SON([("_id", 1)])}]))
+#
+#     return {
+#         'labels': list(map(lambda x: x['_id']['radiation'], result)),
+#         'datasets': [{
+#             'data': list(map(lambda x: x['percentage'], result)),
+#             'label': "Diagnosed",
+#             'borderColor': '#48ccf5',
+#             'fill': False
+#         }]
+#     }
 
 
-def survival_months_within_ages_30_40():
-    result = json.loads(aggregate([{"$match": {
-        "$or": [
-            {"age-recode-with-1-year-olds": "35-39 years"},
-            {"age-recode-with-1-year-olds": "30-34 years"}
-        ]
-    }},
-        {"$group": {
-            "_id": "$survival-months",
-            "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", -1)])}]))
-
-    res = {'> 120 months': 0, '> 96 months': 0, '> 48 months': 0, '> 24 months': 0}
-    for i in result:
-        if isinstance(i['_id'], int) and i['_id'] > 120:
-            res['> 120 months'] += i['count']
-        elif isinstance(i['_id'], int) and i['_id'] > 96:
-            res['> 96 months'] += i['count']
-        elif isinstance(i['_id'], int) and i['_id'] > 48:
-            res['> 48 months'] += i['count']
-        elif isinstance(i['_id'], int) and i['_id'] > 24:
-            res['> 24 months'] += i['count']
-
-    return {
-        'labels': list(map(lambda x: x, res.keys())),
-        'datasets': [{
-            'data': list(map(lambda x: x, res.values())),
-            'label': "Diagnosed",
-            'borderColor': '#48ccf5',
-            'fill': False
-        }]
-    }
+# def survival_months_within_ages_30_40():
+#     result = json.loads(aggregate([{"$match": {
+#         "$or": [
+#             {"age-recode-with-1-year-olds": "35-39 years"},
+#             {"age-recode-with-1-year-olds": "30-34 years"}
+#         ]
+#     }},
+#         {"$group": {
+#             "_id": "$survival-months",
+#             "count": {"$sum": 1}}},
+#         {"$sort": SON([("_id", -1)])}]))
+#
+#     res = {'> 120 months': 0, '> 96 months': 0, '> 48 months': 0, '> 24 months': 0}
+#     for i in result:
+#         if isinstance(i['_id'], int) and i['_id'] > 120:
+#             res['> 120 months'] += i['count']
+#         elif isinstance(i['_id'], int) and i['_id'] > 96:
+#             res['> 96 months'] += i['count']
+#         elif isinstance(i['_id'], int) and i['_id'] > 48:
+#             res['> 48 months'] += i['count']
+#         elif isinstance(i['_id'], int) and i['_id'] > 24:
+#             res['> 24 months'] += i['count']
+#
+#     return {
+#         'labels': list(map(lambda x: x, res.keys())),
+#         'datasets': [{
+#             'data': list(map(lambda x: x, res.values())),
+#             'label': "Diagnosed",
+#             'borderColor': '#48ccf5',
+#             'fill': False
+#         }]
+#     }
 
 
 def cause_of_death_overall():
+    """
+    Does not need any input parameters
+    Returns percentage of Breast and Others
+    :return: json
+    """
     result = json.loads(aggregate([{"$match": {
         "cod-to-site-recode": {"$nin": ["Alive"]}}
     },
@@ -618,48 +627,61 @@ def cause_of_death_overall():
     }
 
 
-def cause_of_death_within_ages_30_40():
-    result = json.loads(aggregate([{"$match": {
-        "$and": [{"cod-to-site-recode": {"$nin": ["Alive"]}},
-                 {"$or": [
-                     {"age-recode-with-1-year-olds": "35-39 years"},
-                     {"age-recode-with-1-year-olds": "30-34 years"}
-                 ]}]
-    }},
-        {"$group": {
-            "_id": "",
-            "total": {"$sum": 1},
-            "data_subset": {"$push": "$cod-to-site-recode"}
-        }},
-        {"$unwind": "$data_subset"},
-        {"$group": {
-            "_id": {"cod-to-site-recode": "$data_subset", "total": "$total"},
-            "count": {"$sum": 1}}},
-        {"$project": {
-            "count": 1,
-            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
-        }},
-        {"$sort": SON([("count", -1)])}]))
-
-    data = {"Breast": 0, "Other": 0}
-    for i, label in enumerate(list(map(lambda x: x['_id']['cod-to-site-recode'], result))):
-        if label == 'Breast':
-            data['Breast'] = result[i]['percentage']
-        else:
-            data['Other'] += result[i]['percentage']
-
-    return {
-        'labels': list(map(lambda x: x, data.keys())),
-        'datasets': [{
-            'data': list(map(lambda x: x, data.values())),
-            'label': "Diagnosed",
-            'borderColor': '#48ccf5',
-            'fill': False
-        }]
-    }
+# def cause_of_death_within_ages_30_40():
+#     result = json.loads(aggregate([{"$match": {
+#         "$and": [{"cod-to-site-recode": {"$nin": ["Alive"]}},
+#                  {"$or": [
+#                      {"age-recode-with-1-year-olds": "35-39 years"},
+#                      {"age-recode-with-1-year-olds": "30-34 years"}
+#                  ]}]
+#     }},
+#         {"$group": {
+#             "_id": "",
+#             "total": {"$sum": 1},
+#             "data_subset": {"$push": "$cod-to-site-recode"}
+#         }},
+#         {"$unwind": "$data_subset"},
+#         {"$group": {
+#             "_id": {"cod-to-site-recode": "$data_subset", "total": "$total"},
+#             "count": {"$sum": 1}}},
+#         {"$project": {
+#             "count": 1,
+#             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+#         }},
+#         {"$sort": SON([("count", -1)])}]))
+#
+#     data = {"Breast": 0, "Other": 0}
+#     for i, label in enumerate(list(map(lambda x: x['_id']['cod-to-site-recode'], result))):
+#         if label == 'Breast':
+#             data['Breast'] = result[i]['percentage']
+#         else:
+#             data['Other'] += result[i]['percentage']
+#
+#     return {
+#         'labels': list(map(lambda x: x, data.keys())),
+#         'datasets': [{
+#             'data': list(map(lambda x: x, data.values())),
+#             'label': "Diagnosed",
+#             'borderColor': '#48ccf5',
+#             'fill': False
+#         }]
+#     }
 
 
 def cause_of_death(input_json):
+    """
+    sample request input_json = '{"age": 48, ' \
+                   '"sex": "Female", ' \
+                   '"tumor_grade": 1, ' \
+                   '"er_status": "+", ' \
+                   '"pr_status": "+", ' \
+                   '"tumor_size_in_mm": 22, ' \
+                   '"num_pos_nodes": 0, ' \
+                   '"her2_status": "+", ' \
+                   '"ethnicity": "White"}'
+    :param input_json:
+    :return: json
+    """
     filters = create_filter(input_json)
     result = json.loads(aggregate([
         {"$match": filters},
@@ -690,6 +712,19 @@ def cause_of_death(input_json):
 
 
 def survival_months(input_json):
+    """
+    sample request input_json = '{"age": 48, ' \
+                   '"sex": "Female", ' \
+                   '"tumor_grade": 1, ' \
+                   '"er_status": "+", ' \
+                   '"pr_status": "+", ' \
+                   '"tumor_size_in_mm": 22, ' \
+                   '"num_pos_nodes": 0, ' \
+                   '"her2_status": "+", ' \
+                   '"ethnicity": "White"}'
+    :param input_json:
+    :return: json
+    """
     filters = create_filter(input_json)
     result = json.loads(aggregate([
         {"$match": filters},
@@ -721,6 +756,19 @@ def survival_months(input_json):
 
 
 def radiation(input_json):
+    """
+    sample request input_json = '{"age": 48, ' \
+                   '"sex": "Female", ' \
+                   '"tumor_grade": 1, ' \
+                   '"er_status": "+", ' \
+                   '"pr_status": "+", ' \
+                   '"tumor_size_in_mm": 22, ' \
+                   '"num_pos_nodes": 0, ' \
+                   '"her2_status": "+", ' \
+                   '"ethnicity": "White"}'
+    :param input_json:
+    :return: json
+    """
     filters = create_filter(input_json)
     result = json.loads(aggregate([
         {"$match": filters},
@@ -751,6 +799,19 @@ def radiation(input_json):
 
 
 def chemotherapy(input_json):
+    """
+    sample request input_json = '{"age": 48, ' \
+                   '"sex": "Female", ' \
+                   '"tumor_grade": 1, ' \
+                   '"er_status": "+", ' \
+                   '"pr_status": "+", ' \
+                   '"tumor_size_in_mm": 22, ' \
+                   '"num_pos_nodes": 0, ' \
+                   '"her2_status": "+", ' \
+                   '"ethnicity": "White"}'
+    :param input_json:
+    :return:
+    """
     filters = create_filter(input_json)
     result = json.loads(aggregate([
         {"$match": filters},
@@ -781,6 +842,19 @@ def chemotherapy(input_json):
 
 
 def surgery_decisions(input_json):
+    """
+    sample request input_json = '{"age": 48, ' \
+                   '"sex": "Female", ' \
+                   '"tumor_grade": 1, ' \
+                   '"er_status": "+", ' \
+                   '"pr_status": "+", ' \
+                   '"tumor_size_in_mm": 22, ' \
+                   '"num_pos_nodes": 0, ' \
+                   '"her2_status": "+", ' \
+                   '"ethnicity": "White"}'
+    :param input_json:
+    :return: json
+    """
     filters = create_filter(input_json)
     result = json.loads(aggregate([
         {"$match": filters},
@@ -812,6 +886,19 @@ def surgery_decisions(input_json):
 
 
 def distribution_of_stage_of_cancer(input_json):
+    """
+    sample request input_json = '{"age": 48, ' \
+                   '"sex": "Female", ' \
+                   '"tumor_grade": 1, ' \
+                   '"er_status": "+", ' \
+                   '"pr_status": "+", ' \
+                   '"tumor_size_in_mm": 22, ' \
+                   '"num_pos_nodes": 0, ' \
+                   '"her2_status": "+", ' \
+                   '"ethnicity": "White"}'
+    :param input_json:
+    :return:
+    """
     filters = create_filter(input_json)
     result = json.loads(aggregate([
         {"$match": filters},
@@ -832,6 +919,19 @@ def distribution_of_stage_of_cancer(input_json):
 
 
 def woman_annualy_diagnosed(input_json):
+    """
+    sample request input_json = '{"age": 48, ' \
+                   '"sex": "Female", ' \
+                   '"tumor_grade": 1, ' \
+                   '"er_status": "+", ' \
+                   '"pr_status": "+", ' \
+                   '"tumor_size_in_mm": 22, ' \
+                   '"num_pos_nodes": 0, ' \
+                   '"her2_status": "+", ' \
+                   '"ethnicity": "White"}'
+    :param input_json:
+    :return: json
+    """
     filters = create_filter(input_json)
     result = json.loads(aggregate([
         {"$match": filters},
@@ -852,6 +952,16 @@ def woman_annualy_diagnosed(input_json):
 
 
 def growth_by_specific_type(input_json, operator="$and"):
+    """
+    Sample requests:
+    input_json = '{"type": "IDC"}'
+    input_json = '{"type": "In-Situ"}'
+    input_json = '{"type": "ILC"}'
+    input_json = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
+    :param input_json:
+    :param operator:
+    :return: json
+    """
     filters = create_filter(input_json, operator)
     result = json.loads(aggregate([
         {"$match": filters},
@@ -872,6 +982,19 @@ def growth_by_specific_type(input_json, operator="$and"):
 
 
 def percent_race_with_cancer_by_age(input_json):
+    """
+    sample request input_json = '{"age": 48, ' \
+                   '"sex": "Female", ' \
+                   '"tumor_grade": 1, ' \
+                   '"er_status": "+", ' \
+                   '"pr_status": "+", ' \
+                   '"tumor_size_in_mm": 22, ' \
+                   '"num_pos_nodes": 0, ' \
+                   '"her2_status": "+", ' \
+                   '"ethnicity": "White"}'
+    :param input_json:
+    :return: json
+    """
     filters = create_filter(input_json)
     result = json.loads(aggregate([
         {"$match": filters},
@@ -902,43 +1025,52 @@ def percent_race_with_cancer_by_age(input_json):
     }
 
 
-def breakout_by_stage2(input_json):
-    """
-    Do not use this func it is only for comparation
-    :param input_json:
-    :return:
-    """
-    filters = create_filter(input_json)
-    result = json.loads(aggregate([
-        {"$match": filters},
-        {"$group": {
-            "_id": "",
-            "total": {"$sum": 1},
-            "subset": {"$push": "$1998-stage"}
-        }},
-        {"$unwind": "$subset"},
-        {"$group": {
-            "_id": {"1998-stage": "$subset", "total": "$total"},
-            "count": {"$sum": 1}
-        }},
-        {"$project": {
-            "count": 1,
-            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
-        }},
-        {"$sort": SON([("percentage", -1)])}]))
-
-    return {
-        'labels': list(map(lambda x: x['_id']['1998-stage'], result)),
-        'datasets': [{
-            'data': list(map(lambda x: x['percentage'], result)),
-            'label': "Diagnosed",
-            'borderColor': '#48ccf5',
-            'fill': False
-        }]
-    }
+# def breakout_by_stage2(input_json):
+#     """
+#     Do not use this func it is only for comparation
+#     :param input_json:
+#     :return:
+#     """
+#     filters = create_filter(input_json)
+#     result = json.loads(aggregate([
+#         {"$match": filters},
+#         {"$group": {
+#             "_id": "",
+#             "total": {"$sum": 1},
+#             "subset": {"$push": "$1998-stage"}
+#         }},
+#         {"$unwind": "$subset"},
+#         {"$group": {
+#             "_id": {"1998-stage": "$subset", "total": "$total"},
+#             "count": {"$sum": 1}
+#         }},
+#         {"$project": {
+#             "count": 1,
+#             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+#         }},
+#         {"$sort": SON([("percentage", -1)])}]))
+#
+#     return {
+#         'labels': list(map(lambda x: x['_id']['1998-stage'], result)),
+#         'datasets': [{
+#             'data': list(map(lambda x: x['percentage'], result)),
+#             'label': "Diagnosed",
+#             'borderColor': '#48ccf5',
+#             'fill': False
+#         }]
+#     }
 
 
 def breakout_by_stage(input_json):
+    """
+    Returns breakeout by stage discarding the nulls and "Blank" fields
+    example filter:
+    input_json = '{"age": 48, ' \
+                 '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
+                 '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
+    :param input_json: json
+    :return: json
+    """
     filters = create_filter(input_json, "$and")
     result = json.loads(aggregate([
         {"$match": filters},
@@ -997,7 +1129,7 @@ if __name__ == '__main__':
 
     diag_request_age_only = '{"age": 48}'
 
-    # pprint(surgery_decisions(diag_request_age_only))
+    pprint(surgery_decisions(diag_request_age_only))
 
     # d = diagnosis(diag_request, limit=25)
     # pprint(d)
@@ -1012,5 +1144,5 @@ if __name__ == '__main__':
                                  '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
 
     # pprint(breakout_by_stage(diag_request_age_for_stage))
-    pprint(cause_of_death_within_ages_30_40())
-    pprint(breakout_by_stage(diag_request))
+    # pprint(cause_of_death_within_ages_30_40())
+    # pprint(breakout_by_stage(diag_request))
