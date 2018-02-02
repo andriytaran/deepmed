@@ -276,7 +276,7 @@ class NationalStates extends React.Component {
 }
 
 const mapState = state => ({
-  ...state.diagnosis,
+  // ...state.diagnosis,
 })
 
 const mapDispatch = {}
