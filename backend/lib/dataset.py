@@ -1202,3 +1202,7 @@ if __name__ == '__main__':
                  '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
                  '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
     pprint(breakout_by_stage(input_json))
+
+    diag_request = '{"age": 48, ' \
+                   '"sex": "Female"}'
+    pprint(percent_race_with_cancer_by_age(diag_request))
