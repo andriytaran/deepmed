@@ -803,10 +803,21 @@ def percent_race_with_cancer_by_age(input_json):
         }},
         {"$sort": SON([("percentage", -1)])}]))
 
+    data = {'Other': 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['race-recode-w-b-ai-api'], result))):
+        if label == 'White':
+            data['White'] = result[i]['percentage']
+        elif label == 'Black':
+            data['Black'] = result[i]['percentage']
+        elif label == 'Asian or Pacific Islander':
+            data['Asian or Pacific Islander'] = result[i]['percentage']
+        elif label in ['Unknown', 'American Indian/Alaska Native'] or label is None:
+            data['Other'] += result[i]['percentage']
+
     return {
-        'labels': list(map(lambda x: x['_id']['race-recode-w-b-ai-api'], result)),
+        'labels': list(map(lambda x: x, data.keys())),
         'datasets': [{
-            'data': list(map(lambda x: x['percentage'], result)),
+            'data': list(map(lambda x: x, data.values())),
             'label': "Diagnosed",
             'borderColor': '#48ccf5',
             'fill': False
@@ -1203,6 +1214,5 @@ if __name__ == '__main__':
                  '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
     pprint(breakout_by_stage(input_json))
 
-    diag_request = '{"age": 48, ' \
-                   '"sex": "Female"}'
+    diag_request = '{"sex": "Female"}'
     pprint(percent_race_with_cancer_by_age(diag_request))
