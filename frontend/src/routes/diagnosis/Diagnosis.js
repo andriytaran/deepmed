@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './Diagnosis.scss'
+import {RACES} from '../../constants'
 
 class Diagnosis extends React.Component {
   render() {
@@ -109,10 +110,9 @@ class Diagnosis extends React.Component {
                   <div className='col-sm-2 col-xs-6'>
                     <label className='visible-xs'>Ethnicity (optional)</label>
                     <select className='form-control text-input-sm'>
-                      <option>African-American</option>
-                      <option>Asian</option>
-                      <option>Native American</option>
-                      <option>Caucasian</option>
+                      {RACES.map((race, i) =>
+                        <option key={i}>{race}</option>
+                      )}
                     </select>
                   </div>
                   <div className='col-sm-2 col-xs-6 push-top-2-xs'>

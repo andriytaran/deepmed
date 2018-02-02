@@ -21,7 +21,7 @@ export const getDiagnosisData = (values) => (dispatch, getState, {fetch, history
     method: 'GET',
     token,
     success: (data) => {
-      dispatch({type: GET_DIAGNOSIS_DATA_SUCCESS, data})
+      dispatch({type: GET_DIAGNOSIS_DATA_SUCCESS, data, diagnosisForm: values})
       history.push('/diagnosis')
     },
     failure: (err) => dispatch({type: GET_DIAGNOSIS_DATA_FAILURE})
@@ -35,6 +35,7 @@ export const clear = () => ({type: CLEAR})
 // ------------------------------------
 const initialState = {
   loading: false,
+  diagnosisForm: {},
   data: {},
 }
 
@@ -42,9 +43,10 @@ export default createReducer(initialState, {
   [GET_DIAGNOSIS_DATA_REQUEST]: (state, action) => ({
     loading: true,
   }),
-  [GET_DIAGNOSIS_DATA_SUCCESS]: (state, {data}) => ({
+  [GET_DIAGNOSIS_DATA_SUCCESS]: (state, {data, diagnosisForm}) => ({
     loading: false,
     data,
+    diagnosisForm,
   }),
   [GET_DIAGNOSIS_DATA_FAILURE]: (state, action) => ({
     loading: false,

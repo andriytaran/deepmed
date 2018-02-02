@@ -1,6 +1,7 @@
 import React from 'react'
 import {Button, FormControl} from 'react-bootstrap'
 import {createForm} from 'rc-form'
+import {RACES} from '../../constants'
 
 class TextField extends React.Component {
   render() {
@@ -133,10 +134,9 @@ class DiagnosisForm extends React.Component {
               })(
                 <SelectField>
                   <option value='' disabled hidden>Select...</option>
-                  <option>African-American</option>
-                  <option>Asian</option>
-                  <option>Native American</option>
-                  <option>Caucasian</option>
+                  {RACES.map((race, i) =>
+                    <option key={i}>{race}</option>
+                  )}
                 </SelectField>
               )}
             </div>

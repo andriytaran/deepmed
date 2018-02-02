@@ -3,7 +3,13 @@ import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './SpecificStates.scss'
 import {Bar, HorizontalBar, Line, Pie} from 'react-chartjs-2'
-import {formatChartNumber, formatPercentage} from '../../utils'
+import {formatChartNumber} from '../../utils'
+
+// TODO
+const getAgeRangeLabel = (age) => {
+  const nearestRoundedDown10 = parseInt(+age / 10, 10) * 10
+  return `Ages ${nearestRoundedDown10}-${nearestRoundedDown10 + 10}`
+}
 
 class SpecificStates extends React.Component {
   render() {
@@ -22,22 +28,23 @@ class SpecificStates extends React.Component {
       fontSize: 10,
       padding: 8
     }
-    const {data} = this.props
+    const {data, diagnosisForm} = this.props
+    const ageRange = diagnosisForm.age ? getAgeRangeLabel(diagnosisForm.age) : ''
     return (
       <div className="container container-full" data-children="same-height">
         <div className="row">
           <div className="col-sm-12">
             <div className="custom-panel custom-panel-condensed light-gray-bg">
               <div className="row row-condensed">
-                {data.woman_age_30_40_annualy_diagnosed && (
+                {data.woman_annualy_diagnosed && (
                   <div className="col-xl-5ths col-lg-4 col-md-6">
                     <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
                          data-adjust="height">
                       <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong># of Women Age 30-40 Annually Diagnosed</strong>
+                        <strong># of Women Annually Diagnosed {ageRange}</strong>
                       </h4>
                       <Line
-                        data={data.woman_age_30_40_annualy_diagnosed}
+                        data={data.woman_annualy_diagnosed}
                         options={{
                           legend: {
                             display: false,
@@ -68,35 +75,7 @@ class SpecificStates extends React.Component {
                         <strong>Growth by Specific Type</strong>
                       </h4>
                       <Line
-                        data={{
-                          ...data.growth_by_specific_type.other,
-                          datasets: [
-                            ...data.growth_by_specific_type.other.datasets.map(item => ({
-                              ...item,
-                              label: 'Other',
-                              borderColor: color_5,
-                              backgroundColor: color_5,
-                            })),
-                            ...data.growth_by_specific_type.idc.datasets.map(item => ({
-                              ...item,
-                              label: 'IDC',
-                              borderColor: color_6,
-                              backgroundColor: color_6,
-                            })),
-                            ...data.growth_by_specific_type.ilc.datasets.map(item => ({
-                              ...item,
-                              label: 'ILC',
-                              borderColor: color_7,
-                              backgroundColor: color_7,
-                            })),
-                            ...data.growth_by_specific_type.in_situ.datasets.map(item => ({
-                              ...item,
-                              label: 'In SITU',
-                              borderColor: color_8,
-                              backgroundColor: color_8,
-                            })),
-                          ],
-                        }}
+                        data={data.growth_by_specific_type}
                         options={{
                           legend: {
                             position: 'bottom'
@@ -118,7 +97,7 @@ class SpecificStates extends React.Component {
                     </div>
                   </div>
                 )}
-                {data.breast_cancer_by_grade_and_size_age_30_40 && (
+                {data.breast_cancer_by_grade_and_size && (
                   <div className="col-xl-5ths col-lg-4 col-md-6">
                     <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0" data-adjust="height">
                       <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
@@ -126,8 +105,8 @@ class SpecificStates extends React.Component {
                       </h4>
                       <Bar
                         data={{
-                          ...data.breast_cancer_by_grade_and_size_age_30_40.grade,
-                          datasets: data.breast_cancer_by_grade_and_size_age_30_40.grade.datasets.map(item => ({
+                          ...data.breast_cancer_by_grade_and_size.grade,
+                          datasets: data.breast_cancer_by_grade_and_size.grade.datasets.map(item => ({
                             ...item,
                             backgroundColor: color_1,
                             hoverBackgroundColor: color_3,
@@ -146,8 +125,8 @@ class SpecificStates extends React.Component {
                       />
                       <Bar
                         data={{
-                          ...data.breast_cancer_by_grade_and_size_age_30_40.size,
-                          datasets: data.breast_cancer_by_grade_and_size_age_30_40.size.datasets.map(item => ({
+                          ...data.breast_cancer_by_grade_and_size.size,
+                          datasets: data.breast_cancer_by_grade_and_size.size.datasets.map(item => ({
                             ...item,
                             backgroundColor: color_1,
                             hoverBackgroundColor: color_3,
@@ -166,17 +145,17 @@ class SpecificStates extends React.Component {
                     </div>
                   </div>
                 )}
-                {data.distribution_of_stage_of_cancer_for_ages_30_40 && (
+                {data.distribution_of_stage_of_cancer && (
                   <div className="col-xl-5ths col-lg-4 col-md-6">
                     <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
                          data-adjust="height">
                       <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>Distribution of Stage of Cancer for Women Ages 30-40</strong>
+                        <strong>Distribution of Stage of Cancer for Women {ageRange}</strong>
                       </h4>
                       <Pie
                         data={{
-                          ...data.distribution_of_stage_of_cancer_for_ages_30_40,
-                          datasets: data.distribution_of_stage_of_cancer_for_ages_30_40.datasets.map(item => ({
+                          ...data.distribution_of_stage_of_cancer,
+                          datasets: data.distribution_of_stage_of_cancer.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           }))
@@ -198,7 +177,7 @@ class SpecificStates extends React.Component {
                   <div className="col-xl-5ths col-lg-4 col-md-6">
                     <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0" data-adjust="height">
                       <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>% of Women with Cancer by Race</strong>
+                        <strong>% of Women with Cancer by Race {ageRange}</strong>
                       </h4>
                       <p className="no-margin pad-left-1 small"><strong>Overall</strong></p>
                       <Pie
@@ -256,16 +235,16 @@ class SpecificStates extends React.Component {
             </div>
             <div className="custom-panel custom-panel-condensed light-gray-bg push-bot-0">
               <div className="row row-condensed">
-                {data.surgery_decisions_within_ages_30_40 && (
+                {data.surgery_decisions && (
                   <div className="col-xl-5ths col-lg-4 col-md-6">
                     <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0" data-adjust="height">
                       <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>Surgery Decisions for Women Within Ages 30-40</strong>
+                        <strong>Surgery Decisions for Women Within {ageRange}</strong>
                       </h4>
                       <Pie
                         data={{
-                          ...data.surgery_decisions_within_ages_30_40,
-                          datasets: data.surgery_decisions_within_ages_30_40.datasets.map(item => ({
+                          ...data.surgery_decisions,
+                          datasets: data.surgery_decisions.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           }))
@@ -288,18 +267,18 @@ class SpecificStates extends React.Component {
                     </div>
                   </div>
                 )}
-                {data.chemotherapy_for_ages_30_40 && (
+                {data.chemotherapy && (
                   <div className="col-xl-5ths col-lg-4 col-md-6">
                     <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
                          data-adjust="height">
                       <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>Chemotherapy for Women Ages 30-40</strong>
+                        <strong>Chemotherapy for Women {ageRange}</strong>
                       </h4>
                       <p className="no-margin pad-left-1 small"><strong>Overall</strong></p>
                       <Pie
                         data={{
-                          ...data.chemotherapy_for_ages_30_40.overall,
-                          datasets: data.chemotherapy_for_ages_30_40.overall.datasets.map(item => ({
+                          ...data.chemotherapy.overall,
+                          datasets: data.chemotherapy.overall.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           }))
@@ -323,8 +302,8 @@ class SpecificStates extends React.Component {
                       </p>
                       <Pie
                         data={{
-                          ...data.chemotherapy_for_ages_30_40.breakout_by_stage,
-                          datasets: data.chemotherapy_for_ages_30_40.breakout_by_stage.datasets.map(item => ({
+                          ...data.chemotherapy.breakout_by_stage,
+                          datasets: data.chemotherapy.breakout_by_stage.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           }))
@@ -347,18 +326,18 @@ class SpecificStates extends React.Component {
                     </div>
                   </div>
                 )}
-                {data.radiation_for_ages_30_40 && (
+                {data.radiation && (
                   <div className="col-xl-5ths col-lg-4 col-md-6">
                     <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
                          data-adjust="height">
                       <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>Radiation for Women Ages 30-40</strong>
+                        <strong>Radiation for Women {ageRange}</strong>
                       </h4>
                       <p className="no-margin pad-left-1 small"><strong>Overall</strong></p>
                       <Pie
                         data={{
-                          ...data.radiation_for_ages_30_40.overall,
-                          datasets: data.radiation_for_ages_30_40.overall.datasets.map(item => ({
+                          ...data.radiation.overall,
+                          datasets: data.radiation.overall.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           }))
@@ -382,8 +361,8 @@ class SpecificStates extends React.Component {
                       </p>
                       <Pie
                         data={{
-                          ...data.radiation_for_ages_30_40.breakout_by_stage,
-                          datasets: data.radiation_for_ages_30_40.breakout_by_stage.datasets.map(item => ({
+                          ...data.radiation.breakout_by_stage,
+                          datasets: data.radiation.breakout_by_stage.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           }))
@@ -406,17 +385,17 @@ class SpecificStates extends React.Component {
                     </div>
                   </div>
                 )}
-                {data.survival_months_within_ages_30_40 && (
+                {data.survival_months && (
                   <div className="col-xl-5ths col-lg-4 col-md-6">
                     <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
                          data-adjust="height">
                       <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>Survival Months for Women Ages 30-40</strong>
+                        <strong>Survival Months for Women {ageRange}</strong>
                       </h4>
                       <HorizontalBar
                         data={{
-                          ...data.survival_months_within_ages_30_40,
-                          datasets: data.survival_months_within_ages_30_40.datasets.map(item => ({
+                          ...data.survival_months,
+                          datasets: data.survival_months.datasets.map(item => ({
                             ...item,
                             backgroundColor: color_1,
                             hoverBackgroundColor: color_3,
@@ -467,12 +446,12 @@ class SpecificStates extends React.Component {
                         height={75}
                       />
                       <p className="push-bot-0 push-top-3 pad-left-1 small">
-                        <strong>Ages<br/>30-40</strong>
+                        <strong>{ageRange}</strong>
                       </p>
                       <Pie
                         data={{
-                          ...data.cause_of_death.cause_of_death_within_ages_30_40,
-                          datasets: data.cause_of_death.cause_of_death_within_ages_30_40.datasets.map(item => ({
+                          ...data.cause_of_death.by_ages,
+                          datasets: data.cause_of_death.by_ages.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                           }))
