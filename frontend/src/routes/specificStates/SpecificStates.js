@@ -101,7 +101,7 @@ class SpecificStates extends React.Component {
                   <div className="col-xl-5ths col-lg-4 col-md-6">
                     <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0" data-adjust="height">
                       <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>Breast Cancer by Grade and Size (Age 30-40)</strong>
+                        <strong>Breast Cancer by Grade and Size {ageRange}</strong>
                       </h4>
                       <Bar
                         data={{
