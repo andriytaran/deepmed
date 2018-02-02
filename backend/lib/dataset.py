@@ -819,7 +819,7 @@ def breakout_by_stage(input_json):
     Returns breakeout by stage discarding the nulls and "Blank" fields
     example filter:
     input_json = '{"age": 48, ' \
-                 '"chemo": "yes", ' \
+                 '"chemo": "Yes", ' \
                  '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
                  '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
     :param input_json: json
@@ -843,8 +843,6 @@ def breakout_by_stage(input_json):
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
         {"$sort": SON([("percentage", -1)])}]))
-
-    # pprint(result)
 
     data = {"II": 0, "III": 0, "0": 0}
     for i, label in enumerate(list(map(lambda x: x['_id']['breast-adjusted-ajcc-6th-stage-1988'], result))):
@@ -1200,7 +1198,7 @@ if __name__ == '__main__':
     # pprint(cause_of_death_within_ages_30_40())
 
     input_json = '{"age": 48, ' \
-                 '"chemo": "yes", ' \
+                 '"chemo": "Yes", ' \
                  '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
                  '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
-    pprint(breakout_by_stage(diag_request))
+    pprint(breakout_by_stage(input_json))
