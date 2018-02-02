@@ -318,25 +318,40 @@ def breast_cancer_by_grade(age):
 
 
 def percent_of_women_with_cancer_by_race_overall():
-    result = json.loads(aggregate([{"$group": {
-        "_id": "$race-recode-w-b-ai-api",
-        "count": {"$sum": 1},
-    }},
-        {"$project": {
-            "count": 1,
-            "percentage": {"$multiply": [{"$divide": [100, 1546698]}, "$count"]}
-        }},
-        {"$sort": SON([("_id", -1)])}]))
-
-    return {
-        'labels': list(map(lambda x: x['_id'], result)),
-        'datasets': [{
-            'data': list(map(lambda x: x['percentage'], result)),
-            'label': "Diagnosed",
-            'borderColor': '#48ccf5',
-            'fill': False
-        }]
-    }
+    diag_request = '{"sex": "Female"}'
+    return percent_race_with_cancer_by_age(diag_request)
+    # result = json.loads(aggregate([{"$group": {
+    #     "_id": "$race-recode-w-b-ai-api",
+    #     "count": {"$sum": 1},
+    # }},
+    #     {"$project": {
+    #         "count": 1,
+    #         "percentage": {"$multiply": [{"$divide": [100, 1546698]}, "$count"]}
+    #     }},
+    #     {"$sort": SON([("_id", -1)])}]))
+    #
+    # pprint(result)
+    #
+    # data = {'Other': 0}
+    # for i, label in enumerate(list(map(lambda x: x['_id'], result))):
+    #     if label == 'White':
+    #         data['White'] = result[i]['percentage']
+    #     elif label == 'Black':
+    #         data['Black'] = result[i]['percentage']
+    #     elif label == 'Asian or Pacific Islander':
+    #         data['Asian or Pacific Islander'] = result[i]['percentage']
+    #     elif label in ['Unknown', 'American Indian/Alaska Native'] or label is None:
+    #         data['Other'] += result[i]['percentage']
+    #
+    # return {
+    #     'labels': list(map(lambda x: x, data.keys())),
+    #     'datasets': [{
+    #         'data': list(map(lambda x: x, data.values())),
+    #         'label': "Diagnosed",
+    #         'borderColor': '#48ccf5',
+    #         'fill': False
+    #     }]
+    # }
 
 
 def cause_of_death_overall():
@@ -1216,3 +1231,4 @@ if __name__ == '__main__':
 
     diag_request = '{"sex": "Female"}'
     pprint(percent_race_with_cancer_by_age(diag_request))
+    pprint(percent_of_women_with_cancer_by_race_overall())
