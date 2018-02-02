@@ -55,7 +55,7 @@
 
     - role: gunicorn
       become: true
-      tags: [project]
+      tags: [gunicorn]
 
     - role: geerlingguy.nodejs
       become: true

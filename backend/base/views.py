@@ -28,6 +28,14 @@ class ReportDataView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         diagnosis_data = serializer.validated_data
 
+        breakout_by_stage_d = breakout_by_stage(
+            json.dumps({"age": diagnosis_data.get('age'),
+                        "breast-adjusted-ajcc-6th-stage-1988": {
+                            "$in": ["I", "IIA", "IIB", "IIIA",
+                                    "IIIB", "IIIC", "IIINOS", "IV",
+                                    0]
+                        }}))
+
         data = {
             'woman_age_30_40_annualy_diagnosed': woman_age_30_40_annualy_diagnosed(),
             'growth_by_specific_type': {
@@ -52,10 +60,12 @@ class ReportDataView(GenericAPIView):
             },
             'surgery_decisions_within_ages_30_40': surgery_decisions_within_ages_30_40(),
             'chemotherapy_for_ages_30_40': {
-                'overall': chemotherapy_for_ages_30_40()
+                'overall': chemotherapy_for_ages_30_40(),
+                'breakout_by_stage': breakout_by_stage_d
             },
             'radiation_for_ages_30_40': {
-                'overall': radiation_for_ages_30_40()
+                'overall': radiation_for_ages_30_40(),
+                'breakout_by_stage': breakout_by_stage_d
             },
             'survival_months_within_ages_30_40': survival_months_within_ages_30_40(),
             'cause_of_death': {

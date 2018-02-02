@@ -43,7 +43,7 @@ nginx_sites:
         proxy_pass http://{{ deploy_project_name }}_webapp;
       }
 
-  project_api:
+  project_django:
     - listen {{ api_port }}
     - charset utf-8
     - server_tokens off
@@ -64,8 +64,8 @@ nginx_sites:
       }
 
     - location / {
-          proxy_read_timeout 300;
-          proxy_connect_timeout 300;
+          proxy_read_timeout 180s;
+          proxy_connect_timeout 75s;
           proxy_redirect off;
           proxy_set_header X-Forwarded-Proto $scheme;
           proxy_set_header Host $http_host;
@@ -73,4 +73,4 @@ nginx_sites:
           proxy_pass http://{{ deploy_project_name }}_api;
       }
 
-nginx_remove_sites: [default, deepmed]
+nginx_remove_sites: [default]

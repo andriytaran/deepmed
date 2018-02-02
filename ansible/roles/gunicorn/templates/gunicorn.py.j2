@@ -6,3 +6,5 @@ errorlog = '{{ gunicorn_errorlog }}'
 reload = {% if gunicorn_reload %}True{% else %}False{% endif %}
 
 loglevel = '{{ gunicorn_loglevel }}'
+
+timeout = 300
