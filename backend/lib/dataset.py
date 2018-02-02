@@ -182,6 +182,8 @@ def create_filter(input_data, operator='$and'):
         filter_list.append({"race-recode-w-b-ai-api": input_data["ethnicity"]})
     if 'type' in input_data.keys():
         filter_list.append({"type": input_data["type"]})
+    if 'breast-adjusted-ajcc-6th-stage-1988' in input_data.keys():
+        filter_list.append({"breast-adjusted-ajcc-6th-stage-1988": input_data["breast-adjusted-ajcc-6th-stage-1988"]})
 
     return {operator: filter_list}
 
@@ -921,7 +923,7 @@ def breakout_by_stage2(input_json):
 
 
 def breakout_by_stage(input_json):
-    filters = create_filter(input_json)
+    filters = create_filter(input_json, "$and")
     result = json.loads(aggregate([
         {"$match": filters},
         {"$group": {
@@ -940,6 +942,8 @@ def breakout_by_stage(input_json):
         }},
         {"$sort": SON([("percentage", -1)])}]))
 
+    pprint(result)
+
     data = {"II": 0, "III": 0, "0": 0}
     for i, label in enumerate(list(map(lambda x: x['_id']['breast-adjusted-ajcc-6th-stage-1988'], result))):
         if label == 'I':
@@ -950,7 +954,7 @@ def breakout_by_stage(input_json):
             data['III'] += result[i]['percentage']
         elif label == 'IV':
             data['IV'] = result[i]['percentage']
-        elif label in [0, 'UNK Stage', 'Blank(s)'] or label is None:
+        elif label in [0] or label is None:
             data['0'] += result[i]['percentage']
 
     return {
@@ -986,5 +990,8 @@ if __name__ == '__main__':
     type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
 
     # pprint(growth_by_specific_type(type_others, "$or"))
+    diag_request_age_for_stage = '{"age": 48, ' \
+                                 '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
+                                 '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
 
-    pprint(breakout_by_stage(diag_request_age_only))
+    pprint(breakout_by_stage(diag_request_age_for_stage))
