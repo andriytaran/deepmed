@@ -168,6 +168,8 @@ def create_filter(input_data, operator='$and'):
     if 'tumor_size_in_mm' in input_data.keys():
         t_size_cm = get_t_size_cm(input_data['tumor_size_in_mm'])
         filter_list.append({"t-size-cm": t_size_cm})
+    if 'sex' in input_data.keys():
+        filter_list.append({"sex": input_data["sex"]})
     if 'tumor_grade' in input_data.keys():
         filter_list.append({"grade": input_data["tumor_grade"]})
     if 'er_status' in input_data.keys():
@@ -598,10 +600,17 @@ def cause_of_death_overall():
         }},
         {"$sort": SON([("count", -1)])}]))
 
+    data = {"Breast": 0, "Other": 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['cod-to-site-recode'], result))):
+        if label == 'Breast':
+            data['Breast'] = result[i]['percentage']
+        else:
+            data['Other'] += result[i]['percentage']
+
     return {
-        'labels': list(map(lambda x: x['_id']['cod-to-site-recode'], result)),
+        'labels': list(map(lambda x: x, data.keys())),
         'datasets': [{
-            'data': list(map(lambda x: x['percentage'], result)),
+            'data': list(map(lambda x: x, data.values())),
             'label': "Diagnosed",
             'borderColor': '#48ccf5',
             'fill': False
@@ -632,10 +641,17 @@ def cause_of_death_within_ages_30_40():
         }},
         {"$sort": SON([("count", -1)])}]))
 
+    data = {"Breast": 0, "Other": 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['cod-to-site-recode'], result))):
+        if label == 'Breast':
+            data['Breast'] = result[i]['percentage']
+        else:
+            data['Other'] += result[i]['percentage']
+
     return {
-        'labels': list(map(lambda x: x['_id']['cod-to-site-recode'], result)),
+        'labels': list(map(lambda x: x, data.keys())),
         'datasets': [{
-            'data': list(map(lambda x: x['percentage'], result)),
+            'data': list(map(lambda x: x, data.values())),
             'label': "Diagnosed",
             'borderColor': '#48ccf5',
             'fill': False
@@ -942,7 +958,7 @@ def breakout_by_stage(input_json):
         }},
         {"$sort": SON([("percentage", -1)])}]))
 
-    pprint(result)
+    # pprint(result)
 
     data = {"II": 0, "III": 0, "0": 0}
     for i, label in enumerate(list(map(lambda x: x['_id']['breast-adjusted-ajcc-6th-stage-1988'], result))):
@@ -970,6 +986,7 @@ def breakout_by_stage(input_json):
 
 if __name__ == '__main__':
     diag_request = '{"age": 48, ' \
+                   '"sex": "Female", ' \
                    '"tumor_grade": 1, ' \
                    '"er_status": "+", ' \
                    '"pr_status": "+", ' \
@@ -994,4 +1011,6 @@ if __name__ == '__main__':
                                  '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
                                  '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
 
-    pprint(breakout_by_stage(diag_request_age_for_stage))
+    # pprint(breakout_by_stage(diag_request_age_for_stage))
+    pprint(cause_of_death_within_ages_30_40())
+    pprint(breakout_by_stage(diag_request))
