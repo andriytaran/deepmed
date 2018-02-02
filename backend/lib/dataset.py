@@ -755,6 +755,54 @@ def survival_months(input_json):
     }
 
 
+def breast_cancer_by_size(input_json):
+    """
+    sample request input_json = '{"age": 48, ' \
+                   '"sex": "Female", ' \
+                   '"tumor_grade": 1, ' \
+                   '"er_status": "+", ' \
+                   '"pr_status": "+", ' \
+                   '"tumor_size_in_mm": 22, ' \
+                   '"num_pos_nodes": 0, ' \
+                   '"her2_status": "+", ' \
+                   '"ethnicity": "White"}'
+    :param input_json:
+    :return: json
+    """
+    filters = create_filter(input_json)
+    j = aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "$t-size-cm",
+            "count": {"$sum": 1}}},
+        {"$sort": SON([("_id", 1)])}])
+    l = json.loads(j)
+    res = {'< 1cm': 0}
+    for i in l:
+        if i['_id'] == '<1cm':
+            res['< 1cm'] += i['count']
+        elif i['_id'] == '<2cm':
+            res['< 2cm'] = i['count']
+        elif i['_id'] == '<3cm':
+            res['< 3cm'] = i['count']
+        elif i['_id'] == '>3cm':
+            res['> 3cm'] = i['count']
+        elif i['_id'] == '>5cm':
+            res['> 5cm'] = i['count']
+        elif i['_id'] == 'Micro':
+            res['< 1cm'] += i['count']
+
+    return {
+        'labels': list(map(lambda x: x, res.keys())),
+        'datasets': [{
+            'data': list(map(lambda x: x, res.values())),
+            'label': "Diagnosed",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
 def radiation(input_json):
     """
     sample request input_json = '{"age": 48, ' \
@@ -1129,7 +1177,7 @@ if __name__ == '__main__':
 
     diag_request_age_only = '{"age": 48}'
 
-    pprint(surgery_decisions(diag_request_age_only))
+    pprint(breast_cancer_by_size(diag_request_age_only))
 
     # d = diagnosis(diag_request, limit=25)
     # pprint(d)
