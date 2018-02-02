@@ -7,14 +7,12 @@ from rest_framework.response import Response
 
 from base.serializers import DiagnosisSerializer
 from lib.dataset import breast_cancer_by_grade, diagnosis, \
-    growth_by_specific_type, percent_race_with_cancer_by_age, breakout_by_stage
-from lib.dataset import woman_age_30_40_annualy_diagnosed, \
-    breast_cancer_by_size_age_30_40, \
-    distribution_of_stage_of_cancer_for_ages_30_40, \
-    percent_of_women_with_cancer_by_race, surgery_decisions_within_ages_30_40, \
-    chemotherapy_for_ages_30_40, radiation_for_ages_30_40, \
-    survival_months_within_ages_30_40, cause_of_death_overall, \
-    cause_of_death_within_ages_30_40
+    growth_by_specific_type, percent_race_with_cancer_by_age, \
+    breakout_by_stage, woman_annualy_diagnosed, breast_cancer_by_size, \
+    percent_of_women_with_cancer_by_race_overall, \
+    distribution_of_stage_of_cancer, surgery_decisions, survival_months, \
+    chemotherapy, radiation, cause_of_death
+from lib.dataset import cause_of_death_overall
 
 
 class ReportDataView(GenericAPIView):
@@ -22,59 +20,67 @@ class ReportDataView(GenericAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-
         serializer = self.get_serializer(data=request.query_params)
 
         serializer.is_valid(raise_exception=True)
         diagnosis_data = serializer.validated_data
-
-        breakout_by_stage_d = breakout_by_stage(
-            json.dumps({"age": diagnosis_data.get('age'),
-                        "breast-adjusted-ajcc-6th-stage-1988": {
-                            "$in": ["I", "IIA", "IIB", "IIIA",
-                                    "IIIB", "IIIC", "IIINOS", "IV",
-                                    0]
-                        }}))
+        input_json = json.dumps(diagnosis_data, ensure_ascii=False)
 
         data = {
-            'woman_age_30_40_annualy_diagnosed': woman_age_30_40_annualy_diagnosed(),
-            'growth_by_specific_type': {
-                'other': growth_by_specific_type(
-                    '{"type": "Other", "type": "Mixed", "type": "IBC"}',
-                    "$or"),
-                'idc': growth_by_specific_type('{"type": "IDC"}', "$or"),
-                'ilc': growth_by_specific_type('{"type": "ILC"}', "$or"),
-                'in_situ': growth_by_specific_type('{"type": "In-Situ"}',
-                                                   "$or")
-            },
-            'breast_cancer_by_grade_and_size_age_30_40': {
+            'woman_annualy_diagnosed': woman_annualy_diagnosed(input_json),
+            'growth_by_specific_type': growth_by_specific_type(
+                '{"type": "Other", "type": "IDC",'
+                ' "type": "ILC", "type": "In Situ"}',
+                operator="$and"),
+            'breast_cancer_by_grade_and_size': {
                 'grade': breast_cancer_by_grade(diagnosis_data.get('age')),
-                'size': breast_cancer_by_size_age_30_40()
+                'size': breast_cancer_by_size(input_json)
             },
-            'distribution_of_stage_of_cancer_for_ages_30_40': distribution_of_stage_of_cancer_for_ages_30_40(),
+            'distribution_of_stage_of_cancer': distribution_of_stage_of_cancer(
+                input_json),
             'percent_of_women_with_cancer_by_race': {
-                'overall': percent_of_women_with_cancer_by_race(),
-                'by_age': percent_race_with_cancer_by_age(
-                    json.dumps(diagnosis_data,
-                               ensure_ascii=False)),
+                'overall': percent_of_women_with_cancer_by_race_overall()
             },
-            'surgery_decisions_within_ages_30_40': surgery_decisions_within_ages_30_40(),
-            'chemotherapy_for_ages_30_40': {
-                'overall': chemotherapy_for_ages_30_40(),
-                'breakout_by_stage': breakout_by_stage_d
+            'surgery_decisions': surgery_decisions(input_json),
+            'chemotherapy': {
+                'overall': chemotherapy(input_json),  # ????
             },
-            'radiation_for_ages_30_40': {
-                'overall': radiation_for_ages_30_40(),
-                'breakout_by_stage': breakout_by_stage_d
+            'radiation': {
+                'overall': radiation(input_json),  # ????
             },
-            'survival_months_within_ages_30_40': survival_months_within_ages_30_40(),
+            'survival_months': survival_months(input_json),
             'cause_of_death': {
                 'cause_of_death_overall': cause_of_death_overall(),
-                'cause_of_death_within_ages_30_40': cause_of_death_within_ages_30_40()
+                'by_ages': cause_of_death(input_json)
             },
-            'similar_diagnosis': diagnosis(json.dumps(diagnosis_data,
-                                                      ensure_ascii=False))
+            'similar_diagnosis': diagnosis(input_json)
         }
+
         [o.pop('_id') for o in data['similar_diagnosis']]
+
+        data['chemotherapy']['breakout_by_stage'] = breakout_by_stage(
+            json.dumps({
+                'age': diagnosis_data.get('age'),
+                'chemo': 'Yes',
+                "breast-adjusted-ajcc-6th-stage-1988": {
+                    "$in": ["I", "IIA", "IIB", "IIIA",
+                            "IIIB", "IIIC", "IIINOS", "IV",
+                            0]
+                }}, ensure_ascii=False))
+
+        data['radiation']['breakout_by_stage'] = breakout_by_stage(json.dumps({
+            'age': diagnosis_data.get('age'),
+            'radiation': 'Yes',
+            "breast-adjusted-ajcc-6th-stage-1988": {
+                "$in": ["I", "IIA", "IIB", "IIIA",
+                        "IIIB", "IIIC", "IIINOS", "IV",
+                        0]
+            }}, ensure_ascii=False))
+
+        data['percent_of_women_with_cancer_by_race'][
+            'by_age'] = percent_race_with_cancer_by_age(json.dumps({
+            'age': diagnosis_data.get('age'),
+            'sex': 'Female'
+        }, ensure_ascii=False))
 
         return Response(data, status=status.HTTP_200_OK)
