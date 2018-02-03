@@ -1205,6 +1205,7 @@ if __name__ == '__main__':
                    '"ethnicity": "White"}'
 
     diag_request_age_only = '{"age": 48}'
+    age_only = '{"age": 55}'
 
     # pprint(breast_cancer_by_size(diag_request_age_only))
 
@@ -1227,8 +1228,18 @@ if __name__ == '__main__':
                  '"chemo": "Yes", ' \
                  '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
                  '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
-    pprint(breakout_by_stage(input_json))
 
-    diag_request = '{"sex": "Female"}'
-    pprint(percent_race_with_cancer_by_age(diag_request))
-    pprint(percent_of_women_with_cancer_by_race_overall())
+
+    # pprint(breakout_by_stage(input_json))
+
+    # diag_request = '{"sex": "Female"}'
+    # pprint(percent_race_with_cancer_by_age(diag_request))
+    # pprint(percent_of_women_with_cancer_by_race_overall())
+    # pprint(woman_annualy_diagnosed(age_only))
+
+    def wrapper(full_request):
+        only_age = {"age": json.loads(full_request)['age']}
+        return woman_annualy_diagnosed(json.dumps(only_age))
+
+
+    pprint(wrapper(diag_request))
