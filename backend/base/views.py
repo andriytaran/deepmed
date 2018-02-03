@@ -27,7 +27,8 @@ class ReportDataView(GenericAPIView):
         input_json = json.dumps(diagnosis_data, ensure_ascii=False)
 
         data = {
-            'woman_annualy_diagnosed': woman_annualy_diagnosed(input_json),
+            'woman_annualy_diagnosed': woman_annualy_diagnosed(
+                json.dumps({'age': diagnosis_data.get('age')})),
             'growth_by_specific_type': growth_by_specific_type(
                 '{"type": "Other", "type": "IDC",'
                 ' "type": "ILC", "type": "In Situ"}',
