@@ -13,6 +13,7 @@ const getAgeRangeLabel = (age) => {
 
 class SpecificStates extends React.Component {
   render() {
+    const white = '#fff'
     const color_1 = '#48ccf5'
     const color_2 = '#88d0d1'
     const color_3 = '#47cfd1'
@@ -110,6 +111,7 @@ class SpecificStates extends React.Component {
                             ...item,
                             backgroundColor: color_1,
                             hoverBackgroundColor: color_3,
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -130,6 +132,7 @@ class SpecificStates extends React.Component {
                             ...item,
                             backgroundColor: color_1,
                             hoverBackgroundColor: color_3,
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -158,6 +161,7 @@ class SpecificStates extends React.Component {
                           datasets: data.distribution_of_stage_of_cancer.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -186,6 +190,7 @@ class SpecificStates extends React.Component {
                           datasets: data.percent_of_women_with_cancer_by_race.overall.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -211,6 +216,7 @@ class SpecificStates extends React.Component {
                           datasets: data.percent_of_women_with_cancer_by_race.by_age.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -247,6 +253,7 @@ class SpecificStates extends React.Component {
                           datasets: data.surgery_decisions.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -281,6 +288,7 @@ class SpecificStates extends React.Component {
                           datasets: data.chemotherapy.overall.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -306,6 +314,7 @@ class SpecificStates extends React.Component {
                           datasets: data.chemotherapy.breakout_by_stage.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -340,6 +349,7 @@ class SpecificStates extends React.Component {
                           datasets: data.radiation.overall.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -365,6 +375,7 @@ class SpecificStates extends React.Component {
                           datasets: data.radiation.breakout_by_stage.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
                           }))
                         }}
                         options={{
