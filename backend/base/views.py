@@ -25,35 +25,35 @@ class ReportDataView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         diagnosis_data = serializer.validated_data
         input_json = json.dumps(diagnosis_data, ensure_ascii=False)
+        age = json.dumps({'age': diagnosis_data.get('age')})
 
         data = {
-            'woman_annualy_diagnosed': woman_annualy_diagnosed(
-                json.dumps({'age': diagnosis_data.get('age')})),
+            'woman_annualy_diagnosed': woman_annualy_diagnosed(age),
             'growth_by_specific_type': growth_by_specific_type(
                 '{"type": "Other", "type": "IDC",'
                 ' "type": "ILC", "type": "In Situ"}',
                 operator="$or"),
             'breast_cancer_by_grade_and_size': {
                 'grade': breast_cancer_by_grade(diagnosis_data.get('age')),
-                'size': breast_cancer_by_size(input_json)
+                'size': breast_cancer_by_size(age)
             },
             'distribution_of_stage_of_cancer': distribution_of_stage_of_cancer(
-                input_json),
+                age),
             'percent_of_women_with_cancer_by_race': {
                 'overall': percent_of_women_with_cancer_by_race_overall()
             },
-            'surgery_decisions': surgery_decisions(input_json),
+            'surgery_decisions': surgery_decisions(age),
             'chemotherapy': {
-                'overall': chemotherapy(input_json),  # ????
+                'overall': chemotherapy(age),  # ????
             },
             'radiation': {
-                'overall': radiation(input_json),  # ????
+                'overall': radiation(age),  # ????
             },
-            'survival_months': survival_months(input_json),
-            'cause_of_death': {
-                'cause_of_death_overall': cause_of_death_overall(),
-                'by_ages': cause_of_death(input_json)
-            },
+            # 'survival_months': survival_months(input_json),
+            # 'cause_of_death': {
+            #     'cause_of_death_overall': cause_of_death_overall(),
+            #     'by_ages': cause_of_death(input_json)
+            # },
             'similar_diagnosis': diagnosis(input_json)
         }
 
