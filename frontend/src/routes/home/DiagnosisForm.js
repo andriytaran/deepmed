@@ -28,8 +28,9 @@ class SelectField extends React.Component {
 
 class DiagnosisForm extends React.Component {
   render() {
+    let errors
     const {onSubmit} = this.props
-    const {getFieldDecorator} = this.props.form
+    const {getFieldDecorator, getFieldError} = this.props.form
     return (
       <form onSubmit={onSubmit}>
         <div className="detailedDiagnosis text-left">
@@ -46,15 +47,22 @@ class DiagnosisForm extends React.Component {
             <div className="col-xs-6">
               <label>Age at Diagnosis</label>
               {getFieldDecorator('age', {
-                initialValue: ''
+                initialValue: '',
+                rules: [
+                  {required: true, message: 'This field is required.'}
+                ],
               })(
                 <TextField/>
               )}
+              {(errors = getFieldError('age')) ? errors.join(',') : null}
             </div>
             <div className="col-xs-6">
               <label>Tumor Size in mm</label>
               {getFieldDecorator('tumor_size_in_mm', {
-                initialValue: ''
+                initialValue: '',
+                rules: [
+                  {required: true, message: 'This field is required.'}
+                ],
               })(
                 <TextField/>
               )}
@@ -64,7 +72,11 @@ class DiagnosisForm extends React.Component {
             <div className="col-xs-6">
               <label>Tumor Grade</label>
               {getFieldDecorator('tumor_grade', {
-                initialValue: ''              })(
+                initialValue: '',
+                rules: [
+                  {required: true, message: 'This field is required.'}
+                ],
+              })(
                 <SelectField>
                   <option value='' disabled hidden>Select...</option>
                   <option value={1}>1 (Low)</option>
@@ -77,7 +89,10 @@ class DiagnosisForm extends React.Component {
               <label><span className="hidden-xs">Number</span><span
                 className="visible-xs display-inline">#</span> of Positive Nodes</label>
               {getFieldDecorator('num_pos_nodes', {
-                initialValue: ''
+                initialValue: '',
+                rules: [
+                  {required: true, message: 'This field is required.'}
+                ],
               })(
                 <SelectField>
                   <option value='' disabled hidden>Select...</option>
@@ -92,7 +107,10 @@ class DiagnosisForm extends React.Component {
             <div className="col-xs-6">
               <label>ER Status</label>
               {getFieldDecorator('er_status', {
-                initialValue: ''
+                initialValue: '',
+                rules: [
+                  {required: true, message: 'This field is required.'}
+                ],
               })(
                 <SelectField>
                   <option value='' disabled hidden>Select...</option>
@@ -104,7 +122,10 @@ class DiagnosisForm extends React.Component {
             <div className="col-xs-6">
               <label>HER2 Status</label>
               {getFieldDecorator('her2_status', {
-                initialValue: ''
+                initialValue: '',
+                rules: [
+                  {required: true, message: 'This field is required.'}
+                ],
               })(
                 <SelectField>
                   <option value='' disabled hidden>Select...</option>
@@ -118,7 +139,10 @@ class DiagnosisForm extends React.Component {
             <div className="col-xs-6">
               <label>PR Status</label>
               {getFieldDecorator('pr_status', {
-                initialValue: ''
+                initialValue: '',
+                rules: [
+                  {required: true, message: 'This field is required.'}
+                ],
               })(
                 <SelectField>
                   <option value='' disabled hidden>Select...</option>
@@ -130,7 +154,10 @@ class DiagnosisForm extends React.Component {
             <div className="col-xs-6">
               <label>Ethnicity (optional)</label>
               {getFieldDecorator('ethnicity', {
-                initialValue: ''
+                initialValue: '',
+                rules: [
+                  {required: true, message: 'This field is required.'}
+                ],
               })(
                 <SelectField>
                   <option value='' disabled hidden>Select...</option>

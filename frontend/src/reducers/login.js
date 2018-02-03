@@ -1,7 +1,7 @@
 import createReducer, {RESET_STORE} from '../createReducer'
 import {setCookie} from 'redux-cookie'
 import {getUser} from './user'
-import {WEEK} from '../constants'
+import {PREV_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE, TOKEN_COOKIE, WEEK} from '../constants'
 
 // ------------------------------------
 // Constants
@@ -39,9 +39,9 @@ export const login = (values, redirectUrl) => (dispatch, getState, {fetch}) => {
 
 export const loginSuccess = (auth, redirectUrl = '/') => (dispatch, getState, {history}) => {
   dispatch({type: LOGIN_SUCCESS})
-  dispatch(setCookie('token', auth.access_token, {expires: auth.expires_in / (60 * 60 * 24)}))
-  dispatch(setCookie('refresh_token', auth.refresh_token, {expires: WEEK}))
-  dispatch(setCookie('prev_token', auth.access_token, {expires: WEEK}))
+  dispatch(setCookie(TOKEN_COOKIE, auth.access_token, {expires: auth.expires_in / (60 * 60 * 24)}))
+  dispatch(setCookie(REFRESH_TOKEN_COOKIE, auth.refresh_token, {expires: WEEK}))
+  dispatch(setCookie(PREV_TOKEN_COOKIE, auth.access_token, {expires: WEEK}))
   dispatch(getUser())
   history.push(redirectUrl)
 }

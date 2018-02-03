@@ -12,12 +12,17 @@ import {
   RESOURCES_ROUTE,
   SIMILAR_DIAGNOSES_ROUTE,
   SPECIFIC_STATES_ROUTE
-} from '../../routes/index'
+} from '../../routes'
 import cn from 'classnames'
+
+/*
+* TODO All html comes from another developer - refactor all html and css in project - do it in React way
+* */
 
 class AppLayout extends React.Component {
   state = {
-    spinnerCounter: 0
+    spinnerCounter: 0,
+    sidebarOpened: false,
   }
 
   componentDidMount() {
@@ -38,8 +43,13 @@ class AppLayout extends React.Component {
     clearInterval(this.timer)
   }
 
+  toggleSidebarOpened = () => {
+    this.setState({sidebarOpened: !this.state.sidebarOpened})
+  }
+
   render() {
     const {currentRouteName, loading} = this.props
+    const {sidebarOpened} = this.state
     const spinnerTexts = [
       'DeepMed is analyzing  over 1M patient records and treatments',
       'DeepMed is processing patient records as far as back as 1973',
@@ -62,8 +72,8 @@ class AppLayout extends React.Component {
           </div>
           :
           <div>
-            <nav className="sidebar active">
-              <div className="sidebar-header" style={{height: 56}}>
+            <nav className={cn('sidebar active', sidebarOpened && 'sidebar-mobile-active')}>
+              <div className="sidebar-header" style={{height: 65}}>
                 <Link to={HOME_ROUTE}>
                   <img src={require('../../static/deep-med-logo-new.png')} width="136" height="auto" alt="presentation"
                        style={{top: '15.5px'}}/>
@@ -113,11 +123,14 @@ class AppLayout extends React.Component {
                 </li>
               </ul>
             </nav>
-            <div className="main-wrapper">
-              <nav className="navbar navbar-fixed-top">
-                <a className="mobile-sidebar-trigger-container">
-                  <i className="icon-open-menu fa fa-bars"/>
-                  <i className="icon-close-menu fa fa-times"/>
+            <div className="main-wrapper" style={sidebarOpened ? {left: 210} : {}}>
+              <nav className={cn('navbar navbar-fixed-top', sidebarOpened && 'has-sidebar-open')}>
+                <a className="mobile-sidebar-trigger-container" onClick={this.toggleSidebarOpened}>
+                  {sidebarOpened ? (
+                    <i className="icon-close-menu fa fa-times"/>
+                  ) : (
+                    <i className="icon-open-menu fa fa-bars"/>
+                  )}
                 </a>
                 <div className="display-table display-table-100">
                   <div className="display-table-cell pad-right-2">

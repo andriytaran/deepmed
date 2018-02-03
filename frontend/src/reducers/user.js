@@ -1,6 +1,7 @@
 import createReducer, {RESET_STORE} from '../createReducer'
 import {getCookie, removeCookie} from 'redux-cookie'
 import {loginSuccess} from './login'
+import {PREV_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE, TOKEN_COOKIE} from '../constants'
 
 // ------------------------------------
 // Constants
@@ -21,9 +22,9 @@ export const REFRESH_TOKEN_FAILURE = 'User.REFRESH_TOKEN_FAILURE'
 // Actions
 // ------------------------------------
 export const expireToken = () => (dispatch, getState) => {
-  dispatch(removeCookie('token', {path: ''}))
-  dispatch(removeCookie('refresh_token', {path: ''}))
-  dispatch(removeCookie('prev_token', {path: ''}))
+  dispatch(removeCookie(TOKEN_COOKIE, {path: ''}))
+  dispatch(removeCookie(REFRESH_TOKEN_COOKIE, {path: ''}))
+  dispatch(removeCookie(PREV_TOKEN_COOKIE, {path: ''}))
 }
 
 export const logoutSuccess = () => (dispatch) => {
@@ -65,9 +66,9 @@ export const refreshToken = (token, refresh_token) => (dispatch, getState, {fetc
 export const getToken = () => (dispatch, getState, {history}) => {
   const {currentPathname} = getState().global
   const {loggedIn} = getState().user
-  const token = dispatch(getCookie('token'))
-  const refresh_token = dispatch(getCookie('refresh_token'))
-  const prevToken = dispatch(getCookie('prev_token'))
+  const token = dispatch(getCookie(TOKEN_COOKIE))
+  const refresh_token = dispatch(getCookie(REFRESH_TOKEN_COOKIE))
+  const prevToken = dispatch(getCookie(PREV_TOKEN_COOKIE))
   if (!token) {
     if (prevToken && refresh_token) {
       dispatch(refreshToken(prevToken, refresh_token))
