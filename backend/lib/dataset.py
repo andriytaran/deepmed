@@ -563,16 +563,16 @@ def breast_cancer_by_size(input_json):
             "count": {"$sum": 1}}},
         {"$sort": SON([("_id", 1)])}])
     l = json.loads(j)
-    res = {'< 1cm': 0}
+    res = {'< 1cm': 0, '< 2cm': 0, '< 5cm': 0}
     for i in l:
         if i['_id'] == '<1cm':
             res['< 1cm'] += i['count']
         elif i['_id'] == '<2cm':
             res['< 2cm'] = i['count']
         elif i['_id'] == '<3cm':
-            res['< 3cm'] = i['count']
+            res['< 5cm'] += i['count']
         elif i['_id'] == '>3cm':
-            res['> 3cm'] = i['count']
+            res['< 5cm'] += i['count']
         elif i['_id'] == '>5cm':
             res['> 5cm'] = i['count']
         elif i['_id'] == 'Micro':
@@ -690,6 +690,8 @@ def surgery_decisions(input_json):
     :return: json
     """
     filters = create_filter(input_json)
+    excluded = ['None']
+    filters['$and'].append({"surgery": {"$nin": excluded}})
     result = json.loads(aggregate([
         {"$match": filters},
         {"$group": {
@@ -708,10 +710,27 @@ def surgery_decisions(input_json):
         }},
         {"$sort": SON([("percentage", -1)])}]))
 
+    data = OrderedDict()
+    data['Lumpectomy'] = 0
+    data['Mastectomy'] = 0
+    data['Other'] = 0
+    for i, label in enumerate(list(map(lambda x: x['_id']['surgery'], result))):
+        if label in ['Lumpectomy', 'Partial Mastectomy']:
+            data['Lumpectomy'] += result[i]['percentage']
+        elif label in ['Single Mastectomy', 'Mastectomy ']:
+            data['Mastectomy'] += result[i]['percentage']
+        elif label == 'Simple Mastectomy':
+            data['Simple Mastectomy'] = result[i]['percentage']
+        elif label == 'Bi-Lateral Mastectomy':
+            data['Bi-Lateral Mastectomy'] = result[i]['percentage']
+        elif label in ['Other', 'Surgery']:
+            data['Other'] += result[i]['percentage']
+    data.move_to_end("Other")
+
     return {
-        'labels': list(map(lambda x: x['_id']['surgery'], result)),
+        'labels': list(map(lambda x: x, data.keys())),
         'datasets': [{
-            'data': list(map(lambda x: x['percentage'], result)),
+            'data': list(map(lambda x: x, data.values())),
             'label': "Diagnosed",
             'borderColor': '#48ccf5',
             'fill': False
@@ -1250,7 +1269,7 @@ if __name__ == '__main__':
     type_ilc = '{"type": "ILC"}'
     type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
 
-    pprint(growth_by_specific_type(type_others, "$or"))
+    # pprint(growth_by_specific_type(type_others, "$or"))
     diag_request_age_for_stage = '{"age": 48, ' \
                                  '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
                                  '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
@@ -1283,4 +1302,5 @@ if __name__ == '__main__':
     # type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
     # pprint(growth_by_specific_type(age_only, "$and"))
 
-    pprint(diagnosis(diag_request, limit=10))
+    # pprint(diagnosis(diag_request, limit=10))
+    pprint(breast_cancer_by_size(age_only))
