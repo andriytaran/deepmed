@@ -48,21 +48,14 @@ class DiagnosisForm extends React.Component {
               <label>Age at Diagnosis</label>
               {getFieldDecorator('age', {
                 initialValue: '',
-                rules: [
-                  {required: true, message: 'This field is required.'}
-                ],
               })(
                 <TextField/>
               )}
-              {(errors = getFieldError('age')) ? errors.join(',') : null}
             </div>
             <div className="col-xs-6">
               <label>Tumor Size in mm</label>
               {getFieldDecorator('tumor_size_in_mm', {
                 initialValue: '',
-                rules: [
-                  {required: true, message: 'This field is required.'}
-                ],
               })(
                 <TextField/>
               )}
@@ -73,9 +66,6 @@ class DiagnosisForm extends React.Component {
               <label>Tumor Grade</label>
               {getFieldDecorator('tumor_grade', {
                 initialValue: '',
-                rules: [
-                  {required: true, message: 'This field is required.'}
-                ],
               })(
                 <SelectField>
                   <option value='' disabled hidden>Select...</option>
@@ -90,9 +80,6 @@ class DiagnosisForm extends React.Component {
                 className="visible-xs display-inline">#</span> of Positive Nodes</label>
               {getFieldDecorator('num_pos_nodes', {
                 initialValue: '',
-                rules: [
-                  {required: true, message: 'This field is required.'}
-                ],
               })(
                 <SelectField>
                   <option value='' disabled hidden>Select...</option>
@@ -108,9 +95,6 @@ class DiagnosisForm extends React.Component {
               <label>ER Status</label>
               {getFieldDecorator('er_status', {
                 initialValue: '',
-                rules: [
-                  {required: true, message: 'This field is required.'}
-                ],
               })(
                 <SelectField>
                   <option value='' disabled hidden>Select...</option>
@@ -123,9 +107,6 @@ class DiagnosisForm extends React.Component {
               <label>HER2 Status</label>
               {getFieldDecorator('her2_status', {
                 initialValue: '',
-                rules: [
-                  {required: true, message: 'This field is required.'}
-                ],
               })(
                 <SelectField>
                   <option value='' disabled hidden>Select...</option>
@@ -140,9 +121,6 @@ class DiagnosisForm extends React.Component {
               <label>PR Status</label>
               {getFieldDecorator('pr_status', {
                 initialValue: '',
-                rules: [
-                  {required: true, message: 'This field is required.'}
-                ],
               })(
                 <SelectField>
                   <option value='' disabled hidden>Select...</option>
@@ -155,9 +133,6 @@ class DiagnosisForm extends React.Component {
               <label>Ethnicity (optional)</label>
               {getFieldDecorator('ethnicity', {
                 initialValue: '',
-                rules: [
-                  {required: true, message: 'This field is required.'}
-                ],
               })(
                 <SelectField>
                   <option value='' disabled hidden>Select...</option>
