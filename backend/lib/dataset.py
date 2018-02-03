@@ -325,7 +325,7 @@ def breast_cancer_by_grade(age):
             "_id": "$grade",
             "count": {"$sum": 1}}},
         {"$sort": SON([("_id", 1)])}])
-    res = {'Grade 3': 0}
+    res = {'Grade 1': 0, 'Grade 2': 0, 'Grade 3': 0}
     for i in json.loads(j):
         if isinstance(i['_id'], float) and i['_id'] == 1.0:
             res['Grade 1'] = i['count']
@@ -1326,5 +1326,6 @@ if __name__ == '__main__':
     # type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
     # pprint(growth_by_specific_type(age_only, "$and"))
 
-    pprint(diagnosis(diag_request, limit=10))
+    # pprint(diagnosis(diag_request, limit=10))
     # pprint(distribution_of_stage_of_cancer(age_only))
+    pprint(breast_cancer_by_grade(33))
