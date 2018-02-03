@@ -196,28 +196,57 @@ def create_filter(input_data, operator='$and'):
 
 
 def diagnosis(input_json, limit=0):
-    input_data = json.loads(input_json)
-    filter_list = []
-    if 'age' in input_data.keys():
-        age = get_age_group(input_data['age'])
-        filter_list.append(("age-recode-with-1-year-olds", age))
-    if 'tumor_size_in_mm' in input_data.keys():
-        t_size_cm = get_t_size_cm(input_data['tumor_size_in_mm'])
-        filter_list.append(("t-size-cm", t_size_cm))
-    if 'tumor_grade' in input_data.keys():
-        filter_list.append(("grade", input_data["tumor_grade"]))
-    if 'er_status' in input_data.keys():
-        filter_list.append(("er-status-recode-breast-cancer-1990", input_data["er_status"]))
-    if 'pr_status' in input_data.keys():
-        filter_list.append(("pr-status-recode-breast-cancer-1990", input_data["pr_status"]))
-    if 'her2_status' in input_data.keys():
-        filter_list.append(("derived-her2-recode-2010", input_data["her2_status"]))
-    if 'num_pos_nodes' in input_data.keys():
-        filter_list.append(("regional-nodes-positive-1988", input_data["num_pos_nodes"]))
-    if 'ethnicity' in input_data.keys():
-        filter_list.append(("race-recode-w-b-ai-api", input_data["ethnicity"]))
+    def get_race(race):
+        if race == "White":
+            return "Caucasian"
+        else:
+            return race
 
-    return find(SON(filter_list), limit=limit)
+    filters = create_filter(input_json)
+    # input_data = json.loads(input_json)
+    # filter_list = []
+    # if 'age' in input_data.keys():
+    #     age = get_age_group(input_data['age'])
+    #     filter_list.append(("age-recode-with-1-year-olds", age))
+    # if 'tumor_size_in_mm' in input_data.keys():
+    #     t_size_cm = get_t_size_cm(input_data['tumor_size_in_mm'])
+    #     filter_list.append(("t-size-cm", t_size_cm))
+    # if 'tumor_grade' in input_data.keys():
+    #     filter_list.append(("grade", input_data["tumor_grade"]))
+    # if 'er_status' in input_data.keys():
+    #     filter_list.append(("er-status-recode-breast-cancer-1990", input_data["er_status"]))
+    # if 'pr_status' in input_data.keys():
+    #     filter_list.append(("pr-status-recode-breast-cancer-1990", input_data["pr_status"]))
+    # if 'her2_status' in input_data.keys():
+    #     filter_list.append(("derived-her2-recode-2010", input_data["her2_status"]))
+    # if 'num_pos_nodes' in input_data.keys():
+    #     filter_list.append(("regional-nodes-positive-1988", input_data["num_pos_nodes"]))
+    # if 'ethnicity' in input_data.keys():
+    #     filter_list.append(("race-recode-w-b-ai-api", input_data["ethnicity"]))
+
+    dataset = find(filters, limit=limit)
+    results = []
+    for item in dataset:
+        d = {'age': item['age-recode-with-single-ages-and-85'],
+             'ethnicity': get_race(item['race-recode-w-b-ai-api']),
+             'size': item['t-size-cm'],
+             'grade': item['grade'],
+             'er': item['er-status-recode-breast-cancer-1990'],
+             'pr': item['pr-status-recode-breast-cancer-1990'],
+             'her2': item['derived-her2-recode-2010'],
+             'lat': item['laterality'],
+             'site': item['site-recode-icd-o-3-who-2008'],
+             'type': item['type'],
+             'stage': item['breast-adjusted-ajcc-6th-stage-1988'],
+             '+nodes': item['regional-nodes-positive-1988-1'],
+             'surgery': item['surgery'],
+             'chemo': item['chemo'],
+             'radiation': item['radiation'],
+             'year dx': item['year-of-diagnosis'],
+             'survival mos.': item['survival-months'],
+             'cod': item['cod-to-site-recode']}
+        results.append(d)
+    return results
 
 
 def breast_cancer_at_a_glance():
@@ -534,16 +563,16 @@ def breast_cancer_by_size(input_json):
             "count": {"$sum": 1}}},
         {"$sort": SON([("_id", 1)])}])
     l = json.loads(j)
-    res = {'< 1cm': 0}
+    res = {'< 1cm': 0, '< 2cm': 0, '< 5cm': 0}
     for i in l:
         if i['_id'] == '<1cm':
             res['< 1cm'] += i['count']
         elif i['_id'] == '<2cm':
             res['< 2cm'] = i['count']
         elif i['_id'] == '<3cm':
-            res['< 3cm'] = i['count']
+            res['< 5cm'] += i['count']
         elif i['_id'] == '>3cm':
-            res['> 3cm'] = i['count']
+            res['< 5cm'] += i['count']
         elif i['_id'] == '>5cm':
             res['> 5cm'] = i['count']
         elif i['_id'] == 'Micro':
@@ -661,6 +690,8 @@ def surgery_decisions(input_json):
     :return: json
     """
     filters = create_filter(input_json)
+    excluded = ['None']
+    filters['$and'].append({"surgery": {"$nin": excluded}})
     result = json.loads(aggregate([
         {"$match": filters},
         {"$group": {
@@ -679,10 +710,27 @@ def surgery_decisions(input_json):
         }},
         {"$sort": SON([("percentage", -1)])}]))
 
+    data = OrderedDict()
+    data['Lumpectomy'] = 0
+    data['Mastectomy'] = 0
+    data['Other'] = 0
+    for i, label in enumerate(list(map(lambda x: x['_id']['surgery'], result))):
+        if label in ['Lumpectomy', 'Partial Mastectomy']:
+            data['Lumpectomy'] += result[i]['percentage']
+        elif label in ['Single Mastectomy', 'Mastectomy ']:
+            data['Mastectomy'] += result[i]['percentage']
+        elif label == 'Simple Mastectomy':
+            data['Simple Mastectomy'] = result[i]['percentage']
+        elif label == 'Bi-Lateral Mastectomy':
+            data['Bi-Lateral Mastectomy'] = result[i]['percentage']
+        elif label in ['Other', 'Surgery']:
+            data['Other'] += result[i]['percentage']
+    data.move_to_end("Other")
+
     return {
-        'labels': list(map(lambda x: x['_id']['surgery'], result)),
+        'labels': list(map(lambda x: x, data.keys())),
         'datasets': [{
-            'data': list(map(lambda x: x['percentage'], result)),
+            'data': list(map(lambda x: x, data.values())),
             'label': "Diagnosed",
             'borderColor': '#48ccf5',
             'fill': False
@@ -706,18 +754,42 @@ def distribution_of_stage_of_cancer(input_json):
     """
     filters = create_filter(input_json)
     stages = ['I', 'IIA', 'IIB', 'IIIA', 'IIIB', 'IIIC', 'IV']
-    filters['$and'].append({"1998-stage": {"$in": stages}})
+    filters['$and'].append({"breast-adjusted-ajcc-6th-stage-1988": {"$in": stages}})
     result = json.loads(aggregate([
         {"$match": filters},
         {"$group": {
-            "_id": "$1998-stage",
-            "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}]))
+            "_id": "",
+            "total": {"$sum": 1},
+            "subset": {"$push": "$breast-adjusted-ajcc-6th-stage-1988"}
+        }},
+        {"$unwind": "$subset"},
+        {"$group": {
+            "_id": {"breast-adjusted-ajcc-6th-stage-1988": "$subset", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}]))
+
+    data = {"I": 0, "II": 0, "III": 0, "IV": 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['breast-adjusted-ajcc-6th-stage-1988'], result))):
+        if label == 'I':
+            data['I'] = result[i]['percentage']
+        elif label in ['IIA', 'IIB']:
+            data['II'] += result[i]['percentage']
+        elif label in ['IIIA', 'IIIB', 'IIIC', 'IIINOS']:
+            data['III'] += result[i]['percentage']
+        elif label == 'IV':
+            data['IV'] = result[i]['percentage']
+        elif label in [0] or label is None:
+            data['0'] += result[i]['percentage']
 
     return {
-        'labels': list(map(lambda x: x['_id'], result)),
+        'labels': list(map(lambda x: x, data.keys())),
         'datasets': [{
-            'data': list(map(lambda x: x['count'], result)),
+            'data': list(map(lambda x: x, data.values())),
             'label': "Diagnosed",
             'borderColor': '#48ccf5',
             'fill': False
@@ -1254,4 +1326,5 @@ if __name__ == '__main__':
     # type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
     # pprint(growth_by_specific_type(age_only, "$and"))
 
-    pprint(breakout_by_stage(age_only))
+    pprint(diagnosis(diag_request, limit=10))
+    # pprint(distribution_of_stage_of_cancer(age_only))
