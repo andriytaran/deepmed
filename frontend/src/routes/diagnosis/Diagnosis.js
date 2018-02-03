@@ -118,37 +118,45 @@ class Diagnosis extends React.Component {
                   <div className='col-sm-2 col-xs-6 push-top-2-xs'>
                     <label className='visible-xs'>Stage</label>
                     <select className='form-control text-input-sm'>
-                      <option>Optional</option>
-                      <option>Stage 1</option>
-                      <option>Stage 2</option>
-                      <option>Stage 3</option>
+                      <option value='' disabled hidden>Optional...</option>
+                      <option value='0'>0</option>
+                      <option value='I'>I</option>
+                      <option value='II'>II</option>
+                      <option value='III'>III</option>
+                      <option value='IV'>IV</option>
                     </select>
                   </div>
                   <div className='col-sm-2 col-xs-6 push-top-2-xs'>
-                    <label className='visible-xs'>Breadth</label>
+                    <label className='visible-xs'>Site</label>
                     <select className='form-control text-input-sm'>
-                      <option>Optional</option>
-                      <option>Option a</option>
-                      <option>Option b</option>
-                      <option>Option c</option>
+                      <option value='' disabled hidden>Optional...</option>
+                      <option value='nipple'>Nipple</option>
+                      <option value='center'>Center</option>
+                      <option value='upper_inner'>Upper-Inner</option>
+                      <option value='lower_inner'>Lower-Inner</option>
+                      <option value='upper_outer'>Upper-Outer</option>
+                      <option value='lower_outer'>Lower-Outer</option>
+                      <option value='axillary'>Axillary</option>
+                      <option value='overlapping'>Overlapping</option>
+                      <option value='nos'>NoS</option>
                     </select>
                   </div>
                   <div className='col-sm-2 col-xs-6 push-top-2-xs'>
                     <label className='visible-xs'>Laterailty</label>
                     <select className='form-control text-input-sm'>
-                      <option>Optional</option>
-                      <option>Option a</option>
-                      <option>Option b</option>
-                      <option>Option c</option>
+                      <option value='' disabled hidden>Optional...</option>
+                      <option value='left'>Left</option>
+                      <option value='right'>Right</option>
                     </select>
                   </div>
                   <div className='col-sm-2 col-xs-6 push-top-2-xs'>
                     <label className='visible-xs'>Type</label>
                     <select className='form-control text-input-sm'>
-                      <option>Optional</option>
-                      <option>Option a</option>
-                      <option>Option b</option>
-                      <option>Option c</option>
+                      <option value='' disabled hidden>Optional...</option>
+                      <option value='idc'>IDC</option>
+                      <option value='ilc'>ILC</option>
+                      <option value='dcis'>DCIS</option>
+                      <option value='other'>Other</option>
                     </select>
                   </div>
                 </div>

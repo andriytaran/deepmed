@@ -174,7 +174,7 @@ class DiagnosisForm extends React.Component {
           </div>
           <div className="row push-top-2">
             <div className="col-xs-6">
-              <label>Stage</label>
+              <label>Site</label>
               {getFieldDecorator('site', {
                 initialValue: '',
               })(
@@ -193,7 +193,7 @@ class DiagnosisForm extends React.Component {
               )}
             </div>
             <div className="col-xs-6">
-              <label>Laterality</label>
+              <label>Type</label>
               {getFieldDecorator('type', {
                 initialValue: '',
               })(
