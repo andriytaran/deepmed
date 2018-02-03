@@ -1,4 +1,5 @@
 import json
+from collections import OrderedDict
 from pymongo import MongoClient
 from bson.son import SON
 from pprint import pprint
@@ -704,6 +705,8 @@ def distribution_of_stage_of_cancer(input_json):
     :return:
     """
     filters = create_filter(input_json)
+    stages = ['I', 'IIA', 'IIB', 'IIIA', 'IIIB', 'IIIC', 'IV']
+    filters['$and'].append({"1998-stage": {"$in": stages}})
     result = json.loads(aggregate([
         {"$match": filters},
         {"$group": {
@@ -818,7 +821,8 @@ def percent_race_with_cancer_by_age(input_json):
         }},
         {"$sort": SON([("percentage", -1)])}]))
 
-    data = {'Other': 0}
+    data = OrderedDict()
+    data['Other'] = 0
     for i, label in enumerate(list(map(lambda x: x['_id']['race-recode-w-b-ai-api'], result))):
         if label == 'White':
             data['White'] = result[i]['percentage']
@@ -828,6 +832,7 @@ def percent_race_with_cancer_by_age(input_json):
             data['Asian or Pacific Islander'] = result[i]['percentage']
         elif label in ['Unknown', 'American Indian/Alaska Native'] or label is None:
             data['Other'] += result[i]['percentage']
+    data.move_to_end("Other")
 
     return {
         'labels': list(map(lambda x: x, data.keys())),
@@ -870,7 +875,7 @@ def breakout_by_stage(input_json):
         }},
         {"$sort": SON([("percentage", -1)])}]))
 
-    data = {"II": 0, "III": 0, "0": 0}
+    data = {"0": 0, "I": 0, "II": 0, "III": 0, "IV": 0}
     for i, label in enumerate(list(map(lambda x: x['_id']['breast-adjusted-ajcc-6th-stage-1988'], result))):
         if label == 'I':
             data['I'] = result[i]['percentage']
@@ -1237,9 +1242,16 @@ if __name__ == '__main__':
     # pprint(percent_of_women_with_cancer_by_race_overall())
     # pprint(woman_annualy_diagnosed(age_only))
 
-    def wrapper(full_request):
-        only_age = {"age": json.loads(full_request)['age']}
-        return woman_annualy_diagnosed(json.dumps(only_age))
+    # def wrapper(full_request):
+    #     only_age = {"age": json.loads(full_request)['age']}
+    #     return woman_annualy_diagnosed(json.dumps(only_age))
+    #
+    #
+    # pprint(wrapper(diag_request))
 
+    # pprint(growth_by_specific_type('{"type": "Other", "type": "IDC", "type": "ILC", "type": "In Situ"}', operator="$and"))
 
-    pprint(wrapper(diag_request))
+    # type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
+    # pprint(growth_by_specific_type(age_only, "$and"))
+
+    pprint(breakout_by_stage(age_only))
