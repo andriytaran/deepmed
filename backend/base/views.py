@@ -30,8 +30,8 @@ class ReportDataView(GenericAPIView):
         data = {
             'woman_annualy_diagnosed': woman_annualy_diagnosed(age),
             'growth_by_specific_type': growth_by_specific_type(
-                '{"type": "Other", "type": "IDC",'
-                ' "type": "ILC", "type": "In Situ"}',
+                '{"type": "Other", "type": "Mixed",'
+                ' "type": "IBC", "type": "Mixed "}',
                 operator="$or"),
             'breast_cancer_by_grade_and_size': {
                 'grade': breast_cancer_by_grade(diagnosis_data.get('age')),
