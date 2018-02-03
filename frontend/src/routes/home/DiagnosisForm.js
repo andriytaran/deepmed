@@ -144,6 +144,70 @@ class DiagnosisForm extends React.Component {
             </div>
           </div>
           <div className="row push-top-2">
+            <div className="col-xs-6">
+              <label>Stage</label>
+              {getFieldDecorator('stage', {
+                initialValue: '',
+              })(
+                <SelectField>
+                  <option value='' disabled hidden>Select...</option>
+                  <option value='0'>0</option>
+                  <option value='I'>I</option>
+                  <option value='II'>II</option>
+                  <option value='III'>III</option>
+                  <option value='IV'>IV</option>
+                </SelectField>
+              )}
+            </div>
+            <div className="col-xs-6">
+              <label>Laterality</label>
+              {getFieldDecorator('laterality', {
+                initialValue: '',
+              })(
+                <SelectField>
+                  <option value='' disabled hidden>Select...</option>
+                  <option value='left'>Left</option>
+                  <option value='right'>Right</option>
+                </SelectField>
+              )}
+            </div>
+          </div>
+          <div className="row push-top-2">
+            <div className="col-xs-6">
+              <label>Stage</label>
+              {getFieldDecorator('site', {
+                initialValue: '',
+              })(
+                <SelectField>
+                  <option value='' disabled hidden>Select...</option>
+                  <option value='nipple'>Nipple</option>
+                  <option value='center'>Center</option>
+                  <option value='upper_inner'>Upper-Inner</option>
+                  <option value='lower_inner'>Lower-Inner</option>
+                  <option value='upper_outer'>Upper-Outer</option>
+                  <option value='lower_outer'>Lower-Outer</option>
+                  <option value='axillary'>Axillary</option>
+                  <option value='overlapping'>Overlapping</option>
+                  <option value='nos'>NoS</option>
+                </SelectField>
+              )}
+            </div>
+            <div className="col-xs-6">
+              <label>Laterality</label>
+              {getFieldDecorator('type', {
+                initialValue: '',
+              })(
+                <SelectField>
+                  <option value='' disabled hidden>Select...</option>
+                  <option value='idc'>IDC</option>
+                  <option value='ilc'>ILC</option>
+                  <option value='dcis'>DCIS</option>
+                  <option value='other'>Other</option>
+                </SelectField>
+              )}
+            </div>
+          </div>
+          <div className="row push-top-2">
             <div className="col-xs-12 text-center position-relative">
               <Button bsSize="large" bsStyle="primary" type="submit" className="btn-offset">
                 Analyze

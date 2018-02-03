@@ -84,4 +84,6 @@ class ReportDataView(GenericAPIView):
             'sex': 'Female'
         }, ensure_ascii=False))
 
+        data['test'] = input_json
+
         return Response(data, status=status.HTTP_200_OK)
