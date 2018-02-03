@@ -1298,7 +1298,7 @@ if __name__ == '__main__':
                                  '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
                                  '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
 
-    pprint(breakout_by_stage(diag_request_age_for_stage))
+    # pprint(breakout_by_stage(diag_request_age_for_stage))
     # pprint(cause_of_death_within_ages_30_40())
 
     input_json = '{"age": 48, ' \
@@ -1326,5 +1326,5 @@ if __name__ == '__main__':
     # type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
     # pprint(growth_by_specific_type(age_only, "$and"))
 
-    # pprint(diagnosis(diag_request, limit=10))
-    pprint(distribution_of_stage_of_cancer(age_only))
+    pprint(diagnosis(diag_request, limit=10))
+    # pprint(distribution_of_stage_of_cancer(age_only))
