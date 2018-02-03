@@ -41,6 +41,7 @@ export const loginSuccess = (auth, redirectUrl = '/') => (dispatch, getState, {h
   dispatch({type: LOGIN_SUCCESS})
   dispatch(setCookie('token', auth.access_token, {expires: auth.expires_in}))
   dispatch(setCookie('refresh_token', auth.refresh_token, {expires: WEEK}))
+  dispatch(setCookie('prev_token', auth.access_token, {expires: WEEK}))
   dispatch(getUser())
   history.push(redirectUrl)
 }
