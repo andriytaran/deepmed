@@ -35,8 +35,11 @@ class UsersViewSet(ActionPermissionClassesMixin,
 
     @list_route(methods=['GET'])
     def me(self, request, *args, **kwargs):
-        return Response(self.get_serializer(request.user).data,
-                        status=status.HTTP_200_OK)
+        try:
+            data = self.get_serializer(request.user).data
+            return Response(data, status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     @list_route(methods=['GET'], url_path='confirm-email')
     def confirm_email(self, request, *args, **kwargs):

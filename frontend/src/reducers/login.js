@@ -39,7 +39,7 @@ export const login = (values, redirectUrl) => (dispatch, getState, {fetch}) => {
 
 export const loginSuccess = (auth, redirectUrl = '/') => (dispatch, getState, {history}) => {
   dispatch({type: LOGIN_SUCCESS})
-  dispatch(setCookie('token', auth.access_token, {expires: auth.expires_in}))
+  dispatch(setCookie('token', auth.access_token, {expires: auth.expires_in / (60 * 60 * 24)}))
   dispatch(setCookie('refresh_token', auth.refresh_token, {expires: WEEK}))
   dispatch(setCookie('prev_token', auth.access_token, {expires: WEEK}))
   dispatch(getUser())
