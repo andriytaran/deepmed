@@ -1332,5 +1332,6 @@ if __name__ == '__main__':
     # pprint(growth_by_specific_type(age_only, "$and"))
 
     # pprint(diagnosis(diag_request, limit=10))
-    pprint(surgery_decisions(age_only))
+    age_and_race = '{"age": 48, "ethnicity":"White"}'
+    pprint(distribution_of_stage_of_cancer(age_and_race))
     # pprint(breast_cancer_by_grade(diag_request))
