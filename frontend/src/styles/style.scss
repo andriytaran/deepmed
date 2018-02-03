@@ -1,5 +1,6 @@
 @import "font-awesome/variables";
 @import "font-awesome/path";
+@import "lib/animate";
 
 :global {
   @import "variables/variables";
@@ -16,7 +17,6 @@
   /*@import "lib/prettyCheckable";*/
   @import "lib/bootstrap.scss";
   @import "lib/bootstrap-select";
-  @import "lib/animate";
 
   /*--------------------------------------------------------------
   # Bourbon

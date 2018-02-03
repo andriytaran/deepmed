@@ -3,12 +3,14 @@ import NationalStates from './NationalStates'
 import {AppLayout} from '../../components'
 import {setCurrentRouteName} from '../../reducers/global'
 
+const title = 'National Breast Cancer Statistics'
+
 async function action({store, route}) {
   store.dispatch(setCurrentRouteName(route.name))
 
   return {
-    title: 'National States',
-    component: <AppLayout><NationalStates/></AppLayout>,
+    title,
+    component: <AppLayout title={title}><NationalStates/></AppLayout>,
   }
 }
 
