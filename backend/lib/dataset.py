@@ -196,28 +196,57 @@ def create_filter(input_data, operator='$and'):
 
 
 def diagnosis(input_json, limit=0):
-    input_data = json.loads(input_json)
-    filter_list = []
-    if 'age' in input_data.keys():
-        age = get_age_group(input_data['age'])
-        filter_list.append(("age-recode-with-1-year-olds", age))
-    if 'tumor_size_in_mm' in input_data.keys():
-        t_size_cm = get_t_size_cm(input_data['tumor_size_in_mm'])
-        filter_list.append(("t-size-cm", t_size_cm))
-    if 'tumor_grade' in input_data.keys():
-        filter_list.append(("grade", input_data["tumor_grade"]))
-    if 'er_status' in input_data.keys():
-        filter_list.append(("er-status-recode-breast-cancer-1990", input_data["er_status"]))
-    if 'pr_status' in input_data.keys():
-        filter_list.append(("pr-status-recode-breast-cancer-1990", input_data["pr_status"]))
-    if 'her2_status' in input_data.keys():
-        filter_list.append(("derived-her2-recode-2010", input_data["her2_status"]))
-    if 'num_pos_nodes' in input_data.keys():
-        filter_list.append(("regional-nodes-positive-1988", input_data["num_pos_nodes"]))
-    if 'ethnicity' in input_data.keys():
-        filter_list.append(("race-recode-w-b-ai-api", input_data["ethnicity"]))
+    def get_race(race):
+        if race == "White":
+            return "Caucasian"
+        else:
+            return race
 
-    return find(SON(filter_list), limit=limit)
+    filters = create_filter(input_json)
+    # input_data = json.loads(input_json)
+    # filter_list = []
+    # if 'age' in input_data.keys():
+    #     age = get_age_group(input_data['age'])
+    #     filter_list.append(("age-recode-with-1-year-olds", age))
+    # if 'tumor_size_in_mm' in input_data.keys():
+    #     t_size_cm = get_t_size_cm(input_data['tumor_size_in_mm'])
+    #     filter_list.append(("t-size-cm", t_size_cm))
+    # if 'tumor_grade' in input_data.keys():
+    #     filter_list.append(("grade", input_data["tumor_grade"]))
+    # if 'er_status' in input_data.keys():
+    #     filter_list.append(("er-status-recode-breast-cancer-1990", input_data["er_status"]))
+    # if 'pr_status' in input_data.keys():
+    #     filter_list.append(("pr-status-recode-breast-cancer-1990", input_data["pr_status"]))
+    # if 'her2_status' in input_data.keys():
+    #     filter_list.append(("derived-her2-recode-2010", input_data["her2_status"]))
+    # if 'num_pos_nodes' in input_data.keys():
+    #     filter_list.append(("regional-nodes-positive-1988", input_data["num_pos_nodes"]))
+    # if 'ethnicity' in input_data.keys():
+    #     filter_list.append(("race-recode-w-b-ai-api", input_data["ethnicity"]))
+
+    dataset = find(filters, limit=limit)
+    results = []
+    for item in dataset:
+        d = {'age': item['age-recode-with-single-ages-and-85'],
+             'ethnicity': get_race(item['race-recode-w-b-ai-api']),
+             'size': item['t-size-cm'],
+             'grade': item['grade'],
+             'er': item['er-status-recode-breast-cancer-1990'],
+             'pr': item['pr-status-recode-breast-cancer-1990'],
+             'her2': item['derived-her2-recode-2010'],
+             'lat': item['laterality'],
+             'site': item['site-recode-icd-o-3-who-2008'],
+             'type': item['type'],
+             'stage': item['breast-adjusted-ajcc-6th-stage-1988'],
+             '+nodes': item['regional-nodes-positive-1988-1'],
+             'surgery': item['surgery'],
+             'chemo': item['chemo'],
+             'radiation': item['radiation'],
+             'year dx': item['year-of-diagnosis'],
+             'survival mos.': item['survival-months'],
+             'cod': item['cod-to-site-recode']}
+        results.append(d)
+    return results
 
 
 def breast_cancer_at_a_glance():
@@ -1221,7 +1250,7 @@ if __name__ == '__main__':
     type_ilc = '{"type": "ILC"}'
     type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
 
-    # pprint(growth_by_specific_type(type_others, "$or"))
+    pprint(growth_by_specific_type(type_others, "$or"))
     diag_request_age_for_stage = '{"age": 48, ' \
                                  '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
                                  '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
@@ -1254,4 +1283,4 @@ if __name__ == '__main__':
     # type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
     # pprint(growth_by_specific_type(age_only, "$and"))
 
-    pprint(breakout_by_stage(age_only))
+    pprint(diagnosis(diag_request, limit=10))
