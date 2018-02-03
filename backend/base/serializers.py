@@ -14,3 +14,7 @@ class DiagnosisSerializer(serializers.Serializer):
     num_pos_nodes = serializers.IntegerField(required=True)
     ethnicity = serializers.CharField(required=False)
     sex = serializers.CharField(required=False, default='Female')
+    type = serializers.CharField(required=False)
+    site = serializers.CharField(required=False)
+    laterality = serializers.CharField(required=False)
+    stage = serializers.CharField(required=False)
