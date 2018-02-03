@@ -7,7 +7,7 @@ async function action({store, route}) {
   store.dispatch(setCurrentRouteName(route.name))
 
   return {
-    title: 'Home',
+    title: 'DeepMed',
     component: <AppLayout><Home/></AppLayout>,
   }
 }

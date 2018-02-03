@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './SpecificStates.scss'
-import {Bar, HorizontalBar, Line, Pie} from 'react-chartjs-2'
+import {Bar, Line, Pie} from 'react-chartjs-2'
 import {formatChartNumber} from '../../utils'
 
 // TODO
@@ -13,6 +13,7 @@ const getAgeRangeLabel = (age) => {
 
 class SpecificStates extends React.Component {
   render() {
+    const white = '#fff'
     const color_1 = '#48ccf5'
     const color_2 = '#88d0d1'
     const color_3 = '#47cfd1'
@@ -110,6 +111,7 @@ class SpecificStates extends React.Component {
                             ...item,
                             backgroundColor: color_1,
                             hoverBackgroundColor: color_3,
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -130,6 +132,7 @@ class SpecificStates extends React.Component {
                             ...item,
                             backgroundColor: color_1,
                             hoverBackgroundColor: color_3,
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -158,6 +161,7 @@ class SpecificStates extends React.Component {
                           datasets: data.distribution_of_stage_of_cancer.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -186,6 +190,7 @@ class SpecificStates extends React.Component {
                           datasets: data.percent_of_women_with_cancer_by_race.overall.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -211,6 +216,7 @@ class SpecificStates extends React.Component {
                           datasets: data.percent_of_women_with_cancer_by_race.by_age.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -247,6 +253,7 @@ class SpecificStates extends React.Component {
                           datasets: data.surgery_decisions.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -281,6 +288,7 @@ class SpecificStates extends React.Component {
                           datasets: data.chemotherapy.overall.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -306,6 +314,7 @@ class SpecificStates extends React.Component {
                           datasets: data.chemotherapy.breakout_by_stage.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -340,6 +349,7 @@ class SpecificStates extends React.Component {
                           datasets: data.radiation.overall.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -365,6 +375,7 @@ class SpecificStates extends React.Component {
                           datasets: data.radiation.breakout_by_stage.datasets.map(item => ({
                             ...item,
                             backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
                           }))
                         }}
                         options={{
@@ -386,88 +397,88 @@ class SpecificStates extends React.Component {
                   </div>
                 )}
                 {/*{data.survival_months && (*/}
-                  {/*<div className="col-xl-5ths col-lg-4 col-md-6">*/}
-                    {/*<div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"*/}
-                         {/*data-adjust="height">*/}
-                      {/*<h4 className="push-top-1 push-bot-2 text-center" data-type="title">*/}
-                        {/*<strong>Survival Months for Women {ageRange}</strong>*/}
-                      {/*</h4>*/}
-                      {/*<HorizontalBar*/}
-                        {/*data={{*/}
-                          {/*...data.survival_months,*/}
-                          {/*datasets: data.survival_months.datasets.map(item => ({*/}
-                            {/*...item,*/}
-                            {/*backgroundColor: color_1,*/}
-                            {/*hoverBackgroundColor: color_3,*/}
-                          {/*}))*/}
-                        {/*}}*/}
-                        {/*options={{*/}
-                          {/*legend: {*/}
-                            {/*display: false,*/}
-                            {/*position: 'bottom'*/}
-                          {/*},*/}
-                          {/*scales: {*/}
-                            {/*xAxes: [{*/}
-                              {/*ticks: {*/}
-                                {/*beginAtZero: true*/}
-                              {/*}*/}
-                            {/*}]*/}
-                          {/*}*/}
-                        {/*}}*/}
-                        {/*width={400}*/}
-                        {/*height={400}*/}
-                      {/*/>*/}
-                    {/*</div>*/}
-                  {/*</div>*/}
+                {/*<div className="col-xl-5ths col-lg-4 col-md-6">*/}
+                {/*<div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"*/}
+                {/*data-adjust="height">*/}
+                {/*<h4 className="push-top-1 push-bot-2 text-center" data-type="title">*/}
+                {/*<strong>Survival Months for Women {ageRange}</strong>*/}
+                {/*</h4>*/}
+                {/*<HorizontalBar*/}
+                {/*data={{*/}
+                {/*...data.survival_months,*/}
+                {/*datasets: data.survival_months.datasets.map(item => ({*/}
+                {/*...item,*/}
+                {/*backgroundColor: color_1,*/}
+                {/*hoverBackgroundColor: color_3,*/}
+                {/*}))*/}
+                {/*}}*/}
+                {/*options={{*/}
+                {/*legend: {*/}
+                {/*display: false,*/}
+                {/*position: 'bottom'*/}
+                {/*},*/}
+                {/*scales: {*/}
+                {/*xAxes: [{*/}
+                {/*ticks: {*/}
+                {/*beginAtZero: true*/}
+                {/*}*/}
+                {/*}]*/}
+                {/*}*/}
+                {/*}}*/}
+                {/*width={400}*/}
+                {/*height={400}*/}
+                {/*/>*/}
+                {/*</div>*/}
+                {/*</div>*/}
                 {/*)}*/}
                 {/*{data.cause_of_death && (*/}
-                  {/*<div className="col-xl-5ths col-lg-4 col-md-6">*/}
-                    {/*<div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"*/}
-                         {/*data-adjust="height">*/}
-                      {/*<h4 className="push-top-1 push-bot-2 text-center" data-type="title">*/}
-                        {/*<strong>Cause of Death</strong></h4>*/}
-                      {/*<p className="no-margin pad-left-1 small"><strong>Overall</strong></p>*/}
-                      {/*<Pie*/}
-                        {/*data={{*/}
-                          {/*...data.cause_of_death.cause_of_death_overall,*/}
-                          {/*datasets: data.cause_of_death.cause_of_death_overall.datasets.map(item => ({*/}
-                            {/*...item,*/}
-                            {/*backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],*/}
-                          {/*}))*/}
-                        {/*}}*/}
-                        {/*options={{*/}
-                          {/*legend: {*/}
-                            {/*display: true,*/}
-                            {/*position: 'right',*/}
-                            {/*labels: chartsLabelsOptions*/}
-                          {/*}*/}
-                        {/*}}*/}
-                        {/*width={200}*/}
-                        {/*height={75}*/}
-                      {/*/>*/}
-                      {/*<p className="push-bot-0 push-top-3 pad-left-1 small">*/}
-                        {/*<strong>{ageRange}</strong>*/}
-                      {/*</p>*/}
-                      {/*<Pie*/}
-                        {/*data={{*/}
-                          {/*...data.cause_of_death.by_ages,*/}
-                          {/*datasets: data.cause_of_death.by_ages.datasets.map(item => ({*/}
-                            {/*...item,*/}
-                            {/*backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],*/}
-                          {/*}))*/}
-                        {/*}}*/}
-                        {/*options={{*/}
-                          {/*legend: {*/}
-                            {/*display: true,*/}
-                            {/*position: 'right',*/}
-                            {/*labels: chartsLabelsOptions*/}
-                          {/*}*/}
-                        {/*}}*/}
-                        {/*width={200}*/}
-                        {/*height={75}*/}
-                      {/*/>*/}
-                    {/*</div>*/}
-                  {/*</div>*/}
+                {/*<div className="col-xl-5ths col-lg-4 col-md-6">*/}
+                {/*<div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"*/}
+                {/*data-adjust="height">*/}
+                {/*<h4 className="push-top-1 push-bot-2 text-center" data-type="title">*/}
+                {/*<strong>Cause of Death</strong></h4>*/}
+                {/*<p className="no-margin pad-left-1 small"><strong>Overall</strong></p>*/}
+                {/*<Pie*/}
+                {/*data={{*/}
+                {/*...data.cause_of_death.cause_of_death_overall,*/}
+                {/*datasets: data.cause_of_death.cause_of_death_overall.datasets.map(item => ({*/}
+                {/*...item,*/}
+                {/*backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],*/}
+                {/*}))*/}
+                {/*}}*/}
+                {/*options={{*/}
+                {/*legend: {*/}
+                {/*display: true,*/}
+                {/*position: 'right',*/}
+                {/*labels: chartsLabelsOptions*/}
+                {/*}*/}
+                {/*}}*/}
+                {/*width={200}*/}
+                {/*height={75}*/}
+                {/*/>*/}
+                {/*<p className="push-bot-0 push-top-3 pad-left-1 small">*/}
+                {/*<strong>{ageRange}</strong>*/}
+                {/*</p>*/}
+                {/*<Pie*/}
+                {/*data={{*/}
+                {/*...data.cause_of_death.by_ages,*/}
+                {/*datasets: data.cause_of_death.by_ages.datasets.map(item => ({*/}
+                {/*...item,*/}
+                {/*backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],*/}
+                {/*}))*/}
+                {/*}}*/}
+                {/*options={{*/}
+                {/*legend: {*/}
+                {/*display: true,*/}
+                {/*position: 'right',*/}
+                {/*labels: chartsLabelsOptions*/}
+                {/*}*/}
+                {/*}}*/}
+                {/*width={200}*/}
+                {/*height={75}*/}
+                {/*/>*/}
+                {/*</div>*/}
+                {/*</div>*/}
                 {/*)}*/}
               </div>
             </div>

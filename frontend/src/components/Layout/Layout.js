@@ -48,7 +48,7 @@ class AppLayout extends React.Component {
   }
 
   render() {
-    const {currentRouteName, loading} = this.props
+    const {currentRouteName, loading, title} = this.props
     const {sidebarOpened} = this.state
     const spinnerTexts = [
       'DeepMed is analyzing  over 1M patient records and treatments',
@@ -73,7 +73,7 @@ class AppLayout extends React.Component {
           :
           <div>
             <nav className={cn('sidebar active', sidebarOpened && 'sidebar-mobile-active')}>
-              <div className="sidebar-header" style={{height: 65}}>
+              <div className="sidebar-header" style={{height: 56}}>
                 <Link to={HOME_ROUTE}>
                   <img src={require('../../static/deep-med-logo-new.png')} width="136" height="auto" alt="presentation"
                        style={{top: '15.5px'}}/>
@@ -139,7 +139,7 @@ class AppLayout extends React.Component {
                         <img src={require('../../static/icon-logo.png')} width="50" height="auto"/>
                       </div>
                       <div className="display-table-cell hidden-sm">
-                        <h1 className="no-margin">#Page Location#</h1>
+                        <h1 className="no-margin">{title}</h1>
                       </div>
                     </div>
                   </div>
