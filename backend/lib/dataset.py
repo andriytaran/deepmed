@@ -310,36 +310,42 @@ def breast_cancer_by_state():
     }
 
 
-def breast_cancer_by_grade(age):
-    dec_age = age - age % 10
-    age_filter1 = "%s-%s years" % (dec_age, dec_age + 4)
-    age_filter2 = "%s-%s years" % (dec_age + 5, dec_age + 9)
-
-    j = aggregate([{"$match": {
-        "$or": [
-            {"age-recode-with-1-year-olds": age_filter1},
-            {"age-recode-with-1-year-olds": age_filter2}
-        ]
-    }},
+def breast_cancer_by_grade(input_json):
+    only_age = {"age": json.loads(input_json)['age']}
+    filters = create_filter(json.dumps(only_age))
+    stages = [1.0, 2.0, 3.0, 4.0]
+    filters['$and'].append({"grade": {"$in": stages}})
+    result = json.loads(aggregate([
+        {"$match": filters},
         {"$group": {
-            "_id": "$grade",
-            "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}])
-    res = {'Grade 1': 0, 'Grade 2': 0, 'Grade 3': 0}
-    for i in json.loads(j):
-        if isinstance(i['_id'], float) and i['_id'] == 1.0:
-            res['Grade 1'] = i['count']
-        elif isinstance(i['_id'], float) and i['_id'] == 2.0:
-            res['Grade 2'] = i['count']
-        elif isinstance(i['_id'], float) and i['_id'] == 3.0:
-            res['Grade 3'] = i['count']
-        elif isinstance(i['_id'], float) and i['_id'] == 4.0:
-            res['Grade 3'] += i['count']
+            "_id": "",
+            "total": {"$sum": 1},
+            "subset": {"$push": "$grade"}
+        }},
+        {"$unwind": "$subset"},
+        {"$group": {
+            "_id": {"grade": "$subset", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}]))
+
+    data = {'Grade 1': 0, 'Grade 2': 0, 'Grade 3': 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['grade'], result))):
+        if label == 1.0:
+            data['Grade 1'] += result[i]['percentage']
+        elif label == 2.0:
+            data['Grade 2'] += result[i]['percentage']
+        elif label in [3.0, 4.0]:
+            data['Grade 3'] += result[i]['percentage']
 
     return {
-        'labels': list(map(lambda x: x, res.keys())),
+        'labels': list(map(lambda x: x, data.keys())),
         'datasets': [{
-            'data': list(map(lambda x: x, res.values())),
+            'data': list(map(lambda x: x, data.values())),
             'label': "Diagnosed",
             'borderColor': '#48ccf5',
             'fill': False
@@ -717,10 +723,10 @@ def surgery_decisions(input_json):
     for i, label in enumerate(list(map(lambda x: x['_id']['surgery'], result))):
         if label in ['Lumpectomy', 'Partial Mastectomy']:
             data['Lumpectomy'] += result[i]['percentage']
-        elif label in ['Single Mastectomy', 'Mastectomy ']:
+        elif label in ['Single Mastectomy', 'Mastectomy ', 'Simple Mastectomy']:
             data['Mastectomy'] += result[i]['percentage']
-        elif label == 'Simple Mastectomy':
-            data['Simple Mastectomy'] = result[i]['percentage']
+        # elif label == 'Simple Mastectomy':
+        #     data['Simple Mastectomy'] = result[i]['percentage']
         elif label == 'Bi-Lateral Mastectomy':
             data['Bi-Lateral Mastectomy'] = result[i]['percentage']
         elif label in ['Other', 'Surgery']:
@@ -1306,7 +1312,6 @@ if __name__ == '__main__':
                  '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
                  '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
 
-
     # pprint(breakout_by_stage(input_json))
 
     # diag_request = '{"sex": "Female"}'
@@ -1327,5 +1332,5 @@ if __name__ == '__main__':
     # pprint(growth_by_specific_type(age_only, "$and"))
 
     # pprint(diagnosis(diag_request, limit=10))
-    # pprint(distribution_of_stage_of_cancer(age_only))
-    pprint(breast_cancer_by_grade(33))
+    pprint(surgery_decisions(age_only))
+    # pprint(breast_cancer_by_grade(diag_request))
