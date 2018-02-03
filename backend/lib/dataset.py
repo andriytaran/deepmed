@@ -754,18 +754,42 @@ def distribution_of_stage_of_cancer(input_json):
     """
     filters = create_filter(input_json)
     stages = ['I', 'IIA', 'IIB', 'IIIA', 'IIIB', 'IIIC', 'IV']
-    filters['$and'].append({"1998-stage": {"$in": stages}})
+    filters['$and'].append({"breast-adjusted-ajcc-6th-stage-1988": {"$in": stages}})
     result = json.loads(aggregate([
         {"$match": filters},
         {"$group": {
-            "_id": "$1998-stage",
-            "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}]))
+            "_id": "",
+            "total": {"$sum": 1},
+            "subset": {"$push": "$breast-adjusted-ajcc-6th-stage-1988"}
+        }},
+        {"$unwind": "$subset"},
+        {"$group": {
+            "_id": {"breast-adjusted-ajcc-6th-stage-1988": "$subset", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}]))
+
+    data = {"I": 0, "II": 0, "III": 0, "IV": 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['breast-adjusted-ajcc-6th-stage-1988'], result))):
+        if label == 'I':
+            data['I'] = result[i]['percentage']
+        elif label in ['IIA', 'IIB']:
+            data['II'] += result[i]['percentage']
+        elif label in ['IIIA', 'IIIB', 'IIIC', 'IIINOS']:
+            data['III'] += result[i]['percentage']
+        elif label == 'IV':
+            data['IV'] = result[i]['percentage']
+        elif label in [0] or label is None:
+            data['0'] += result[i]['percentage']
 
     return {
-        'labels': list(map(lambda x: x['_id'], result)),
+        'labels': list(map(lambda x: x, data.keys())),
         'datasets': [{
-            'data': list(map(lambda x: x['count'], result)),
+            'data': list(map(lambda x: x, data.values())),
             'label': "Diagnosed",
             'borderColor': '#48ccf5',
             'fill': False
@@ -1274,7 +1298,7 @@ if __name__ == '__main__':
                                  '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
                                  '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
 
-    # pprint(breakout_by_stage(diag_request_age_for_stage))
+    pprint(breakout_by_stage(diag_request_age_for_stage))
     # pprint(cause_of_death_within_ages_30_40())
 
     input_json = '{"age": 48, ' \
@@ -1303,4 +1327,4 @@ if __name__ == '__main__':
     # pprint(growth_by_specific_type(age_only, "$and"))
 
     # pprint(diagnosis(diag_request, limit=10))
-    pprint(breast_cancer_by_size(age_only))
+    pprint(distribution_of_stage_of_cancer(age_only))
