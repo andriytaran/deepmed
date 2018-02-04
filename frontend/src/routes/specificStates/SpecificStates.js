@@ -191,6 +191,40 @@ class SpecificStates extends React.Component {
                     </div>
                   </div>
                 )}
+                {data.distribution_of_stage_of_cancer_by_ethnicity && (
+                  <div className="col-xl-5ths col-lg-4 col-md-6">
+                    <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
+                         data-adjust="height">
+                      <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
+                        <strong>Distribution of Stage of Cancer for Women {ageRange} and Ethnicity</strong>
+                      </h4>
+                      <Pie
+                        data={{
+                          ...data.distribution_of_stage_of_cancer_by_ethnicity,
+                          datasets: data.distribution_of_stage_of_cancer_by_ethnicity.datasets.map(item => ({
+                            ...item,
+                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
+                          }))
+                        }}
+                        options={{
+                          legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: chartsLabelsOptions
+                          },
+                          tooltips: {
+                            callbacks: {
+                            label: formatChartNumber
+                          }
+                        },
+                        }}
+                        width={400}
+                        height={400}
+                      />
+                    </div>
+                  </div>
+                )}
                 {data.percent_of_women_with_cancer_by_race && (
                   <div className="col-xl-5ths col-lg-4 col-md-6">
                     <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0" data-adjust="height">
