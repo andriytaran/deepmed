@@ -36,8 +36,7 @@ class ReportDataView(GenericAPIView):
                           'radiation': 'y',
                           'chemo': 'y',
                           'surgery': 'y',
-                          'level': 3}
-                         ]
+                          'level': 3}]
 
         data = {
             'recommended_treatment_plans': {
@@ -126,39 +125,54 @@ class TestDataView(GenericAPIView):
         command = [settings.ML_PYTHON_PATH,
                    settings.ML_SURGERY_FILE,
                    str_args, 'Surgery']
+        try:
+            import subprocess
+            import ast
 
-        import subprocess
-        import ast
+            surgery_command = subprocess.Popen(command, stdout=subprocess.PIPE,
+                                               stderr=subprocess.PIPE)
+            output, err = surgery_command.communicate()
 
-        surgery_command = subprocess.Popen(command, stdout=subprocess.PIPE,
-                                           stderr=subprocess.PIPE)
-        output, err = surgery_command.communicate()
-        sc_response = ast.literal_eval(str(output.decode('utf8')))
+            if output:
+                sc_response = ast.literal_eval(str(output.decode('utf8')))
 
-        overall_plans = []
-        percent = round(sc_response[1] * 100)
-        if sc_response[0] == 'Mastectomy':
-            overall_plans.append({'type': sc_response[0],
+                overall_plans = []
+                percent = round(sc_response[1] * 100)
+                if sc_response[0] == 'Mastectomy':
+                    overall_plans.append({'type': sc_response[0],
+                                          'radiation': 'n',
+                                          'chemo': 'y',
+                                          'surgery': 'y',
+                                          'level': percent})
+                    overall_plans.append({'type': 'Lumpectomy',
+                                          'radiation': 'y',
+                                          'chemo': 'y',
+                                          'surgery': 'y',
+                                          'level': 100 - percent})
+                else:
+                    overall_plans.append({'type': sc_response[0],
+                                          'radiation': 'y',
+                                          'chemo': 'y',
+                                          'surgery': 'y',
+                                          'level': percent})
+                    overall_plans.append({'type': 'Mastectomy',
+                                          'radiation': 'n',
+                                          'chemo': 'y',
+                                          'surgery': 'y',
+                                          'level': 100 - percent})
+            else:
+                overall_plans = [{'type': 'Mastectomy',
                                   'radiation': 'n',
                                   'chemo': 'y',
                                   'surgery': 'y',
-                                  'level': percent})
-            overall_plans.append({'type': 'Lumpectomy',
+                                  'level': 97},
+                                 {'type': 'Lumpectomy',
                                   'radiation': 'y',
                                   'chemo': 'y',
                                   'surgery': 'y',
-                                  'level': 100 - percent})
-        else:
-            overall_plans.append({'type': sc_response[0],
-                                  'radiation': 'y',
-                                  'chemo': 'y',
-                                  'surgery': 'y',
-                                  'level': percent})
-            overall_plans.append({'type': 'Mastectomy',
-                                  'radiation': 'n',
-                                  'chemo': 'y',
-                                  'surgery': 'y',
-                                  'level': 100 - percent})
+                                  'level': 3}]
+        except:
+            overall_plans = []
 
         data = {
             'recommended_treatment_plans': {

@@ -6,6 +6,7 @@ import {RACES} from '../../constants'
 
 class Diagnosis extends React.Component {
   render() {
+    const {data, diagnosisForm} = this.props
     return (
       <div className='container container-full'>
         <div className='row'>
@@ -188,22 +189,16 @@ class Diagnosis extends React.Component {
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                      <td><p className='no-margin'>Preferred Outcome A</p></td>
-                      <td><p className='no-margin'>82%</p></td>
-                      <td><p className='no-margin'>Y</p></td>
-                      <td><p className='no-margin'>Lumpectomy</p></td>
-                      <td><p className='no-margin'>Yes</p></td>
-                      <td><p className='no-margin'>Yes</p></td>
-                    </tr>
-                    <tr>
-                      <td><p className='no-margin'>Preferred Outcome B</p></td>
-                      <td><p className='no-margin'>47%</p></td>
-                      <td><p className='no-margin'>Y</p></td>
-                      <td><p className='no-margin'>Mastectomy</p></td>
-                      <td><p className='no-margin'>No</p></td>
-                      <td><p className='no-margin'>Yes</p></td>
-                    </tr>
+                    {data.recommended_treatment_plans.overall_plans.map((item, i) =>
+                      <tr key={i}>
+                        <td><p className="no-margin">Preferred Outcome A</p></td>
+                        <td><p className="no-margin">{item['level']}</p></td>
+                        <td><p className="no-margin">{item['surgery']}</p></td>
+                        <td><p className="no-margin">{item['type']}</p></td>
+                        <td><p className="no-margin">{item['radiation']}</p></td>
+                        <td><p className="no-margin">{item['chemo']}</p></td>
+                      </tr>
+                    )}
                     </tbody>
                   </table>
                 </div>
