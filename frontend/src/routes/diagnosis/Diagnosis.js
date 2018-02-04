@@ -192,7 +192,7 @@ class Diagnosis extends React.Component {
                     {data.recommended_treatment_plans.overall_plans.map((item, i) =>
                       <tr key={i}>
                         <td><p className="no-margin">Preferred Outcome A</p></td>
-                        <td><p className="no-margin">{item['level']}</p></td>
+                        <td><p className="no-margin">{item['level']}%</p></td>
                         <td><p className="no-margin">{item['surgery']}</p></td>
                         <td><p className="no-margin">{item['type']}</p></td>
                         <td><p className="no-margin">{item['radiation']}</p></td>
