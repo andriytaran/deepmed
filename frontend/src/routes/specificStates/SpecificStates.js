@@ -31,6 +31,7 @@ class SpecificStates extends React.Component {
     }
     const {data, diagnosisForm} = this.props
     const ageRange = diagnosisForm.age ? getAgeRangeLabel(diagnosisForm.age) : ''
+    const ethnicity = diagnosisForm.ethnicity || ''
     return (
       <div className="container container-full" data-children="same-height">
         <div className="row">
@@ -196,7 +197,7 @@ class SpecificStates extends React.Component {
                     <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
                          data-adjust="height">
                       <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>Distribution of Stage of Cancer for Women {ageRange} and Ethnicity</strong>
+                        <strong>Distribution of Stage of Cancer for {ethnicity} Women {ageRange}</strong>
                       </h4>
                       <Pie
                         data={{

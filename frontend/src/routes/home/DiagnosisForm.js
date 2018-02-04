@@ -2,12 +2,20 @@ import React from 'react'
 import {Button, FormControl} from 'react-bootstrap'
 import {createForm} from 'rc-form'
 import {RACES} from '../../constants'
+import cn from 'classnames'
+
+const messages = {
+  required: 'This field is required.'
+}
 
 class TextField extends React.Component {
   render() {
+    const {label, error, ...otherProps} = this.props
     return (
-      <div>
-        <FormControl type='text' {...this.props}/>
+      <div className={cn(error && 'has-error')}>
+        {label && <label className='control-label'>{label}</label>}
+        <FormControl type='text' {...otherProps}/>
+        {error && <span className='help-block'>{error}</span>}
       </div>
     )
   }
@@ -15,12 +23,14 @@ class TextField extends React.Component {
 
 class SelectField extends React.Component {
   render() {
-    const {children, ...otherProps} = this.props
+    const {label, error, children, ...otherProps} = this.props
     return (
-      <div>
+      <div className={cn(error && 'has-error')}>
+        {label && <label className='control-label'>{label}</label>}
         <select className="form-control" {...otherProps}>
           {children}
         </select>
+        {error && <span className='help-block'>{error}</span>}
       </div>
     )
   }
@@ -28,7 +38,6 @@ class SelectField extends React.Component {
 
 class DiagnosisForm extends React.Component {
   render() {
-    let errors
     const {onSubmit} = this.props
     const {getFieldDecorator, getFieldError} = this.props.form
     return (
@@ -45,29 +54,35 @@ class DiagnosisForm extends React.Component {
           </div>
           <div className="row push-top-5">
             <div className="col-xs-6">
-              <label>Age at Diagnosis</label>
               {getFieldDecorator('age', {
                 initialValue: '',
+                rules: [
+                  {required: true, message: messages.required},
+                ]
               })(
-                <TextField/>
+                <TextField error={getFieldError('age')} label={'Age at Diagnosis'}/>
               )}
             </div>
             <div className="col-xs-6">
-              <label>Tumor Size in mm</label>
               {getFieldDecorator('tumor_size_in_mm', {
                 initialValue: '',
+                rules: [
+                  {required: true, message: messages.required},
+                ]
               })(
-                <TextField/>
+                <TextField error={getFieldError('tumor_size_in_mm')} label={'Tumor Size in mm'}/>
               )}
             </div>
           </div>
           <div className="row push-top-2">
             <div className="col-xs-6">
-              <label>Tumor Grade</label>
               {getFieldDecorator('tumor_grade', {
                 initialValue: '',
+                rules: [
+                  {required: true, message: messages.required},
+                ]
               })(
-                <SelectField>
+                <SelectField error={getFieldError('tumor_grade')} label={'Tumor Grade'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value={1}>1 (Low)</option>
                   <option value={2}>2 (Medium)</option>
@@ -76,12 +91,13 @@ class DiagnosisForm extends React.Component {
               )}
             </div>
             <div className="col-xs-6">
-              <label><span className="hidden-xs">Number</span><span
-                className="visible-xs display-inline">#</span> of Positive Nodes</label>
               {getFieldDecorator('num_pos_nodes', {
                 initialValue: '',
+                rules: [
+                  {required: true, message: messages.required},
+                ]
               })(
-                <SelectField>
+                <SelectField error={getFieldError('num_pos_nodes')} label={'Number of Positive Nodes'}>
                   <option value='' disabled hidden>Select...</option>
                   {Array.from(new Array(24), (val, i) =>
                     <option key={i} value={i}>{i}</option>
@@ -92,11 +108,13 @@ class DiagnosisForm extends React.Component {
           </div>
           <div className="row push-top-2">
             <div className="col-xs-6">
-              <label>ER Status</label>
               {getFieldDecorator('er_status', {
                 initialValue: '',
+                rules: [
+                  {required: true, message: messages.required},
+                ]
               })(
-                <SelectField>
+                <SelectField error={getFieldError('er_status')} label={'ER Status'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value='+'>Positive</option>
                   <option value='-'>Negative</option>
@@ -104,11 +122,13 @@ class DiagnosisForm extends React.Component {
               )}
             </div>
             <div className="col-xs-6">
-              <label>HER2 Status</label>
               {getFieldDecorator('her2_status', {
                 initialValue: '',
+                rules: [
+                  {required: true, message: messages.required},
+                ]
               })(
-                <SelectField>
+                <SelectField error={getFieldError('her2_status')} label={'HER2 Status'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value='+'>Positive</option>
                   <option value='-'>Negative</option>
@@ -118,11 +138,13 @@ class DiagnosisForm extends React.Component {
           </div>
           <div className="row push-top-2">
             <div className="col-xs-6">
-              <label>PR Status</label>
               {getFieldDecorator('pr_status', {
                 initialValue: '',
+                rules: [
+                  {required: true, message: messages.required},
+                ]
               })(
-                <SelectField>
+                <SelectField error={getFieldError('pr_status')} label={'PR Status'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value='+'>Positive</option>
                   <option value='-'>Negative</option>
@@ -130,11 +152,13 @@ class DiagnosisForm extends React.Component {
               )}
             </div>
             <div className="col-xs-6">
-              <label>Ethnicity (optional)</label>
               {getFieldDecorator('ethnicity', {
                 initialValue: '',
+                rules: [
+                  {required: true, message: messages.required},
+                ]
               })(
-                <SelectField>
+                <SelectField error={getFieldError('ethnicity')} label={'Ethnicity'}>
                   <option value='' disabled hidden>Select...</option>
                   {RACES.map((race, i) =>
                     <option key={i}>{race}</option>
@@ -145,11 +169,13 @@ class DiagnosisForm extends React.Component {
           </div>
           <div className="row push-top-2">
             <div className="col-xs-6">
-              <label>Stage</label>
               {getFieldDecorator('stage', {
                 initialValue: '',
+                rules: [
+                  {required: true, message: messages.required},
+                ]
               })(
-                <SelectField>
+                <SelectField error={getFieldError('stage')} label={'Stage'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value='0'>0</option>
                   <option value='I'>I</option>
@@ -160,11 +186,13 @@ class DiagnosisForm extends React.Component {
               )}
             </div>
             <div className="col-xs-6">
-              <label>Laterality</label>
               {getFieldDecorator('laterality', {
                 initialValue: '',
+                rules: [
+                  {required: true, message: messages.required},
+                ]
               })(
-                <SelectField>
+                <SelectField error={getFieldError('laterality')} label={'Laterality'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value='left'>Left</option>
                   <option value='right'>Right</option>
@@ -174,11 +202,13 @@ class DiagnosisForm extends React.Component {
           </div>
           <div className="row push-top-2">
             <div className="col-xs-6">
-              <label>Site</label>
               {getFieldDecorator('site', {
                 initialValue: '',
+                rules: [
+                  {required: true, message: messages.required},
+                ]
               })(
-                <SelectField>
+                <SelectField error={getFieldError('site')} label={'Site'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value='nipple'>Nipple</option>
                   <option value='center'>Center</option>
@@ -193,11 +223,13 @@ class DiagnosisForm extends React.Component {
               )}
             </div>
             <div className="col-xs-6">
-              <label>Type</label>
               {getFieldDecorator('type', {
                 initialValue: '',
+                rules: [
+                  {required: true, message: messages.required},
+                ]
               })(
-                <SelectField>
+                <SelectField error={getFieldError('type')} label={'Type'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value='idc'>IDC</option>
                   <option value='ilc'>ILC</option>
