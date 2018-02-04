@@ -10,9 +10,7 @@ from lib.dataset import breast_cancer_by_grade, diagnosis, \
     growth_by_specific_type, percent_race_with_cancer_by_age, \
     breakout_by_stage, woman_annualy_diagnosed, breast_cancer_by_size, \
     percent_of_women_with_cancer_by_race_overall, \
-    distribution_of_stage_of_cancer, surgery_decisions, survival_months, \
-    chemotherapy, radiation, cause_of_death
-from lib.dataset import cause_of_death_overall
+    distribution_of_stage_of_cancer, surgery_decisions, chemotherapy, radiation
 
 
 class ReportDataView(GenericAPIView):
@@ -34,7 +32,7 @@ class ReportDataView(GenericAPIView):
                 ' "type": "IBC", "type": "Mixed "}',
                 operator="$or"),
             'breast_cancer_by_grade_and_size': {
-                'grade': breast_cancer_by_grade(diagnosis_data.get('age')),
+                'grade': breast_cancer_by_grade(age),
                 'size': breast_cancer_by_size(age)
             },
             'distribution_of_stage_of_cancer': distribution_of_stage_of_cancer(
