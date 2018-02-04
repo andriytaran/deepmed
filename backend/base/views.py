@@ -47,15 +47,8 @@ class ReportDataView(GenericAPIView):
             'radiation': {
                 'overall': radiation(age),  # ????
             },
-            # 'survival_months': survival_months(input_json),
-            # 'cause_of_death': {
-            #     'cause_of_death_overall': cause_of_death_overall(),
-            #     'by_ages': cause_of_death(input_json)
-            # },
             'similar_diagnosis': diagnosis(input_json)
         }
-
-        [o.pop('_id') for o in data['similar_diagnosis']]
 
         data['chemotherapy']['breakout_by_stage'] = breakout_by_stage(
             json.dumps({
