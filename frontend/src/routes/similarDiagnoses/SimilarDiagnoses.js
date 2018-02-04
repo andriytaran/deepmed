@@ -56,24 +56,24 @@ class SimilarDiagnoses extends React.Component {
                     <tbody>
                     {data.similar_diagnosis.map((item, i) =>
                       <tr key={i}>
-                        <td><p className="no-margin">{item['age-recode-with-single-ages-and-85']}</p></td>
-                        <td><p className="no-margin">{item['race-ethnicity']}</p></td>
-                        <td><p className="no-margin">{item['cs-tumor-size-2004']}</p></td>
+                        <td><p className="no-margin">{item['age']}</p></td>
+                        <td><p className="no-margin">{item['ethnicity']}</p></td>
+                        <td><p className="no-margin">{item['size']}</p></td>
                         <td><p className="no-margin">{item['grade']}</p></td>
-                        <td><p className="no-margin">{item['er-status-recode-breast-cancer-1990']}</p></td>
-                        <td><p className="no-margin">{item['pr-status-recode-breast-cancer-1990']}</p></td>
-                        <td><p className="no-margin">{item['derived-her2-recode-2010-1']}</p></td>
-                        <td><p className="no-margin">{item['laterality']}</p></td>
-                        <td><p className="no-margin">{item['site-recode-icd-o-3-who-2008']}</p></td>
+                        <td><p className="no-margin">{item['er']}</p></td>
+                        <td><p className="no-margin">{item['pr']}</p></td>
+                        <td><p className="no-margin">{item['her2']}</p></td>
+                        <td><p className="no-margin">{item['lat']}</p></td>
+                        <td><p className="no-margin">{item['site']}</p></td>
                         <td><p className="no-margin">{item['type']}</p></td>
-                        <td><p className="no-margin">{item['2010-stage']}</p></td>
-                        <td><p className="no-margin">{item['regional-nodes-positive-1988-1']}</p></td>
+                        <td><p className="no-margin">{item['stage']}</p></td>
+                        <td><p className="no-margin">{item['+nodes']}</p></td>
                         <td><p className="no-margin">{item['surgery']}</p></td>
                         <td><p className="no-margin">{item['chemo']}</p></td>
-                        <td><p className="no-margin">{item['radiation-recode']}</p></td>
-                        <td><p className="no-margin">{item['year-of-diagnosis']}</p></td>
-                        <td><p className="no-margin">{item['survival-months']}</p></td>
-                        <td><p className="no-margin">{item['cod-to-site-recode']}</p></td>
+                        <td><p className="no-margin">{item['radiation']}</p></td>
+                        <td><p className="no-margin">{item['year dx']}</p></td>
+                        <td><p className="no-margin">{item['survival mos.']}</p></td>
+                        <td><p className="no-margin">{item['cod']}</p></td>
                       </tr>
                     )}
                     </tbody>
