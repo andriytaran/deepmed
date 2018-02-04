@@ -5,7 +5,8 @@ force_upgrade: yes
 project_repo_branch: 'vagrant'
 
 ### Project ###
-ml_surgery_file: '{{ deploy_src_dir }}/ml'
+ml_surgery_file: '{{ deploy_src_dir }}/ml/command_line.py'
+ml_python_path: '/home/ubuntu/anaconda3/bin/python'
 skip_checkout: no
 run_mongo: no
 site_domain: 52.14.12.34

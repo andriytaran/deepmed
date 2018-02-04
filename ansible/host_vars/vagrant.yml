@@ -6,6 +6,7 @@ vaulted_database_password: 'qwe123'
 
 ### Deploy ###
 ml_surgery_file: '{{ deploy_src_dir }}/backend/dta/command_line.py'
+ml_python_path: '/usr/bin/python'
 deploy_env: development
 force_upgrade: yes
 

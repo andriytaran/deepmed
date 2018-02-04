@@ -108,7 +108,7 @@ class TestDataView(GenericAPIView):
                              str(dd.get('Total_insitu_mali_tumors', 12)),
                              str(dd.get('num_pos_nodes', 10))])
 
-        command = ['python',
+        command = [settings.ML_PYTHON_PATH,
                    settings.ML_SURGERY_FILE,
                    "\'{}\'".format(str_args), 'Surgery']
 

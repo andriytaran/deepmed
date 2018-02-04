@@ -31,6 +31,7 @@ site_protocol: http
 
 ### Options ###
 ml_surgery_file: ''
+ml_python_path: '/usr/bin/python'
 skip_checkout: no
 force_upgrade: no
 run_handlers: yes

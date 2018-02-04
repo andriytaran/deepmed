@@ -15,5 +15,5 @@
 - include: backend.yml
   tags: [backend]
 
-- include: frontend.yml
-  tags: [frontend]
+#- include: frontend.yml
+#  tags: [frontend]
