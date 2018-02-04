@@ -1,40 +1,9 @@
 import React from 'react'
-import {Button, FormControl} from 'react-bootstrap'
+import {Button} from 'react-bootstrap'
 import {createForm} from 'rc-form'
 import {RACES} from '../../constants'
-import cn from 'classnames'
-
-const messages = {
-  required: 'This field is required.'
-}
-
-class TextField extends React.Component {
-  render() {
-    const {label, error, ...otherProps} = this.props
-    return (
-      <div className={cn(error && 'has-error')}>
-        {label && <label className='control-label'>{label}</label>}
-        <FormControl type='text' {...otherProps}/>
-        {error && <span className='help-block'>{error}</span>}
-      </div>
-    )
-  }
-}
-
-class SelectField extends React.Component {
-  render() {
-    const {label, error, children, ...otherProps} = this.props
-    return (
-      <div className={cn(error && 'has-error')}>
-        {label && <label className='control-label'>{label}</label>}
-        <select className="form-control" {...otherProps}>
-          {children}
-        </select>
-        {error && <span className='help-block'>{error}</span>}
-      </div>
-    )
-  }
-}
+import messages from '../../components/messages'
+import {Input, Select} from '../../components'
 
 class DiagnosisForm extends React.Component {
   render() {
@@ -60,7 +29,7 @@ class DiagnosisForm extends React.Component {
                   {required: true, message: messages.required},
                 ]
               })(
-                <TextField error={getFieldError('age')} label={'Age at Diagnosis'}/>
+                <Input error={getFieldError('age')} label={'Age at Diagnosis'}/>
               )}
             </div>
             <div className="col-xs-6">
@@ -70,7 +39,7 @@ class DiagnosisForm extends React.Component {
                   {required: true, message: messages.required},
                 ]
               })(
-                <TextField error={getFieldError('tumor_size_in_mm')} label={'Tumor Size in mm'}/>
+                <Input error={getFieldError('tumor_size_in_mm')} label={'Tumor Size in mm'}/>
               )}
             </div>
           </div>
@@ -82,12 +51,12 @@ class DiagnosisForm extends React.Component {
                   {required: true, message: messages.required},
                 ]
               })(
-                <SelectField error={getFieldError('tumor_grade')} label={'Tumor Grade'}>
+                <Select error={getFieldError('tumor_grade')} label={'Tumor Grade'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value={1}>1 (Low)</option>
                   <option value={2}>2 (Medium)</option>
                   <option value={3}>3 (High)</option>
-                </SelectField>
+                </Select>
               )}
             </div>
             <div className="col-xs-6">
@@ -97,12 +66,12 @@ class DiagnosisForm extends React.Component {
                   {required: true, message: messages.required},
                 ]
               })(
-                <SelectField error={getFieldError('num_pos_nodes')} label={'Number of Positive Nodes'}>
+                <Select error={getFieldError('num_pos_nodes')} label={'Number of Positive Nodes'}>
                   <option value='' disabled hidden>Select...</option>
                   {Array.from(new Array(24), (val, i) =>
                     <option key={i} value={i}>{i}</option>
                   )}
-                </SelectField>
+                </Select>
               )}
             </div>
           </div>
@@ -114,11 +83,11 @@ class DiagnosisForm extends React.Component {
                   {required: true, message: messages.required},
                 ]
               })(
-                <SelectField error={getFieldError('er_status')} label={'ER Status'}>
+                <Select error={getFieldError('er_status')} label={'ER Status'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value='+'>Positive</option>
                   <option value='-'>Negative</option>
-                </SelectField>
+                </Select>
               )}
             </div>
             <div className="col-xs-6">
@@ -128,11 +97,11 @@ class DiagnosisForm extends React.Component {
                   {required: true, message: messages.required},
                 ]
               })(
-                <SelectField error={getFieldError('her2_status')} label={'HER2 Status'}>
+                <Select error={getFieldError('her2_status')} label={'HER2 Status'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value='+'>Positive</option>
                   <option value='-'>Negative</option>
-                </SelectField>
+                </Select>
               )}
             </div>
           </div>
@@ -144,11 +113,11 @@ class DiagnosisForm extends React.Component {
                   {required: true, message: messages.required},
                 ]
               })(
-                <SelectField error={getFieldError('pr_status')} label={'PR Status'}>
+                <Select error={getFieldError('pr_status')} label={'PR Status'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value='+'>Positive</option>
                   <option value='-'>Negative</option>
-                </SelectField>
+                </Select>
               )}
             </div>
             <div className="col-xs-6">
@@ -158,12 +127,12 @@ class DiagnosisForm extends React.Component {
                   {required: true, message: messages.required},
                 ]
               })(
-                <SelectField error={getFieldError('ethnicity')} label={'Ethnicity'}>
+                <Select error={getFieldError('ethnicity')} label={'Ethnicity'}>
                   <option value='' disabled hidden>Select...</option>
                   {RACES.map((race, i) =>
                     <option key={i}>{race}</option>
                   )}
-                </SelectField>
+                </Select>
               )}
             </div>
           </div>
@@ -175,14 +144,14 @@ class DiagnosisForm extends React.Component {
                   {required: true, message: messages.required},
                 ]
               })(
-                <SelectField error={getFieldError('stage')} label={'Stage'}>
+                <Select error={getFieldError('stage')} label={'Stage'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value='0'>0</option>
                   <option value='I'>I</option>
                   <option value='II'>II</option>
                   <option value='III'>III</option>
                   <option value='IV'>IV</option>
-                </SelectField>
+                </Select>
               )}
             </div>
             <div className="col-xs-6">
@@ -192,11 +161,11 @@ class DiagnosisForm extends React.Component {
                   {required: true, message: messages.required},
                 ]
               })(
-                <SelectField error={getFieldError('laterality')} label={'Laterality'}>
+                <Select error={getFieldError('laterality')} label={'Laterality'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value='left'>Left</option>
                   <option value='right'>Right</option>
-                </SelectField>
+                </Select>
               )}
             </div>
           </div>
@@ -208,7 +177,7 @@ class DiagnosisForm extends React.Component {
                   {required: true, message: messages.required},
                 ]
               })(
-                <SelectField error={getFieldError('site')} label={'Site'}>
+                <Select error={getFieldError('site')} label={'Site'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value='nipple'>Nipple</option>
                   <option value='center'>Center</option>
@@ -219,7 +188,7 @@ class DiagnosisForm extends React.Component {
                   <option value='axillary'>Axillary</option>
                   <option value='overlapping'>Overlapping</option>
                   <option value='nos'>NoS</option>
-                </SelectField>
+                </Select>
               )}
             </div>
             <div className="col-xs-6">
@@ -229,13 +198,13 @@ class DiagnosisForm extends React.Component {
                   {required: true, message: messages.required},
                 ]
               })(
-                <SelectField error={getFieldError('type')} label={'Type'}>
+                <Select error={getFieldError('type')} label={'Type'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value='idc'>IDC</option>
                   <option value='ilc'>ILC</option>
                   <option value='dcis'>DCIS</option>
                   <option value='other'>Other</option>
-                </SelectField>
+                </Select>
               )}
             </div>
           </div>
