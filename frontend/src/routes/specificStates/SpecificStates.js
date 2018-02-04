@@ -87,7 +87,8 @@ class SpecificStates extends React.Component {
                         data={data.growth_by_specific_type}
                         options={{
                           legend: {
-                            position: 'bottom'
+                            position: 'bottom',
+                            display: false
                           },
                           scales: {
                             yAxes: [{
@@ -177,7 +178,12 @@ class SpecificStates extends React.Component {
                             display: true,
                             position: 'bottom',
                             labels: chartsLabelsOptions
+                          },
+                          tooltips: {
+                            callbacks: {
+                            label: formatChartNumber
                           }
+                        },
                         }}
                         width={400}
                         height={400}
