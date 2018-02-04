@@ -110,7 +110,7 @@ class TestDataView(GenericAPIView):
 
         command = [settings.ML_PYTHON_PATH,
                    settings.ML_SURGERY_FILE,
-                   "\'{}\'".format(str_args), 'Surgery']
+                   str_args, 'Surgery']
 
         import subprocess
         import ast
