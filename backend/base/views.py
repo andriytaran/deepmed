@@ -24,7 +24,17 @@ class ReportDataView(GenericAPIView):
 
         serializer.is_valid(raise_exception=True)
         dd = serializer.validated_data
-        input_json = json.dumps(dd, ensure_ascii=False)
+        input_json = json.dumps({'age': dd.get('age'),
+                                 'tumor_size_in_mm': dd.get(
+                                     'tumor_size_in_mm'),
+                                 'tumor_grade': dd.get('tumor_grade'),
+                                 'er_status': dd.get('er_status'),
+                                 'pr_status': dd.get('pr_status'),
+                                 'her2_status': dd.get('her2_status'),
+                                 'num_pos_nodes': dd.get('num_pos_nodes'),
+                                 'ethnicity': dd.get('ethnicity'),
+                                 'sex': dd.get('sex')},
+                                ensure_ascii=False)
         age = json.dumps({'age': dd.get('age')})
 
         overall_plans = [{'type': 'Mastectomy',
