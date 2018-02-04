@@ -27,7 +27,22 @@ class ReportDataView(GenericAPIView):
         input_json = json.dumps(dd, ensure_ascii=False)
         age = json.dumps({'age': dd.get('age')})
 
+        overall_plans = [{'type': 'Mastectomy',
+                                  'radiation': 'n',
+                                  'chemo': 'y',
+                                  'surgery': 'y',
+                                  'level': 97},
+                         {'type': 'Lumpectomy',
+                          'radiation': 'y',
+                          'chemo': 'y',
+                          'surgery': 'y',
+                          'level': 3}
+                         ]
+
         data = {
+            'recommended_treatment_plans': {
+                'overall_plans': overall_plans
+            },
             'woman_annualy_diagnosed': woman_annualy_diagnosed(age),
             'growth_by_specific_type': growth_by_specific_type(
                 '{"type": "Other", "type": "Mixed",'
