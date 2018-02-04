@@ -160,6 +160,19 @@ def get_t_size_cm(size_mm):
     return t_size_cm
 
 
+def get_node_range(number):
+    n_size = None
+    if number >= 10:
+        n_size = {"$gte": 10}
+    elif number >= 4:
+        n_size = {"$in": [4, 5, 6, 7, 8, 9]}
+    elif number >= 1:
+        n_size = {"$in": [1, 2, 3]}
+    elif number == 0:
+        n_size = {"$eq": 0}
+    return n_size
+
+
 def create_filter(input_data, operator='$and'):
     input_data = json.loads(input_data)
     filter_list = []
@@ -180,7 +193,8 @@ def create_filter(input_data, operator='$and'):
     if 'her2_status' in input_data.keys():
         filter_list.append({"derived-her2-recode-2010": input_data['her2_status']})
     if 'num_pos_nodes' in input_data.keys():
-        filter_list.append({"regional-nodes-positive-1988": input_data['num_pos_nodes']})
+        n_size = get_node_range(input_data['num_pos_nodes'])
+        filter_list.append({"regional-nodes-positive-1988-1": n_size})
     if 'ethnicity' in input_data.keys():
         filter_list.append({"race-recode-w-b-ai-api": input_data["ethnicity"]})
     if 'type' in input_data.keys():
@@ -223,7 +237,7 @@ def diagnosis(input_json, limit=0):
     #     filter_list.append(("regional-nodes-positive-1988", input_data["num_pos_nodes"]))
     # if 'ethnicity' in input_data.keys():
     #     filter_list.append(("race-recode-w-b-ai-api", input_data["ethnicity"]))
-
+    pprint(filters)
     dataset = find(filters, limit=limit)
     results = []
     for item in dataset:
@@ -1283,7 +1297,7 @@ if __name__ == '__main__':
                    '"er_status": "+", ' \
                    '"pr_status": "+", ' \
                    '"tumor_size_in_mm": 22, ' \
-                   '"num_pos_nodes": 0, ' \
+                   '"num_pos_nodes": 3, ' \
                    '"her2_status": "+", ' \
                    '"ethnicity": "White"}'
 
@@ -1331,7 +1345,7 @@ if __name__ == '__main__':
     # type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
     # pprint(growth_by_specific_type(age_only, "$and"))
 
-    # pprint(diagnosis(diag_request, limit=10))
-    age_and_race = '{"age": 48, "ethnicity":"White"}'
-    pprint(distribution_of_stage_of_cancer(age_and_race))
+    pprint(diagnosis(diag_request, limit=10))
+    # age_and_race = '{"age": 48, "ethnicity":"White"}'
+    # pprint(distribution_of_stage_of_cancer(age_and_race))
     # pprint(breast_cancer_by_grade(diag_request))
