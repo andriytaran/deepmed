@@ -161,13 +161,25 @@ def get_t_size_cm(size_mm):
 
 
 def get_node_range(number):
+    """
+    90	>9
+    95	N/A
+    97	>1
+    98	N/A
+    99	N/A
+    :param number:
+    :return:
+    """
     n_size = None
     if number >= 10:
-        n_size = {"$gte": 10}
+        # n_size = {"$gte": 10}
+        range_list = [x for x in range(10, 90)]
+        range_list.append(90)
+        n_size = {"$in": range_list}
     elif number >= 4:
         n_size = {"$in": [4, 5, 6, 7, 8, 9]}
     elif number >= 1:
-        n_size = {"$in": [1, 2, 3]}
+        n_size = {"$in": [1, 2, 3, 97]}
     elif number == 0:
         n_size = {"$eq": 0}
     return n_size
@@ -237,7 +249,7 @@ def diagnosis(input_json, limit=0):
     #     filter_list.append(("regional-nodes-positive-1988", input_data["num_pos_nodes"]))
     # if 'ethnicity' in input_data.keys():
     #     filter_list.append(("race-recode-w-b-ai-api", input_data["ethnicity"]))
-    pprint(filters)
+    # pprint(filters)
     dataset = find(filters, limit=limit)
     results = []
     for item in dataset:
@@ -1297,7 +1309,7 @@ if __name__ == '__main__':
                    '"er_status": "+", ' \
                    '"pr_status": "+", ' \
                    '"tumor_size_in_mm": 22, ' \
-                   '"num_pos_nodes": 3, ' \
+                   '"num_pos_nodes": 1, ' \
                    '"her2_status": "+", ' \
                    '"ethnicity": "White"}'
 
