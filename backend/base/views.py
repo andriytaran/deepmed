@@ -37,6 +37,11 @@ class ReportDataView(GenericAPIView):
             },
             'distribution_of_stage_of_cancer': distribution_of_stage_of_cancer(
                 age),
+            'distribution_of_stage_of_cancer_by_ethnicity':
+                distribution_of_stage_of_cancer(
+                    json.dumps({'age': diagnosis_data.get('age'),
+                                'ethnicity': diagnosis_data.get(
+                                    'ethnicity')}, ensure_ascii=False)),
             'percent_of_women_with_cancer_by_race': {
                 'overall': percent_of_women_with_cancer_by_race_overall()
             },
