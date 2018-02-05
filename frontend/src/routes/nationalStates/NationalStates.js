@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './NationalStates.scss'
-// import {VectorMap} from 'react-jvectormap'
+// import {VectorMap} from '../../components'
 import {Line} from 'react-chartjs-2'
 
 class NationalStates extends React.Component {

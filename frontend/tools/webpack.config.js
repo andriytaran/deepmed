@@ -286,7 +286,6 @@ const clientConfig = {
   entry: {
     client: [
       '@babel/polyfill',
-      'jquery',
       './src/client.js'
     ],
   },
@@ -298,6 +297,12 @@ const clientConfig = {
       'process.env.NODE_ENV': isDebug ? '"development"' : '"production"',
       'process.env.BROWSER': true,
       __DEV__: isDebug,
+    }),
+
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery',
     }),
 
     // Emit a file with assets paths
@@ -369,7 +374,6 @@ const serverConfig = {
   entry: {
     server: [
       '@babel/polyfill',
-      'jquery',
       './src/server.js'
     ],
   },
@@ -452,6 +456,12 @@ const serverConfig = {
       'process.env.NODE_ENV': isDebug ? '"development"' : '"production"',
       'process.env.BROWSER': false,
       __DEV__: isDebug,
+    }),
+
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery',
     }),
 
     // Adds a banner to the top of each generated chunk
