@@ -274,7 +274,7 @@ def diagnosis(input_json, limit=20):
         results.append(d)
 
     if len(results) < 20:
-        filters['$and'] = [d for d in filters['$and'] if 'race-recode-w-b-ai-api' not in d]
+        filters['$and'] = [d for d in filters['$and'] if 't-size-cm' not in d]
         dataset = find(filters, limit=limit)
         results = []
         for item in dataset:
@@ -298,7 +298,7 @@ def diagnosis(input_json, limit=20):
                  'cod': item['cod-to-site-recode']}
             results.append(d)
         if len(results) < 20:
-            filters['$and'] = [d for d in filters['$and'] if 'age-recode-with-1-year-olds' not in d]
+            filters['$and'] = [d for d in filters['$and'] if 'race-recode-w-b-ai-api' not in d]
             dataset = find(filters, limit=limit)
             results = []
             for item in dataset:
@@ -321,6 +321,31 @@ def diagnosis(input_json, limit=20):
                      'survival mos.': item['survival-months'],
                      'cod': item['cod-to-site-recode']}
                 results.append(d)
+            if len(results) < 20:
+                filters['$and'] = [d for d in filters['$and'] if 'age-recode-with-single-ages-and-85' not in d]
+                dataset = find(filters, limit=limit)
+                results = []
+                for item in dataset:
+                    d = {'age': item['age-recode-with-single-ages-and-85'],
+                         'ethnicity': get_race(item['race-recode-w-b-ai-api']),
+                         'size': item['t-size-cm'],
+                         'grade': item['grade'],
+                         'er': item['er-status-recode-breast-cancer-1990'],
+                         'pr': item['pr-status-recode-breast-cancer-1990'],
+                         'her2': item['derived-her2-recode-2010'],
+                         'lat': item['laterality'],
+                         'site': item['site-recode-icd-o-3-who-2008'],
+                         'type': item['type'],
+                         'stage': item['breast-adjusted-ajcc-6th-stage-1988'],
+                         '+nodes': item['regional-nodes-positive-1988-1'],
+                         'surgery': item['surgery'],
+                         'chemo': item['chemo'],
+                         'radiation': item['radiation'],
+                         'year dx': item['year-of-diagnosis'],
+                         'survival mos.': item['survival-months'],
+                         'cod': item['cod-to-site-recode']}
+                    results.append(d)
+                return results
             return results
         return results
     return results
@@ -369,14 +394,21 @@ def breast_cancer_by_state():
         {"$sort": SON([("count", -1), ("_id", -1)])}]))
 
     values = {}
-    for state in STATES_ABRS:
-        match = filter(lambda x: STATES_NAME_ABRS[x['_id']] in STATES_ABRS, result)
-        if match.count() > 0:
-            values["US-" + state] = match[0]['count']
-        else:
-            values["US-" + state] = 0
+    for row in result:
+        pprint(row)
+        if row['_id'] in STATES_NAME_ABRS:
+            state = STATES_NAME_ABRS[row['_id']]
+            values["US-" + state] = row['count']
+        # exit()
+    # for state in STATES_ABRS:
+    #     match = filter(lambda x: STATES_NAME_ABRS[x['_id']] in STATES_ABRS, result)
+    #     pprint(list(match))
+    #     if match.count() > 0:
+    #         values["US-" + state] = match[0]['count']
+    #     else:
+    #         values["US-" + state] = 0
 
-    pprint(values)
+    # pprint(values)
 
     return {
         'regions': [{
@@ -606,33 +638,47 @@ def breast_cancer_by_size(input_json):
     :param input_json:
     :return: json
     """
-    filters = create_filter(input_json)
-    j = aggregate([
+    only_age = {"age": json.loads(input_json)['age']}
+    filters = create_filter(json.dumps(only_age))
+    sizes = ['< 1cm', '<2cm', '<3cm', '>3cm', '>5cm', 'Micro']
+    filters['$and'].append({"t-size-cm": {"$in": sizes}})
+    result = json.loads(aggregate([
         {"$match": filters},
         {"$group": {
-            "_id": "$t-size-cm",
-            "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}])
-    l = json.loads(j)
-    res = {'< 1cm': 0, '< 2cm': 0, '< 5cm': 0}
-    for i in l:
-        if i['_id'] == '<1cm':
-            res['< 1cm'] += i['count']
-        elif i['_id'] == '<2cm':
-            res['< 2cm'] = i['count']
-        elif i['_id'] == '<3cm':
-            res['< 5cm'] += i['count']
-        elif i['_id'] == '>3cm':
-            res['< 5cm'] += i['count']
-        elif i['_id'] == '>5cm':
-            res['> 5cm'] = i['count']
-        elif i['_id'] == 'Micro':
-            res['< 1cm'] += i['count']
+            "_id": "",
+            "total": {"$sum": 1},
+            "subset": {"$push": "$t-size-cm"}
+        }},
+        {"$unwind": "$subset"},
+        {"$group": {
+            "_id": {"t-size-cm": "$subset", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}]))
+
+    data = {'< 1cm': 0, '< 2cm': 0, '< 5cm': 0, '> 5cm': 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['t-size-cm'], result))):
+        if label == '< 1cm':
+            data['< 1cm'] += result[i]['percentage']
+        elif label == '<2cm':
+            data['< 2cm'] += result[i]['percentage']
+        elif label == '<3cm':
+            data['< 5cm'] += result[i]['percentage']
+        elif label == '>3cm':
+            data['< 5cm'] += result[i]['percentage']
+        elif label == '>5cm':
+            data['> 5cm'] += result[i]['percentage']
+        elif label == 'Micro':
+            data['< 1cm'] += result[i]['percentage']
 
     return {
-        'labels': list(map(lambda x: x, res.keys())),
+        'labels': list(map(lambda x: x, data.keys())),
         'datasets': [{
-            'data': list(map(lambda x: x, res.values())),
+            'data': list(map(lambda x: x, data.values())),
             'label': "Diagnosed",
             'borderColor': '#48ccf5',
             'fill': False
@@ -1292,7 +1338,7 @@ if __name__ == '__main__':
                    '"er_status": "+", ' \
                    '"pr_status": "+", ' \
                    '"tumor_size_in_mm": 22, ' \
-                   '"num_pos_nodes": 1, ' \
+                   '"num_pos_nodes": 5, ' \
                    '"her2_status": "+", ' \
                    '"ethnicity": "White"}'
 
@@ -1324,7 +1370,7 @@ if __name__ == '__main__':
     # pprint(breakout_by_stage(input_json))
 
     # diag_request = '{"sex": "Female"}'
-    # pprint(percent_race_with_cancer_by_age(diag_request))
+    pprint(breast_cancer_by_size(age_only))
     # pprint(percent_of_women_with_cancer_by_race_overall())
     # pprint(woman_annualy_diagnosed(age_only))
 
@@ -1340,7 +1386,10 @@ if __name__ == '__main__':
     # type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
     # pprint(growth_by_specific_type(age_only, "$and"))
 
-    pprint(diagnosis(diag_request, limit=20))
+    # pprint(diagnosis(diag_request, limit=20))
     # age_and_race = '{"age": 48, "ethnicity":"White"}'
     # pprint(distribution_of_stage_of_cancer(age_and_race))
     # pprint(woman_annualy_diagnosed(age_only))
+    # pprint(breast_cancer_by_state())
+    # diag = diagnosis(diag_request, limit=20)
+    # print(len(diag))
