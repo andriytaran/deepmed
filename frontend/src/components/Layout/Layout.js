@@ -72,59 +72,59 @@ class AppLayout extends React.Component {
           </div>
           :
           <div>
-            {currentRouteName !== HOME_ROUTE && (
-              <nav className={cn('sidebar active', sidebarOpened && 'sidebar-mobile-active')}>
-                <div className="sidebar-header" style={{height: 56}}>
-                  <Link to={HOME_ROUTE}>
-                    <img src={require('../../static/deep-med-logo-new.png')} width="136" height="auto" alt="presentation"
-                         style={{top: '15.5px'}}/>
-                  </Link>
-                </div>
+            <nav className={cn('sidebar active', sidebarOpened && 'sidebar-mobile-active')}>
+              <div className="sidebar-header" style={{height: 56}}>
+                <a href={'/'}>
+                  <img src={require('../../static/deep-med-logo-new.png')} width="136" height="auto" alt="presentation"
+                       style={{top: '15.5px'}}/>
+                </a>
+              </div>
+              {currentRouteName !== HOME_ROUTE && (
                 <ul className="ul-no-bullets">
                   <li className={cn(currentRouteName === DIAGNOSIS_ROUTE && 'active')}>
                     <Link to={DIAGNOSIS_ROUTE}>
-                <span className="icon-container">
-                <i className="fa fa-heart-o"/>
-                </span>
+              <span className="icon-container">
+              <i className="fa fa-heart-o"/>
+              </span>
                       Diagnosis
                     </Link>
                   </li>
                   <li className={cn(currentRouteName === NATIONAL_STATES_ROUTE && 'active')}>
                     <Link to={NATIONAL_STATES_ROUTE}>
-                <span className="icon-container">
-                <i className="fa fa-bar-chart"/>
-                </span>
+              <span className="icon-container">
+              <i className="fa fa-bar-chart"/>
+              </span>
                       National Stats
                     </Link>
                   </li>
                   <li className={cn(currentRouteName === SPECIFIC_STATES_ROUTE && 'active')}>
                     <Link to={SPECIFIC_STATES_ROUTE}>
-                <span className="icon-container">
-                <i className="fa fa-bar-chart"/>
-                </span>
+              <span className="icon-container">
+              <i className="fa fa-bar-chart"/>
+              </span>
                       Specific Stats
                     </Link>
                   </li>
                   <li
                     className={cn(currentRouteName === SIMILAR_DIAGNOSES_ROUTE && 'active')}>
                     <Link to={SIMILAR_DIAGNOSES_ROUTE}>
-                <span className="icon-container">
-                <i className="fa fa-files-o"/>
-                </span>
+              <span className="icon-container">
+              <i className="fa fa-files-o"/>
+              </span>
                       Similar Diagnoses
                     </Link>
                   </li>
                   <li className={cn(currentRouteName === RESOURCES_ROUTE && 'active')}>
                     <Link to={RESOURCES_ROUTE}>
-                <span className="icon-container">
-                <i className="fa fa-laptop"/>
-                </span>
+              <span className="icon-container">
+              <i className="fa fa-laptop"/>
+              </span>
                       Resources
                     </Link>
                   </li>
                 </ul>
-              </nav>
-            )}
+              )}
+            </nav>
             <div className="main-wrapper" style={sidebarOpened ? {left: 210} : {}}>
               <nav className={cn('navbar navbar-fixed-top', sidebarOpened && 'has-sidebar-open')}>
                 <a className="mobile-sidebar-trigger-container" onClick={this.toggleSidebarOpened}>
@@ -148,47 +148,47 @@ class AppLayout extends React.Component {
                   <div className="display-table-cell text-right top-nav-tools">
                     <div className="inline-block">
                       {/*<div className="display-table">*/}
-                        {/*<div className="display-table-cell pad-right-3">*/}
-                          {/*<p className="inline-block">*/}
-                            {/*<a className="alerts-wrapper">*/}
-                              {/*<span className="circle">*/}
-                                {/*<span>12</span>*/}
-                              {/*</span>*/}
-                              {/*<i className="font-size-18 fa fa-bell-o"/>*/}
-                            {/*</a>*/}
-                          {/*</p>*/}
-                        {/*</div>*/}
-                        {/*<div className="display-table-cell">*/}
-                          {/*<div className="inline-block">*/}
-                            {/*<div className="dropdown">*/}
-                              {/*<a*/}
-                                {/*className="dropdown-toggle user-dropdown inline-block"*/}
-                                {/*data-toggle="dropdown"*/}
-                                {/*id="userDropdownMenu"*/}
-                              {/*>*/}
-                                {/*<span className="avatar inline-block"*/}
-                                      {/*style={{backgroundImage: require('../../static/avatar.png')}}/>*/}
-                                {/*<img className="arrow"*/}
-                                     {/*src={require('../../static/caret-down.png')}*/}
-                                     {/*width="10"*/}
-                                     {/*height="auto"*/}
-                                     {/*alt="presentation"*/}
-                                {/*/>*/}
-                              {/*</a>*/}
-                              {/*<ul aria-labelledby="userDropdownMenu"*/}
-                                  {/*className="dropdown-menu dropdown-menu-right dropdown-menu-keep-open">*/}
-                                {/*<li>*/}
-                                  {/*<a>Menu Item 1</a></li>*/}
-                                {/*<li>*/}
-                                  {/*<a>Menu Item 1</a>*/}
-                                {/*</li>*/}
-                                {/*<li>*/}
-                                  {/*<Link to={LOGOUT_ROUTE}>Log Out</Link>*/}
-                                {/*</li>*/}
-                              {/*</ul>*/}
-                            {/*</div>*/}
-                          {/*</div>*/}
-                        {/*</div>*/}
+                      {/*<div className="display-table-cell pad-right-3">*/}
+                      {/*<p className="inline-block">*/}
+                      {/*<a className="alerts-wrapper">*/}
+                      {/*<span className="circle">*/}
+                      {/*<span>12</span>*/}
+                      {/*</span>*/}
+                      {/*<i className="font-size-18 fa fa-bell-o"/>*/}
+                      {/*</a>*/}
+                      {/*</p>*/}
+                      {/*</div>*/}
+                      {/*<div className="display-table-cell">*/}
+                      {/*<div className="inline-block">*/}
+                      {/*<div className="dropdown">*/}
+                      {/*<a*/}
+                      {/*className="dropdown-toggle user-dropdown inline-block"*/}
+                      {/*data-toggle="dropdown"*/}
+                      {/*id="userDropdownMenu"*/}
+                      {/*>*/}
+                      {/*<span className="avatar inline-block"*/}
+                      {/*style={{backgroundImage: require('../../static/avatar.png')}}/>*/}
+                      {/*<img className="arrow"*/}
+                      {/*src={require('../../static/caret-down.png')}*/}
+                      {/*width="10"*/}
+                      {/*height="auto"*/}
+                      {/*alt="presentation"*/}
+                      {/*/>*/}
+                      {/*</a>*/}
+                      {/*<ul aria-labelledby="userDropdownMenu"*/}
+                      {/*className="dropdown-menu dropdown-menu-right dropdown-menu-keep-open">*/}
+                      {/*<li>*/}
+                      {/*<a>Menu Item 1</a></li>*/}
+                      {/*<li>*/}
+                      {/*<a>Menu Item 1</a>*/}
+                      {/*</li>*/}
+                      {/*<li>*/}
+                      {/*<Link to={LOGOUT_ROUTE}>Log Out</Link>*/}
+                      {/*</li>*/}
+                      {/*</ul>*/}
+                      {/*</div>*/}
+                      {/*</div>*/}
+                      {/*</div>*/}
                       {/*</div>*/}
                     </div>
                   </div>
