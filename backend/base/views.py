@@ -12,7 +12,7 @@ from lib.dataset import breast_cancer_by_grade, diagnosis, \
     breakout_by_stage, woman_annualy_diagnosed, breast_cancer_by_size, \
     percent_of_women_with_cancer_by_race_overall, \
     distribution_of_stage_of_cancer, surgery_decisions, chemotherapy, \
-    radiation, get_t_size_cm
+    radiation, get_t_size_cm, breast_cancer_by_state
 
 
 class ReportDataView(GenericAPIView):
@@ -217,6 +217,7 @@ class TestDataView(GenericAPIView):
             'radiation': {
                 'overall': radiation(age),  # ????
             },
+            'breast_cancer_by_state': breast_cancer_by_state()
         }
 
         similar_diagnosis = diagnosis(json.dumps(dd, ensure_ascii=False),
