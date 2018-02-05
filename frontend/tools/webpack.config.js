@@ -286,6 +286,8 @@ const clientConfig = {
   entry: {
     client: [
       '@babel/polyfill',
+      'jquery',
+      'jvectormap',
       './src/client.js'
     ],
   },

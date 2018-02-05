@@ -280,6 +280,7 @@ class Diagnosis extends React.Component {
                         className='number-circle blue-circle'>1</span> AC + T</p></td>
                       <td>
                         <table>
+                          <tbody>
                           <tr>
                             <td>
                               <p className='push-bot-1 push-top-1'>A) 4AC, 4T</p>
@@ -290,10 +291,12 @@ class Diagnosis extends React.Component {
                               <p className='push-bot-1 push-top-1'>B) 4AC, 12T</p>
                             </td>
                           </tr>
+                          </tbody>
                         </table>
                       </td>
                       <td>
                         <table>
+                          <tbody>
                           <tr>
                             <td>
                               <p className='no-margin'>A)</p>
@@ -330,6 +333,7 @@ class Diagnosis extends React.Component {
                               </p>
                             </td>
                           </tr>
+                          </tbody>
                         </table>
                       </td>
                     </tr>
