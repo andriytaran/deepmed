@@ -221,7 +221,7 @@ def create_filter(input_data, operator='$and'):
     return {operator: filter_list}
 
 
-def diagnosis(input_json, limit=0):
+def diagnosis(input_json, limit=20):
     def get_race(race):
         if race == "White":
             return "Caucasian"
@@ -272,6 +272,57 @@ def diagnosis(input_json, limit=0):
              'survival mos.': item['survival-months'],
              'cod': item['cod-to-site-recode']}
         results.append(d)
+
+    if len(results) < 20:
+        filters['$and'] = [d for d in filters['$and'] if 'race-recode-w-b-ai-api' not in d]
+        dataset = find(filters, limit=limit)
+        results = []
+        for item in dataset:
+            d = {'age': item['age-recode-with-single-ages-and-85'],
+                 'ethnicity': get_race(item['race-recode-w-b-ai-api']),
+                 'size': item['t-size-cm'],
+                 'grade': item['grade'],
+                 'er': item['er-status-recode-breast-cancer-1990'],
+                 'pr': item['pr-status-recode-breast-cancer-1990'],
+                 'her2': item['derived-her2-recode-2010'],
+                 'lat': item['laterality'],
+                 'site': item['site-recode-icd-o-3-who-2008'],
+                 'type': item['type'],
+                 'stage': item['breast-adjusted-ajcc-6th-stage-1988'],
+                 '+nodes': item['regional-nodes-positive-1988-1'],
+                 'surgery': item['surgery'],
+                 'chemo': item['chemo'],
+                 'radiation': item['radiation'],
+                 'year dx': item['year-of-diagnosis'],
+                 'survival mos.': item['survival-months'],
+                 'cod': item['cod-to-site-recode']}
+            results.append(d)
+        if len(results) < 20:
+            filters['$and'] = [d for d in filters['$and'] if 'age-recode-with-1-year-olds' not in d]
+            dataset = find(filters, limit=limit)
+            results = []
+            for item in dataset:
+                d = {'age': item['age-recode-with-single-ages-and-85'],
+                     'ethnicity': get_race(item['race-recode-w-b-ai-api']),
+                     'size': item['t-size-cm'],
+                     'grade': item['grade'],
+                     'er': item['er-status-recode-breast-cancer-1990'],
+                     'pr': item['pr-status-recode-breast-cancer-1990'],
+                     'her2': item['derived-her2-recode-2010'],
+                     'lat': item['laterality'],
+                     'site': item['site-recode-icd-o-3-who-2008'],
+                     'type': item['type'],
+                     'stage': item['breast-adjusted-ajcc-6th-stage-1988'],
+                     '+nodes': item['regional-nodes-positive-1988-1'],
+                     'surgery': item['surgery'],
+                     'chemo': item['chemo'],
+                     'radiation': item['radiation'],
+                     'year dx': item['year-of-diagnosis'],
+                     'survival mos.': item['survival-months'],
+                     'cod': item['cod-to-site-recode']}
+                results.append(d)
+            return results
+        return results
     return results
 
 
@@ -382,38 +433,6 @@ def breast_cancer_by_grade(input_json):
 def percent_of_women_with_cancer_by_race_overall():
     diag_request = '{"sex": "Female"}'
     return percent_race_with_cancer_by_age(diag_request)
-    # result = json.loads(aggregate([{"$group": {
-    #     "_id": "$race-recode-w-b-ai-api",
-    #     "count": {"$sum": 1},
-    # }},
-    #     {"$project": {
-    #         "count": 1,
-    #         "percentage": {"$multiply": [{"$divide": [100, 1546698]}, "$count"]}
-    #     }},
-    #     {"$sort": SON([("_id", -1)])}]))
-    #
-    # pprint(result)
-    #
-    # data = {'Other': 0}
-    # for i, label in enumerate(list(map(lambda x: x['_id'], result))):
-    #     if label == 'White':
-    #         data['White'] = result[i]['percentage']
-    #     elif label == 'Black':
-    #         data['Black'] = result[i]['percentage']
-    #     elif label == 'Asian or Pacific Islander':
-    #         data['Asian or Pacific Islander'] = result[i]['percentage']
-    #     elif label in ['Unknown', 'American Indian/Alaska Native'] or label is None:
-    #         data['Other'] += result[i]['percentage']
-    #
-    # return {
-    #     'labels': list(map(lambda x: x, data.keys())),
-    #     'datasets': [{
-    #         'data': list(map(lambda x: x, data.values())),
-    #         'label': "Diagnosed",
-    #         'borderColor': '#48ccf5',
-    #         'fill': False
-    #     }]
-    # }
 
 
 def cause_of_death_overall():
@@ -1003,42 +1022,6 @@ def breakout_by_stage(input_json):
     }
 
 
-# def breakout_by_stage2(input_json):
-#     """
-#     Do not use this func it is only for comparation
-#     :param input_json:
-#     :return:
-#     """
-#     filters = create_filter(input_json)
-#     result = json.loads(aggregate([
-#         {"$match": filters},
-#         {"$group": {
-#             "_id": "",
-#             "total": {"$sum": 1},
-#             "subset": {"$push": "$1998-stage"}
-#         }},
-#         {"$unwind": "$subset"},
-#         {"$group": {
-#             "_id": {"1998-stage": "$subset", "total": "$total"},
-#             "count": {"$sum": 1}
-#         }},
-#         {"$project": {
-#             "count": 1,
-#             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
-#         }},
-#         {"$sort": SON([("percentage", -1)])}]))
-#
-#     return {
-#         'labels': list(map(lambda x: x['_id']['1998-stage'], result)),
-#         'datasets': [{
-#             'data': list(map(lambda x: x['percentage'], result)),
-#             'label': "Diagnosed",
-#             'borderColor': '#48ccf5',
-#             'fill': False
-#         }]
-#     }
-
-
 # def cause_of_death_within_ages_30_40():
 #     result = json.loads(aggregate([{"$match": {
 #         "$and": [{"cod-to-site-recode": {"$nin": ["Alive"]}},
@@ -1357,7 +1340,7 @@ if __name__ == '__main__':
     # type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
     # pprint(growth_by_specific_type(age_only, "$and"))
 
-    pprint(diagnosis(diag_request, limit=10))
+    pprint(diagnosis(diag_request, limit=20))
     # age_and_race = '{"age": 48, "ethnicity":"White"}'
     # pprint(distribution_of_stage_of_cancer(age_and_race))
-    # pprint(breast_cancer_by_grade(diag_request))
+    # pprint(woman_annualy_diagnosed(age_only))
