@@ -23,7 +23,7 @@ class ReportDataView(GenericAPIView):
         serializer = self.get_serializer(data=request.query_params)
 
         serializer.is_valid(raise_exception=True)
-        dd = serializer.validated_data
+        dd = dict(serializer.validated_data)
         input_json = json.dumps({'age': dd.get('age'),
                                  'tumor_size_in_mm': dd.get(
                                      'tumor_size_in_mm'),
