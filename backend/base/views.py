@@ -199,13 +199,14 @@ class TestDataView(GenericAPIView):
                 'grade': breast_cancer_by_grade(age),
                 'size': breast_cancer_by_size(age)
             },
-            'distribution_of_stage_of_cancer': distribution_of_stage_of_cancer(
-                age),
-            'distribution_of_stage_of_cancer_by_ethnicity':
-                distribution_of_stage_of_cancer(
-                    json.dumps({'age': dd.get('age'),
-                                'ethnicity': dd.get(
-                                    'ethnicity')}, ensure_ascii=False)),
+            'distribution_of_stage_of_cancer': {
+                'overall': distribution_of_stage_of_cancer(age),
+                'by_race':
+                    distribution_of_stage_of_cancer(
+                        json.dumps({'age': dd.get('age'),
+                                    'ethnicity': dd.get(
+                                        'ethnicity')}, ensure_ascii=False)),
+            },
             'percent_of_women_with_cancer_by_race': {
                 'overall': percent_of_women_with_cancer_by_race_overall()
             },
