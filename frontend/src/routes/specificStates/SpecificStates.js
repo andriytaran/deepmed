@@ -121,7 +121,12 @@ class SpecificStates extends React.Component {
                             display: false,
                             position: 'bottom',
                             labels: chartsLabelsOptions
-                          }
+                          },
+                          tooltips: {
+                            callbacks: {
+                              label: formatChartNumber
+                            }
+                          },
                         }}
                         width={200}
                         height={100}
