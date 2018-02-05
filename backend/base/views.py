@@ -81,8 +81,22 @@ class ReportDataView(GenericAPIView):
             'radiation': {
                 'overall': radiation(age),
             },
-            'similar_diagnosis': diagnosis(input_json)
         }
+
+        similar_diagnosis = diagnosis(json.dumps(dd, ensure_ascii=False),
+                                      limit=20)
+
+        if len(similar_diagnosis) < 20:
+            dd.pop('ethnicity', None)
+            similar_diagnosis = diagnosis(json.dumps(dd, ensure_ascii=False),
+                                          limit=20)
+
+            if len(similar_diagnosis) < 20:
+                dd.pop('age', None)
+                similar_diagnosis = diagnosis(
+                    json.dumps(dd, ensure_ascii=False), limit=20)
+
+        data['similar_diagnosis'] = similar_diagnosis
 
         data['chemotherapy']['breakout_by_stage'] = breakout_by_stage(
             json.dumps({
@@ -120,8 +134,7 @@ class TestDataView(GenericAPIView):
         serializer = self.get_serializer(data=request.query_params)
 
         serializer.is_valid(raise_exception=True)
-        dd = serializer.validated_data
-        input_json = json.dumps(dd, ensure_ascii=False)
+        dd = dict(serializer.validated_data)
         age = json.dumps({'age': dd.get('age')})
 
         str_args = ' '.join([dd.get('sex', 'Female'),
@@ -218,8 +231,22 @@ class TestDataView(GenericAPIView):
             'radiation': {
                 'overall': radiation(age),  # ????
             },
-            'similar_diagnosis': diagnosis(input_json)
         }
+
+        similar_diagnosis = diagnosis(json.dumps(dd, ensure_ascii=False),
+                                      limit=20)
+
+        if len(similar_diagnosis) < 20:
+            dd.pop('ethnicity', None)
+            similar_diagnosis = diagnosis(json.dumps(dd, ensure_ascii=False),
+                                          limit=20)
+
+            if len(similar_diagnosis) < 20:
+                dd.pop('age', None)
+                similar_diagnosis = diagnosis(
+                    json.dumps(dd, ensure_ascii=False), limit=20)
+
+        data['similar_diagnosis'] = similar_diagnosis
 
         data['chemotherapy']['breakout_by_stage'] = breakout_by_stage(
             json.dumps({
