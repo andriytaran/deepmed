@@ -42,6 +42,7 @@ class Html extends React.Component {
           />
         ))}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jvectormap/2.0.4/jquery-jvectormap.css" type="text/css" media="screen"/>
+        <link href="https://fonts.googleapis.com/css?family=Arimo:400,400i,700,700i" rel="stylesheet"/>
       </head>
       <body>
       <div id="app" dangerouslySetInnerHTML={{__html: children}}/>

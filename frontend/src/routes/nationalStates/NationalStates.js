@@ -7,6 +7,7 @@ import {Line} from 'react-chartjs-2'
 
 class NationalStates extends React.Component {
   render() {
+    const {data} = this.props
     return (
       <div className="container container-full" data-children="same-height">
 
@@ -17,15 +18,16 @@ class NationalStates extends React.Component {
               <h2 className="no-margin text-center">Breast Cancer by State</h2>
 
               <div className="text-center">
-                {/*{this.props.data &&*/}
-                {/*<VectorMap map="us_aea"*/}
-                {/*backgroundColor="transparent"*/}
-                {/*borderColor="#fb0000"*/}
-                {/*borderWidth={2}*/}
-                {/*series={this.props.data.breast_cancer_by_state}*/}
-                {/*containerStyle={{width: '100%', height: 400}}*/}
-                {/*/>*/}
-                {/*}*/}
+                {/*{data.breast_cancer_by_state && (*/}
+                  {/*<VectorMap*/}
+                    {/*map="us_aea"*/}
+                    {/*backgroundColor="transparent"*/}
+                    {/*borderColor="#fb0000"*/}
+                    {/*borderWidth={2}*/}
+                    {/*series={data.breast_cancer_by_state}*/}
+                    {/*containerStyle={{width: '100%', height: 400}}*/}
+                  {/*/>*/}
+                {/*)}*/}
               </div>
 
               <div className="row push-top-5">
@@ -37,8 +39,7 @@ class NationalStates extends React.Component {
                       <div className="display-table">
                         <div className="display-table-cell">
                           <div className="display-table-cell">
-                                                        <span className="range-square"
-                                                              style={{backgroundColor: '#47cfd1'}}></span>
+                            <span className="range-square" style={{backgroundColor: '#47cfd1'}}/>
                           </div>
                           <div className="display-table-cell">
                             <p className="no-margin line-height-100 small">&nbsp;106.6 to
@@ -47,8 +48,7 @@ class NationalStates extends React.Component {
                         </div>
                         <div className="display-table-cell pad-left-1">
                           <div className="display-table-cell">
-                                                        <span className="range-square"
-                                                              style={{backgroundColor: '#04a9a9'}}></span>
+                            <span className="range-square" style={{backgroundColor: '#04a9a9'}}/>
                           </div>
                           <div className="display-table-cell">
                             <p className="no-margin line-height-100 small">&nbsp;118.7 to
@@ -57,8 +57,7 @@ class NationalStates extends React.Component {
                         </div>
                         <div className="display-table-cell pad-left-1">
                           <div className="display-table-cell">
-                                                        <span className="range-square"
-                                                              style={{backgroundColor: '#48ccf5'}}></span>
+                            <span className="range-square" style={{backgroundColor: '#48ccf5'}}/>
                           </div>
                           <div className="display-table-cell">
                             <p className="no-margin line-height-100 small">&nbsp;125.9 to
@@ -67,8 +66,7 @@ class NationalStates extends React.Component {
                         </div>
                         <div className="display-table-cell pad-left-1">
                           <div className="display-table-cell">
-                                                        <span className="range-square"
-                                                              style={{backgroundColor: '#77c2d9'}}></span>
+                            <span className="range-square" style={{backgroundColor: '#77c2d9'}}/>
                           </div>
                           <div className="display-table-cell">
                             <p className="no-margin line-height-100 small">&nbsp;132.3 to
@@ -93,10 +91,13 @@ class NationalStates extends React.Component {
                   <div className="col-sm-12">
                     <p className="push-top-1 push-bot-2 text-center"><strong>Number per 100,000
                       females</strong></p>
-                    {this.props.data &&
-                    <Line data={this.props.data.breast_cancer_at_a_glance}
-                          width={500} height={100}/>
-                    }
+                    {data.breast_cancer_at_a_glance && (
+                      <Line
+                        data={data.breast_cancer_at_a_glance}
+                        width={500}
+                        height={100}
+                      />
+                    )}
                   </div>
                 </div>
                 <div className="row row-condensed push-top-2">
@@ -205,14 +206,19 @@ class NationalStates extends React.Component {
                   <div className="custom-panel custom-panel-condensed push-bot-0">
                     <p className="push-top-1 push-bot-2 text-center"><strong>Age-Specific Rates of
                       Breast Cancer in the United States</strong></p>
-                    {this.props.data &&
-                    <Line data={this.props.data.breast_cancer_by_age} options={{
-                      legend: {
-                        display: false,
-                        position: 'bottom'
-                      }
-                    }} width={275} height={100}/>
-                    }
+                    {data.breast_cancer_by_age && (
+                      <Line
+                        data={data.breast_cancer_by_age}
+                        options={{
+                          legend: {
+                            display: false,
+                            position: 'bottom'
+                          }
+                        }}
+                        width={275}
+                        height={100}
+                      />
+                    )}
                   </div>
                 </div>
                 <div className="col-md-6 push-top-1-sm">
@@ -276,7 +282,7 @@ class NationalStates extends React.Component {
 }
 
 const mapState = state => ({
-  // ...state.diagnosis,
+  ...state.diagnosis,
 })
 
 const mapDispatch = {}

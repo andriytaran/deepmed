@@ -72,57 +72,59 @@ class AppLayout extends React.Component {
           </div>
           :
           <div>
-            <nav className={cn('sidebar active', sidebarOpened && 'sidebar-mobile-active')}>
-              <div className="sidebar-header" style={{height: 56}}>
-                <Link to={HOME_ROUTE}>
-                  <img src={require('../../static/deep-med-logo-new.png')} width="136" height="auto" alt="presentation"
-                       style={{top: '15.5px'}}/>
-                </Link>
-              </div>
-              <ul className="ul-no-bullets">
-                <li className={cn(currentRouteName === DIAGNOSIS_ROUTE && 'active')}>
-                  <Link to={DIAGNOSIS_ROUTE}>
+            {currentRouteName !== HOME_ROUTE && (
+              <nav className={cn('sidebar active', sidebarOpened && 'sidebar-mobile-active')}>
+                <div className="sidebar-header" style={{height: 56}}>
+                  <Link to={HOME_ROUTE}>
+                    <img src={require('../../static/deep-med-logo-new.png')} width="136" height="auto" alt="presentation"
+                         style={{top: '15.5px'}}/>
+                  </Link>
+                </div>
+                <ul className="ul-no-bullets">
+                  <li className={cn(currentRouteName === DIAGNOSIS_ROUTE && 'active')}>
+                    <Link to={DIAGNOSIS_ROUTE}>
                 <span className="icon-container">
                 <i className="fa fa-heart-o"/>
                 </span>
-                    Diagnosis
-                  </Link>
-                </li>
-                <li className={cn(currentRouteName === NATIONAL_STATES_ROUTE && 'active')}>
-                  <Link to={NATIONAL_STATES_ROUTE}>
+                      Diagnosis
+                    </Link>
+                  </li>
+                  <li className={cn(currentRouteName === NATIONAL_STATES_ROUTE && 'active')}>
+                    <Link to={NATIONAL_STATES_ROUTE}>
                 <span className="icon-container">
                 <i className="fa fa-bar-chart"/>
                 </span>
-                    National Stats
-                  </Link>
-                </li>
-                <li className={cn(currentRouteName === SPECIFIC_STATES_ROUTE && 'active')}>
-                  <Link to={SPECIFIC_STATES_ROUTE}>
+                      National Stats
+                    </Link>
+                  </li>
+                  <li className={cn(currentRouteName === SPECIFIC_STATES_ROUTE && 'active')}>
+                    <Link to={SPECIFIC_STATES_ROUTE}>
                 <span className="icon-container">
                 <i className="fa fa-bar-chart"/>
                 </span>
-                    Specific Stats
-                  </Link>
-                </li>
-                <li
-                  className={cn(currentRouteName === SIMILAR_DIAGNOSES_ROUTE && 'active')}>
-                  <Link to={SIMILAR_DIAGNOSES_ROUTE}>
+                      Specific Stats
+                    </Link>
+                  </li>
+                  <li
+                    className={cn(currentRouteName === SIMILAR_DIAGNOSES_ROUTE && 'active')}>
+                    <Link to={SIMILAR_DIAGNOSES_ROUTE}>
                 <span className="icon-container">
                 <i className="fa fa-files-o"/>
                 </span>
-                    Similar Diagnoses
-                  </Link>
-                </li>
-                <li className={cn(currentRouteName === RESOURCES_ROUTE && 'active')}>
-                  <Link to={RESOURCES_ROUTE}>
+                      Similar Diagnoses
+                    </Link>
+                  </li>
+                  <li className={cn(currentRouteName === RESOURCES_ROUTE && 'active')}>
+                    <Link to={RESOURCES_ROUTE}>
                 <span className="icon-container">
                 <i className="fa fa-laptop"/>
                 </span>
-                    Resources
-                  </Link>
-                </li>
-              </ul>
-            </nav>
+                      Resources
+                    </Link>
+                  </li>
+                </ul>
+              </nav>
+            )}
             <div className="main-wrapper" style={sidebarOpened ? {left: 210} : {}}>
               <nav className={cn('navbar navbar-fixed-top', sidebarOpened && 'has-sidebar-open')}>
                 <a className="mobile-sidebar-trigger-container" onClick={this.toggleSidebarOpened}>

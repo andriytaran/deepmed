@@ -7,8 +7,19 @@ import {createForm} from 'rc-form'
 import messages from '../../components/messages'
 import {Input, Select} from '../../components'
 import isEmpty from 'lodash/isEmpty'
+import {Button} from 'react-bootstrap'
+import {getDiagnosisData} from '../../reducers/diagnosis'
 
 class Diagnosis extends React.Component {
+  handleSubmit = (e) => {
+    e.preventDefault()
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        this.props.getDiagnosisData(values)
+      }
+    })
+  }
+
   render() {
     const {data, diagnosisForm} = this.props
     const {getFieldDecorator, getFieldError} = this.props.form
@@ -19,7 +30,7 @@ class Diagnosis extends React.Component {
             {!isEmpty(diagnosisForm) && (
               <div className='custom-panel custom-panel-condensed light-gray-bg'>
                 <h2 className='push-top-2'>Diagnosis</h2>
-                <form>
+                <form onSubmit={this.handleSubmit}>
                   <div className='row row-condensed push-top-2-xs'>
                     <div className='col-sm-2 col-xs-6'>
                       {getFieldDecorator('age', {
@@ -197,6 +208,13 @@ class Diagnosis extends React.Component {
                           <option value='other'>Other</option>
                         </Select>
                       )}
+                    </div>
+                  </div>
+                  <div className="row row-condensed push-top-2-xs">
+                    <div className="col-xs-12 text-center position-relative">
+                      <Button bsSize="large" bsStyle="primary" type="submit" className={s.analyzeBtn}>
+                        Analyze
+                      </Button>
                     </div>
                   </div>
                 </form>
@@ -393,6 +411,8 @@ const mapState = state => ({
   ...state.diagnosis,
 })
 
-const mapDispatch = {}
+const mapDispatch = {
+  getDiagnosisData,
+}
 
 export default connect(mapState, mapDispatch)(createForm()(withStyles(s)(Diagnosis)))

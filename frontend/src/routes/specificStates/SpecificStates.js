@@ -38,45 +38,37 @@ class SpecificStates extends React.Component {
           <div className="col-sm-12">
             <div className="custom-panel custom-panel-condensed light-gray-bg">
               <div className="row row-condensed">
-            {data.woman_annualy_diagnosed && (
-              <div className="col-xl-12 col-lg-12 col-md-12">
-                <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
-                     data-adjust="height">
-                  <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                    <strong># of Women Annually Diagnosed {ageRange}</strong>
-                  </h4>
-                  <Line
-                    data={data.woman_annualy_diagnosed}
-                    options={{
-                      legend: {
-                        display: false,
-                        position: 'bottom'
-                      },
-                      scales: {
-                        yAxes: [{
-                          gridLines: {
-                            display: false
+                {data.woman_annualy_diagnosed && (
+                  <div className="col-xl-5ths col-lg-4 col-md-6">
+                    <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
+                         data-adjust="height">
+                      <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
+                        <strong># of Women Annually Diagnosed {ageRange}</strong>
+                      </h4>
+                      <Line
+                        data={data.woman_annualy_diagnosed}
+                        options={{
+                          legend: {
+                            display: false,
+                            position: 'bottom'
                           },
-                          ticks: {
-                            beginAtZero: true,
+                          scales: {
+                            yAxes: [{
+                              gridLines: {
+                                display: false
+                              },
+                              ticks: {
+                                beginAtZero: true,
+                              }
+                            }]
                           }
-                        }]
-                      }
-                    }}
-                    width={400}
-                    height={100}
-                  />
-                </div>
-              </div>
-            )}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="custom-panel custom-panel-condensed light-gray-bg">
-              <div className="row row-condensed">
+                        }}
+                        width={400}
+                        height={400}
+                      />
+                    </div>
+                  </div>
+                )}
                 {data.growth_by_specific_type && (
                   <div className="col-xl-5ths col-lg-4 col-md-6">
                     <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
