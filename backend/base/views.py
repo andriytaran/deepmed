@@ -12,7 +12,8 @@ from lib.dataset import breast_cancer_by_grade, diagnosis, \
     breakout_by_stage, woman_annualy_diagnosed, breast_cancer_by_size, \
     percent_of_women_with_cancer_by_race_overall, \
     distribution_of_stage_of_cancer, surgery_decisions, chemotherapy, \
-    radiation, get_t_size_cm, breast_cancer_by_state
+    radiation, get_t_size_cm, breast_cancer_by_state, \
+    breast_cancer_at_a_glance, breast_cancer_by_age
 
 
 class ReportDataView(GenericAPIView):
@@ -23,7 +24,7 @@ class ReportDataView(GenericAPIView):
         serializer = self.get_serializer(data=request.query_params)
 
         serializer.is_valid(raise_exception=True)
-        dd = serializer.validated_data
+        dd = dict(serializer.validated_data)
         input_json = json.dumps({'age': dd.get('age'),
                                  'tumor_size_in_mm': dd.get(
                                      'tumor_size_in_mm'),
@@ -81,7 +82,9 @@ class ReportDataView(GenericAPIView):
             'radiation': {
                 'overall': radiation(age),
             },
-            'similar_diagnosis': diagnosis(input_json)
+            'breast_cancer_by_state': breast_cancer_by_state(),
+            'breast_cancer_at_a_glance': breast_cancer_at_a_glance(),
+            'breast_cancer_by_age': breast_cancer_by_age(),
         }
 
         data['chemotherapy']['breakout_by_stage'] = breakout_by_stage(
@@ -108,6 +111,26 @@ class ReportDataView(GenericAPIView):
             'age': dd.get('age'),
             'sex': 'Female'
         }, ensure_ascii=False))
+
+        dd.pop('laterality', None)
+        dd.pop('site', None)
+        dd.pop('type', None)
+        dd.pop('stage', None)
+
+        similar_diagnosis = diagnosis(json.dumps(dd, ensure_ascii=False),
+                                      limit=20)
+
+        if len(similar_diagnosis) < 20:
+            dd.pop('ethnicity', None)
+            similar_diagnosis = diagnosis(json.dumps(dd, ensure_ascii=False),
+                                          limit=20)
+
+            if len(similar_diagnosis) < 20:
+                dd.pop('age', None)
+                similar_diagnosis = diagnosis(
+                    json.dumps(dd, ensure_ascii=False), limit=20)
+
+        data['similar_diagnosis'] = similar_diagnosis
 
         return Response(data, status=status.HTTP_200_OK)
 
