@@ -186,16 +186,15 @@ class NationalStates extends React.Component {
                     <p className="push-bot-1">
                       Number of New Cases and Deaths per 100,000: The number of new cases of female breast cancer was
                       124.9 per 100,000 women per year. The number of deaths was 21.2 per 100,000 women per year. These
-                      rates are age-adjusted and based on 2010-2014 cases and deaths. <a href="#">Read more</a>
+                      rates are age-adjusted and based on 2010-2014 cases and deaths.
                     </p>
                     <p className="push-bot-1">
                       Lifetime Risk of Developing Cancer: Approximately 12.4 percent of women will be diagnosed with
-                      female breast cancer at some point during their lifetime, based on 2012-2014 data. <a href="#">Read
-                      more</a>
+                      female breast cancer at some point during their lifetime, based on 2012-2014 data.
                     </p>
                     <p>
                       Prevalence of This Cancer: In 2014, there were an estimated 3,327,552 women living with female
-                      breast cancer in the United States. <a href="#">Read more</a>
+                      breast cancer in the United States.
                     </p>
                   </div>
                 </div>
