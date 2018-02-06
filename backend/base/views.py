@@ -149,18 +149,19 @@ class TestDataView(GenericAPIView):
             regex = r"\((.*?)\)"
 
             # START SURGERY
-            surgery_args = ' '.join([dd.get('sex', 'Female'),
-                                     str(dd.get('age', 43)),
-                                     dd.get('ethnicity', 'White'),
-                                     str(float(dd.get('tumor_grade', 1))),
-                                     dd.get('site', 'Center'),
-                                     dd.get('type', 'IDC'),
-                                     dd.get('stage', str('II')),
-                                     dd.get('n_stage', 'Localized'),
+            surgery_args = ' '.join([dd.get('sex'),
+                                     str(dd.get('age')),
+                                     dd.get('ethnicity') if not dd.get(
+                                         'ethnicity') == 'Caucasian' else 'White',
+                                     str(float(dd.get('tumor_grade'))),
+                                     dd.get('site'),
+                                     dd.get('type'),
+                                     dd.get('stage'),
+                                     dd.get('n_stage'),
                                      get_t_size_cm(
-                                         dd.get('tumor_size_in_mm', 22)),
-                                     str(dd.get('number_of_tumors', 12)),
-                                     str(dd.get('num_pos_nodes', 10))])
+                                         dd.get('tumor_size_in_mm')),
+                                     str(dd.get('number_of_tumors')),
+                                     str(dd.get('num_pos_nodes'))])
 
             surgery_command_str = [settings.ML_PYTHON_PATH,
                                    settings.ML_COMMAND_FILE,
@@ -186,7 +187,8 @@ class TestDataView(GenericAPIView):
 
             chemo_args = ' '.join([
                 str(dd.get('age')),
-                dd.get('ethnicity'),
+                dd.get('ethnicity') if not dd.get(
+                    'ethnicity') == 'Caucasian' else 'White',
                 str(float(dd.get('tumor_grade'))),
                 dd.get('type'),
                 dd.get('stage'),
@@ -220,7 +222,8 @@ class TestDataView(GenericAPIView):
 
             radiation_args = [
                 str(dd.get('age')),
-                dd.get('ethnicity'),
+                dd.get('ethnicity') if not dd.get(
+                    'ethnicity') == 'Caucasian' else 'White',
                 str(float(dd.get('tumor_grade'))),
                 dd.get('site'),
                 dd.get('type'),
@@ -234,7 +237,8 @@ class TestDataView(GenericAPIView):
                 str(dd.get('pr_status')),
                 str(dd.get('her2_status'))]
 
-            sm_radiation_args = copy.deepcopy(radiation_args)  # Copy base list of args
+            sm_radiation_args = copy.deepcopy(
+                radiation_args)  # Copy base list of args
 
             sm_radiation_args.append('Mastectomy')
             sm_radiation_args.append(chemo_response[0])
@@ -256,7 +260,8 @@ class TestDataView(GenericAPIView):
                 re.search(regex,
                           str(sm_radiation_output.decode('utf8'))).group())
 
-            sl_radiation_args = copy.deepcopy(radiation_args)  # Copy base list of args
+            sl_radiation_args = copy.deepcopy(
+                radiation_args)  # Copy base list of args
 
             sl_radiation_args.append('Lumpectomy')
             sl_radiation_args.append(chemo_response[0])

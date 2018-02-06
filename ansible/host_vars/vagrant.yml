@@ -5,8 +5,9 @@ vaulted_database_user: 'vagrant'
 vaulted_database_password: 'qwe123'
 
 ### Deploy ###
-ml_surgery_file: '{{ deploy_src_dir }}/backend/dta/command_line.py'
-ml_python_path: '/usr/bin/python'
+ml_command_file: '{{ deploy_src_dir }}/backend/dta/command_line.py'
+ml_command_dir: '{{ deploy_src_dir }}/backend/dta/'
+ml_python_path: '/home/ubuntu/venv/bin/python'
 deploy_env: development
 force_upgrade: yes
 

@@ -2,21 +2,21 @@ export const WEEK = 7
 export const YEAR = 365
 export const RACES = ['Asian or Pacific Islander', 'Black', 'Caucasian', 'Other']
 export const SITES = [
-  {value: 'axillary', label: 'Axillary'},
-  {value: 'center', label: 'Center'},
-  {value: 'lower_inner', label: 'Lower-Inner'},
-  {value: 'lower_outer', label: 'Lower-Outer'},
-  {value: 'nipple', label: 'Nipple'},
-  {value: 'nos', label: 'NoS'},
-  {value: 'overlapping', label: 'Overlapping'},
-  {value: 'upper_inner', label: 'Upper-Inner'},
-  {value: 'upper_outer', label: 'Upper-Outer'},
+  {value: 'Axillary', label: 'Axillary'},
+  {value: 'Center', label: 'Center'},
+  {value: 'Lower-Inner', label: 'Lower-Inner'},
+  {value: 'Lower-Outer', label: 'Lower-Outer'},
+  {value: 'Nipple', label: 'Nipple'},
+  {value: 'NoS', label: 'NoS'},
+  {value: 'Overlapping', label: 'Overlapping'},
+  {value: 'Upper-Inner', label: 'Upper-Inner'},
+  {value: 'Upper-Outer', label: 'Upper-Outer'},
 ]
 export const TYPES = [
-  {value: 'dcis', label: 'DCIS'},
-  {value: 'idc', label: 'IDC'},
-  {value: 'ilc', label: 'ILC'},
-  {value: 'other', label: 'Other'},
+  {value: 'DCIS', label: 'DCIS'},
+  {value: 'IDC', label: 'IDC'},
+  {value: 'ILC', label: 'ILC'},
+  {value: 'Other', label: 'Other'},
 ]
 export const STAGES = [
   {value: '0', label: '0'},
