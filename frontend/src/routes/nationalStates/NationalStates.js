@@ -4,6 +4,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './NationalStates.scss'
 import {VectorMap} from '../../components'
 import {Line} from 'react-chartjs-2'
+import {humanReadableNumber} from '../../utils'
 
 class NationalStates extends React.Component {
   render() {
@@ -213,7 +214,15 @@ class NationalStates extends React.Component {
                           legend: {
                             display: false,
                             position: 'bottom'
-                          }
+                          },
+                          scales: {
+                            yAxes: [{
+                              ticks: {
+                                beginAtZero:true,
+                                callback: humanReadableNumber
+                              }
+                            }]
+                          },
                         }}
                         width={275}
                         height={100}

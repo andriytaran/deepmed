@@ -122,6 +122,14 @@ class SpecificStates extends React.Component {
                             position: 'bottom',
                             labels: chartsLabelsOptions
                           },
+                          scales: {
+                            yAxes: [{
+                              ticks: {
+                                beginAtZero:true,
+                                callback: (value) => `${value}%`
+                              }
+                            }]
+                          },
                           tooltips: {
                             callbacks: {
                               label: formatChartNumber
@@ -147,7 +155,20 @@ class SpecificStates extends React.Component {
                             display: false,
                             position: 'bottom',
                             labels: chartsLabelsOptions
-                          }
+                          },
+                          scales: {
+                            yAxes: [{
+                              ticks: {
+                                beginAtZero:true,
+                                callback: (value) => `${value}%`
+                              }
+                            }]
+                          },
+                          tooltips: {
+                            callbacks: {
+                              label: formatChartNumber
+                            }
+                          },
                         }}
                         width={200}
                         height={100}
@@ -283,7 +304,7 @@ class SpecificStates extends React.Component {
                   <div className="col-xl-5ths col-lg-4 col-md-6">
                     <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0" data-adjust="height">
                       <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>Surgery Decisions for Women Within {ageRange}</strong>
+                        <strong>Surgery Decisions for Women {ageRange}</strong>
                       </h4>
                       <Pie
                         data={{
