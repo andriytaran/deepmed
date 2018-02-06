@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './NationalStates.scss'
-// import {VectorMap} from '../../components'
+import {VectorMap} from '../../components'
 import {Line} from 'react-chartjs-2'
 
 class NationalStates extends React.Component {
@@ -18,16 +18,16 @@ class NationalStates extends React.Component {
               <h2 className="no-margin text-center">Breast Cancer by State</h2>
 
               <div className="text-center">
-                {/*{data.breast_cancer_by_state && (*/}
-                  {/*<VectorMap*/}
-                    {/*map="us_aea"*/}
-                    {/*backgroundColor="transparent"*/}
-                    {/*borderColor="#fb0000"*/}
-                    {/*borderWidth={2}*/}
-                    {/*series={data.breast_cancer_by_state}*/}
-                    {/*containerStyle={{width: '100%', height: 400}}*/}
-                  {/*/>*/}
-                {/*)}*/}
+                {data.breast_cancer_by_state && (
+                  <VectorMap
+                    map="us_aea"
+                    backgroundColor="transparent"
+                    borderColor="#fb0000"
+                    borderWidth={2}
+                    series={data.breast_cancer_by_state}
+                    containerStyle={{width: '100%', height: 400}}
+                  />
+                )}
               </div>
 
               <div className="row push-top-5">
