@@ -32,61 +32,77 @@ class SpecificStates extends React.Component {
           <div className="col-sm-12">
             <div className="custom-panel custom-panel-condensed light-gray-bg">
               <div className="row row-condensed">
-                {data.woman_annualy_diagnosed && (
+                {data.percent_women_annualy_diagnosed && (
                   <div className="col-xl-5ths col-lg-4 col-md-6">
                     <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
                          data-adjust="height">
                       <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong># of Women Annually Diagnosed {ageRange}</strong>
+                        <strong>% of Total Breast Cancer Diagnoses</strong>
                       </h4>
-                      <Line
-                        data={data.woman_annualy_diagnosed}
+                      <Bar
+                        data={{
+                          ...data.percent_women_annualy_diagnosed,
+                          datasets: data.percent_women_annualy_diagnosed.datasets.map(item => ({
+                            ...item,
+                            backgroundColor: color_1,
+                            hoverBackgroundColor: color_3,
+                            borderColor: white,
+                          }))
+                        }}
                         options={{
                           legend: {
                             display: false,
-                            position: 'bottom'
+                            position: 'bottom',
+                            labels: chartsLabelsOptions
                           },
                           scales: {
                             yAxes: [{
-                              gridLines: {
-                                display: false
-                              },
                               ticks: {
-                                beginAtZero: true,
+                                beginAtZero:true,
+                                callback: (value) => `${value}%`
                               }
                             }]
-                          }
+                          },
+                          tooltips: {
+                            callbacks: {
+                              label: formatChartNumber
+                            }
+                          },
                         }}
-                        width={400}
-                        height={400}
+                        width={200}
+                        height={200}
+                        ref="chart"
                       />
                     </div>
                   </div>
                 )}
-                {data.growth_by_specific_type && (
+                {data.percent_women_by_type && (
                   <div className="col-xl-5ths col-lg-4 col-md-6">
                     <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
                          data-adjust="height">
                       <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>Breast Cancer Trends by Specific Type</strong>
+                        <strong>Percent of Women by Breast Cancer Type</strong>
                       </h4>
-                      <Line
-                        data={data.growth_by_specific_type}
+                      <Pie
+                        data={{
+                          ...data.percent_women_by_type,
+                          datasets: data.percent_women_by_type.datasets.map(item => ({
+                            ...item,
+                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                            borderColor: white,
+                          }))
+                        }}
                         options={{
                           legend: {
+                            display: true,
                             position: 'bottom',
-                            display: false
+                            labels: chartsLabelsOptions
                           },
-                          scales: {
-                            yAxes: [{
-                              gridLines: {
-                                display: false
-                              },
-                              ticks: {
-                                beginAtZero: true,
-                              }
-                            }]
-                          }
+                          tooltips: {
+                            callbacks: {
+                              label: formatChartNumber
+                            }
+                          },
                         }}
                         width={400}
                         height={400}
