@@ -184,16 +184,18 @@ class NationalStates extends React.Component {
                   </div>
                   <div className="display-table-cell display-block-xs push-top-2-xs pad-left-1">
                     <p className="push-bot-1">
-                      Number of New Cases and Deaths per 100,00: The number of new cases of female
-                      breast... <a href="#">Read more</a>
+                      Number of New Cases and Deaths per 100,000: The number of new cases of female breast cancer was
+                      124.9 per 100,000 women per year. The number of deaths was 21.2 per 100,000 women per year. These
+                      rates are age-adjusted and based on 2010-2014 cases and deaths. <a href="#">Read more</a>
                     </p>
                     <p className="push-bot-1">
-                      Lifetime Risk of Developing Cancer: Aproximately 12.4 percent of women will
-                      be... <a href="#">Read more</a>
+                      Lifetime Risk of Developing Cancer: Approximately 12.4 percent of women will be diagnosed with
+                      female breast cancer at some point during their lifetime, based on 2012-2014 data. <a href="#">Read
+                      more</a>
                     </p>
                     <p>
-                      Prevalence of This Cancer: in 2014, there were an estimated 3,327,552
-                      women... <a href="#">Read more</a>
+                      Prevalence of This Cancer: In 2014, there were an estimated 3,327,552 women living with female
+                      breast cancer in the United States. <a href="#">Read more</a>
                     </p>
                   </div>
                 </div>
@@ -224,7 +226,7 @@ class NationalStates extends React.Component {
                           scales: {
                             yAxes: [{
                               ticks: {
-                                beginAtZero:true,
+                                beginAtZero: true,
                                 callback: humanReadableNumber
                               }
                             }]

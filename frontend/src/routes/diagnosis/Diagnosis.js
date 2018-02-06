@@ -203,7 +203,7 @@ class Diagnosis extends React.Component {
                     </div>
                     <div className="col-sm-2 col-xs-6 push-top-2-xs">
                       {getFieldDecorator('region', {
-                        initialValue: '',
+                        initialValue: diagnosisForm.region,
                         rules: [
                           {required: true, message: messages.required},
                         ]
@@ -218,7 +218,7 @@ class Diagnosis extends React.Component {
                     </div>
                     <div className="col-sm-2 col-xs-6 push-top-2-xs">
                       {getFieldDecorator('number_of_tumors', {
-                        initialValue: '',
+                        initialValue: diagnosisForm.number_of_tumors,
                         rules: [
                           {required: true, message: messages.required},
                         ]
