@@ -161,7 +161,7 @@ class TestDataView(GenericAPIView):
                                      dd.get('site'),
                                      dd.get('type'),
                                      dd.get('stage'),
-                                     dd.get('n_stage'),
+                                     dd.get('region'),
                                      get_t_size_cm(
                                          dd.get('tumor_size_in_mm')),
                                      str(dd.get('number_of_tumors')),
