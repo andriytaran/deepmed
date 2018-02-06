@@ -145,6 +145,8 @@ class TestDataView(GenericAPIView):
         try:
             import subprocess
             import ast
+            import re
+            regex = r"\((.*?)\)"
 
             # START SURGERY
             surgery_args = ' '.join([dd.get('sex', 'Female'),
@@ -173,7 +175,8 @@ class TestDataView(GenericAPIView):
             # To-Do remove try-except
             try:
                 surgery_response = ast.literal_eval(
-                    str(surgery_output.decode('utf8')))
+                    re.search(regex,
+                              str(surgery_output.decode('utf8'))).group())
             except:
                 surgery_response = ()
 
@@ -206,7 +209,8 @@ class TestDataView(GenericAPIView):
                                              cwd=settings.ML_COMMAND_DIR)
             chemo_output, err = chemo_command.communicate()
 
-            chemo_response = ast.literal_eval(str(chemo_output.decode('utf8')))
+            chemo_response = ast.literal_eval(
+                re.search(regex, str(chemo_output.decode('utf8'))).group())
 
             # END CHEMO
 
@@ -244,7 +248,8 @@ class TestDataView(GenericAPIView):
             sm_radiation_output, err = sm_radiation_command.communicate()
 
             sm_radiation_response = ast.literal_eval(
-                str(sm_radiation_output.decode('utf8')))
+                re.search(regex,
+                          str(sm_radiation_output.decode('utf8'))).group())
 
             sl_radiation_args = list(radiation_args)  # Copy base list of args
 
@@ -262,7 +267,8 @@ class TestDataView(GenericAPIView):
             sl_radiation_output, err = sl_radiation_command.communicate()
 
             sl_radiation_response = ast.literal_eval(
-                str(sl_radiation_output.decode('utf8')))
+                re.search(regex,
+                          str(sl_radiation_output.decode('utf8'))).group())
 
             # END RADIATION
 
