@@ -16,7 +16,7 @@ class InputNumber extends React.Component {
           upHandler={null}
           downHandler={null}
         />
-        {error && <span className='help-block'>{error}</span>}
+        {error && <span className='help-block'>{error[0]}</span>}
       </div>
     )
   }
