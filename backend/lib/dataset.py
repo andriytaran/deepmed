@@ -394,6 +394,12 @@ def breast_cancer_by_state():
         {"$sort": SON([("count", -1), ("_id", -1)])}]))
 
     values = {}
+    # for state in STATES_NAME_ABRS:
+    #     pprint(state)
+    #     if state in [x['_id'] for x in result]:
+    #         print(state)
+    #     print(type(state))
+    #     exit()
     for row in result:
         pprint(row)
         if row['_id'] in STATES_NAME_ABRS:
@@ -1370,7 +1376,7 @@ if __name__ == '__main__':
     # pprint(breakout_by_stage(input_json))
 
     # diag_request = '{"sex": "Female"}'
-    pprint(breast_cancer_by_size(age_only))
+    # pprint(breast_cancer_by_size(age_only))
     # pprint(percent_of_women_with_cancer_by_race_overall())
     # pprint(woman_annualy_diagnosed(age_only))
 
@@ -1390,6 +1396,6 @@ if __name__ == '__main__':
     # age_and_race = '{"age": 48, "ethnicity":"White"}'
     # pprint(distribution_of_stage_of_cancer(age_and_race))
     # pprint(woman_annualy_diagnosed(age_only))
-    # pprint(breast_cancer_by_state())
+    pprint(breast_cancer_by_state())
     # diag = diagnosis(diag_request, limit=20)
     # print(len(diag))
