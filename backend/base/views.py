@@ -90,7 +90,7 @@ class ReportDataView(GenericAPIView):
                 str(dd.get('er_status')),
                 str(dd.get('pr_status')),
                 str(dd.get('her2_status')),
-                str(dd.get('stage'))])  # AJCC_2010p
+                str('unk')])  # AJCC_2010p
 
             chemo_command_str = [settings.ML_PYTHON_PATH,
                                  settings.ML_COMMAND_FILE,
@@ -132,7 +132,7 @@ class ReportDataView(GenericAPIView):
 
             sm_radiation_args.append('Mastectomy')
             sm_radiation_args.append(chemo_response[0])
-            sm_radiation_args.append(str(dd.get('stage')))  # AJCC_2010p
+            sm_radiation_args.append(str('unk'))  # AJCC_2010p
 
             sm_radiation_command_str = [settings.ML_PYTHON_PATH,
                                         settings.ML_COMMAND_FILE,
@@ -155,7 +155,7 @@ class ReportDataView(GenericAPIView):
 
             sl_radiation_args.append('Lumpectomy')
             sl_radiation_args.append(chemo_response[0])
-            sl_radiation_args.append(str(dd.get('stage')))  # AJCC_2010p
+            sl_radiation_args.append(str('unk'))  # AJCC_2010p
 
             sl_radiation_command_str = [settings.ML_PYTHON_PATH,
                                         settings.ML_COMMAND_FILE,
@@ -274,10 +274,6 @@ class ReportDataView(GenericAPIView):
             'age': dd.get('age'),
             'sex': 'Female'
         }, ensure_ascii=False))
-
-        ###
-
-        ###
 
         dd.pop('laterality', None)
         dd.pop('site', None)
