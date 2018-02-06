@@ -222,11 +222,6 @@ class ReportDataView(GenericAPIView):
             'percent_women_annualy_diagnosed': percent_women_annualy_diagnosed(
                 age),
             'percent_women_by_type': percent_women_by_type(),
-            'woman_annualy_diagnosed': woman_annualy_diagnosed(age),
-            'growth_by_specific_type': growth_by_specific_type(
-                '{"type": "Other", "type": "Mixed",'
-                ' "type": "IBC", "type": "Mixed "}',
-                operator="$or"),
             'breast_cancer_by_grade_and_size': {
                 'grade': breast_cancer_by_grade(age),
                 'size': breast_cancer_by_size(age)
