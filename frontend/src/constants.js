@@ -13,7 +13,7 @@ export const SITES = [
   {value: 'Upper-Outer', label: 'Upper-Outer'},
 ]
 export const TYPES = [
-  {value: 'DCIS', label: 'DCIS'},
+  {value: 'In-Situ', label: 'DCIS'},
   {value: 'IDC', label: 'IDC'},
   {value: 'ILC', label: 'ILC'},
   {value: 'Other', label: 'Other'},
