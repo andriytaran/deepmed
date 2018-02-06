@@ -169,8 +169,11 @@ class TestDataView(GenericAPIView):
                                                stderr=subprocess.PIPE)
             surgery_output, err = surgery_command.communicate()
 
-            surgery_response = ast.literal_eval(
-                str(surgery_output.decode('utf8')))
+            try:
+                surgery_response = ast.literal_eval(
+                    str(surgery_output.decode('utf8')))
+            except:
+                surgery_response = ()
 
             # END SURGERY
 
