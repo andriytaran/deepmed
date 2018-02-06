@@ -362,7 +362,7 @@ def breast_cancer_at_a_glance():
         'labels': list(map(lambda x: x['_id'], result)),
         'datasets': [{
             'data': list(map(lambda x: x['count'], result)),
-            'label': "Deaths",
+            'label': "Diagnosed",
             'borderColor': '#48ccf5',
             'fill': False
         }]
@@ -394,27 +394,19 @@ def breast_cancer_by_state():
         {"$sort": SON([("count", -1), ("_id", -1)])}]))
 
     values = {}
-    # for state in STATES_NAME_ABRS:
-    #     pprint(state)
-    #     if state in [x['_id'] for x in result]:
-    #         print(state)
-    #     print(type(state))
-    #     exit()
-    for row in result:
-        pprint(row)
-        if row['_id'] in STATES_NAME_ABRS:
-            state = STATES_NAME_ABRS[row['_id']]
-            values["US-" + state] = row['count']
-        # exit()
-    # for state in STATES_ABRS:
-    #     match = filter(lambda x: STATES_NAME_ABRS[x['_id']] in STATES_ABRS, result)
-    #     pprint(list(match))
-    #     if match.count() > 0:
-    #         values["US-" + state] = match[0]['count']
-    #     else:
-    #         values["US-" + state] = 0
+    for state in STATES_NAME_ABRS:
+        st = STATES_NAME_ABRS[state]
+        if state in [x['_id'] for x in result]:
+            c = [x for x in result if state in x['_id']]
+            values["US-" + st] = c[0]['count']
+        else:
+            values["US-" + st] = 0
 
-    # pprint(values)
+    # for row in result:
+    #     pprint(row)
+    #     if row['_id'] in STATES_NAME_ABRS:
+    #         state = STATES_NAME_ABRS[row['_id']]
+    #         values["US-" + state] = row['count']
 
     return {
         'regions': [{
@@ -900,6 +892,71 @@ def distribution_of_stage_of_cancer(input_json):
     }
 
 
+def percent_women_annualy_diagnosed(input_json):
+    """
+    sample request input_json = '{"age": 48, ' \
+                   '"sex": "Female", ' \
+                   '"tumor_grade": 1, ' \
+                   '"er_status": "+", ' \
+                   '"pr_status": "+", ' \
+                   '"tumor_size_in_mm": 22, ' \
+                   '"num_pos_nodes": 0, ' \
+                   '"her2_status": "+", ' \
+                   '"ethnicity": "White"}'
+    :param input_json:
+    :return: json
+    """
+    filters = create_filter(input_json)
+    filters['$and'].append({"year-of-diagnosis": {"$gte": 1979}})
+    result = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "subset": {"$push": "$year-of-diagnosis"}
+        }},
+        {"$unwind": "$subset"},
+        {"$group": {
+            "_id": {"year-of-diagnosis": "$subset", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("_id", 1)])}]))
+
+    data = {"1979-1983": 0, "1984-1988": 0, "1989-1993": 0, "1994-1998": 0,
+            "1999-2003": 0, "2004-2008": 0, "2009-2013": 0, "2014+": 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['year-of-diagnosis'], result))):
+        if i < 5:
+            data['1979-1983'] += result[i]['percentage']
+        elif i < 10:
+            data['1984-1988'] += result[i]['percentage']
+        elif i < 15:
+            data['1989-1993'] += result[i]['percentage']
+        elif i < 20:
+            data['1994-1998'] += result[i]['percentage']
+        elif i < 25:
+            data['1999-2003'] += result[i]['percentage']
+        elif i < 30:
+            data['2004-2008'] += result[i]['percentage']
+        elif i < 35:
+            data['2009-2013'] += result[i]['percentage']
+        elif i < 40:
+            data['2014+'] += result[i]['percentage']
+
+    return {
+        'labels': list(map(lambda x: x, data.keys())),
+        'datasets': [{
+            'data': list(map(lambda x: x, data.values())),
+            'label': "Diagnosed",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
 def woman_annualy_diagnosed(input_json):
     """
     sample request input_json = '{"age": 48, ' \
@@ -1000,7 +1057,7 @@ def percent_race_with_cancer_by_age(input_json):
     data['Other'] = 0
     for i, label in enumerate(list(map(lambda x: x['_id']['race-recode-w-b-ai-api'], result))):
         if label == 'White':
-            data['White'] = result[i]['percentage']
+            data['Caucasian'] = result[i]['percentage']
         elif label == 'Black':
             data['Black'] = result[i]['percentage']
         elif label == 'Asian or Pacific Islander':
@@ -1062,6 +1119,46 @@ def breakout_by_stage(input_json):
             data['IV'] = result[i]['percentage']
         elif label in [0] or label is None:
             data['0'] += result[i]['percentage']
+
+    return {
+        'labels': list(map(lambda x: x, data.keys())),
+        'datasets': [{
+            'data': list(map(lambda x: x, data.values())),
+            'label': "Diagnosed",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
+def percent_women_by_type():
+    result = json.loads(aggregate([
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "subset": {"$push": "$type"}
+        }},
+        {"$unwind": "$subset"},
+        {"$group": {
+            "_id": {"type": "$subset", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}]))
+
+    data = {"IDC": 0, "DCIS": 0, "ILC": 0, "Other": 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['type'], result))):
+        if label == 'IDC':
+            data['IDC'] += result[i]['percentage']
+        elif label == 'In-Situ':
+            data['DCIS'] += result[i]['percentage']
+        elif label in ['Other', 'Mixed', 'IBC', 'Mixed ']:
+            data['Other'] += result[i]['percentage']
+        elif label == 'ILC':
+            data['ILC'] += result[i]['percentage']
 
     return {
         'labels': list(map(lambda x: x, data.keys())),
@@ -1378,7 +1475,7 @@ if __name__ == '__main__':
     # diag_request = '{"sex": "Female"}'
     # pprint(breast_cancer_by_size(age_only))
     # pprint(percent_of_women_with_cancer_by_race_overall())
-    # pprint(woman_annualy_diagnosed(age_only))
+    # pprint(surgery_decisions(age_only))
 
     # def wrapper(full_request):
     #     only_age = {"age": json.loads(full_request)['age']}
@@ -1395,7 +1492,7 @@ if __name__ == '__main__':
     # pprint(diagnosis(diag_request, limit=20))
     # age_and_race = '{"age": 48, "ethnicity":"White"}'
     # pprint(distribution_of_stage_of_cancer(age_and_race))
-    # pprint(woman_annualy_diagnosed(age_only))
-    pprint(breast_cancer_by_state())
+    # pprint(breast_cancer_by_size(age_only))
+    pprint(percent_women_by_type())
     # diag = diagnosis(diag_request, limit=20)
     # print(len(diag))
