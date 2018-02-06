@@ -321,7 +321,7 @@ class TestDataView(GenericAPIView):
                     'chemo': 'Y' if chemo_response[0] == 'Yes' else 'N',
                     'surgery': 'Y',
                     'level': 100 - percent})
-        except:
+        except Exception as e:
             overall_plans = []
 
         data = {

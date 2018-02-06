@@ -170,7 +170,7 @@ class DiagnosisForm extends React.Component {
           </div>
           <div className="row push-top-2">
             <div className="col-xs-6">
-              {getFieldDecorator('Region', {
+              {getFieldDecorator('region', {
                 initialValue: '',
                 rules: [
                   {required: true, message: messages.required},
