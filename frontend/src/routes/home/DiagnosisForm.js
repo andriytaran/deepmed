@@ -193,8 +193,8 @@ class DiagnosisForm extends React.Component {
               })(
                 <Select error={getFieldError('number_of_tumors')} label={'Number of tumors'}>
                   <option value='' disabled hidden>Select...</option>
-                  {Array.from(new Array(24), (val, i) =>
-                    <option key={i} value={i}>{i == 23 ? i + '+' : i}</option>
+                  {Array.from(new Array(8), (val, i) =>
+                    <option key={i} value={i}>{i}</option>
                   )}
                 </Select>
               )}
