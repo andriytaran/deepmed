@@ -148,11 +148,15 @@ class TestDataView(GenericAPIView):
             import re
             regex = r"\((.*?)\)"
 
+            if dd.get('ethnicity') == 'Caucasian':
+                v_ethnicity = 'White'
+            else:
+                v_ethnicity = dd.get('ethnicity')
+
             # START SURGERY
             surgery_args = ' '.join([dd.get('sex'),
                                      str(dd.get('age')),
-                                     dd.get('ethnicity') if not dd.get(
-                                         'ethnicity') == 'Caucasian' else 'White',
+                                     v_ethnicity,
                                      str(float(dd.get('tumor_grade'))),
                                      dd.get('site'),
                                      dd.get('type'),
@@ -187,8 +191,7 @@ class TestDataView(GenericAPIView):
 
             chemo_args = ' '.join([
                 str(dd.get('age')),
-                dd.get('ethnicity') if not dd.get(
-                    'ethnicity') == 'Caucasian' else 'White',
+                v_ethnicity,
                 str(float(dd.get('tumor_grade'))),
                 dd.get('type'),
                 dd.get('stage'),
@@ -222,8 +225,7 @@ class TestDataView(GenericAPIView):
 
             radiation_args = [
                 str(dd.get('age')),
-                dd.get('ethnicity') if not dd.get(
-                    'ethnicity') == 'Caucasian' else 'White',
+                v_ethnicity,
                 str(float(dd.get('tumor_grade'))),
                 dd.get('site'),
                 dd.get('type'),
