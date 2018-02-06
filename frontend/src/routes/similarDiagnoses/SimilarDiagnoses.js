@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './SimilarDiagnoses.scss'
+import {getAgeRangeLabel} from '../../utils'
 
 class SimilarDiagnoses extends React.Component {
   render() {
@@ -56,7 +57,7 @@ class SimilarDiagnoses extends React.Component {
                     <tbody>
                     {data.similar_diagnosis.map((item, i) =>
                       <tr key={i}>
-                        <td><p className="no-margin">{item['age']}</p></td>
+                        <td><p className="no-margin">{getAgeRangeLabel(+item['age'].replace(/[^0-9]/g,''))}</p></td>
                         <td><p className="no-margin">{item['ethnicity']}</p></td>
                         <td><p className="no-margin">{item['size']}</p></td>
                         <td><p className="no-margin">{item['grade']}</p></td>

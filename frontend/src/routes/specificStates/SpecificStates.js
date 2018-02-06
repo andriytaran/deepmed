@@ -3,13 +3,7 @@ import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './SpecificStates.scss'
 import {Bar, Line, Pie} from 'react-chartjs-2'
-import {formatChartNumber} from '../../utils'
-
-// TODO
-const getAgeRangeLabel = (age) => {
-  const nearestRoundedDown10 = parseInt(+age / 10, 10) * 10
-  return `Ages ${nearestRoundedDown10}-${nearestRoundedDown10 + 10}`
-}
+import {formatChartNumber, getAgeRangeLabel} from '../../utils'
 
 class SpecificStates extends React.Component {
   render() {
