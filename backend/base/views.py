@@ -36,6 +36,8 @@ class ReportDataView(GenericAPIView):
 
             if dd.get('ethnicity') == 'Caucasian':
                 v_ethnicity = 'White'
+            elif dd.get('ethnicity') == 'Other':
+                v_ethnicity = 'Unknown'
             else:
                 v_ethnicity = dd.get('ethnicity')
 
