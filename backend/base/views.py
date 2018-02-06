@@ -216,6 +216,8 @@ class TestDataView(GenericAPIView):
 
             # START RADIATION
 
+            import copy
+
             radiation_args = [
                 str(dd.get('age')),
                 dd.get('ethnicity'),
@@ -231,7 +233,7 @@ class TestDataView(GenericAPIView):
                 str(dd.get('her2_status')),
                 str(chemo_response[0])]
 
-            sm_radiation_args = list(radiation_args)  # Copy base list of args
+            sm_radiation_args = copy.deepcopy(radiation_args)  # Copy base list of args
 
             sm_radiation_args.append('Mastectomy')
             sm_radiation_args.append(str(dd.get('stage')))  # AJCC_2010p
@@ -251,7 +253,7 @@ class TestDataView(GenericAPIView):
                 re.search(regex,
                           str(sm_radiation_output.decode('utf8'))).group())
 
-            sl_radiation_args = list(radiation_args)  # Copy base list of args
+            sl_radiation_args = copy.deepcopy(radiation_args)  # Copy base list of args
 
             sl_radiation_args.append('Lumpectomy')
             sl_radiation_args.append(str(dd.get('stage')))  # AJCC_2010p
