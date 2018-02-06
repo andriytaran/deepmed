@@ -13,7 +13,8 @@ from lib.dataset import breast_cancer_by_grade, diagnosis, \
     percent_of_women_with_cancer_by_race_overall, \
     distribution_of_stage_of_cancer, surgery_decisions, chemotherapy, \
     radiation, get_t_size_cm, breast_cancer_by_state, \
-    breast_cancer_at_a_glance, breast_cancer_by_age
+    breast_cancer_at_a_glance, breast_cancer_by_age, \
+    percent_women_annualy_diagnosed, percent_women_by_type
 
 
 class ReportDataView(GenericAPIView):
@@ -218,6 +219,9 @@ class ReportDataView(GenericAPIView):
             'recommended_treatment_plans': {
                 'overall_plans': overall_plans
             },
+            'percent_women_annualy_diagnosed': percent_women_annualy_diagnosed(
+                age),
+            'percent_women_by_type': percent_women_by_type(),
             'woman_annualy_diagnosed': woman_annualy_diagnosed(age),
             'growth_by_specific_type': growth_by_specific_type(
                 '{"type": "Other", "type": "Mixed",'
