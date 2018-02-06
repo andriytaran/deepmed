@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './Diagnosis.scss'
-import {RACES, SITES, TYPES, STAGES} from '../../constants'
+import {RACES, SITES, TYPES, STAGES, REGIONS} from '../../constants'
 import {createForm} from 'rc-form'
 import messages from '../../components/messages'
 import {Input, Select, InputNumber} from '../../components'
@@ -197,6 +197,36 @@ class Diagnosis extends React.Component {
                           <option value='' disabled hidden>Select...</option>
                           {TYPES.map((item, i) =>
                             <option key={i} value={item.value}>{item.label}</option>
+                          )}
+                        </Select>
+                      )}
+                    </div>
+                    <div className="col-sm-2 col-xs-6 push-top-2-xs">
+                      {getFieldDecorator('region', {
+                        initialValue: '',
+                        rules: [
+                          {required: true, message: messages.required},
+                        ]
+                      })(
+                        <Select error={getFieldError('region')} label={'Region'}>
+                          <option value='' disabled hidden>Select...</option>
+                          {REGIONS.map((item, i) =>
+                            <option key={i} value={item.value}>{item.label}</option>
+                          )}
+                        </Select>
+                      )}
+                    </div>
+                    <div className="col-sm-2 col-xs-6 push-top-2-xs">
+                      {getFieldDecorator('number_of_tumors', {
+                        initialValue: '',
+                        rules: [
+                          {required: true, message: messages.required},
+                        ]
+                      })(
+                        <Select error={getFieldError('number_of_tumors')} label={'Number of tumors'}>
+                          <option value='' disabled hidden>Select...</option>
+                          {Array.from(new Array(8), (val, i) =>
+                            <option key={i} value={i}>{i}</option>
                           )}
                         </Select>
                       )}
