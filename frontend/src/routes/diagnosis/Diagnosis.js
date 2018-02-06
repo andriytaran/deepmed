@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './Diagnosis.scss'
-import {RACES} from '../../constants'
+import {RACES, SITES, TYPES, STAGES} from '../../constants'
 import {createForm} from 'rc-form'
 import messages from '../../components/messages'
 import {Input, Select} from '../../components'
@@ -77,7 +77,7 @@ class Diagnosis extends React.Component {
                         <Select error={getFieldError('num_pos_nodes')} label={'Number of Positive Nodes'}>
                           <option value='' disabled hidden>Select...</option>
                           {Array.from(new Array(24), (val, i) =>
-                            <option key={i} value={i}>{i}</option>
+                            <option key={i} value={i}>{i === 23 ? i + '+' : i}</option>
                           )}
                         </Select>
                       )}
@@ -135,8 +135,8 @@ class Diagnosis extends React.Component {
                       })(
                         <Select error={getFieldError('ethnicity')} label={'Ethnicity'}>
                           <option value='' disabled hidden>Select...</option>
-                          {RACES.map((race, i) =>
-                            <option key={i}>{race}</option>
+                          {RACES.map((item, i) =>
+                            <option key={i}>{item}</option>
                           )}
                         </Select>
                       )}
@@ -150,11 +150,9 @@ class Diagnosis extends React.Component {
                       })(
                         <Select error={getFieldError('stage')} label={'Stage'}>
                           <option value='' disabled hidden>Select...</option>
-                          <option value='0'>0</option>
-                          <option value='I'>I</option>
-                          <option value='II'>II</option>
-                          <option value='III'>III</option>
-                          <option value='IV'>IV</option>
+                          {STAGES.map((item, i) =>
+                            <option key={i} value={item.value}>{item.label}</option>
+                          )}
                         </Select>
                       )}
                     </div>
@@ -167,15 +165,9 @@ class Diagnosis extends React.Component {
                       })(
                         <Select error={getFieldError('site')} label={'Site'}>
                           <option value='' disabled hidden>Select...</option>
-                          <option value='nipple'>Nipple</option>
-                          <option value='center'>Center</option>
-                          <option value='upper_inner'>Upper-Inner</option>
-                          <option value='lower_inner'>Lower-Inner</option>
-                          <option value='upper_outer'>Upper-Outer</option>
-                          <option value='lower_outer'>Lower-Outer</option>
-                          <option value='axillary'>Axillary</option>
-                          <option value='overlapping'>Overlapping</option>
-                          <option value='nos'>NoS</option>
+                          {SITES.map((site, i) =>
+                            <option key={i} value={site.value}>{site.label}</option>
+                          )}
                         </Select>
                       )}
                     </div>
@@ -202,10 +194,9 @@ class Diagnosis extends React.Component {
                       })(
                         <Select error={getFieldError('type')} label={'Type'}>
                           <option value='' disabled hidden>Select...</option>
-                          <option value='idc'>IDC</option>
-                          <option value='ilc'>ILC</option>
-                          <option value='dcis'>DCIS</option>
-                          <option value='other'>Other</option>
+                          {TYPES.map((item, i) =>
+                            <option key={i} value={item.value}>{item.label}</option>
+                          )}
                         </Select>
                       )}
                     </div>

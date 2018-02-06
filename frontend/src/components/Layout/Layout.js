@@ -94,7 +94,7 @@ class AppLayout extends React.Component {
               <span className="icon-container">
               <i className="fa fa-bar-chart"/>
               </span>
-                      National Stats
+                      National Statistics
                     </Link>
                   </li>
                   <li className={cn(currentRouteName === SPECIFIC_STATES_ROUTE && 'active')}>
@@ -102,7 +102,7 @@ class AppLayout extends React.Component {
               <span className="icon-container">
               <i className="fa fa-bar-chart"/>
               </span>
-                      Specific Stats
+                      Individual Statistics
                     </Link>
                   </li>
                   <li

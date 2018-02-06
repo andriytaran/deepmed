@@ -169,7 +169,7 @@ class NationalStates extends React.Component {
                   <div className="display-table-cell display-block-xs">
                     <div
                       className="custom-panel custom-panel-condensed gradient-bg text-center push-bot-0">
-                      <p className="no-margin text-white"><strong>Percent<br/>Surviving 5</strong></p>
+                      <p className="no-margin text-white"><strong>5 year survival rate</strong></p>
                       <p className="font-size-40 push-top-1 push-bot-1 text-white">
                         <strong>89.7%</strong></p>
                       <p className="no-margin text-white text-light">2017-2013</p>

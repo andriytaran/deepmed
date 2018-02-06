@@ -4,9 +4,9 @@ import {generateUrl} from '../router'
 
 export const HOME_ROUTE = 'home'
 export const DIAGNOSIS_ROUTE = 'diagnosis'
-export const NATIONAL_STATES_ROUTE = 'national-states'
+export const NATIONAL_STATES_ROUTE = 'national-statistics'
 export const SPECIFIC_STATES_ROUTE = 'specific-states'
-export const SIMILAR_DIAGNOSES_ROUTE = 'similar-diagnoses'
+export const SIMILAR_DIAGNOSES_ROUTE = 'individual-statistics'
 export const RESOURCES_ROUTE = 'resources'
 export const LOGIN_ROUTE = 'login'
 export const REGISTER_ROUTE = 'register'
@@ -44,12 +44,12 @@ const routes = {
           action: require('./diagnosis').default,
         },
         {
-          path: '/national-states',
+          path: '/national-statistics',
           name: `${NATIONAL_STATES_ROUTE}`,
           action: require('./nationalStates').default,
         },
         {
-          path: '/specific-states',
+          path: '/individual-statistics',
           name: `${SPECIFIC_STATES_ROUTE}`,
           action: require('./specificStates').default,
         },
