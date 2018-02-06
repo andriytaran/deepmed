@@ -240,7 +240,9 @@ class TestDataView(GenericAPIView):
 
             sm_radiation_command_str = [settings.ML_PYTHON_PATH,
                                         settings.ML_COMMAND_FILE,
-                                        sm_radiation_args, 'Radiation']
+                                        json.dumps(sm_radiation_args,
+                                                   ensure_ascii=False),
+                                        'Radiation']
 
             sm_radiation_command = subprocess.Popen(sm_radiation_command_str,
                                                     stdout=subprocess.PIPE,
@@ -260,7 +262,9 @@ class TestDataView(GenericAPIView):
 
             sl_radiation_command_str = [settings.ML_PYTHON_PATH,
                                         settings.ML_COMMAND_FILE,
-                                        sm_radiation_args, 'Radiation']
+                                        json.dumps(sm_radiation_args,
+                                                   ensure_ascii=False),
+                                        'Radiation']
 
             sl_radiation_command = subprocess.Popen(sl_radiation_command_str,
                                                     stdout=subprocess.PIPE,
