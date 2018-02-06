@@ -222,20 +222,22 @@ class TestDataView(GenericAPIView):
                 str(dd.get('age')),
                 dd.get('ethnicity'),
                 str(float(dd.get('tumor_grade'))),
+                dd.get('site'),
                 dd.get('type'),
                 dd.get('stage'),
                 dd.get('region'),
                 get_t_size_cm(dd.get('tumor_size_in_mm')),
                 str(dd.get('number_of_tumors')),
+                str(dd.get('num_pos_nodes')),
                 str(dd.get('num_pos_nodes')),  # cs_lymphnodes
                 str(dd.get('er_status')),
                 str(dd.get('pr_status')),
-                str(dd.get('her2_status')),
-                str(chemo_response[0])]
+                str(dd.get('her2_status'))]
 
             sm_radiation_args = copy.deepcopy(radiation_args)  # Copy base list of args
 
             sm_radiation_args.append('Mastectomy')
+            sm_radiation_args.append(chemo_response[0])
             sm_radiation_args.append(str(dd.get('stage')))  # AJCC_2010p
 
             sm_radiation_command_str = [settings.ML_PYTHON_PATH,
@@ -258,6 +260,7 @@ class TestDataView(GenericAPIView):
             sl_radiation_args = copy.deepcopy(radiation_args)  # Copy base list of args
 
             sl_radiation_args.append('Lumpectomy')
+            sl_radiation_args.append(chemo_response[0])
             sl_radiation_args.append(str(dd.get('stage')))  # AJCC_2010p
 
             sl_radiation_command_str = [settings.ML_PYTHON_PATH,
