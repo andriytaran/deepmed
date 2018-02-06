@@ -161,14 +161,16 @@ class TestDataView(GenericAPIView):
                                      str(dd.get('num_pos_nodes', 10))])
 
             surgery_command_str = [settings.ML_PYTHON_PATH,
-                                   settings.ML_SURGERY_FILE,
+                                   settings.ML_COMMAND_FILE,
                                    surgery_args, 'Surgery']
 
             surgery_command = subprocess.Popen(surgery_command_str,
                                                stdout=subprocess.PIPE,
-                                               stderr=subprocess.PIPE)
+                                               stderr=subprocess.PIPE,
+                                               cwd=settings.ML_COMMAND_DIR)
             surgery_output, err = surgery_command.communicate()
 
+            # To-Do remove try-except
             try:
                 surgery_response = ast.literal_eval(
                     str(surgery_output.decode('utf8')))
@@ -188,18 +190,20 @@ class TestDataView(GenericAPIView):
                 dd.get('region'),
                 get_t_size_cm(dd.get('tumor_size_in_mm')),
                 str(dd.get('num_pos_nodes')),
+                str(dd.get('num_pos_nodes')),
                 str(dd.get('er_status')),
                 str(dd.get('pr_status')),
                 str(dd.get('her2_status')),
                 str(dd.get('stage'))])  # AJCC_2010p
 
             chemo_command_str = [settings.ML_PYTHON_PATH,
-                                 settings.ML_SURGERY_FILE,
+                                 settings.ML_COMMAND_FILE,
                                  chemo_args, 'Chemo']
 
             chemo_command = subprocess.Popen(chemo_command_str,
                                              stdout=subprocess.PIPE,
-                                             stderr=subprocess.PIPE)
+                                             stderr=subprocess.PIPE,
+                                             cwd=settings.ML_COMMAND_DIR)
             chemo_output, err = chemo_command.communicate()
 
             chemo_response = ast.literal_eval(str(chemo_output.decode('utf8')))
@@ -216,7 +220,7 @@ class TestDataView(GenericAPIView):
                 dd.get('stage'),
                 dd.get('region'),
                 get_t_size_cm(dd.get('tumor_size_in_mm')),
-                str(dd.get('num_pos_nodes')),
+                str(dd.get('number_of_tumors')),
                 str(dd.get('num_pos_nodes')),  # cs_lymphnodes
                 str(dd.get('er_status')),
                 str(dd.get('pr_status')),
@@ -229,12 +233,13 @@ class TestDataView(GenericAPIView):
             sm_radiation_args.append(str(dd.get('stage')))  # AJCC_2010p
 
             sm_radiation_command_str = [settings.ML_PYTHON_PATH,
-                                        settings.ML_SURGERY_FILE,
+                                        settings.ML_COMMAND_FILE,
                                         sm_radiation_args, 'Radiation']
 
             sm_radiation_command = subprocess.Popen(sm_radiation_command_str,
                                                     stdout=subprocess.PIPE,
-                                                    stderr=subprocess.PIPE)
+                                                    stderr=subprocess.PIPE,
+                                                    cwd=settings.ML_COMMAND_DIR)
 
             sm_radiation_output, err = sm_radiation_command.communicate()
 
@@ -247,12 +252,13 @@ class TestDataView(GenericAPIView):
             sl_radiation_args.append(str(dd.get('stage')))  # AJCC_2010p
 
             sl_radiation_command_str = [settings.ML_PYTHON_PATH,
-                                        settings.ML_SURGERY_FILE,
+                                        settings.ML_COMMAND_FILE,
                                         sm_radiation_args, 'Radiation']
 
             sl_radiation_command = subprocess.Popen(sl_radiation_command_str,
                                                     stdout=subprocess.PIPE,
-                                                    stderr=subprocess.PIPE)
+                                                    stderr=subprocess.PIPE,
+                                                    cwd=settings.ML_COMMAND_DIR)
             sl_radiation_output, err = sl_radiation_command.communicate()
 
             sl_radiation_response = ast.literal_eval(
@@ -296,7 +302,7 @@ class TestDataView(GenericAPIView):
                                             0] == 'Yes' else 'N',
                     'chemo': 'Y' if chemo_response[0] == 'Yes' else 'N',
                     'surgery': 'Y',
-                    'level': 100-percent})
+                    'level': 100 - percent})
         except:
             overall_plans = []
 
