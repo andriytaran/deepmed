@@ -18,3 +18,5 @@ class DiagnosisSerializer(serializers.Serializer):
     site = serializers.CharField(required=False)
     laterality = serializers.CharField(required=False)
     stage = serializers.CharField(required=False)
+    number_of_tumors = serializers.IntegerField(required=True)
+    region = serializers.CharField(required=True)

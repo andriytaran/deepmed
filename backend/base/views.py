@@ -25,17 +25,7 @@ class ReportDataView(GenericAPIView):
 
         serializer.is_valid(raise_exception=True)
         dd = dict(serializer.validated_data)
-        input_json = json.dumps({'age': dd.get('age'),
-                                 'tumor_size_in_mm': dd.get(
-                                     'tumor_size_in_mm'),
-                                 'tumor_grade': dd.get('tumor_grade'),
-                                 'er_status': dd.get('er_status'),
-                                 'pr_status': dd.get('pr_status'),
-                                 'her2_status': dd.get('her2_status'),
-                                 'num_pos_nodes': dd.get('num_pos_nodes'),
-                                 'ethnicity': dd.get('ethnicity'),
-                                 'sex': dd.get('sex')},
-                                ensure_ascii=False)
+
         age = json.dumps({'age': dd.get('age')})
 
         overall_plans = [{'type': 'Mastectomy',
@@ -112,10 +102,16 @@ class ReportDataView(GenericAPIView):
             'sex': 'Female'
         }, ensure_ascii=False))
 
+        ###
+
+        ###
+
         dd.pop('laterality', None)
         dd.pop('site', None)
         dd.pop('type', None)
         dd.pop('stage', None)
+        dd.pop('number_of_tumors', None)
+        dd.pop('region', None)
 
         similar_diagnosis = diagnosis(json.dumps(dd, ensure_ascii=False),
                                       limit=20)
@@ -146,66 +142,158 @@ class TestDataView(GenericAPIView):
         dd = dict(serializer.validated_data)
         age = json.dumps({'age': dd.get('age')})
 
-        str_args = ' '.join([dd.get('sex', 'Female'),
-                             str(dd.get('age', 43)),
-                             dd.get('ethnicity', 'White'),
-                             str(float(dd.get('tumor_grade', 1))),
-                             dd.get('site', 'Center'), dd.get('type', 'IDC'),
-                             dd.get('stage', str('II')),
-                             dd.get('n_stage', 'Localized'),
-                             get_t_size_cm(dd.get('tumor_size_in_mm', 22)),
-                             str(dd.get('Total_insitu_mali_tumors', 12)),
-                             str(dd.get('num_pos_nodes', 10))])
-
-        command = [settings.ML_PYTHON_PATH,
-                   settings.ML_SURGERY_FILE,
-                   str_args, 'Surgery']
         try:
             import subprocess
             import ast
 
-            surgery_command = subprocess.Popen(command, stdout=subprocess.PIPE,
+            # START SURGERY
+            surgery_args = ' '.join([dd.get('sex', 'Female'),
+                                     str(dd.get('age', 43)),
+                                     dd.get('ethnicity', 'White'),
+                                     str(float(dd.get('tumor_grade', 1))),
+                                     dd.get('site', 'Center'),
+                                     dd.get('type', 'IDC'),
+                                     dd.get('stage', str('II')),
+                                     dd.get('n_stage', 'Localized'),
+                                     get_t_size_cm(
+                                         dd.get('tumor_size_in_mm', 22)),
+                                     str(dd.get('number_of_tumors', 12)),
+                                     str(dd.get('num_pos_nodes', 10))])
+
+            surgery_command_str = [settings.ML_PYTHON_PATH,
+                                   settings.ML_SURGERY_FILE,
+                                   surgery_args, 'Surgery']
+
+            surgery_command = subprocess.Popen(surgery_command_str,
+                                               stdout=subprocess.PIPE,
                                                stderr=subprocess.PIPE)
-            output, err = surgery_command.communicate()
+            surgery_output, err = surgery_command.communicate()
 
-            if output:
-                sc_response = ast.literal_eval(str(output.decode('utf8')))
+            surgery_response = ast.literal_eval(
+                str(surgery_output.decode('utf8')))
 
-                overall_plans = []
-                percent = round(sc_response[1] * 100)
-                if sc_response[0] == 'Mastectomy':
-                    overall_plans.append({'type': sc_response[0],
-                                          'radiation': 'n',
-                                          'chemo': 'y',
-                                          'surgery': 'y',
-                                          'level': percent})
-                    overall_plans.append({'type': 'Lumpectomy',
-                                          'radiation': 'y',
-                                          'chemo': 'y',
-                                          'surgery': 'y',
-                                          'level': 100 - percent})
-                else:
-                    overall_plans.append({'type': sc_response[0],
-                                          'radiation': 'y',
-                                          'chemo': 'y',
-                                          'surgery': 'y',
-                                          'level': percent})
-                    overall_plans.append({'type': 'Mastectomy',
-                                          'radiation': 'n',
-                                          'chemo': 'y',
-                                          'surgery': 'y',
-                                          'level': 100 - percent})
+            # END SURGERY
+
+            # START CHEMO
+
+            chemo_args = ' '.join([
+                str(dd.get('age')),
+                dd.get('ethnicity'),
+                str(float(dd.get('tumor_grade'))),
+                dd.get('type'),
+                dd.get('stage'),
+                dd.get('region'),
+                get_t_size_cm(dd.get('tumor_size_in_mm')),
+                str(dd.get('num_pos_nodes')),
+                str(dd.get('er_status')),
+                str(dd.get('pr_status')),
+                str(dd.get('her2_status')),
+                str(dd.get('stage'))])  # AJCC_2010p
+
+            chemo_command_str = [settings.ML_PYTHON_PATH,
+                                 settings.ML_SURGERY_FILE,
+                                 chemo_args, 'Chemo']
+
+            chemo_command = subprocess.Popen(chemo_command_str,
+                                             stdout=subprocess.PIPE,
+                                             stderr=subprocess.PIPE)
+            chemo_output, err = chemo_command.communicate()
+
+            chemo_response = ast.literal_eval(str(chemo_output.decode('utf8')))
+
+            # END CHEMO
+
+            # START RADIATION
+
+            radiation_args = [
+                str(dd.get('age')),
+                dd.get('ethnicity'),
+                str(float(dd.get('tumor_grade'))),
+                dd.get('type'),
+                dd.get('stage'),
+                dd.get('region'),
+                get_t_size_cm(dd.get('tumor_size_in_mm')),
+                str(dd.get('num_pos_nodes')),
+                str(dd.get('num_pos_nodes')),  # cs_lymphnodes
+                str(dd.get('er_status')),
+                str(dd.get('pr_status')),
+                str(dd.get('her2_status')),
+                str(chemo_response[0])]
+
+            sm_radiation_args = list(radiation_args)  # Copy base list of args
+
+            sm_radiation_args.append('Mastectomy')
+            sm_radiation_args.append(str(dd.get('stage')))  # AJCC_2010p
+
+            sm_radiation_command_str = [settings.ML_PYTHON_PATH,
+                                        settings.ML_SURGERY_FILE,
+                                        sm_radiation_args, 'Radiation']
+
+            sm_radiation_command = subprocess.Popen(sm_radiation_command_str,
+                                                    stdout=subprocess.PIPE,
+                                                    stderr=subprocess.PIPE)
+
+            sm_radiation_output, err = sm_radiation_command.communicate()
+
+            sm_radiation_response = ast.literal_eval(
+                str(sm_radiation_output.decode('utf8')))
+
+            sl_radiation_args = list(radiation_args)  # Copy base list of args
+
+            sl_radiation_args.append('Lumpectomy')
+            sl_radiation_args.append(str(dd.get('stage')))  # AJCC_2010p
+
+            sl_radiation_command_str = [settings.ML_PYTHON_PATH,
+                                        settings.ML_SURGERY_FILE,
+                                        sm_radiation_args, 'Radiation']
+
+            sl_radiation_command = subprocess.Popen(sl_radiation_command_str,
+                                                    stdout=subprocess.PIPE,
+                                                    stderr=subprocess.PIPE)
+            sl_radiation_output, err = sl_radiation_command.communicate()
+
+            sl_radiation_response = ast.literal_eval(
+                str(sl_radiation_output.decode('utf8')))
+
+            # END RADIATION
+
+            overall_plans = []
+
+            percent = round(surgery_response[1] * 100)
+            if surgery_response[0] == 'Mastectomy':
+                overall_plans.append({
+                    'name': 'Preferred Outcome A',
+                    'type': surgery_response[0],
+                    'radiation': 'Y' if sm_radiation_response[
+                                            0] == 'Yes' else 'N',
+                    'chemo': 'Y' if chemo_response[0] == 'Yes' else 'N',
+                    'surgery': 'Y',
+                    'level': percent})
+                overall_plans.append({
+                    'name': 'Preferred Outcome B',
+                    'type': 'Lumpectomy',
+                    'radiation': 'Y' if sl_radiation_response[
+                                            0] == 'Yes' else 'N',
+                    'chemo': 'Y' if chemo_response[0] == 'Yes' else 'N',
+                    'surgery': 'Y',
+                    'level': 100 - percent})
             else:
-                overall_plans = [{'type': 'Mastectomy',
-                                  'radiation': 'n',
-                                  'chemo': 'y',
-                                  'surgery': 'y',
-                                  'level': 97},
-                                 {'type': 'Lumpectomy',
-                                  'radiation': 'y',
-                                  'chemo': 'y',
-                                  'surgery': 'y',
-                                  'level': 3}]
+                overall_plans.append({
+                    'name': 'Preferred Outcome A',
+                    'type': 'Lumpectomy',
+                    'radiation': 'Y' if sl_radiation_response[
+                                            0] == 'Yes' else 'N',
+                    'chemo': 'Y' if chemo_response[0] == 'Yes' else 'N',
+                    'surgery': 'Y',
+                    'level': percent})
+                overall_plans.append({
+                    'name': 'Preferred Outcome B',
+                    'type': surgery_response[0],
+                    'radiation': 'Y' if sm_radiation_response[
+                                            0] == 'Yes' else 'N',
+                    'chemo': 'Y' if chemo_response[0] == 'Yes' else 'N',
+                    'surgery': 'Y',
+                    'level': 100-percent})
         except:
             overall_plans = []
 
@@ -235,28 +323,15 @@ class TestDataView(GenericAPIView):
             },
             'surgery_decisions': surgery_decisions(age),
             'chemotherapy': {
-                'overall': chemotherapy(age),  # ????
+                'overall': chemotherapy(age),
             },
             'radiation': {
-                'overall': radiation(age),  # ????
+                'overall': radiation(age),
             },
-            'breast_cancer_by_state': breast_cancer_by_state()
+            'breast_cancer_by_state': breast_cancer_by_state(),
+            'breast_cancer_at_a_glance': breast_cancer_at_a_glance(),
+            'breast_cancer_by_age': breast_cancer_by_age(),
         }
-
-        similar_diagnosis = diagnosis(json.dumps(dd, ensure_ascii=False),
-                                      limit=20)
-
-        if len(similar_diagnosis) < 20:
-            dd.pop('ethnicity', None)
-            similar_diagnosis = diagnosis(json.dumps(dd, ensure_ascii=False),
-                                          limit=20)
-
-            if len(similar_diagnosis) < 20:
-                dd.pop('age', None)
-                similar_diagnosis = diagnosis(
-                    json.dumps(dd, ensure_ascii=False), limit=20)
-
-        data['similar_diagnosis'] = similar_diagnosis
 
         data['chemotherapy']['breakout_by_stage'] = breakout_by_stage(
             json.dumps({
@@ -282,5 +357,36 @@ class TestDataView(GenericAPIView):
             'age': dd.get('age'),
             'sex': 'Female'
         }, ensure_ascii=False))
+
+        ###
+
+        ###
+
+        dd.pop('laterality', None)
+        dd.pop('site', None)
+        dd.pop('type', None)
+        dd.pop('stage', None)
+        dd.pop('number_of_tumors', None)
+        dd.pop('region', None)
+
+        similar_diagnosis = diagnosis(json.dumps(dd, ensure_ascii=False),
+                                      limit=20)
+
+        if len(similar_diagnosis) < 20:
+            dd.pop('tumor_size_in_mm', None)
+            similar_diagnosis = diagnosis(json.dumps(dd, ensure_ascii=False),
+                                          limit=20)
+
+            if len(similar_diagnosis) < 20:
+                dd.pop('race', None)
+                similar_diagnosis = diagnosis(
+                    json.dumps(dd, ensure_ascii=False), limit=20)
+
+                if len(similar_diagnosis) < 20:
+                    dd.pop('age', None)
+                    similar_diagnosis = diagnosis(
+                        json.dumps(dd, ensure_ascii=False), limit=20)
+
+        data['similar_diagnosis'] = similar_diagnosis
 
         return Response(data, status=status.HTTP_200_OK)
