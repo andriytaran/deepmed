@@ -5,7 +5,7 @@ import s from './Diagnosis.scss'
 import {RACES, SITES, TYPES, STAGES} from '../../constants'
 import {createForm} from 'rc-form'
 import messages from '../../components/messages'
-import {Input, Select} from '../../components'
+import {Input, Select, InputNumber} from '../../components'
 import isEmpty from 'lodash/isEmpty'
 import {Button} from 'react-bootstrap'
 import {getDiagnosisData} from '../../reducers/diagnosis'
@@ -37,9 +37,10 @@ class Diagnosis extends React.Component {
                         initialValue: diagnosisForm.age,
                         rules: [
                           {required: true, message: messages.required},
+                          {min: 18, message: messages.minAge, type: 'number'},
                         ]
                       })(
-                        <Input error={getFieldError('age')} label={'Age at Diagnosis'}/>
+                        <InputNumber error={getFieldError('age')} label={'Age at Diagnosis'}/>
                       )}
                     </div>
                     <div className='col-sm-2 col-xs-6'>

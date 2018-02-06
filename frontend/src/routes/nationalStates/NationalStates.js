@@ -4,6 +4,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './NationalStates.scss'
 import {VectorMap} from '../../components'
 import {Line} from 'react-chartjs-2'
+import InputNumber from 'rc-input-number'
 import {humanReadableNumber} from '../../utils'
 
 class NationalStates extends React.Component {

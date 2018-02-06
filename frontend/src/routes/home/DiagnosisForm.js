@@ -3,7 +3,7 @@ import {Button} from 'react-bootstrap'
 import {createForm} from 'rc-form'
 import {RACES, SITES, TYPES, REGIONS, STAGES} from '../../constants'
 import messages from '../../components/messages'
-import {Input, Select} from '../../components'
+import {Input, Select, InputNumber} from '../../components'
 
 class DiagnosisForm extends React.Component {
   render() {
@@ -27,9 +27,10 @@ class DiagnosisForm extends React.Component {
                 initialValue: '',
                 rules: [
                   {required: true, message: messages.required},
+                  {min: 18, message: messages.minAge, type: 'number'},
                 ],
               })(
-                <Input error={getFieldError('age')} label={'Age at Diagnosis'}/>
+                <InputNumber error={getFieldError('age')} label={'Age at Diagnosis'}/>
               )}
             </div>
             <div className="col-xs-6">

@@ -33,6 +33,7 @@
     "prop-types": "^15.6.0",
     "query-string": "^5.0.1",
     "rc-form": "^2.1.7",
+    "rc-input-number": "^4.0.2",
     "react": "^16.2.0",
     "react-async-script": "^0.9.1",
     "react-bootstrap": "^0.32.1",

@@ -1,4 +1,4 @@
 export default {
   required: 'This field is required.',
-  minAge: 'Minimal age is 18'
+  minAge: 'Minimum age is 18'
 }
