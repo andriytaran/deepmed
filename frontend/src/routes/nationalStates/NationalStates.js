@@ -98,6 +98,11 @@ class NationalStates extends React.Component {
                         data={data.breast_cancer_at_a_glance}
                         width={500}
                         height={100}
+                        options={{
+                          legend: {
+                            display: false
+                          }
+                        }}
                       />
                     )}
                   </div>
