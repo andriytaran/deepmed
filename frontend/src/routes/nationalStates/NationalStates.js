@@ -17,7 +17,7 @@ class NationalStates extends React.Component {
           <div className="col-md-6">
             <div className="custom-panel custom-panel-condensed light-gray-bg" data-adjust="height">
 
-              <h2 className="no-margin text-center">Breast Cancer by State</h2>
+              <h2 className="no-margin text-center">Breast Cancer Incidence per 100,000 Women</h2>
 
               <div className="text-center">
                 {data.breast_cancer_by_state && (
@@ -25,9 +25,10 @@ class NationalStates extends React.Component {
                     map="us_aea"
                     backgroundColor="transparent"
                     borderColor="#fb0000"
-                    borderWidth={2}
+                    borderWidth={54}
                     series={data.breast_cancer_by_state}
                     containerStyle={{width: '100%', height: 400}}
+                    regionStyle={{strokeWidth: 15}}
                   />
                 )}
               </div>
@@ -87,7 +88,7 @@ class NationalStates extends React.Component {
           <div className="col-md-6">
             <div className="custom-panel custom-panel-condensed light-gray-bg" data-adjust="height">
 
-              <h2 className="no-margin text-center">Breast Cancer at a Glance</h2>
+              <h2 className="no-margin text-center">Breast Cancer Incidence over Time</h2>
               <div className="custom-panel custom-panel-condensed push-top-4">
                 <div className="row row-condensed">
                   <div className="col-sm-12">
