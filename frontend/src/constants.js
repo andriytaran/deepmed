@@ -1,6 +1,7 @@
 export const WEEK = 7
 export const YEAR = 365
-export const RACES = ['Asian or Pacific Islander', 'Black', 'Caucasian', 'Other']
+export const RACES = ['Asian or Pacific Islander', 'Black', 'Caucasian', 'American Indian/Alaska Native', 'Other']
+
 export const SITES = [
   {value: 'Axillary', label: 'Axillary'},
   {value: 'Center', label: 'Center'},
@@ -16,6 +17,7 @@ export const TYPES = [
   {value: 'In-Situ', label: 'DCIS'},
   {value: 'IDC', label: 'IDC'},
   {value: 'ILC', label: 'ILC'},
+  {value: 'IBC', label: 'IBC'},
   {value: 'Other', label: 'Other'},
 ]
 export const STAGES = [
