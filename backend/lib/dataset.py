@@ -261,7 +261,7 @@ def diagnosis(input_json, limit=20):
              'pr': item['pr-status-recode-breast-cancer-1990'],
              'her2': item['derived-her2-recode-2010'],
              'lat': item['laterality'],
-             'site': item['site-recode-icd-o-3-who-2008'],
+             'site': item['primary-site-labeled'],
              'type': item['type'],
              'stage': item['breast-adjusted-ajcc-6th-stage-1988'],
              '+nodes': item['regional-nodes-positive-1988-1'],
@@ -286,7 +286,7 @@ def diagnosis(input_json, limit=20):
                  'pr': item['pr-status-recode-breast-cancer-1990'],
                  'her2': item['derived-her2-recode-2010'],
                  'lat': item['laterality'],
-                 'site': item['site-recode-icd-o-3-who-2008'],
+                 'site': item['primary-site-labeled'],
                  'type': item['type'],
                  'stage': item['breast-adjusted-ajcc-6th-stage-1988'],
                  '+nodes': item['regional-nodes-positive-1988-1'],
@@ -310,7 +310,7 @@ def diagnosis(input_json, limit=20):
                      'pr': item['pr-status-recode-breast-cancer-1990'],
                      'her2': item['derived-her2-recode-2010'],
                      'lat': item['laterality'],
-                     'site': item['site-recode-icd-o-3-who-2008'],
+                     'site': item['primary-site-labeled'],
                      'type': item['type'],
                      'stage': item['breast-adjusted-ajcc-6th-stage-1988'],
                      '+nodes': item['regional-nodes-positive-1988-1'],
@@ -334,7 +334,7 @@ def diagnosis(input_json, limit=20):
                          'pr': item['pr-status-recode-breast-cancer-1990'],
                          'her2': item['derived-her2-recode-2010'],
                          'lat': item['laterality'],
-                         'site': item['site-recode-icd-o-3-who-2008'],
+                         'site': item['primary-site-labeled'],
                          'type': item['type'],
                          'stage': item['breast-adjusted-ajcc-6th-stage-1988'],
                          '+nodes': item['regional-nodes-positive-1988-1'],
@@ -1441,7 +1441,7 @@ if __name__ == '__main__':
                    '"er_status": "+", ' \
                    '"pr_status": "+", ' \
                    '"tumor_size_in_mm": 22, ' \
-                   '"num_pos_nodes": 5, ' \
+                   '"num_pos_nodes": 1, ' \
                    '"her2_status": "+", ' \
                    '"ethnicity": "White"}'
 
@@ -1493,6 +1493,7 @@ if __name__ == '__main__':
     # age_and_race = '{"age": 48, "ethnicity":"White"}'
     # pprint(distribution_of_stage_of_cancer(age_and_race))
     # pprint(breast_cancer_by_size(age_only))
-    pprint(percent_women_by_type())
-    # diag = diagnosis(diag_request, limit=20)
-    # print(len(diag))
+    # pprint(percent_women_by_type())
+    diag = diagnosis(diag_request, limit=20)
+    print(len(diag))
+    pprint(diag)
