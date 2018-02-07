@@ -31,8 +31,8 @@ class Diagnosis extends React.Component {
               <div className='custom-panel custom-panel-condensed light-gray-bg'>
                 <h2 className='push-top-2'>Diagnosis</h2>
                 <form onSubmit={this.handleSubmit}>
-                  <div className='row row-condensed push-top-2-xs'>
-                    <div className='col-sm-2 col-xs-6'>
+                  <div className={s.row}>
+                    <div className={s.col}>
                       {getFieldDecorator('age', {
                         initialValue: diagnosisForm.age,
                         rules: [
@@ -43,7 +43,7 @@ class Diagnosis extends React.Component {
                         <InputNumber error={getFieldError('age')} label={'Age at Diagnosis'}/>
                       )}
                     </div>
-                    <div className='col-sm-2 col-xs-6'>
+                    <div className={s.col}>
                       {getFieldDecorator('tumor_size_in_mm', {
                         initialValue: diagnosisForm.tumor_size_in_mm,
                         rules: [
@@ -53,7 +53,7 @@ class Diagnosis extends React.Component {
                         <Input error={getFieldError('tumor_size_in_mm')} label={'Tumor Size in mm'}/>
                       )}
                     </div>
-                    <div className='col-sm-2 col-xs-6 push-top-2-xs'>
+                    <div className={s.col}>
                       {getFieldDecorator('tumor_grade', {
                         initialValue: diagnosisForm.tumor_grade,
                         rules: [
@@ -68,7 +68,7 @@ class Diagnosis extends React.Component {
                         </Select>
                       )}
                     </div>
-                    <div className='col-sm-2 col-xs-6 push-top-2-xs'>
+                    <div className={s.col}>
                       {getFieldDecorator('num_pos_nodes', {
                         initialValue: diagnosisForm.num_pos_nodes,
                         rules: [
@@ -83,7 +83,7 @@ class Diagnosis extends React.Component {
                         </Select>
                       )}
                     </div>
-                    <div className='col-sm-2 col-xs-6 push-top-2-xs'>
+                    <div className={s.col}>
                       {getFieldDecorator('er_status', {
                         initialValue: diagnosisForm.er_status,
                         rules: [
@@ -97,7 +97,7 @@ class Diagnosis extends React.Component {
                         </Select>
                       )}
                     </div>
-                    <div className='col-sm-2 col-xs-6 push-top-2-xs'>
+                    <div className={s.col}>
                       {getFieldDecorator('her2_status', {
                         initialValue: diagnosisForm.her2_status,
                         rules: [
@@ -111,9 +111,7 @@ class Diagnosis extends React.Component {
                         </Select>
                       )}
                     </div>
-                  </div>
-                  <div className='row row-condensed push-top-2-xs'>
-                    <div className='col-sm-2 col-xs-6'>
+                    <div className={s.col}>
                       {getFieldDecorator('pr_status', {
                         initialValue: diagnosisForm.pr_status,
                         rules: [
@@ -127,7 +125,9 @@ class Diagnosis extends React.Component {
                         </Select>
                       )}
                     </div>
-                    <div className='col-sm-2 col-xs-6'>
+                  </div>
+                  <div className={s.row}>
+                    <div className={s.col}>
                       {getFieldDecorator('ethnicity', {
                         initialValue: diagnosisForm.ethnicity,
                         rules: [
@@ -142,7 +142,7 @@ class Diagnosis extends React.Component {
                         </Select>
                       )}
                     </div>
-                    <div className='col-sm-2 col-xs-6 push-top-2-xs'>
+                    <div className={s.col}>
                       {getFieldDecorator('stage', {
                         initialValue: diagnosisForm.stage,
                         rules: [
@@ -157,7 +157,7 @@ class Diagnosis extends React.Component {
                         </Select>
                       )}
                     </div>
-                    <div className='col-sm-2 col-xs-6 push-top-2-xs'>
+                    <div className={s.col}>
                       {getFieldDecorator('site', {
                         initialValue: diagnosisForm.site,
                         rules: [
@@ -172,7 +172,7 @@ class Diagnosis extends React.Component {
                         </Select>
                       )}
                     </div>
-                    <div className='col-sm-2 col-xs-6 push-top-2-xs'>
+                    <div className={s.col}>
                       {getFieldDecorator('laterality', {
                         initialValue: diagnosisForm.laterality,
                         rules: [
@@ -186,7 +186,7 @@ class Diagnosis extends React.Component {
                         </Select>
                       )}
                     </div>
-                    <div className='col-sm-2 col-xs-6 push-top-2-xs'>
+                    <div className={s.col}>
                       {getFieldDecorator('type', {
                         initialValue: diagnosisForm.type,
                         rules: [
@@ -201,7 +201,7 @@ class Diagnosis extends React.Component {
                         </Select>
                       )}
                     </div>
-                    <div className="col-sm-2 col-xs-6 push-top-2-xs">
+                    <div className={s.col}>
                       {getFieldDecorator('region', {
                         initialValue: diagnosisForm.region,
                         rules: [
@@ -216,7 +216,7 @@ class Diagnosis extends React.Component {
                         </Select>
                       )}
                     </div>
-                    <div className="col-sm-2 col-xs-6 push-top-2-xs">
+                    <div className={s.col}>
                       {getFieldDecorator('number_of_tumors', {
                         initialValue: diagnosisForm.number_of_tumors,
                         rules: [
@@ -232,7 +232,7 @@ class Diagnosis extends React.Component {
                       )}
                     </div>
                   </div>
-                  <div className="row row-condensed push-top-2-xs">
+                  <div className={s.row}>
                     <div className="col-xs-12 text-center position-relative">
                       <Button bsSize="large" bsStyle="primary" type="submit" className={s.analyzeBtn}>
                         Analyze
