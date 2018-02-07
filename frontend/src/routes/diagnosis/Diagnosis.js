@@ -257,22 +257,26 @@ class Diagnosis extends React.Component {
                       <thead>
                       <tr>
                         <th><h6>TREATMENT PLANS</h6></th>
-                        <th><h6>CONFIDENCE LEVEL</h6></th>
                         <th><h6>SURGERY</h6></th>
+                        <th><h6>SURGERY CONFIDENCE LEVEL</h6></th>
                         <th><h6>SURGERY TYPE</h6></th>
                         <th><h6>RADIATION</h6></th>
+                        <th><h6>RADIATION CONFIDENCE LEVEL</h6></th>
                         <th><h6>CHEMO</h6></th>
+                        <th><h6>CHEMO CONFIDENCE LEVEL</h6></th>
                       </tr>
                       </thead>
                       <tbody>
                       {data.recommended_treatment_plans.overall_plans.map((item, i) =>
                         <tr key={i}>
-                          <td><p className="no-margin">Preferred Outcome A</p></td>
-                          <td><p className="no-margin">{item['level']}%</p></td>
+                          <td><p className="no-margin">{item.name}</p></td>
                           <td><p className="no-margin">{item['surgery']}</p></td>
+                          <td><p className="no-margin">{item['surgery_confidence_level']}%</p></td>
                           <td><p className="no-margin">{item['type']}</p></td>
                           <td><p className="no-margin">{item['radiation']}</p></td>
+                          <td><p className="no-margin">{item['radiation_confidence_level']}%</p></td>
                           <td><p className="no-margin">{item['chemo']}</p></td>
+                          <td><p className="no-margin">{item['chemo_confidence_level']}%</p></td>
                         </tr>
                       )}
                       </tbody>
