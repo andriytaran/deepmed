@@ -24,11 +24,15 @@ class NationalStates extends React.Component {
                   <VectorMap
                     map="us_aea"
                     backgroundColor="transparent"
-                    borderColor="#fb0000"
-                    borderWidth={54}
                     series={data.breast_cancer_by_state}
                     containerStyle={{width: '100%', height: 400}}
-                    regionStyle={{strokeWidth: 15}}
+                    regionStyle={{
+                      initial: {
+                        stroke: 'white',
+                        "stroke-width": 2,
+                        "stroke-opacity": 1
+                      },
+                    }}
                   />
                 )}
               </div>
