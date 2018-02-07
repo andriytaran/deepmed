@@ -194,7 +194,7 @@ class ReportDataView(GenericAPIView):
             else:
                 overall_plans.append({
                     'name': 'Preferred Outcome A',
-                    'type': 'Lumpectomy',
+                    'type': surgery_response[0],
                     'radiation': 'Y' if sl_radiation_response[
                                             0] == 'Yes' else 'N',
                     'chemo': 'Y' if chemo_response[0] == 'Yes' else 'N',
@@ -202,7 +202,7 @@ class ReportDataView(GenericAPIView):
                     'level': percent})
                 overall_plans.append({
                     'name': 'Preferred Outcome B',
-                    'type': surgery_response[0],
+                    'type': 'Mastectomy',
                     'radiation': 'Y' if sm_radiation_response[
                                             0] == 'Yes' else 'N',
                     'chemo': 'Y' if chemo_response[0] == 'Yes' else 'N',
