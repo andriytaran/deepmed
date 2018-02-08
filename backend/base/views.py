@@ -380,7 +380,7 @@ class ReportDataView(GenericAPIView):
             'radiation': {
                 'overall': radiation(age),
             },
-            'breast_cancer_by_state': breast_cancer_by_state(),
+            'breast_cancer_by_state': breast_cancer_by_state2(1),
             'breast_cancer_at_a_glance': breast_cancer_at_a_glance2(),
             'breast_cancer_by_age': breast_cancer_by_age(),
         }
@@ -421,19 +421,14 @@ class ReportDataView(GenericAPIView):
                                       limit=20)
 
         if len(similar_diagnosis) < 20:
-            dd.pop('tumor_size_in_mm', None)
-            similar_diagnosis = diagnosis(json.dumps(dd, ensure_ascii=False),
-                                          limit=20)
+            dd.pop('race', None)
+            similar_diagnosis = diagnosis(
+                json.dumps(dd, ensure_ascii=False), limit=20)
 
             if len(similar_diagnosis) < 20:
-                dd.pop('race', None)
+                dd.pop('age', None)
                 similar_diagnosis = diagnosis(
                     json.dumps(dd, ensure_ascii=False), limit=20)
-
-                if len(similar_diagnosis) < 20:
-                    dd.pop('age', None)
-                    similar_diagnosis = diagnosis(
-                        json.dumps(dd, ensure_ascii=False), limit=20)
 
         data['similar_diagnosis'] = similar_diagnosis
 
