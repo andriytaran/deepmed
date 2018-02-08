@@ -229,27 +229,6 @@ def diagnosis(input_json, limit=20):
             return race
 
     filters = create_filter(input_json)
-    # input_data = json.loads(input_json)
-    # filter_list = []
-    # if 'age' in input_data.keys():
-    #     age = get_age_group(input_data['age'])
-    #     filter_list.append(("age-recode-with-1-year-olds", age))
-    # if 'tumor_size_in_mm' in input_data.keys():
-    #     t_size_cm = get_t_size_cm(input_data['tumor_size_in_mm'])
-    #     filter_list.append(("t-size-cm", t_size_cm))
-    # if 'tumor_grade' in input_data.keys():
-    #     filter_list.append(("grade", input_data["tumor_grade"]))
-    # if 'er_status' in input_data.keys():
-    #     filter_list.append(("er-status-recode-breast-cancer-1990", input_data["er_status"]))
-    # if 'pr_status' in input_data.keys():
-    #     filter_list.append(("pr-status-recode-breast-cancer-1990", input_data["pr_status"]))
-    # if 'her2_status' in input_data.keys():
-    #     filter_list.append(("derived-her2-recode-2010", input_data["her2_status"]))
-    # if 'num_pos_nodes' in input_data.keys():
-    #     filter_list.append(("regional-nodes-positive-1988", input_data["num_pos_nodes"]))
-    # if 'ethnicity' in input_data.keys():
-    #     filter_list.append(("race-recode-w-b-ai-api", input_data["ethnicity"]))
-    # pprint(filters)
     dataset = find(filters, limit=limit)
     results = []
     for item in dataset:
@@ -415,6 +394,551 @@ def breast_cancer_by_state():
             'values': values
         }]
     }
+
+
+def breast_cancer_by_state2(option):
+    if option == 1:
+        json_data = [
+            {
+                "State": "AK",
+                "Range": "125.9 to 132.0",
+                "Rate": 127.1
+            },
+            {
+                "State": "AL",
+                "Range": "118.7 to 125.5",
+                "Rate": 120.5
+            },
+            {
+                "State": "AR",
+                "Range": "106.6 to 118.3",
+                "Rate": 113.9
+            },
+            {
+                "State": "AZ",
+                "Range": "106.6 to 118.3",
+                "Rate": 115
+            },
+            {
+                "State": "CA",
+                "Range": "118.7 to 125.5",
+                "Rate": 118.7
+            },
+            {
+                "State": "CO",
+                "Range": "118.7 to 125.5",
+                "Rate": 124.9
+            },
+            {
+                "State": "CT",
+                "Range": "132.3 to 144.9",
+                "Rate": 142
+            },
+            {
+                "State": "DC",
+                "Range": "132.3 to 144.9",
+                "Rate": 139.6
+            },
+            {
+                "State": "DE",
+                "Range": "132.3 to 144.9",
+                "Rate": 136.9
+            },
+            {
+                "State": "FL",
+                "Range": "106.6 to 118.3",
+                "Rate": 114.8
+            },
+            {
+                "State": "GA",
+                "Range": "118.7 to 125.5",
+                "Rate": 124.4
+            },
+            {
+                "State": "HI",
+                "Range": "132.3 to 144.9",
+                "Rate": 138
+            },
+            {
+                "State": "IA",
+                "Range": "125.9 to 132.0",
+                "Rate": 125.9
+            },
+            {
+                "State": "ID",
+                "Range": "118.7 to 125.5",
+                "Rate": 123.2
+            },
+            {
+                "State": "IL",
+                "Range": "132.3 to 144.9",
+                "Rate": 133.5
+            },
+            {
+                "State": "IN",
+                "Range": "118.7 to 125.5",
+                "Rate": 121.6
+            },
+            {
+                "State": "KS",
+                "Range": "118.7 to 125.5",
+                "Rate": 125.5
+            },
+            {
+                "State": "KY",
+                "Range": "125.9 to 132.0",
+                "Rate": 127.3
+            },
+            {
+                "State": "LA",
+                "Range": "118.7 to 125.5",
+                "Rate": 122.7
+            },
+            {
+                "State": "MA",
+                "Range": "132.3 to 144.9",
+                "Rate": 138.4
+            },
+            {
+                "State": "MD",
+                "Range": "125.9 to 132.0",
+                "Rate": 129.8
+            },
+            {
+                "State": "ME",
+                "Range": "125.9 to 132.0",
+                "Rate": 127.9
+            },
+            {
+                "State": "MI",
+                "Range": "106.6 to 118.3",
+                "Rate": 117
+            },
+            {
+                "State": "MN",
+                "Range": "125.9 to 132.0",
+                "Rate": 130.9
+            },
+            {
+                "State": "MO",
+                "Range": "125.9 to 132.0",
+                "Rate": 128.9
+            },
+            {
+                "State": "MS",
+                "Range": "106.6 to 118.3",
+                "Rate": 113.8
+            },
+            {
+                "State": "MT",
+                "Range": "125.9 to 132.0",
+                "Rate": 128
+            },
+            {
+                "State": "NC",
+                "Range": "125.9 to 132.0",
+                "Rate": 129.9
+            },
+            {
+                "State": "ND",
+                "Range": "106.6 to 118.3",
+                "Rate": 114
+            },
+            {
+                "State": "NE",
+                "Range": "118.7 to 125.5",
+                "Rate": 124
+            },
+            {
+                "State": "NH",
+                "Range": "132.3 to 144.9",
+                "Rate": 144.9
+            },
+            {
+                "State": "NJ",
+                "Range": "132.3 to 144.9",
+                "Rate": 134.3
+            },
+            {
+                "State": "NM",
+                "Range": "106.6 to 118.3",
+                "Rate": 108.2
+            },
+            {
+                "State": "NV",
+                "Range": "106.6 to 118.3",
+                "Rate": 106.6
+            },
+            {
+                "State": "NY",
+                "Range": "132.3 to 144.9",
+                "Rate": 132.3
+            },
+            {
+                "State": "OH",
+                "Range": "125.9 to 132.0",
+                "Rate": 126.6
+            },
+            {
+                "State": "OK",
+                "Range": "118.7 to 125.5",
+                "Rate": 120.4
+            },
+            {
+                "State": "OR",
+                "Range": "106.6 to 118.3",
+                "Rate": 118.3
+            },
+            {
+                "State": "PA",
+                "Range": "125.9 to 132.0",
+                "Rate": 132
+            },
+            {
+                "State": "RI",
+                "Range": "132.3 to 144.9",
+                "Rate": 133.2
+            },
+            {
+                "State": "SC",
+                "Range": "118.7 to 125.5",
+                "Rate": 125.1
+            },
+            {
+                "State": "SD",
+                "Range": "118.7 to 125.5",
+                "Rate": 122.3
+            },
+            {
+                "State": "TN",
+                "Range": "106.6 to 118.3",
+                "Rate": 118
+            },
+            {
+                "State": "TX",
+                "Range": "106.6 to 118.3",
+                "Rate": 110.7
+            },
+            {
+                "State": "UT",
+                "Range": "106.6 to 118.3",
+                "Rate": 117.1
+            },
+            {
+                "State": "VA",
+                "Range": "125.9 to 132.0",
+                "Rate": 131.1
+            },
+            {
+                "State": "VT",
+                "Range": "132.3 to 144.9",
+                "Rate": 135.9
+            },
+            {
+                "State": "WA",
+                "Range": "132.3 to 144.9",
+                "Rate": 134.8
+            },
+            {
+                "State": "WI",
+                "Range": "125.9 to 132.0",
+                "Rate": 126.9
+            },
+            {
+                "State": "WV",
+                "Range": "106.6 to 118.3",
+                "Rate": 111.4
+            },
+            {
+                "State": "WY",
+                "Range": "118.7 to 125.5",
+                "Rate": 124.4
+            }
+        ]
+    elif option == 2:
+        json_data = {
+            "AK": {
+                "Range": "125.9 to 132.0",
+                "Rate": 127.1
+            },
+            "AL": {
+                "Range": "118.7 to 125.5",
+                "Rate": 120.5
+            },
+            "AR": {
+                "Range": "106.6 to 118.3",
+                "Rate": 113.9
+            },
+            "AZ": {
+                "Range": "106.6 to 118.3",
+                "Rate": 115
+            },
+            "CA": {
+                "Range": "118.7 to 125.5",
+                "Rate": 118.7
+            },
+            "CO": {
+                "Range": "118.7 to 125.5",
+                "Rate": 124.9
+            },
+            "CT": {
+                "Range": "132.3 to 144.9",
+                "Rate": 142
+            },
+            "DC": {
+                "Range": "132.3 to 144.9",
+                "Rate": 139.6
+            },
+            "DE": {
+                "Range": "132.3 to 144.9",
+                "Rate": 136.9
+            },
+            "FL": {
+                "Range": "106.6 to 118.3",
+                "Rate": 114.8
+            },
+            "GA": {
+                "Range": "118.7 to 125.5",
+                "Rate": 124.4
+            },
+            "HI": {
+                "Range": "132.3 to 144.9",
+                "Rate": 138
+            },
+            "IA": {
+                "Range": "125.9 to 132.0",
+                "Rate": 125.9
+            },
+            "ID": {
+                "Range": "118.7 to 125.5",
+                "Rate": 123.2
+            },
+            "IL": {
+                "Range": "132.3 to 144.9",
+                "Rate": 133.5
+            },
+            "IN": {
+                "Range": "118.7 to 125.5",
+                "Rate": 121.6
+            },
+            "KS": {
+                "Range": "118.7 to 125.5",
+                "Rate": 125.5
+            },
+            "KY": {
+                "Range": "125.9 to 132.0",
+                "Rate": 127.3
+            },
+            "LA": {
+                "Range": "118.7 to 125.5",
+                "Rate": 122.7
+            },
+            "MA": {
+                "Range": "132.3 to 144.9",
+                "Rate": 138.4
+            },
+            "MD": {
+                "Range": "125.9 to 132.0",
+                "Rate": 129.8
+            },
+            "ME": {
+                "Range": "125.9 to 132.0",
+                "Rate": 127.9
+            },
+            "MI": {
+                "Range": "106.6 to 118.3",
+                "Rate": 117
+            },
+            "MN": {
+                "Range": "125.9 to 132.0",
+                "Rate": 130.9
+            },
+            "MO": {
+                "Range": "125.9 to 132.0",
+                "Rate": 128.9
+            },
+            "MS": {
+                "Range": "106.6 to 118.3",
+                "Rate": 113.8
+            },
+            "MT": {
+                "Range": "125.9 to 132.0",
+                "Rate": 128
+            },
+            "NC": {
+                "Range": "125.9 to 132.0",
+                "Rate": 129.9
+            },
+            "ND": {
+                "Range": "106.6 to 118.3",
+                "Rate": 114
+            },
+            "NE": {
+                "Range": "118.7 to 125.5",
+                "Rate": 124
+            },
+            "NH": {
+                "Range": "132.3 to 144.9",
+                "Rate": 144.9
+            },
+            "NJ": {
+                "Range": "132.3 to 144.9",
+                "Rate": 134.3
+            },
+            "NM": {
+                "Range": "106.6 to 118.3",
+                "Rate": 108.2
+            },
+            "NV": {
+                "Range": "106.6 to 118.3",
+                "Rate": 106.6
+            },
+            "NY": {
+                "Range": "132.3 to 144.9",
+                "Rate": 132.3
+            },
+            "OH": {
+                "Range": "125.9 to 132.0",
+                "Rate": 126.6
+            },
+            "OK": {
+                "Range": "118.7 to 125.5",
+                "Rate": 120.4
+            },
+            "OR": {
+                "Range": "106.6 to 118.3",
+                "Rate": 118.3
+            },
+            "PA": {
+                "Range": "125.9 to 132.0",
+                "Rate": 132
+            },
+            "RI": {
+                "Range": "132.3 to 144.9",
+                "Rate": 133.2
+            },
+            "SC": {
+                "Range": "118.7 to 125.5",
+                "Rate": 125.1
+            },
+            "SD": {
+                "Range": "118.7 to 125.5",
+                "Rate": 122.3
+            },
+            "TN": {
+                "Range": "106.6 to 118.3",
+                "Rate": 118
+            },
+            "TX": {
+                "Range": "106.6 to 118.3",
+                "Rate": 110.7
+            },
+            "UT": {
+                "Range": "106.6 to 118.3",
+                "Rate": 117.1
+            },
+            "VA": {
+                "Range": "125.9 to 132.0",
+                "Rate": 131.1
+            },
+            "VT": {
+                "Range": "132.3 to 144.9",
+                "Rate": 135.9
+            },
+            "WA": {
+                "Range": "132.3 to 144.9",
+                "Rate": 134.8
+            },
+            "WI": {
+                "Range": "125.9 to 132.0",
+                "Rate": 126.9
+            },
+            "WV": {
+                "Range": "106.6 to 118.3",
+                "Rate": 111.4
+            },
+            "WY": {
+                "Range": "118.7 to 125.5",
+                "Rate": 124.4
+            }
+        }
+    elif option == 3:
+        json_data = [
+            ["AK", "125.9 to 132.0", 127.1],
+            ["AL", "118.7 to 125.5", 120.5],
+            ["AR", "106.6 to 118.3", 113.9],
+            ["AZ", "106.6 to 118.3", 115],
+            ["CA", "118.7 to 125.5", 118.7],
+            ["CO", "118.7 to 125.5", 124.9],
+            ["CT", "132.3 to 144.9", 142],
+            ["DC", "132.3 to 144.9", 139.6],
+            ["DE", "132.3 to 144.9", 136.9],
+            ["FL", "106.6 to 118.3", 114.8],
+            ["GA", "118.7 to 125.5", 124.4],
+            ["HI", "132.3 to 144.9", 138],
+            ["IA", "125.9 to 132.0", 125.9],
+            ["ID", "118.7 to 125.5", 123.2],
+            ["IL", "132.3 to 144.9", 133.5],
+            ["IN", "118.7 to 125.5", 121.6],
+            ["KS", "118.7 to 125.5", 125.5],
+            ["KY", "125.9 to 132.0", 127.3],
+            ["LA", "118.7 to 125.5", 122.7],
+            ["MA", "132.3 to 144.9", 138.4],
+            ["MD", "125.9 to 132.0", 129.8],
+            ["ME", "125.9 to 132.0", 127.9],
+            ["MI", "106.6 to 118.3", 117],
+            ["MN", "125.9 to 132.0", 130.9],
+            ["MO", "125.9 to 132.0", 128.9],
+            ["MS", "106.6 to 118.3", 113.8],
+            ["MT", "125.9 to 132.0", 128],
+            ["NC", "125.9 to 132.0", 129.9],
+            ["ND", "106.6 to 118.3", 114],
+            ["NE", "118.7 to 125.5", 124],
+            ["NH", "132.3 to 144.9", 144.9],
+            ["NJ", "132.3 to 144.9", 134.3],
+            ["NM", "106.6 to 118.3", 108.2],
+            ["NV", "106.6 to 118.3", 106.6],
+            ["NY", "132.3 to 144.9", 132.3],
+            ["OH", "125.9 to 132.0", 126.6],
+            ["OK", "118.7 to 125.5", 120.4],
+            ["OR", "106.6 to 118.3", 118.3],
+            ["PA", "125.9 to 132.0", 132],
+            ["RI", "132.3 to 144.9", 133.2],
+            ["SC", "118.7 to 125.5", 125.1],
+            ["SD", "118.7 to 125.5", 122.3],
+            ["TN", "106.6 to 118.3", 118],
+            ["TX", "106.6 to 118.3", 110.7],
+            ["UT", "106.6 to 118.3", 117.1],
+            ["VA", "125.9 to 132.0", 131.1],
+            ["VT", "132.3 to 144.9", 135.9],
+            ["WA", "132.3 to 144.9", 134.8],
+            ["WI", "125.9 to 132.0", 126.9],
+            ["WV", "106.6 to 118.3", 111.4],
+            ["WY", "118.7 to 125.5", 124.4]
+        ]
+    elif option == 4:
+        json_data = {
+            "State": ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "HI", "IA", "ID", "IL", "IN",
+                      "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ",
+                      "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA",
+                      "WI", "WV", "WY"],
+            "Range": ["125.9 to 132.0", "118.7 to 125.5", "106.6 to 118.3", "106.6 to 118.3", "118.7 to 125.5",
+                      "118.7 to 125.5", "132.3 to 144.9", "132.3 to 144.9", "132.3 to 144.9", "106.6 to 118.3",
+                      "118.7 to 125.5", "132.3 to 144.9", "125.9 to 132.0", "118.7 to 125.5", "132.3 to 144.9",
+                      "118.7 to 125.5", "118.7 to 125.5", "125.9 to 132.0", "118.7 to 125.5", "132.3 to 144.9",
+                      "125.9 to 132.0", "125.9 to 132.0", "106.6 to 118.3", "125.9 to 132.0", "125.9 to 132.0",
+                      "106.6 to 118.3", "125.9 to 132.0", "125.9 to 132.0", "106.6 to 118.3", "118.7 to 125.5",
+                      "132.3 to 144.9", "132.3 to 144.9", "106.6 to 118.3", "106.6 to 118.3", "132.3 to 144.9",
+                      "125.9 to 132.0", "118.7 to 125.5", "106.6 to 118.3", "125.9 to 132.0", "132.3 to 144.9",
+                      "118.7 to 125.5", "118.7 to 125.5", "106.6 to 118.3", "106.6 to 118.3", "106.6 to 118.3",
+                      "125.9 to 132.0", "132.3 to 144.9", "132.3 to 144.9", "125.9 to 132.0", "106.6 to 118.3",
+                      "118.7 to 125.5"],
+            "Rate": [127.1, 120.5, 113.9, 115, 118.7, 124.9, 142, 139.6, 136.9, 114.8, 124.4, 138, 125.9, 123.2, 133.5,
+                     121.6, 125.5, 127.3, 122.7, 138.4, 129.8, 127.9, 117, 130.9, 128.9, 113.8, 128, 129.9, 114, 124,
+                     144.9, 134.3, 108.2, 106.6, 132.3, 126.6, 120.4, 118.3, 132, 133.2, 125.1, 122.3, 118, 110.7,
+                     117.1, 131.1, 135.9, 134.8, 126.9, 111.4, 124.4]
+        }
+    return json_data
 
 
 def breast_cancer_by_grade(input_json):
