@@ -253,8 +253,7 @@ class ReportDataView(GenericAPIView):
                 'by_race':
                     distribution_of_stage_of_cancer(
                         json.dumps({'age': dd.get('age'),
-                                    'ethnicity': dd.get(
-                                        'ethnicity')}, ensure_ascii=False)),
+                                    'ethnicity': ethnicity}, ensure_ascii=False)),
             },
             'percent_of_women_with_cancer_by_race': {
                 'overall': percent_of_women_with_cancer_by_race_overall()
