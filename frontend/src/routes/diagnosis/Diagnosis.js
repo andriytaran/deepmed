@@ -391,12 +391,14 @@ class Diagnosis extends React.Component {
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                      <td><p className='no-margin'><span
-                        className='number-circle blue-circle'>1</span> Beam Radiation</p></td>
-                      <td><p className='no-margin'>30</p></td>
-                      <td><p className='no-margin'>Daily</p></td>
-                    </tr>
+                    {data.recommended_treatment_plans.radiation_therapy.map((item, i) =>
+                      <tr key={i}>
+                        <td><p className='no-margin'><span
+                          className='number-circle blue-circle'>{i+1}</span> {item.name}</p></td>
+                        <td><p className="no-margin">{item.number_of_treatments}</p></td>
+                        <td><p className="no-margin">{item.administration}</p></td>
+                      </tr>
+                    )}
                     </tbody>
                   </table>
                 </div>
@@ -419,12 +421,14 @@ class Diagnosis extends React.Component {
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                      <td><p className='no-margin'><span
-                        className='number-circle blue-circle'>1</span> Tamoxifen</p></td>
-                      <td><p className='no-margin'>120</p></td>
-                      <td><p className='no-margin'>Monthly</p></td>
-                    </tr>
+                    {data.recommended_treatment_plans.hormonal_therapy.map((item, i) =>
+                      <tr key={i}>
+                        <td><p className='no-margin'><span
+                          className='number-circle blue-circle'>{i+1}</span> {item.name}</p></td>
+                        <td><p className="no-margin">{item.number_of_treatments}</p></td>
+                        <td><p className="no-margin">{item.administration}</p></td>
+                      </tr>
+                    )}
                     </tbody>
                   </table>
                 </div>

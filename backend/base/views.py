@@ -42,6 +42,8 @@ class ReportDataView(GenericAPIView):
         else:
             v_ethnicity = ethnicity
 
+        is_radiation_therapy = 'No'  # Radiation Therapy
+
         # Recommended Treatment Plans
 
         ## Overall Plans
@@ -189,6 +191,7 @@ class ReportDataView(GenericAPIView):
             sl_radiation_level = round(sl_radiation_response[1] * 100)
 
             if surgery_response[0] == 'Mastectomy':
+                is_radiation_therapy = sm_radiation_response[0]
                 overall_plans.append({
                     'name': 'Preferred Outcome A',
                     'type': surgery_response[0],
@@ -212,6 +215,7 @@ class ReportDataView(GenericAPIView):
                     'surgery_confidence_level': 100 - surgery_level,
                     'level': 100 - surgery_level})
             else:
+                is_radiation_therapy = sl_radiation_response[0]
                 overall_plans.append({
                     'name': 'Preferred Outcome A',
                     'type': surgery_response[0],
@@ -237,9 +241,29 @@ class ReportDataView(GenericAPIView):
         except Exception as e:
             overall_plans = []
 
+        # Hormonal Therapy
+
+        hormonal_therapy = []
+        if dd.get('pr_status') == '+' or dd.get('er_status') == '+':
+            hormonal_therapy.append({'name': 'Tamoxifen',
+                                     'number_of_treatments': 120,
+                                     'administration': 'Monthly'})
+
+        # Radiation Therapy
+
+        radiation_therapy = []
+        if is_radiation_therapy == 'Yes':
+            radiation_therapy.append({'name': 'Beam Radiation',
+                                      'number_of_treatments': 30,
+                                      'administration': 'Daily'})
+
+        # Chemo Therapy
+
         data = {
             'recommended_treatment_plans': {
-                'overall_plans': overall_plans
+                'overall_plans': overall_plans,
+                'hormonal_therapy': hormonal_therapy,
+                'radiation_therapy': radiation_therapy,
             },
             'percent_women_annualy_diagnosed': percent_women_annualy_diagnosed(
                 age),
@@ -253,7 +277,8 @@ class ReportDataView(GenericAPIView):
                 'by_race':
                     distribution_of_stage_of_cancer(
                         json.dumps({'age': dd.get('age'),
-                                    'ethnicity': v_ethnicity}, ensure_ascii=False)),
+                                    'ethnicity': v_ethnicity},
+                                   ensure_ascii=False)),
             },
             'percent_of_women_with_cancer_by_race': {
                 'overall': percent_of_women_with_cancer_by_race_overall()
@@ -350,6 +375,8 @@ class TestDataView(GenericAPIView):
         else:
             v_ethnicity = ethnicity
 
+        is_radiation_therapy = 'No'  # Radiation Therapy
+
         # Recommended Treatment Plans
 
         ## Overall Plans
@@ -497,6 +524,7 @@ class TestDataView(GenericAPIView):
             sl_radiation_level = round(sl_radiation_response[1] * 100)
 
             if surgery_response[0] == 'Mastectomy':
+                is_radiation_therapy = sm_radiation_response[0]
                 overall_plans.append({
                     'name': 'Preferred Outcome A',
                     'type': surgery_response[0],
@@ -520,6 +548,7 @@ class TestDataView(GenericAPIView):
                     'surgery_confidence_level': 100 - surgery_level,
                     'level': 100 - surgery_level})
             else:
+                is_radiation_therapy = sl_radiation_response[0]
                 overall_plans.append({
                     'name': 'Preferred Outcome A',
                     'type': surgery_response[0],
@@ -556,15 +585,18 @@ class TestDataView(GenericAPIView):
         # Radiation Therapy
 
         radiation_therapy = []
-        if dd.get('pr_status'):
-            hormonal_therapy.append({'name': 'Tamoxifen',
-                                     'number_of_treatments': 120,
-                                     'administration': 'Monthly'})
+        if is_radiation_therapy == 'Yes':
+            radiation_therapy.append({'name': 'Beam Radiation',
+                                      'number_of_treatments': 30,
+                                      'administration': 'Daily'})
+
+        # Chemo Therapy
 
         data = {
             'recommended_treatment_plans': {
                 'overall_plans': overall_plans,
                 'hormonal_therapy': hormonal_therapy,
+                'radiation_therapy': radiation_therapy,
             },
             'percent_women_annualy_diagnosed': percent_women_annualy_diagnosed(
                 age),
@@ -578,7 +610,8 @@ class TestDataView(GenericAPIView):
                 'by_race':
                     distribution_of_stage_of_cancer(
                         json.dumps({'age': dd.get('age'),
-                                    'ethnicity': ethnicity}, ensure_ascii=False)),
+                                    'ethnicity': ethnicity},
+                                   ensure_ascii=False)),
             },
             'percent_of_women_with_cancer_by_race': {
                 'overall': percent_of_women_with_cancer_by_race_overall()
