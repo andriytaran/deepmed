@@ -2,13 +2,13 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './Diagnosis.scss'
-import {RACES, SITES, TYPES, STAGES, REGIONS} from '../../constants'
+import {RACES, REGIONS, SITES, STAGES, TYPES} from '../../constants'
 import {createForm} from 'rc-form'
 import messages from '../../components/messages'
-import {Input, Select, InputNumber} from '../../components'
+import {Input, InputNumber, Select} from '../../components'
 import isEmpty from 'lodash/isEmpty'
-import {Button} from 'react-bootstrap'
 import {getDiagnosisData} from '../../reducers/diagnosis'
+import cn from 'classnames'
 
 class Diagnosis extends React.Component {
   handleSubmit = (e) => {
@@ -234,207 +234,187 @@ class Diagnosis extends React.Component {
                   </div>
                   <div className={s.row}>
                     <div className="col-xs-12 text-center position-relative">
-                      <Button bsSize="large" bsStyle="primary" type="submit" className={s.analyzeBtn}>
+                      <button type="submit" className={cn('btn btn-lg btn-primary', s.analyzeBtn)}>
                         Analyze
-                      </Button>
+                      </button>
                     </div>
                   </div>
                 </form>
               </div>
             )}
-            <div className='custom-panel custom-panel-condensed light-gray-bg push-bot-0'>
-              <h2 className='push-top-2'>Recommended Treatment Plans</h2>
-              {data.recommended_treatment_plans && data.recommended_treatment_plans.overall_plans && (
+            {data.recommended_treatment_plans && (
+              <div className='custom-panel custom-panel-condensed light-gray-bg push-bot-0'>
+                <h2 className='push-top-2'>Recommended Treatment Plans</h2>
+                {data.recommended_treatment_plans.overall_plans && (
+                  <div className='push-top-5'>
+                    <div
+                      className='custom-panel custom-panel-condensed custom-panel-no-vertical-pad no-border bg-transparent push-bot-0'>
+                      <p className='push-top-0 push-bot-1'><strong>Overall Plans</strong></p>
+                    </div>
+                    <div className='custom-panel custom-panel-condensed push-bot-0'>
+                      <table
+                        className='table table-responsive table-middle-cell-align table-hover tablesaw tablesaw-stack'
+                        data-tablesaw-mode='stack'>
+                        <thead>
+                        <tr>
+                          <th><h6>TREATMENT PLANS</h6></th>
+                          <th><h6>SURGERY</h6></th>
+                          <th><h6>SURGERY CONFIDENCE LEVEL</h6></th>
+                          <th><h6>SURGERY TYPE</h6></th>
+                          <th><h6>RADIATION</h6></th>
+                          <th><h6>RADIATION CONFIDENCE LEVEL</h6></th>
+                          <th><h6>CHEMO</h6></th>
+                          <th><h6>CHEMO CONFIDENCE LEVEL</h6></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {data.recommended_treatment_plans.overall_plans.map((item, i) =>
+                          <tr key={i}>
+                            <td><p className="no-margin">{item.name}</p></td>
+                            <td><p className="no-margin">{item['surgery']}</p></td>
+                            <td><p className="no-margin">{item['surgery_confidence_level']}%</p></td>
+                            <td><p className="no-margin">{item['type']}</p></td>
+                            <td><p className="no-margin">{item['radiation']}</p></td>
+                            <td><p className="no-margin">{item['radiation_confidence_level']}%</p></td>
+                            <td><p className="no-margin">{item['chemo']}</p></td>
+                            <td><p className="no-margin">{item['chemo_confidence_level']}%</p></td>
+                          </tr>
+                        )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
                 <div className='push-top-5'>
                   <div
                     className='custom-panel custom-panel-condensed custom-panel-no-vertical-pad no-border bg-transparent push-bot-0'>
-                    <p className='push-top-0 push-bot-1'><strong>Overall Plans</strong></p>
+                    <p className='push-top-0 push-bot-1'><strong>Chemotherapy</strong></p>
                   </div>
                   <div className='custom-panel custom-panel-condensed push-bot-0'>
                     <table
-                      className='table table-responsive table-middle-cell-align table-hover tablesaw tablesaw-stack'
+                      className='table table-responsive table-middle-cell-align table-equal-width-3 table-hover tablesaw tablesaw-stack'
                       data-tablesaw-mode='stack'>
                       <thead>
                       <tr>
-                        <th><h6>TREATMENT PLANS</h6></th>
-                        <th><h6>SURGERY</h6></th>
-                        <th><h6>SURGERY CONFIDENCE LEVEL</h6></th>
-                        <th><h6>SURGERY TYPE</h6></th>
-                        <th><h6>RADIATION</h6></th>
-                        <th><h6>RADIATION CONFIDENCE LEVEL</h6></th>
-                        <th><h6>CHEMO</h6></th>
-                        <th><h6>CHEMO CONFIDENCE LEVEL</h6></th>
+                        <th><h6>CHEMO TREATMENT PLANS</h6></th>
+                        <th><h6>NUMBER OF TREATMENTS</h6></th>
+                        <th><h6>ADMINISTRATION</h6></th>
                       </tr>
                       </thead>
                       <tbody>
-                      {data.recommended_treatment_plans.overall_plans.map((item, i) =>
+                      {data.recommended_treatment_plans.chemo_therapy && data.recommended_treatment_plans.chemo_therapy.length &&
+                      data.recommended_treatment_plans.chemo_therapy.map((item, i) =>
                         <tr key={i}>
-                          <td><p className="no-margin">{item.name}</p></td>
-                          <td><p className="no-margin">{item['surgery']}</p></td>
-                          <td><p className="no-margin">{item['surgery_confidence_level']}%</p></td>
-                          <td><p className="no-margin">{item['type']}</p></td>
-                          <td><p className="no-margin">{item['radiation']}</p></td>
-                          <td><p className="no-margin">{item['radiation_confidence_level']}%</p></td>
-                          <td><p className="no-margin">{item['chemo']}</p></td>
-                          <td><p className="no-margin">{item['chemo_confidence_level']}%</p></td>
+                          <td><p className='no-margin'><span
+                            className='number-circle blue-circle'>{i + 1}</span> {item.plan}</p></td>
+                          <td>
+                            <table>
+                              <tbody>
+                              {item.number_of_treatments.map(n =>
+                                <tr key={n.name}>
+                                  <td>
+                                    <p className='push-bot-1 push-top-1'>{n.name} {n.value}</p>
+                                  </td>
+                                </tr>
+                              )}
+                              </tbody>
+                            </table>
+                          </td>
+                          <td>
+                            <table>
+                              <tbody>
+                              {item.administration.map(m =>
+                                <tr key={m.name}>
+                                  <td>
+                                    <p className='no-margin'>{m.name}</p>
+                                  </td>
+                                  {m.values.map((value, j) =>
+                                    <React.Fragment>
+                                      <td className='pad-left-1 pad-right-1'>
+                                        <p className='no-margin'>{value.name}</p>
+                                        <p className='push-bot-1 line-height-condensed small'>
+                                          <small>{value.time}</small>
+                                        </p>
+                                      </td>
+                                      {(j !== m.values.length - 1) && <td className='vertical-line'/>}
+                                    </React.Fragment>
+                                  )}
+                                </tr>
+                              )}
+                              </tbody>
+                            </table>
+                          </td>
                         </tr>
                       )}
                       </tbody>
                     </table>
                   </div>
                 </div>
-              )}
-              <div className='push-top-5'>
-                <div
-                  className='custom-panel custom-panel-condensed custom-panel-no-vertical-pad no-border bg-transparent push-bot-0'>
-                  <p className='push-top-0 push-bot-1'><strong>Chemotherapy</strong></p>
-                </div>
-                <div className='custom-panel custom-panel-condensed push-bot-0'>
-                  <table
-                    className='table table-responsive table-middle-cell-align table-equal-width-3 table-hover tablesaw tablesaw-stack'
-                    data-tablesaw-mode='stack'>
-                    <thead>
-                    <tr>
-                      <th><h6>CHEMO TREATMENT PLANS</h6></th>
-                      <th><h6>NUMBER OF TREATMENTS</h6></th>
-                      <th><h6>ADMINISTRATION</h6></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                      <td><p className='no-margin'><span
-                        className='number-circle blue-circle'>1</span> AC + T</p></td>
-                      <td>
-                        <table>
-                          <tbody>
-                          <tr>
-                            <td>
-                              <p className='push-bot-1 push-top-1'>A) 4AC, 4T</p>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <p className='push-bot-1 push-top-1'>B) 4AC, 12T</p>
-                            </td>
-                          </tr>
-                          </tbody>
-                        </table>
-                      </td>
-                      <td>
-                        <table>
-                          <tbody>
-                          <tr>
-                            <td>
-                              <p className='no-margin'>A)</p>
-                            </td>
-                            <td className='pad-left-1 pad-right-1'>
-                              <p className='no-margin'>AC</p>
-                              <p className='push-bot-1 line-height-condensed small'>
-                                <small>Every 2 weeks</small>
-                              </p>
-                            </td>
-                            <td className='vertical-line'></td>
-                            <td className='pad-left-2'>
-                              <p className='no-margin'>T</p>
-                              <p className='push-bot-1 line-height-condensed small'>
-                                <small>Every 2 weeks</small>
-                              </p>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <p className='no-margin'>B)</p>
-                            </td>
-                            <td className='pad-left-1 pad-right-1'>
-                              <p className='push-top-1'>AC</p>
-                              <p className='no-margin line-height-condensed small'>
-                                <small>Every 2 weeks</small>
-                              </p>
-                            </td>
-                            <td className='vertical-line'></td>
-                            <td className='pad-left-2'>
-                              <p className='push-top-1'>T</p>
-                              <p className='no-margin line-height-condensed small'>
-                                <small>Every week</small>
-                              </p>
-                            </td>
-                          </tr>
-                          </tbody>
-                        </table>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><p className='no-margin'><span
-                        className='number-circle blue-circle'>2</span> FEC</p></td>
-                      <td><p className='no-margin'>3 FEC</p></td>
-                      <td><p className='no-margin'>Every 3 weeks</p></td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
 
-              <div className='push-top-5'>
-                <div
-                  className='custom-panel custom-panel-condensed custom-panel-no-vertical-pad no-border bg-transparent push-bot-0'>
-                  <p className='push-top-0 push-bot-1'><strong>Radiation Therapy</strong></p>
+                <div className='push-top-5'>
+                  <div
+                    className='custom-panel custom-panel-condensed custom-panel-no-vertical-pad no-border bg-transparent push-bot-0'>
+                    <p className='push-top-0 push-bot-1'><strong>Radiation Therapy</strong></p>
+                  </div>
+                  <div className='custom-panel custom-panel-condensed push-bot-0'>
+                    <table
+                      className='table table-responsive table-middle-cell-align table-equal-width-3 table-hover tablesaw tablesaw-stack'
+                      data-tablesaw-mode='stack'>
+                      <thead>
+                      <tr>
+                        <th><h6>RADIATION TREATMENT PLANS</h6></th>
+                        <th><h6>NUMBER OF TREATMENTS</h6></th>
+                        <th><h6>ADMINISTRATION</h6></th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {data.recommended_treatment_plans.radiation_therapy && data.recommended_treatment_plans.radiation_therapy.length ?
+                        data.recommended_treatment_plans.radiation_therapy.map((item, i) =>
+                          <tr key={i}>
+                            <td><p className='no-margin'><span
+                              className='number-circle blue-circle'>{i + 1}</span> {item.name}</p></td>
+                            <td><p className="no-margin">{item.number_of_treatments}</p></td>
+                            <td><p className="no-margin">{item.administration}</p></td>
+                          </tr>
+                        ) : <tr>
+                          <td colSpan={3} style={{textAlign: 'center'}}>Not applicable</td>
+                        </tr>}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-                <div className='custom-panel custom-panel-condensed push-bot-0'>
-                  <table
-                    className='table table-responsive table-middle-cell-align table-equal-width-3 table-hover tablesaw tablesaw-stack'
-                    data-tablesaw-mode='stack'>
-                    <thead>
-                    <tr>
-                      <th><h6>RADIATION TREATMENT PLANS</h6></th>
-                      <th><h6>NUMBER OF TREATMENTS</h6></th>
-                      <th><h6>ADMINISTRATION</h6></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {data.recommended_treatment_plans.radiation_therapy && data.recommended_treatment_plans.radiation_therapy.length ?
-                      data.recommended_treatment_plans.radiation_therapy.map((item, i) =>
+
+                <div className='push-top-5'>
+                  <div
+                    className='custom-panel custom-panel-condensed custom-panel-no-vertical-pad no-border bg-transparent push-bot-0'>
+                    <p className='push-top-0 push-bot-1'><strong>Hormonal Therapy</strong></p>
+                  </div>
+                  <div className='custom-panel custom-panel-condensed push-bot-0'>
+                    <table
+                      className='table table-responsive table-middle-cell-align table-equal-width-3 table-hover tablesaw tablesaw-stack'
+                      data-tablesaw-mode='stack'>
+                      <thead>
+                      <tr>
+                        <th><h6>HORMONAL TREATMENT PLANS</h6></th>
+                        <th><h6>NUMBER OF TREATMENTS</h6></th>
+                        <th><h6>ADMINISTRATION</h6></th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {data.recommended_treatment_plans.hormonal_therapy.map((item, i) =>
                         <tr key={i}>
                           <td><p className='no-margin'><span
                             className='number-circle blue-circle'>{i + 1}</span> {item.name}</p></td>
                           <td><p className="no-margin">{item.number_of_treatments}</p></td>
                           <td><p className="no-margin">{item.administration}</p></td>
                         </tr>
-                      ) : <tr><td colSpan={3} style={{textAlign: 'center'}}>Not applicable</td></tr>}
-                    </tbody>
-                  </table>
+                      )}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
-
-              <div className='push-top-5'>
-                <div
-                  className='custom-panel custom-panel-condensed custom-panel-no-vertical-pad no-border bg-transparent push-bot-0'>
-                  <p className='push-top-0 push-bot-1'><strong>Hormonal Therapy</strong></p>
-                </div>
-                <div className='custom-panel custom-panel-condensed push-bot-0'>
-                  <table
-                    className='table table-responsive table-middle-cell-align table-equal-width-3 table-hover tablesaw tablesaw-stack'
-                    data-tablesaw-mode='stack'>
-                    <thead>
-                    <tr>
-                      <th><h6>HORMONAL TREATMENT PLANS</h6></th>
-                      <th><h6>NUMBER OF TREATMENTS</h6></th>
-                      <th><h6>ADMINISTRATION</h6></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {data.recommended_treatment_plans.hormonal_therapy.map((item, i) =>
-                      <tr key={i}>
-                        <td><p className='no-margin'><span
-                          className='number-circle blue-circle'>{i + 1}</span> {item.name}</p></td>
-                        <td><p className="no-margin">{item.number_of_treatments}</p></td>
-                        <td><p className="no-margin">{item.administration}</p></td>
-                      </tr>
-                    )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

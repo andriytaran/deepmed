@@ -307,6 +307,9 @@ const clientConfig = {
       'window.jQuery': 'jquery',
     }),
 
+    // load only needed locales (en is default one)
+    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /pl/),
+
     // Emit a file with assets paths
     // https://github.com/sporto/assets-webpack-plugin#options
     new AssetsPlugin({

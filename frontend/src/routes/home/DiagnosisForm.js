@@ -1,5 +1,4 @@
 import React from 'react'
-import {Button} from 'react-bootstrap'
 import {createForm} from 'rc-form'
 import {RACES, SITES, TYPES, REGIONS, STAGES} from '../../constants'
 import messages from '../../components/messages'
@@ -234,9 +233,9 @@ class DiagnosisForm extends React.Component {
           </div>
           <div className="row push-top-2">
             <div className="col-xs-12 text-center position-relative">
-              <Button bsSize="large" bsStyle="primary" type="submit" className="btn-offset">
+              <button type="submit" className='btn btn-lg btn-primary btn-offset'>
                 Analyze
-              </Button>
+              </button>
             </div>
           </div>
         </div>

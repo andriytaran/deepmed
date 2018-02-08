@@ -48,6 +48,11 @@ class ReportDataView(GenericAPIView):
 
         ## Overall Plans
 
+        overall_plans = []
+        hormonal_therapy = []
+        radiation_therapy = []
+        chemo_therapy = []
+
         try:
             import subprocess
             import ast
@@ -238,34 +243,114 @@ class ReportDataView(GenericAPIView):
                     'surgery_confidence_level': 100 - surgery_level,
                     'surgery': 'Y',
                     'level': 100 - surgery_level})
+
+            # Hormonal Therapy
+
+            if dd.get('pr_status') == '+' or dd.get('er_status') == '+':
+                hormonal_therapy.append({'name': 'Tamoxifen',
+                                         'number_of_treatments': 120,
+                                         'administration': 'Monthly'})
+
+            # Radiation Therapy
+
+            if is_radiation_therapy == 'Yes':
+                radiation_therapy.append({'name': 'Beam Radiation',
+                                          'number_of_treatments': 30,
+                                          'administration': 'Daily'})
+
+            # Chemo Therapy
+
+            if chemo_response[0] == 'Yes' and \
+                    int(dd.get('tumor_size_in_mm')) > 20:
+                chemo_therapy.append({
+                    'plan': 'AC+T',
+                    'number_of_treatments': [
+                        {'name': 'A)', 'value': '4AC, 4T'},
+                        {'name': 'B)', 'value': '4AC, 12T'}],
+                    'administration': [
+                        {'name': 'A)', 'values': [
+                            {'name': 'AC', 'time': 'Every 2 weeks'},
+                            {'name': 'T', 'time': 'Every 2 weeks'}
+                        ]},
+                        {'name': 'B)', 'values': [
+                            {'name': 'AC', 'time': 'Every 2 weeks'},
+                            {'name': 'T', 'time': 'Every week'}
+                        ]}
+                    ]
+                })
+            elif chemo_response[0] == 'Yes' and \
+                    int(dd.get('tumor_size_in_mm')) < 20:
+                chemo_therapy.append({
+                    'plan': 'C+T',
+                    'number_of_treatments': [
+                        {'name': 'A)', 'value': '4C, 4T'},
+                        {'name': 'B)', 'value': '4C, 12T'}],
+                    'administration': [
+                        {'name': 'A)', 'values': [
+                            {'name': 'C', 'time': 'Every 2 weeks'},
+                            {'name': 'T', 'time': 'Every 2 weeks'}
+                        ]},
+                        {'name': 'B)', 'values': [
+                            {'name': 'C', 'time': 'Every 2 weeks'},
+                            {'name': 'T', 'time': 'Every week'}
+                        ]}
+                    ]
+                })
+            elif chemo_response[0] == 'Yes' and \
+                    int(dd.get('tumor_size_in_mm')) > 20 and \
+                    dd.get('her2_status') == '+':
+                chemo_therapy.append({
+                    'plan': 'AC+T+HCP',
+                    'number_of_treatments': [
+                        {'name': 'A)', 'value': '4AC, 4T, 52HCP'},
+                        {'name': 'B)', 'value': '4AC, 12T, 52HCP'}],
+                    'administration': [
+                        {'name': 'A)', 'values': [
+                            {'name': 'AC', 'time': 'Every 2 weeks'},
+                            {'name': 'T', 'time': 'Every 2 weeks'},
+                            {'name': 'HCP', 'time': 'Every week'}
+                        ]},
+                        {'name': 'B)', 'values': [
+                            {'name': 'AC', 'time': 'Every 2 weeks'},
+                            {'name': 'T', 'time': 'Every week'},
+                            {'name': 'HCP', 'time': 'Every week'}
+                        ]}
+                    ]
+                })
+            elif chemo_response[0] == 'Yes' and \
+                    int(dd.get('tumor_size_in_mm')) < 20 and \
+                    dd.get('her2_status') == '+':
+                chemo_therapy.append({
+                    'plan': 'A+T+HCP',
+                    'number_of_treatments': [
+                        {'name': 'A)', 'value': '4C, 4T, 52HCP'},
+                        {'name': 'B)', 'value': '4C, 12T, 52HCP'}],
+                    'administration': [
+                        {'name': 'A)', 'values': [
+                            {'name': 'A', 'time': 'Every 2 weeks'},
+                            {'name': 'T', 'time': 'Every 2 weeks'},
+                            {'name': 'HCP', 'time': 'Every week'}
+                        ]},
+                        {'name': 'B)', 'values': [
+                            {'name': 'A', 'time': 'Every 2 weeks'},
+                            {'name': 'T', 'time': 'Every week'},
+                            {'name': 'HCP', 'time': 'Every week'}
+                        ]}
+                    ]
+                })
+
         except Exception as e:
             overall_plans = []
-
-        # Hormonal Therapy
-
-        hormonal_therapy = []
-        if dd.get('pr_status') == '+' or dd.get('er_status') == '+':
-            hormonal_therapy.append({'name': 'Tamoxifen',
-                                     'number_of_treatments': 120,
-                                     'administration': 'Monthly'})
-
-        # Radiation Therapy
-
-        radiation_therapy = []
-        if is_radiation_therapy == 'Yes':
-            radiation_therapy.append({'name': 'Beam Radiation',
-                                      'number_of_treatments': 30,
-                                      'administration': 'Daily'})
-
-        # Chemo Therapy
-
-
+            hormonal_therapy = []
+            radiation_therapy = []
+            chemo_therapy = []
 
         data = {
             'recommended_treatment_plans': {
                 'overall_plans': overall_plans,
                 'hormonal_therapy': hormonal_therapy,
-                'radiation_therapy': radiation_therapy
+                'radiation_therapy': radiation_therapy,
+                'chemo_therapy': chemo_therapy
             },
             'percent_women_annualy_diagnosed': percent_women_annualy_diagnosed(
                 age),

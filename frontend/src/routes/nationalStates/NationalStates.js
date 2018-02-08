@@ -212,7 +212,7 @@ class NationalStates extends React.Component {
 
           <h2 className='no-margin text-center'>Breast Cancer by Age</h2>
 
-          <Row type='flex'>
+          <Row type='flex' gutter={16}>
             <Col sm={24} md={12}>
               <div className={s.card}>
                 <p className='push-top-1 push-bot-2 text-center'><strong>Age-Specific Rates of
