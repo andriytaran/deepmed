@@ -1422,7 +1422,7 @@ def distribution_of_stage_of_cancer(input_json):
     }
 
 
-def percent_women_annualy_diagnosed(input_json):
+def percent_women_annualy_diagnosed2(input_json):
     only_age = {"age": json.loads(input_json)['age']}
     filters = create_filter(json.dumps(only_age))
     filters['$and'].append({"year-of-diagnosis": {"$gte": 1975}})
@@ -1678,6 +1678,66 @@ def percent_women_by_type():
             data['Other'] += result[i]['percentage']
         elif label == 'ILC':
             data['ILC'] += result[i]['percentage']
+
+    return {
+        'labels': list(map(lambda x: x, data.keys())),
+        'datasets': [{
+            'data': list(map(lambda x: x, data.values())),
+            'label': "Diagnosed",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
+def percent_women_annualy_diagnosed(input_json):
+    def get_total(year):
+        ff = {"$and": [{"year-of-diagnosis": {"$gte": year}},
+                       {"year-of-diagnosis": {"$lt": year + 5}}]}
+        total = json.loads(aggregate([
+            {"$match": ff},
+            {"$group": {
+                "_id": "",
+                "count": {"$sum": 1}}},
+            {"$sort": SON([("_id", 1)])}]))
+        return total[0]['count']
+
+    def get_by_age(only_age, year):
+        ff = create_filter(json.dumps(only_age))
+        ff['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": year}},
+                                    {"year-of-diagnosis": {"$lt": year + 5}}]})
+        by_age = json.loads(aggregate([
+            {"$match": ff},
+            {"$group": {
+                "_id": "",
+                "count": {"$sum": 1}}},
+            {"$sort": SON([("_id", 1)])}]))
+        return by_age[0]['count']
+
+    def get_percent(only_age, year):
+        return get_by_age(only_age, year) / get_total(year) * 100
+
+    only_age = {"age": json.loads(input_json)['age']}
+
+    data = {"1975-1979": 0, "1980-1984": 0, "1985-1989": 0, "1990-1994": 0, "1995-1999": 0,
+            "2000-2004": 0, "2005-2009": 0, "2010-2014": 0}
+    for year in [1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010]:
+        if year == 1975:
+            data['1975-1979'] = get_percent(only_age, year)
+        if year == 1980:
+            data['1980-1984'] = get_percent(only_age, year)
+        if year == 1985:
+            data['1985-1989'] = get_percent(only_age, year)
+        if year == 1990:
+            data['1990-1994'] = get_percent(only_age, year)
+        if year == 1995:
+            data['1995-1999'] = get_percent(only_age, year)
+        if year == 2000:
+            data['2000-2004'] = get_percent(only_age, year)
+        if year == 2005:
+            data['2005-2009'] = get_percent(only_age, year)
+        if year == 2010:
+            data['2010-2014'] = get_percent(only_age, year)
 
     return {
         'labels': list(map(lambda x: x, data.keys())),
@@ -1954,7 +2014,7 @@ def percent_women_by_type():
 
 
 if __name__ == '__main__':
-    diag_request = '{"age": 72, ' \
+    diag_request = '{"age": 52, ' \
                    '"sex": "Female", ' \
                    '"tumor_grade": 1, ' \
                    '"er_status": "+", ' \
