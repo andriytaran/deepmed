@@ -15,7 +15,7 @@ from lib.dataset import breast_cancer_by_grade, diagnosis, \
     radiation, get_t_size_cm, breast_cancer_by_state, \
     breast_cancer_at_a_glance, breast_cancer_by_age, \
     percent_women_annualy_diagnosed, percent_women_by_type, \
-    breast_cancer_by_state2
+    breast_cancer_by_state2, breast_cancer_at_a_glance2
 
 
 class ReportDataView(GenericAPIView):
@@ -381,7 +381,7 @@ class ReportDataView(GenericAPIView):
                 'overall': radiation(age),
             },
             'breast_cancer_by_state': breast_cancer_by_state(),
-            'breast_cancer_at_a_glance': breast_cancer_at_a_glance(),
+            'breast_cancer_at_a_glance': breast_cancer_at_a_glance2(),
             'breast_cancer_by_age': breast_cancer_by_age(),
         }
 
