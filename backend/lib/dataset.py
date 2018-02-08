@@ -1453,22 +1453,8 @@ def distribution_of_stage_of_cancer(input_json):
     }
 
 
-def percent_women_annualy_diagnosed(input_json):
-    """
-    sample request input_json = '{"age": 48, ' \
-                   '"sex": "Female", ' \
-                   '"tumor_grade": 1, ' \
-                   '"er_status": "+", ' \
-                   '"pr_status": "+", ' \
-                   '"tumor_size_in_mm": 22, ' \
-                   '"num_pos_nodes": 0, ' \
-                   '"her2_status": "+", ' \
-                   '"ethnicity": "White"}'
-    :param input_json:
-    :return: json
-    """
-    filters = create_filter(input_json)
-    filters['$and'].append({"year-of-diagnosis": {"$gte": 1979}})
+def percent_women_annualy_diagnosed(input_json=None):
+    filters = {"year-of-diagnosis": {"$gte": 1975}}
     result = json.loads(aggregate([
         {"$match": filters},
         {"$group": {
@@ -1487,25 +1473,25 @@ def percent_women_annualy_diagnosed(input_json):
         }},
         {"$sort": SON([("_id", 1)])}]))
 
-    data = {"1979-1983": 0, "1984-1988": 0, "1989-1993": 0, "1994-1998": 0,
-            "1999-2003": 0, "2004-2008": 0, "2009-2013": 0, "2014+": 0}
+    data = {"1975-1979": 0, "1980-1984": 0, "1985-1989": 0, "1990-1994": 0, "1995-1999": 0,
+            "2000-2004": 0, "2005-2009": 0, "2010-2014": 0}
     for i, label in enumerate(list(map(lambda x: x['_id']['year-of-diagnosis'], result))):
         if i < 5:
-            data['1979-1983'] += result[i]['percentage']
+            data['1975-1979'] += result[i]['percentage']
         elif i < 10:
-            data['1984-1988'] += result[i]['percentage']
+            data['1980-1984'] += result[i]['percentage']
         elif i < 15:
-            data['1989-1993'] += result[i]['percentage']
+            data['1985-1989'] += result[i]['percentage']
         elif i < 20:
-            data['1994-1998'] += result[i]['percentage']
+            data['1990-1994'] += result[i]['percentage']
         elif i < 25:
-            data['1999-2003'] += result[i]['percentage']
+            data['1995-1999'] += result[i]['percentage']
         elif i < 30:
-            data['2004-2008'] += result[i]['percentage']
+            data['2000-2004'] += result[i]['percentage']
         elif i < 35:
-            data['2009-2013'] += result[i]['percentage']
+            data['2005-2009'] += result[i]['percentage']
         elif i < 40:
-            data['2014+'] += result[i]['percentage']
+            data['2010-2014'] += result[i]['percentage']
 
     return {
         'labels': list(map(lambda x: x, data.keys())),
@@ -2055,6 +2041,7 @@ if __name__ == '__main__':
     # pprint(distribution_of_stage_of_cancer(age_and_race))
     # pprint(breast_cancer_by_size(age_only))
     # pprint(percent_women_by_type())
-    diag = diagnosis(diag_request, limit=20)
-    print(len(diag))
-    pprint(diag)
+    pprint(percent_women_annualy_diagnosed(diag_request))
+    # diag = diagnosis(diag_request, limit=20)
+    # print(len(diag))
+    # pprint(diag)
