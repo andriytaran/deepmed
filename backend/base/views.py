@@ -12,10 +12,26 @@ from lib.dataset import breast_cancer_by_grade, diagnosis, \
     breakout_by_stage, breast_cancer_by_size, \
     percent_of_women_with_cancer_by_race_overall, \
     distribution_of_stage_of_cancer, surgery_decisions, chemotherapy, \
-    radiation, get_t_size_cm, breast_cancer_by_state, \
+    radiation, breast_cancer_by_state, \
     breast_cancer_at_a_glance, breast_cancer_by_age, \
     percent_women_annualy_diagnosed, percent_women_by_type, \
     breast_cancer_by_state2, breast_cancer_at_a_glance2
+
+
+def v_get_t_size_cm(size_mm):
+    t_size_cm = None
+    if size_mm >= 50:
+        t_size_cm = ">5cm"
+    elif size_mm >= 30:
+        t_size_cm = ">3cm"
+    elif size_mm >= 20:
+        t_size_cm = "<3cm"
+    elif size_mm >= 10:
+        t_size_cm = "<2cm"
+    elif size_mm < 10:
+        t_size_cm = "<1cm"
+
+    return t_size_cm
 
 
 class ReportDataView(GenericAPIView):
@@ -69,7 +85,7 @@ class ReportDataView(GenericAPIView):
                                      dd.get('type'),
                                      dd.get('stage'),
                                      dd.get('region'),
-                                     get_t_size_cm(
+                                     v_get_t_size_cm(
                                          dd.get('tumor_size_in_mm')),
                                      str(dd.get('number_of_tumors')),
                                      str(dd.get('num_pos_nodes'))])
@@ -103,7 +119,7 @@ class ReportDataView(GenericAPIView):
                 dd.get('type'),
                 dd.get('stage'),
                 dd.get('region'),
-                get_t_size_cm(dd.get('tumor_size_in_mm')),
+                v_get_t_size_cm(dd.get('tumor_size_in_mm')),
                 str(dd.get('number_of_tumors')),
                 str(dd.get('num_pos_nodes')),
                 str(dd.get('er_status')),
@@ -137,7 +153,7 @@ class ReportDataView(GenericAPIView):
                 dd.get('type'),
                 dd.get('stage'),
                 dd.get('region'),
-                get_t_size_cm(dd.get('tumor_size_in_mm')),
+                v_get_t_size_cm(dd.get('tumor_size_in_mm')),
                 str(dd.get('number_of_tumors')),
                 str(dd.get('num_pos_nodes')),
                 str(dd.get('er_status')),
@@ -481,7 +497,7 @@ class TestDataView(GenericAPIView):
                                      dd.get('type'),
                                      dd.get('stage'),
                                      dd.get('region'),
-                                     get_t_size_cm(
+                                     v_get_t_size_cm(
                                          dd.get('tumor_size_in_mm')),
                                      str(dd.get('number_of_tumors')),
                                      str(dd.get('num_pos_nodes'))])
@@ -515,7 +531,7 @@ class TestDataView(GenericAPIView):
                 dd.get('type'),
                 dd.get('stage'),
                 dd.get('region'),
-                get_t_size_cm(dd.get('tumor_size_in_mm')),
+                v_get_t_size_cm(dd.get('tumor_size_in_mm')),
                 str(dd.get('number_of_tumors')),
                 str(dd.get('num_pos_nodes')),
                 str(dd.get('er_status')),
@@ -549,7 +565,7 @@ class TestDataView(GenericAPIView):
                 dd.get('type'),
                 dd.get('stage'),
                 dd.get('region'),
-                get_t_size_cm(dd.get('tumor_size_in_mm')),
+                v_get_t_size_cm(dd.get('tumor_size_in_mm')),
                 str(dd.get('number_of_tumors')),
                 str(dd.get('num_pos_nodes')),
                 str(dd.get('er_status')),
