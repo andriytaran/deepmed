@@ -29,6 +29,10 @@ class ReportDataView(GenericAPIView):
 
         age = json.dumps({'age': dd.get('age')})
 
+        # Recommended Treatment Plans
+
+        ## Overall Plans
+
         try:
             import subprocess
             import ast
@@ -36,6 +40,7 @@ class ReportDataView(GenericAPIView):
             regex = r"\((.*?)\)"
 
             ethnicity = dd.get('ethnicity')
+
             if ethnicity == 'Caucasian':
                 v_ethnicity = 'White'
             elif ethnicity == 'African American':
@@ -333,6 +338,10 @@ class TestDataView(GenericAPIView):
 
         age = json.dumps({'age': dd.get('age')})
 
+        # Recommended Treatment Plans
+
+        ## Overall Plans
+
         try:
             import subprocess
             import ast
@@ -340,6 +349,7 @@ class TestDataView(GenericAPIView):
             regex = r"\((.*?)\)"
 
             ethnicity = dd.get('ethnicity')
+
             if ethnicity == 'Caucasian':
                 v_ethnicity = 'White'
             elif ethnicity == 'African American':
@@ -349,13 +359,13 @@ class TestDataView(GenericAPIView):
             elif ethnicity == 'Other':
                 v_ethnicity = 'Unknown'
             else:
-                v_ethnicity = dd.get('ethnicity')
+                v_ethnicity = ethnicity
 
             # START SURGERY
             surgery_args = ','.join([dd.get('sex'),
                                      str(dd.get('age')),
                                      v_ethnicity,
-                                     str(float(dd.get('tumor_grade'))),
+                                     str(float(dd.get('tumor_grade', 'unk'))),
                                      dd.get('site'),
                                      dd.get('type'),
                                      dd.get('stage'),
@@ -387,7 +397,7 @@ class TestDataView(GenericAPIView):
 
             # START CHEMO
 
-            chemo_args = ' '.join([
+            chemo_args = ','.join([
                 str(dd.get('age')),
                 v_ethnicity,
                 str(float(dd.get('tumor_grade'))),
@@ -395,12 +405,11 @@ class TestDataView(GenericAPIView):
                 dd.get('stage'),
                 dd.get('region'),
                 get_t_size_cm(dd.get('tumor_size_in_mm')),
-                str(dd.get('num_pos_nodes')),
+                str(dd.get('number_of_tumors')),
                 str(dd.get('num_pos_nodes')),
                 str(dd.get('er_status')),
                 str(dd.get('pr_status')),
-                str(dd.get('her2_status')),
-                str('unk')])  # AJCC_2010p
+                str(dd.get('her2_status'))])
 
             chemo_command_str = [settings.ML_PYTHON_PATH,
                                  settings.ML_COMMAND_FILE,
@@ -432,7 +441,6 @@ class TestDataView(GenericAPIView):
                 get_t_size_cm(dd.get('tumor_size_in_mm')),
                 str(dd.get('number_of_tumors')),
                 str(dd.get('num_pos_nodes')),
-                str(dd.get('num_pos_nodes')),  # cs_lymphnodes
                 str(dd.get('er_status')),
                 str(dd.get('pr_status')),
                 str(dd.get('her2_status'))]
@@ -442,11 +450,10 @@ class TestDataView(GenericAPIView):
 
             sm_radiation_args.append('Mastectomy')
             sm_radiation_args.append(chemo_response[0])
-            sm_radiation_args.append(str('unk'))  # AJCC_2010p
 
             sm_radiation_command_str = [settings.ML_PYTHON_PATH,
                                         settings.ML_COMMAND_FILE,
-                                        ' '.join(sm_radiation_args),
+                                        ','.join(sm_radiation_args),
                                         'Radiation']
 
             sm_radiation_command = subprocess.Popen(sm_radiation_command_str,
@@ -465,11 +472,10 @@ class TestDataView(GenericAPIView):
 
             sl_radiation_args.append('Lumpectomy')
             sl_radiation_args.append(chemo_response[0])
-            sl_radiation_args.append(str('unk'))  # AJCC_2010p
 
             sl_radiation_command_str = [settings.ML_PYTHON_PATH,
                                         settings.ML_COMMAND_FILE,
-                                        ' '.join(sm_radiation_args),
+                                        ','.join(sm_radiation_args),
                                         'Radiation']
 
             sl_radiation_command = subprocess.Popen(sl_radiation_command_str,
@@ -486,47 +492,72 @@ class TestDataView(GenericAPIView):
 
             overall_plans = []
 
-            percent = round(surgery_response[1] * 100)
+            surgery_level = round(surgery_response[1] * 100)
+            chemo_level = round(chemo_response[1] * 100)
+            sm_radiation_level = round(sm_radiation_response[1] * 100)
+            sl_radiation_level = round(sl_radiation_response[1] * 100)
+
             if surgery_response[0] == 'Mastectomy':
                 overall_plans.append({
                     'name': 'Preferred Outcome A',
                     'type': surgery_response[0],
                     'radiation': 'Y' if sm_radiation_response[
                                             0] == 'Yes' else 'N',
+                    'radiation_confidence_level': sm_radiation_level,
                     'chemo': 'Y' if chemo_response[0] == 'Yes' else 'N',
+                    'chemo_confidence_level': chemo_level,
                     'surgery': 'Y',
-                    'level': percent})
+                    'surgery_confidence_level': surgery_level,
+                    'level': surgery_level})
                 overall_plans.append({
                     'name': 'Preferred Outcome B',
                     'type': 'Lumpectomy',
                     'radiation': 'Y' if sl_radiation_response[
                                             0] == 'Yes' else 'N',
+                    'radiation_confidence_level': sl_radiation_level,
                     'chemo': 'Y' if chemo_response[0] == 'Yes' else 'N',
+                    'chemo_confidence_level': chemo_level,
                     'surgery': 'Y',
-                    'level': 100 - percent})
+                    'surgery_confidence_level': 100 - surgery_level,
+                    'level': 100 - surgery_level})
             else:
                 overall_plans.append({
                     'name': 'Preferred Outcome A',
-                    'type': 'Lumpectomy',
+                    'type': surgery_response[0],
                     'radiation': 'Y' if sl_radiation_response[
                                             0] == 'Yes' else 'N',
+                    'radiation_confidence_level': sl_radiation_level,
                     'chemo': 'Y' if chemo_response[0] == 'Yes' else 'N',
+                    'chemo_confidence_level': chemo_level,
+                    'surgery_confidence_level': surgery_level,
                     'surgery': 'Y',
-                    'level': percent})
+                    'level': surgery_level})
                 overall_plans.append({
                     'name': 'Preferred Outcome B',
-                    'type': surgery_response[0],
+                    'type': 'Mastectomy',
                     'radiation': 'Y' if sm_radiation_response[
                                             0] == 'Yes' else 'N',
+                    'radiation_confidence_level': sm_radiation_level,
                     'chemo': 'Y' if chemo_response[0] == 'Yes' else 'N',
+                    'chemo_confidence_level': chemo_level,
+                    'surgery_confidence_level': 100 - surgery_level,
                     'surgery': 'Y',
-                    'level': 100 - percent})
+                    'level': 100 - surgery_level})
         except Exception as e:
             overall_plans = []
 
+        # Hormonal Therapy
+
+        hormonal_therapy = []
+        if dd.get('pr_status') == '+' or dd.get('er_status') == '+':
+            hormonal_therapy.append({'name': 'Tamoxifen',
+                                     'number_of_treatments': 120,
+                                     'administration': 'Monthly'})
+
         data = {
             'recommended_treatment_plans': {
-                'overall_plans': overall_plans
+                'overall_plans': overall_plans,
+                'hormonal_therapy': hormonal_therapy,
             },
             'percent_women_annualy_diagnosed': percent_women_annualy_diagnosed(
                 age),
