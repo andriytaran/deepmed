@@ -1422,8 +1422,11 @@ def distribution_of_stage_of_cancer(input_json):
     }
 
 
-def percent_women_annualy_diagnosed(input_json=None):
-    filters = {"year-of-diagnosis": {"$gte": 1975}}
+def percent_women_annualy_diagnosed(input_json):
+    only_age = {"age": json.loads(input_json)['age']}
+    filters = create_filter(json.dumps(only_age))
+    filters['$and'].append({"year-of-diagnosis": {"$gte": 1975}})
+    # filters = {"year-of-diagnosis": {"$gte": 1975}}
     result = json.loads(aggregate([
         {"$match": filters},
         {"$group": {
@@ -2010,7 +2013,7 @@ if __name__ == '__main__':
     # pprint(distribution_of_stage_of_cancer(age_and_race))
     # pprint(breast_cancer_by_size(age_only))
     # pprint(percent_women_by_type())
-    # pprint(percent_women_annualy_diagnosed(diag_request))
-    diag = diagnosis(diag_request, limit=20)
-    print(len(diag))
-    pprint(diag)
+    pprint(percent_women_annualy_diagnosed(diag_request))
+    # diag = diagnosis(diag_request, limit=20)
+    # print(len(diag))
+    # pprint(diag)
