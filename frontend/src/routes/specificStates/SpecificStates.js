@@ -33,7 +33,7 @@ class SpecificStates extends React.Component {
         <div className='custom-panel custom-panel-condensed light-gray-bg'>
           <Row type='flex' gutter={16}>
             {data.percent_women_annualy_diagnosed && (
-              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
+              <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
                     <strong>% of Total Breast Cancer Diagnoses</strong>
@@ -76,7 +76,7 @@ class SpecificStates extends React.Component {
               </Col>
             )}
             {data.percent_women_by_type && (
-              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
+              <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
                     <strong>Percent of Women by Breast Cancer Type</strong>
@@ -108,134 +108,8 @@ class SpecificStates extends React.Component {
                 </div>
               </Col>
             )}
-            {data.breast_cancer_by_grade_and_size && (
-              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
-                <div className={s.card}>
-                  <h4 className={s.header}>
-                    <strong>Breast Cancer by Grade {ageRange}</strong>
-                  </h4>
-                  <Bar
-                    data={{
-                      ...data.breast_cancer_by_grade_and_size.grade,
-                      datasets: data.breast_cancer_by_grade_and_size.grade.datasets.map(item => ({
-                        ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                        borderColor: white,
-                      }))
-                    }}
-                    options={{
-                      legend: {
-                        display: false,
-                        position: 'bottom',
-                        labels: chartsLabelsOptions
-                      },
-                      tooltips: {
-                        callbacks: {
-                          label: formatChartNumber
-                        }
-                      },
-                    }}
-                    width={400}
-                    height={400}
-                  />
-                </div>
-              </Col>
-            )}
-            {data.breast_cancer_by_grade_and_size && (
-              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
-                <div className={s.card}>
-                  <h4 className={s.header}>
-                    <strong>Breast Cancer by Size {ageRange}</strong>
-                  </h4>
-                  <Bar
-                    data={{
-                      ...data.breast_cancer_by_grade_and_size.size,
-                      datasets: data.breast_cancer_by_grade_and_size.size.datasets.map(item => ({
-                        ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                        borderColor: white,
-                      }))
-                    }}
-                    options={{
-                      legend: {
-                        display: false,
-                        position: 'bottom',
-                        labels: chartsLabelsOptions
-                      },
-                      tooltips: {
-                        callbacks: {
-                          label: formatChartNumber
-                        }
-                      },
-                    }}
-                    width={400}
-                    height={400}
-                  />
-                </div>
-              </Col>
-            )}
-            {data.distribution_of_stage_of_cancer && (
-              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
-                <div className={s.card}>
-                  <h4 className={s.header}>
-                    <strong>% of Women with Cancer by Stage {ageRange}</strong>
-                  </h4>
-                  <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
-                  <Pie
-                    data={{
-                      ...data.distribution_of_stage_of_cancer.overall,
-                      datasets: data.distribution_of_stage_of_cancer.overall.datasets.map(item => ({
-                        ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                        borderColor: white,
-                      }))
-                    }}
-                    options={{
-                      legend: {
-                        display: true,
-                        position: 'right',
-                        labels: chartsLabelsOptions
-                      },
-                      tooltips: {
-                        callbacks: {
-                          label: formatChartNumber
-                        }
-                      },
-                    }}
-                    width={400}
-                    height={150}
-                  />
-                  <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>{ethnicity} Women Only</strong>
-                  </p>
-                  <Pie
-                    data={{
-                      ...data.distribution_of_stage_of_cancer.by_race,
-                      datasets: data.distribution_of_stage_of_cancer.by_race.datasets.map(item => ({
-                        ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                        borderColor: white,
-                      }))
-                    }}
-                    options={{
-                      legend: {
-                        display: true,
-                        position: 'right',
-                        labels: chartsLabelsOptions
-                      },
-                      tooltips: {
-                        callbacks: {
-                          label: formatChartNumber
-                        }
-                      },
-                    }}
-                    width={400}
-                    height={150}
-                  />
-                </div>
-              </Col>
-            )}
             {data.percent_of_women_with_cancer_by_race && (
-              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
+              <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
                     <strong>% of Women with Cancer by Ethnicity {ageRange}</strong>
@@ -294,8 +168,134 @@ class SpecificStates extends React.Component {
                 </div>
               </Col>
             )}
+            {data.breast_cancer_by_grade_and_size && (
+              <Col xs={24} sm={12} md={8} className={s.col}>
+                <div className={s.card}>
+                  <h4 className={s.header}>
+                    <strong>Breast Cancer by Grade {ageRange}</strong>
+                  </h4>
+                  <Bar
+                    data={{
+                      ...data.breast_cancer_by_grade_and_size.grade,
+                      datasets: data.breast_cancer_by_grade_and_size.grade.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: false,
+                        position: 'bottom',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={400}
+                  />
+                </div>
+              </Col>
+            )}
+            {data.breast_cancer_by_grade_and_size && (
+              <Col xs={24} sm={12} md={8} className={s.col}>
+                <div className={s.card}>
+                  <h4 className={s.header}>
+                    <strong>Breast Cancer by Tumor Size {ageRange}</strong>
+                  </h4>
+                  <Bar
+                    data={{
+                      ...data.breast_cancer_by_grade_and_size.size,
+                      datasets: data.breast_cancer_by_grade_and_size.size.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: false,
+                        position: 'bottom',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={400}
+                  />
+                </div>
+              </Col>
+            )}
+            {data.distribution_of_stage_of_cancer && (
+              <Col xs={24} sm={12} md={8} className={s.col}>
+                <div className={s.card}>
+                  <h4 className={s.header}>
+                    <strong>% of Women with Cancer by Stage {ageRange}</strong>
+                  </h4>
+                  <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
+                  <Pie
+                    data={{
+                      ...data.distribution_of_stage_of_cancer.overall,
+                      datasets: data.distribution_of_stage_of_cancer.overall.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: true,
+                        position: 'right',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={150}
+                  />
+                  <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>{ethnicity} Women Only</strong>
+                  </p>
+                  <Pie
+                    data={{
+                      ...data.distribution_of_stage_of_cancer.by_race,
+                      datasets: data.distribution_of_stage_of_cancer.by_race.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: true,
+                        position: 'right',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={150}
+                  />
+                </div>
+              </Col>
+            )}
             {data.surgery_decisions && (
-              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
+              <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
                     <strong>Surgery Decisions for Women {ageRange}</strong>
@@ -328,7 +328,7 @@ class SpecificStates extends React.Component {
               </Col>
             )}
             {data.chemotherapy && (
-              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
+              <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
                     <strong>Chemotherapy for Women {ageRange}</strong>
@@ -388,7 +388,7 @@ class SpecificStates extends React.Component {
               </Col>
             )}
             {data.radiation && (
-              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
+              <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
                     <strong>Radiation for Women {ageRange}</strong>
@@ -407,7 +407,7 @@ class SpecificStates extends React.Component {
                       legend: {
                         display: true,
                         position: 'right',
-                        labels: chartsLabelsOptions
+                        labels: chartsLabelsOptions,
                       },
                       tooltips: {
                         callbacks: {
@@ -416,7 +416,7 @@ class SpecificStates extends React.Component {
                       },
                     }}
                     width={400}
-                    height={150}
+                    height={160}
                   />
                   <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>by Stage</strong>
                   </p>
@@ -433,7 +433,7 @@ class SpecificStates extends React.Component {
                       legend: {
                         display: true,
                         position: 'right',
-                        labels: chartsLabelsOptions
+                        labels: chartsLabelsOptions,
                       },
                       tooltips: {
                         callbacks: {
@@ -442,7 +442,7 @@ class SpecificStates extends React.Component {
                       },
                     }}
                     width={400}
-                    height={150}
+                    height={160}
                   />
                 </div>
               </Col>

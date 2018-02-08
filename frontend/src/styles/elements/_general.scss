@@ -393,16 +393,6 @@ a.link-no-underline:active {
     }
 }
 
-/* Range Square */
-.range-square {
-	height:2rem;
-	width:2rem;
-	@include border-radius(3px);
-	display:block;
-	background-color:$color__brand_blue;
-	border:1px solid $color__brand_gray;
-}
-
 /* Percentage Widths */
 .width-5-percent {
 	width:5%;

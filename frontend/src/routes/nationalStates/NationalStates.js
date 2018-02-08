@@ -2,14 +2,28 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './NationalStates.scss'
-import {VectorMap, Row, Col} from '../../components'
+import {Col, Row, VectorMap} from '../../components'
 import {Line} from 'react-chartjs-2'
 import {humanReadableNumber} from '../../utils'
 import cn from 'classnames'
+import reduce from 'lodash/reduce'
+import assign from 'lodash/assign'
+import uniq from 'lodash/uniq'
+import sortBy from 'lodash/sortBy'
+
+const colors = ['#47cfd1', '#04a9a9', '#48ccf5', '#77c2d9']
 
 class NationalStates extends React.Component {
   render() {
     const {data} = this.props
+
+    let states
+    let ranges
+    if (data.breast_cancer_by_state && data.breast_cancer_by_state.length) {
+      states = reduce(data.breast_cancer_by_state, (acc, {State, Range}) => assign(acc, {[`US-${State}`]: Range}), {})
+      ranges = sortBy(uniq(data.breast_cancer_by_state.map(item => item.Range)), x => x)
+    }
+
     return (
       <div className='container container-full'>
 
@@ -17,75 +31,47 @@ class NationalStates extends React.Component {
           <Col sm={24} md={12} className={s.col}>
             <div className={cn(s.card, s.mapCard)}>
 
-              <h2 className='no-margin text-center'>Breast Cancer Incidence per 100,000 Women</h2>
+              <h2 className='text-center'>Breast Cancer Incidence per 100,000 Women</h2>
 
               <div className={s.mapWrapper}>
-                {data.breast_cancer_by_state && (
+                {states && (
                   <VectorMap
                     map='us_aea'
                     backgroundColor='transparent'
-                    series={data.breast_cancer_by_state}
+                    series={{
+                      regions: [{
+                        values: states,
+                        scale: colors,
+                      }]
+                    }}
+                    onRegionTipShow={(e, el, code) => {
+                      const currentState = data.breast_cancer_by_state.find(item => code.includes(item.State)) || {}
+                      el.html(el.html() + `<div>Range: ${currentState.Range}<br/>Rate: ${currentState.Rate}</div>`)
+                    }}
                     containerStyle={{width: '100%', height: 500}}
                     regionStyle={{
                       initial: {
                         stroke: 'white',
                         'stroke-width': 2,
-                        'stroke-opacity': 1
+                        'stroke-opacity': 1,
                       },
                     }}
                   />
                 )}
               </div>
-
-              <div className='row push-top-4'>
-                <div className='col-md-12 text-center'>
-                  <div
-                    className='custom-panel custom-panel-condensed gray-bg inline-block  push-bot-0 text-left'>
-                    <p className='no-margin'>Range:</p>
-                    <div className='push-top-1'>
-                      <div className='display-table'>
-                        <div className='display-table-cell'>
-                          <div className='display-table-cell'>
-                            <span className='range-square' style={{backgroundColor: '#47cfd1'}}/>
-                          </div>
-                          <div className='display-table-cell'>
-                            <p className='no-margin line-height-100 small'>&nbsp;106.6 to
-                              118.3</p>
-                          </div>
-                        </div>
-                        <div className='display-table-cell pad-left-1'>
-                          <div className='display-table-cell'>
-                            <span className='range-square' style={{backgroundColor: '#04a9a9'}}/>
-                          </div>
-                          <div className='display-table-cell'>
-                            <p className='no-margin line-height-100 small'>&nbsp;118.7 to
-                              125.5</p>
-                          </div>
-                        </div>
-                        <div className='display-table-cell pad-left-1'>
-                          <div className='display-table-cell'>
-                            <span className='range-square' style={{backgroundColor: '#48ccf5'}}/>
-                          </div>
-                          <div className='display-table-cell'>
-                            <p className='no-margin line-height-100 small'>&nbsp;125.9 to
-                              132.0</p>
-                          </div>
-                        </div>
-                        <div className='display-table-cell pad-left-1'>
-                          <div className='display-table-cell'>
-                            <span className='range-square' style={{backgroundColor: '#77c2d9'}}/>
-                          </div>
-                          <div className='display-table-cell'>
-                            <p className='no-margin line-height-100 small'>&nbsp;132.3 to
-                              144.9</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              {ranges && (
+                <div className={s.rangesCard}>
+                  <p className={s.rangesCardHeader}>Range:</p>
+                  <Row gutter={4} className={s.rangesCardContent}>
+                    {ranges.map((range, i) =>
+                      <Col span='6' key={range} className={s.range}>
+                        <span className={s.rangeIndicator} style={{backgroundColor: colors[i]}}/>
+                        <p className={s.rangeLabel}>{range}</p>
+                      </Col>
+                    )}
+                  </Row>
                 </div>
-              </div>
-
+              )}
             </div>
           </Col>
 

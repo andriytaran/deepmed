@@ -75,4 +75,9 @@
   --------------------------------------------------------------*/
   @import "layout/responsive";
 
+  /*TODO*/
+  .jvectormap-tip {
+    /*because of sidebar 1037*/
+    z-index: 1038;
+  }
 }
