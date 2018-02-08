@@ -380,7 +380,7 @@ class ReportDataView(GenericAPIView):
             'radiation': {
                 'overall': radiation(age),
             },
-            'breast_cancer_by_state': breast_cancer_by_state(),
+            'breast_cancer_by_state': breast_cancer_by_state2(1),
             'breast_cancer_at_a_glance': breast_cancer_at_a_glance2(),
             'breast_cancer_by_age': breast_cancer_by_age(),
         }
