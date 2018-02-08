@@ -554,6 +554,14 @@ class TestDataView(GenericAPIView):
                                      'number_of_treatments': 120,
                                      'administration': 'Monthly'})
 
+        # Radiation Therapy
+
+        radiation_therapy = []
+        if dd.get('pr_status'):
+            hormonal_therapy.append({'name': 'Tamoxifen',
+                                     'number_of_treatments': 120,
+                                     'administration': 'Monthly'})
+
         data = {
             'recommended_treatment_plans': {
                 'overall_plans': overall_plans,
@@ -571,8 +579,7 @@ class TestDataView(GenericAPIView):
                 'by_race':
                     distribution_of_stage_of_cancer(
                         json.dumps({'age': dd.get('age'),
-                                    'ethnicity': dd.get(
-                                        'ethnicity')}, ensure_ascii=False)),
+                                    'ethnicity': ethnicity}, ensure_ascii=False)),
             },
             'percent_of_women_with_cancer_by_race': {
                 'overall': percent_of_women_with_cancer_by_race_overall()
