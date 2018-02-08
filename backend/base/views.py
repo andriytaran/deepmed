@@ -337,6 +337,19 @@ class TestDataView(GenericAPIView):
 
         age = json.dumps({'age': dd.get('age')})
 
+        ethnicity = dd.get('ethnicity')
+
+        if ethnicity == 'Caucasian':
+            v_ethnicity = 'White'
+        elif ethnicity == 'African American':
+            v_ethnicity = 'Black'
+        elif ethnicity == 'Asian':
+            v_ethnicity = 'Asian or Pacific Islander'
+        elif ethnicity == 'Other':
+            v_ethnicity = 'Unknown'
+        else:
+            v_ethnicity = ethnicity
+
         # Recommended Treatment Plans
 
         ## Overall Plans
@@ -346,19 +359,6 @@ class TestDataView(GenericAPIView):
             import ast
             import re
             regex = r"\((.*?)\)"
-
-            ethnicity = dd.get('ethnicity')
-
-            if ethnicity == 'Caucasian':
-                v_ethnicity = 'White'
-            elif ethnicity == 'African American':
-                v_ethnicity = 'Black'
-            elif ethnicity == 'Asian':
-                v_ethnicity = 'Asian or Pacific Islander'
-            elif ethnicity == 'Other':
-                v_ethnicity = 'Unknown'
-            else:
-                v_ethnicity = ethnicity
 
             # START SURGERY
             surgery_args = ','.join([dd.get('sex'),
