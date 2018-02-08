@@ -112,31 +112,22 @@ class SpecificStates extends React.Component {
               <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
-                    <strong>Breast Cancer by Grade and Size {ageRange}</strong>
+                    <strong>Breast Cancer by Grade {ageRange}</strong>
                   </h4>
                   <Bar
                     data={{
                       ...data.breast_cancer_by_grade_and_size.grade,
                       datasets: data.breast_cancer_by_grade_and_size.grade.datasets.map(item => ({
                         ...item,
-                        backgroundColor: color_1,
-                        hoverBackgroundColor: color_3,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                         borderColor: white,
                       }))
                     }}
                     options={{
                       legend: {
-                        display: false,
+                        display: true,
                         position: 'bottom',
                         labels: chartsLabelsOptions
-                      },
-                      scales: {
-                        yAxes: [{
-                          ticks: {
-                            beginAtZero: true,
-                            callback: (value) => `${value}%`
-                          }
-                        }]
                       },
                       tooltips: {
                         callbacks: {
@@ -145,32 +136,31 @@ class SpecificStates extends React.Component {
                       },
                     }}
                     width={400}
-                    height={200}
-                    ref='chart'
+                    height={400}
                   />
+                </div>
+              </Col>
+            )}
+            {data.breast_cancer_by_grade_and_size && (
+              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
+                <div className={s.card}>
+                  <h4 className={s.header}>
+                    <strong>Breast Cancer by Size {ageRange}</strong>
+                  </h4>
                   <Bar
                     data={{
                       ...data.breast_cancer_by_grade_and_size.size,
                       datasets: data.breast_cancer_by_grade_and_size.size.datasets.map(item => ({
                         ...item,
-                        backgroundColor: color_1,
-                        hoverBackgroundColor: color_3,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                         borderColor: white,
                       }))
                     }}
                     options={{
                       legend: {
-                        display: false,
+                        display: true,
                         position: 'bottom',
                         labels: chartsLabelsOptions
-                      },
-                      scales: {
-                        yAxes: [{
-                          ticks: {
-                            beginAtZero: true,
-                            callback: (value) => `${value}%`
-                          }
-                        }]
                       },
                       tooltips: {
                         callbacks: {
@@ -179,7 +169,7 @@ class SpecificStates extends React.Component {
                       },
                     }}
                     width={400}
-                    height={200}
+                    height={400}
                   />
                 </div>
               </Col>
