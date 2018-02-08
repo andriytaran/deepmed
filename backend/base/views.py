@@ -29,6 +29,19 @@ class ReportDataView(GenericAPIView):
 
         age = json.dumps({'age': dd.get('age')})
 
+        ethnicity = dd.get('ethnicity')
+
+        if ethnicity == 'Caucasian':
+            v_ethnicity = 'White'
+        elif ethnicity == 'African American':
+            v_ethnicity = 'Black'
+        elif ethnicity == 'Asian':
+            v_ethnicity = 'Asian or Pacific Islander'
+        elif ethnicity == 'Other':
+            v_ethnicity = 'Unknown'
+        else:
+            v_ethnicity = ethnicity
+
         # Recommended Treatment Plans
 
         ## Overall Plans
@@ -38,19 +51,6 @@ class ReportDataView(GenericAPIView):
             import ast
             import re
             regex = r"\((.*?)\)"
-
-            ethnicity = dd.get('ethnicity')
-
-            if ethnicity == 'Caucasian':
-                v_ethnicity = 'White'
-            elif ethnicity == 'African American':
-                v_ethnicity = 'Black'
-            elif ethnicity == 'Asian':
-                v_ethnicity = 'Asian or Pacific Islander'
-            elif ethnicity == 'Other':
-                v_ethnicity = 'Unknown'
-            else:
-                v_ethnicity = ethnicity
 
             # START SURGERY
             surgery_args = ','.join([dd.get('sex'),
@@ -253,7 +253,7 @@ class ReportDataView(GenericAPIView):
                 'by_race':
                     distribution_of_stage_of_cancer(
                         json.dumps({'age': dd.get('age'),
-                                    'ethnicity': ethnicity}, ensure_ascii=False)),
+                                    'ethnicity': v_ethnicity}, ensure_ascii=False)),
             },
             'percent_of_women_with_cancer_by_race': {
                 'overall': percent_of_women_with_cancer_by_race_overall()
