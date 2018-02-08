@@ -421,19 +421,14 @@ class ReportDataView(GenericAPIView):
                                       limit=20)
 
         if len(similar_diagnosis) < 20:
-            dd.pop('tumor_size_in_mm', None)
-            similar_diagnosis = diagnosis(json.dumps(dd, ensure_ascii=False),
-                                          limit=20)
+            dd.pop('race', None)
+            similar_diagnosis = diagnosis(
+                json.dumps(dd, ensure_ascii=False), limit=20)
 
             if len(similar_diagnosis) < 20:
-                dd.pop('race', None)
+                dd.pop('age', None)
                 similar_diagnosis = diagnosis(
                     json.dumps(dd, ensure_ascii=False), limit=20)
-
-                if len(similar_diagnosis) < 20:
-                    dd.pop('age', None)
-                    similar_diagnosis = diagnosis(
-                        json.dumps(dd, ensure_ascii=False), limit=20)
 
         data['similar_diagnosis'] = similar_diagnosis
 
