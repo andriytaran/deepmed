@@ -228,6 +228,12 @@ def diagnosis(input_json, limit=20):
         else:
             return race
 
+    def get_cod(cod):
+        if cod not in ['Alive', 'Breast']:
+            return "Other"
+        else:
+            return cod
+
     filters = create_filter(input_json)
     dataset = find(filters, limit=limit)
     results = []
@@ -249,7 +255,7 @@ def diagnosis(input_json, limit=20):
              'radiation': item['radiation'],
              'year dx': item['year-of-diagnosis'],
              'survival mos.': item['survival-months'],
-             'cod': item['cod-to-site-recode']}
+             'cod': get_cod(item['cod-to-site-recode'])}
         results.append(d)
 
     if len(results) < 20:
@@ -274,7 +280,7 @@ def diagnosis(input_json, limit=20):
                  'radiation': item['radiation'],
                  'year dx': item['year-of-diagnosis'],
                  'survival mos.': item['survival-months'],
-                 'cod': item['cod-to-site-recode']}
+                 'cod': get_cod(item['cod-to-site-recode'])}
             results.append(d)
         if len(results) < 20:
             filters['$and'] = [d for d in filters['$and'] if 'race-recode-w-b-ai-api' not in d]
@@ -298,7 +304,7 @@ def diagnosis(input_json, limit=20):
                      'radiation': item['radiation'],
                      'year dx': item['year-of-diagnosis'],
                      'survival mos.': item['survival-months'],
-                     'cod': item['cod-to-site-recode']}
+                     'cod': get_cod(item['cod-to-site-recode'])}
                 results.append(d)
             if len(results) < 20:
                 filters['$and'] = [d for d in filters['$and'] if 'age-recode-with-single-ages-and-85' not in d]
@@ -322,7 +328,7 @@ def diagnosis(input_json, limit=20):
                          'radiation': item['radiation'],
                          'year dx': item['year-of-diagnosis'],
                          'survival mos.': item['survival-months'],
-                         'cod': item['cod-to-site-recode']}
+                         'cod': get_cod(item['cod-to-site-recode'])}
                     results.append(d)
                 return results
             return results
@@ -1959,7 +1965,7 @@ def percent_women_by_type():
 
 
 if __name__ == '__main__':
-    diag_request = '{"age": 48, ' \
+    diag_request = '{"age": 72, ' \
                    '"sex": "Female", ' \
                    '"tumor_grade": 1, ' \
                    '"er_status": "+", ' \

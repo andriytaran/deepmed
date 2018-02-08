@@ -1,6 +1,6 @@
 export const WEEK = 7
 export const YEAR = 365
-export const RACES = ['Asian or Pacific Islander', 'Black', 'Caucasian', 'American Indian/Alaska Native', 'Other']
+export const RACES = ['Asian', 'African American', 'Caucasian', 'American Indian/Alaska Native', 'Other']
 
 export const SITES = [
   {value: 'Axillary', label: 'Axillary'},

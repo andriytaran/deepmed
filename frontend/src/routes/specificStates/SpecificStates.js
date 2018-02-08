@@ -2,8 +2,9 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './SpecificStates.scss'
-import {Bar, Line, Pie} from 'react-chartjs-2'
+import {Bar, Pie} from 'react-chartjs-2'
 import {formatChartNumber, getAgeRangeLabel} from '../../utils'
+import {Col, Row} from '../../components'
 
 class SpecificStates extends React.Component {
   render() {
@@ -15,7 +16,7 @@ class SpecificStates extends React.Component {
     const color_5 = '#1ac6ff'
     const color_6 = '#8f61ec'
     const color_7 = '#9df51d'
-    const color_8 = '#ff9200'
+    const color_8 = '#ff9400'
     const color_9 = '#f51431'
 
     const chartsLabelsOptions = {
@@ -26,532 +27,427 @@ class SpecificStates extends React.Component {
     const {data, diagnosisForm} = this.props
     const ageRange = diagnosisForm.age ? getAgeRangeLabel(diagnosisForm.age) : ''
     const ethnicity = diagnosisForm.ethnicity || ''
+
     return (
-      <div className="container container-full" data-children="same-height">
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="custom-panel custom-panel-condensed light-gray-bg">
-              <div className="row row-condensed">
-                {data.percent_women_annualy_diagnosed && (
-                  <div className="col-xl-5ths col-lg-4 col-md-6">
-                    <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
-                         data-adjust="height">
-                      <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>% of Total Breast Cancer Diagnoses</strong>
-                      </h4>
-                      <Bar
-                        data={{
-                          ...data.percent_women_annualy_diagnosed,
-                          datasets: data.percent_women_annualy_diagnosed.datasets.map(item => ({
-                            ...item,
-                            backgroundColor: color_1,
-                            hoverBackgroundColor: color_3,
-                            borderColor: white,
-                          }))
-                        }}
-                        options={{
-                          legend: {
-                            display: false,
-                            position: 'bottom',
-                            labels: chartsLabelsOptions
-                          },
-                          scales: {
-                            yAxes: [{
-                              ticks: {
-                                beginAtZero:true,
-                                callback: (value) => `${value}%`
-                              }
-                            }]
-                          },
-                          tooltips: {
-                            callbacks: {
-                              label: formatChartNumber
-                            }
-                          },
-                        }}
-                        width={200}
-                        height={200}
-                        ref="chart"
-                      />
-                    </div>
-                  </div>
-                )}
-                {data.percent_women_by_type && (
-                  <div className="col-xl-5ths col-lg-4 col-md-6">
-                    <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
-                         data-adjust="height">
-                      <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>Percent of Women by Breast Cancer Type</strong>
-                      </h4>
-                      <Pie
-                        data={{
-                          ...data.percent_women_by_type,
-                          datasets: data.percent_women_by_type.datasets.map(item => ({
-                            ...item,
-                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                            borderColor: white,
-                          }))
-                        }}
-                        options={{
-                          legend: {
-                            display: true,
-                            position: 'bottom',
-                            labels: chartsLabelsOptions
-                          },
-                          tooltips: {
-                            callbacks: {
-                              label: formatChartNumber
-                            }
-                          },
-                        }}
-                        width={400}
-                        height={400}
-                      />
-                    </div>
-                  </div>
-                )}
-                {data.breast_cancer_by_grade_and_size && (
-                  <div className="col-xl-5ths col-lg-4 col-md-6">
-                    <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0" data-adjust="height">
-                      <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>Breast Cancer by Grade and Size {ageRange}</strong>
-                      </h4>
-                      <Bar
-                        data={{
-                          ...data.breast_cancer_by_grade_and_size.grade,
-                          datasets: data.breast_cancer_by_grade_and_size.grade.datasets.map(item => ({
-                            ...item,
-                            backgroundColor: color_1,
-                            hoverBackgroundColor: color_3,
-                            borderColor: white,
-                          }))
-                        }}
-                        options={{
-                          legend: {
-                            display: false,
-                            position: 'bottom',
-                            labels: chartsLabelsOptions
-                          },
-                          scales: {
-                            yAxes: [{
-                              ticks: {
-                                beginAtZero:true,
-                                callback: (value) => `${value}%`
-                              }
-                            }]
-                          },
-                          tooltips: {
-                            callbacks: {
-                              label: formatChartNumber
-                            }
-                          },
-                        }}
-                        width={200}
-                        height={100}
-                        ref="chart"
-                      />
-                      <Bar
-                        data={{
-                          ...data.breast_cancer_by_grade_and_size.size,
-                          datasets: data.breast_cancer_by_grade_and_size.size.datasets.map(item => ({
-                            ...item,
-                            backgroundColor: color_1,
-                            hoverBackgroundColor: color_3,
-                            borderColor: white,
-                          }))
-                        }}
-                        options={{
-                          legend: {
-                            display: false,
-                            position: 'bottom',
-                            labels: chartsLabelsOptions
-                          },
-                          scales: {
-                            yAxes: [{
-                              ticks: {
-                                beginAtZero:true,
-                                callback: (value) => `${value}%`
-                              }
-                            }]
-                          },
-                          tooltips: {
-                            callbacks: {
-                              label: formatChartNumber
-                            }
-                          },
-                        }}
-                        width={200}
-                        height={100}
-                      />
-                    </div>
-                  </div>
-                )}
-                {data.distribution_of_stage_of_cancer && (
-                  <div className="col-xl-5ths col-lg-4 col-md-6">
-                    <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0" data-adjust="height">
-                      <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>% of Women with Cancer by Stage {ageRange}</strong>
-                      </h4>
-                      <p className="no-margin pad-left-1 small"><strong>Overall</strong></p>
-                      <Pie
-                        data={{
-                          ...data.distribution_of_stage_of_cancer.overall,
-                          datasets: data.distribution_of_stage_of_cancer.overall.datasets.map(item => ({
-                            ...item,
-                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                            borderColor: white,
-                          }))
-                        }}
-                        options={{
-                          legend: {
-                            display: true,
-                            position: 'right',
-                            labels: chartsLabelsOptions
-                          },
-                          tooltips: {
-                            callbacks: {
-                              label: formatChartNumber
-                            }
-                          },
-                        }}
-                        width={200}
-                        height={75}
-                      />
-                      <p className="push-bot-0 push-top-3 pad-left-1 small"><strong>{ethnicity} Women Only</strong>
-                      </p>
-                      <Pie
-                        data={{
-                          ...data.distribution_of_stage_of_cancer.by_race,
-                          datasets: data.distribution_of_stage_of_cancer.by_race.datasets.map(item => ({
-                            ...item,
-                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                            borderColor: white,
-                          }))
-                        }}
-                        options={{
-                          legend: {
-                            display: true,
-                            position: 'right',
-                            labels: chartsLabelsOptions
-                          },
-                          tooltips: {
-                            callbacks: {
-                              label: formatChartNumber
-                            }
-                          },
-                        }}
-                        width={200}
-                        height={75}
-                      />
-                    </div>
-                  </div>
-                )}
-                {data.percent_of_women_with_cancer_by_race && (
-                  <div className="col-xl-5ths col-lg-4 col-md-6">
-                    <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0" data-adjust="height">
-                      <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>% of Women with Cancer by Race {ageRange}</strong>
-                      </h4>
-                      <p className="no-margin pad-left-1 small"><strong>Overall</strong></p>
-                      <Pie
-                        data={{
-                          ...data.percent_of_women_with_cancer_by_race.overall,
-                          datasets: data.percent_of_women_with_cancer_by_race.overall.datasets.map(item => ({
-                            ...item,
-                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                            borderColor: white,
-                          }))
-                        }}
-                        options={{
-                          legend: {
-                            display: true,
-                            position: 'right',
-                            labels: chartsLabelsOptions
-                          },
-                          tooltips: {
-                            callbacks: {
-                              label: formatChartNumber
-                            }
-                          },
-                        }}
-                        width={200}
-                        height={75}
-                      />
-                      <p className="push-bot-0 push-top-3 pad-left-1 small"><strong>Within Your<br/>Age Bracket</strong>
-                      </p>
-                      <Pie
-                        data={{
-                          ...data.percent_of_women_with_cancer_by_race.by_age,
-                          datasets: data.percent_of_women_with_cancer_by_race.by_age.datasets.map(item => ({
-                            ...item,
-                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                            borderColor: white,
-                          }))
-                        }}
-                        options={{
-                          legend: {
-                            display: true,
-                            position: 'right',
-                            labels: chartsLabelsOptions
-                          },
-                          tooltips: {
-                            callbacks: {
-                              label: formatChartNumber
-                            }
-                          },
-                        }}
-                        width={200}
-                        height={75}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="custom-panel custom-panel-condensed light-gray-bg push-bot-0">
-              <div className="row row-condensed">
-                {data.surgery_decisions && (
-                  <div className="col-xl-5ths col-lg-4 col-md-6">
-                    <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0" data-adjust="height">
-                      <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>Surgery Decisions for Women {ageRange}</strong>
-                      </h4>
-                      <Pie
-                        data={{
-                          ...data.surgery_decisions,
-                          datasets: data.surgery_decisions.datasets.map(item => ({
-                            ...item,
-                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                            borderColor: white,
-                          }))
-                        }}
-                        options={{
-                          legend: {
-                            display: true,
-                            position: 'bottom',
-                            labels: chartsLabelsOptions
-                          },
-                          tooltips: {
-                            callbacks: {
-                              label: formatChartNumber
-                            }
-                          },
-                        }}
-                        width={400}
-                        height={400}
-                      />
-                    </div>
-                  </div>
-                )}
-                {data.chemotherapy && (
-                  <div className="col-xl-5ths col-lg-4 col-md-6">
-                    <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
-                         data-adjust="height">
-                      <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>Chemotherapy for Women {ageRange}</strong>
-                      </h4>
-                      <p className="no-margin pad-left-1 small"><strong>Overall</strong></p>
-                      <Pie
-                        data={{
-                          ...data.chemotherapy.overall,
-                          datasets: data.chemotherapy.overall.datasets.map(item => ({
-                            ...item,
-                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                            borderColor: white,
-                          }))
-                        }}
-                        options={{
-                          legend: {
-                            display: true,
-                            position: 'right',
-                            labels: chartsLabelsOptions
-                          },
-                          tooltips: {
-                            callbacks: {
-                              label: formatChartNumber
-                            }
-                          },
-                        }}
-                        width={200}
-                        height={75}
-                      />
-                      <p className="push-bot-0 push-top-3 pad-left-1 small"><strong>Breakout<br/>by Stage</strong>
-                      </p>
-                      <Pie
-                        data={{
-                          ...data.chemotherapy.breakout_by_stage,
-                          datasets: data.chemotherapy.breakout_by_stage.datasets.map(item => ({
-                            ...item,
-                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                            borderColor: white,
-                          }))
-                        }}
-                        options={{
-                          legend: {
-                            display: true,
-                            position: 'right',
-                            labels: chartsLabelsOptions
-                          },
-                          tooltips: {
-                            callbacks: {
-                              label: formatChartNumber
-                            }
-                          },
-                        }}
-                        width={200}
-                        height={75}
-                      />
-                    </div>
-                  </div>
-                )}
-                {data.radiation && (
-                  <div className="col-xl-5ths col-lg-4 col-md-6">
-                    <div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"
-                         data-adjust="height">
-                      <h4 className="push-top-1 push-bot-2 text-center" data-type="title">
-                        <strong>Radiation for Women {ageRange}</strong>
-                      </h4>
-                      <p className="no-margin pad-left-1 small"><strong>Overall</strong></p>
-                      <Pie
-                        data={{
-                          ...data.radiation.overall,
-                          datasets: data.radiation.overall.datasets.map(item => ({
-                            ...item,
-                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                            borderColor: white,
-                          }))
-                        }}
-                        options={{
-                          legend: {
-                            display: true,
-                            position: 'right',
-                            labels: chartsLabelsOptions
-                          },
-                          tooltips: {
-                            callbacks: {
-                              label: formatChartNumber
-                            }
-                          },
-                        }}
-                        width={200}
-                        height={75}
-                      />
-                      <p className="push-bot-0 push-top-3 pad-left-1 small"><strong>Breakout<br/>by Stage</strong>
-                      </p>
-                      <Pie
-                        data={{
-                          ...data.radiation.breakout_by_stage,
-                          datasets: data.radiation.breakout_by_stage.datasets.map(item => ({
-                            ...item,
-                            backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                            borderColor: white,
-                          }))
-                        }}
-                        options={{
-                          legend: {
-                            display: true,
-                            position: 'right',
-                            labels: chartsLabelsOptions
-                          },
-                          tooltips: {
-                            callbacks: {
-                              label: formatChartNumber
-                            }
-                          },
-                        }}
-                        width={200}
-                        height={75}
-                      />
-                    </div>
-                  </div>
-                )}
-                {/*{data.survival_months && (*/}
-                {/*<div className="col-xl-5ths col-lg-4 col-md-6">*/}
-                {/*<div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"*/}
-                {/*data-adjust="height">*/}
-                {/*<h4 className="push-top-1 push-bot-2 text-center" data-type="title">*/}
-                {/*<strong>Survival Months for Women {ageRange}</strong>*/}
-                {/*</h4>*/}
-                {/*<HorizontalBar*/}
-                {/*data={{*/}
-                {/*...data.survival_months,*/}
-                {/*datasets: data.survival_months.datasets.map(item => ({*/}
-                {/*...item,*/}
-                {/*backgroundColor: color_1,*/}
-                {/*hoverBackgroundColor: color_3,*/}
-                {/*}))*/}
-                {/*}}*/}
-                {/*options={{*/}
-                {/*legend: {*/}
-                {/*display: false,*/}
-                {/*position: 'bottom'*/}
-                {/*},*/}
-                {/*scales: {*/}
-                {/*xAxes: [{*/}
-                {/*ticks: {*/}
-                {/*beginAtZero: true*/}
-                {/*}*/}
-                {/*}]*/}
-                {/*}*/}
-                {/*}}*/}
-                {/*width={400}*/}
-                {/*height={400}*/}
-                {/*/>*/}
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*)}*/}
-                {/*{data.cause_of_death && (*/}
-                {/*<div className="col-xl-5ths col-lg-4 col-md-6">*/}
-                {/*<div className="custom-panel custom-panel-condensed push-top-1 push-bot-0"*/}
-                {/*data-adjust="height">*/}
-                {/*<h4 className="push-top-1 push-bot-2 text-center" data-type="title">*/}
-                {/*<strong>Cause of Death</strong></h4>*/}
-                {/*<p className="no-margin pad-left-1 small"><strong>Overall</strong></p>*/}
-                {/*<Pie*/}
-                {/*data={{*/}
-                {/*...data.cause_of_death.cause_of_death_overall,*/}
-                {/*datasets: data.cause_of_death.cause_of_death_overall.datasets.map(item => ({*/}
-                {/*...item,*/}
-                {/*backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],*/}
-                {/*}))*/}
-                {/*}}*/}
-                {/*options={{*/}
-                {/*legend: {*/}
-                {/*display: true,*/}
-                {/*position: 'right',*/}
-                {/*labels: chartsLabelsOptions*/}
-                {/*}*/}
-                {/*}}*/}
-                {/*width={200}*/}
-                {/*height={75}*/}
-                {/*/>*/}
-                {/*<p className="push-bot-0 push-top-3 pad-left-1 small">*/}
-                {/*<strong>{ageRange}</strong>*/}
-                {/*</p>*/}
-                {/*<Pie*/}
-                {/*data={{*/}
-                {/*...data.cause_of_death.by_ages,*/}
-                {/*datasets: data.cause_of_death.by_ages.datasets.map(item => ({*/}
-                {/*...item,*/}
-                {/*backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],*/}
-                {/*}))*/}
-                {/*}}*/}
-                {/*options={{*/}
-                {/*legend: {*/}
-                {/*display: true,*/}
-                {/*position: 'right',*/}
-                {/*labels: chartsLabelsOptions*/}
-                {/*}*/}
-                {/*}}*/}
-                {/*width={200}*/}
-                {/*height={75}*/}
-                {/*/>*/}
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*)}*/}
-              </div>
-            </div>
-          </div>
+      <div className='container container-full'>
+        <div className='custom-panel custom-panel-condensed light-gray-bg'>
+          <Row type='flex' gutter={16}>
+            {data.percent_women_annualy_diagnosed && (
+              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
+                <div className={s.card}>
+                  <h4 className={s.header}>
+                    <strong>% of Total Breast Cancer Diagnoses</strong>
+                  </h4>
+                  <Bar
+                    data={{
+                      ...data.percent_women_annualy_diagnosed,
+                      datasets: data.percent_women_annualy_diagnosed.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: color_1,
+                        hoverBackgroundColor: color_3,
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: false,
+                        position: 'bottom',
+                        labels: chartsLabelsOptions
+                      },
+                      scales: {
+                        yAxes: [{
+                          ticks: {
+                            beginAtZero: true,
+                            callback: (value) => `${value}%`
+                          }
+                        }]
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={400}
+                    ref='chart'
+                  />
+                </div>
+              </Col>
+            )}
+            {data.percent_women_by_type && (
+              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
+                <div className={s.card}>
+                  <h4 className={s.header}>
+                    <strong>Percent of Women by Breast Cancer Type</strong>
+                  </h4>
+                  <Pie
+                    data={{
+                      ...data.percent_women_by_type,
+                      datasets: data.percent_women_by_type.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={400}
+                  />
+                </div>
+              </Col>
+            )}
+            {data.breast_cancer_by_grade_and_size && (
+              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
+                <div className={s.card}>
+                  <h4 className={s.header}>
+                    <strong>Breast Cancer by Grade {ageRange}</strong>
+                  </h4>
+                  <Bar
+                    data={{
+                      ...data.breast_cancer_by_grade_and_size.grade,
+                      datasets: data.breast_cancer_by_grade_and_size.grade.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: false,
+                        position: 'bottom',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={400}
+                  />
+                </div>
+              </Col>
+            )}
+            {data.breast_cancer_by_grade_and_size && (
+              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
+                <div className={s.card}>
+                  <h4 className={s.header}>
+                    <strong>Breast Cancer by Size {ageRange}</strong>
+                  </h4>
+                  <Bar
+                    data={{
+                      ...data.breast_cancer_by_grade_and_size.size,
+                      datasets: data.breast_cancer_by_grade_and_size.size.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: false,
+                        position: 'bottom',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={400}
+                  />
+                </div>
+              </Col>
+            )}
+            {data.distribution_of_stage_of_cancer && (
+              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
+                <div className={s.card}>
+                  <h4 className={s.header}>
+                    <strong>% of Women with Cancer by Stage {ageRange}</strong>
+                  </h4>
+                  <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
+                  <Pie
+                    data={{
+                      ...data.distribution_of_stage_of_cancer.overall,
+                      datasets: data.distribution_of_stage_of_cancer.overall.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: true,
+                        position: 'right',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={150}
+                  />
+                  <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>{ethnicity} Women Only</strong>
+                  </p>
+                  <Pie
+                    data={{
+                      ...data.distribution_of_stage_of_cancer.by_race,
+                      datasets: data.distribution_of_stage_of_cancer.by_race.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: true,
+                        position: 'right',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={150}
+                  />
+                </div>
+              </Col>
+            )}
+            {data.percent_of_women_with_cancer_by_race && (
+              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
+                <div className={s.card}>
+                  <h4 className={s.header}>
+                    <strong>% of Women with Cancer by Ethnicity {ageRange}</strong>
+                  </h4>
+                  <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
+                  <Pie
+                    data={{
+                      ...data.percent_of_women_with_cancer_by_race.overall,
+                      datasets: data.percent_of_women_with_cancer_by_race.overall.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: true,
+                        position: 'right',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={150}
+                  />
+                  <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>Within Your<br/>Age Bracket</strong>
+                  </p>
+                  <Pie
+                    data={{
+                      ...data.percent_of_women_with_cancer_by_race.by_age,
+                      datasets: data.percent_of_women_with_cancer_by_race.by_age.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: true,
+                        position: 'right',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={150}
+                  />
+                </div>
+              </Col>
+            )}
+            {data.surgery_decisions && (
+              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
+                <div className={s.card}>
+                  <h4 className={s.header}>
+                    <strong>Surgery Decisions for Women {ageRange}</strong>
+                  </h4>
+                  <Pie
+                    data={{
+                      ...data.surgery_decisions,
+                      datasets: data.surgery_decisions.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={400}
+                  />
+                </div>
+              </Col>
+            )}
+            {data.chemotherapy && (
+              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
+                <div className={s.card}>
+                  <h4 className={s.header}>
+                    <strong>Chemotherapy for Women {ageRange}</strong>
+                  </h4>
+                  <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
+                  <Pie
+                    data={{
+                      ...data.chemotherapy.overall,
+                      datasets: data.chemotherapy.overall.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: true,
+                        position: 'right',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={150}
+                  />
+                  <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>by Stage</strong>
+                  </p>
+                  <Pie
+                    data={{
+                      ...data.chemotherapy.breakout_by_stage,
+                      datasets: data.chemotherapy.breakout_by_stage.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: true,
+                        position: 'right',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={150}
+                  />
+                </div>
+              </Col>
+            )}
+            {data.radiation && (
+              <Col xxl={4} xl={6} lg={8} md={12} xs={24} className={s.col}>
+                <div className={s.card}>
+                  <h4 className={s.header}>
+                    <strong>Radiation for Women {ageRange}</strong>
+                  </h4>
+                  <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
+                  <Pie
+                    data={{
+                      ...data.radiation.overall,
+                      datasets: data.radiation.overall.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: true,
+                        position: 'right',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={150}
+                  />
+                  <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>by Stage</strong>
+                  </p>
+                  <Pie
+                    data={{
+                      ...data.radiation.breakout_by_stage,
+                      datasets: data.radiation.breakout_by_stage.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: true,
+                        position: 'right',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={150}
+                  />
+                </div>
+              </Col>
+            )}
+          </Row>
         </div>
       </div>
     )
