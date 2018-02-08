@@ -36,7 +36,7 @@ class SpecificStates extends React.Component {
               <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
-                    <strong>% of Total Breast Cancer Diagnoses</strong>
+                    <strong>Women Ages {ageRange} as a Percent of total Diagnoses</strong>
                   </h4>
                   <Bar
                     data={{
