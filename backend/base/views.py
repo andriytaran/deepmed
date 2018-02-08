@@ -263,7 +263,7 @@ class ReportDataView(GenericAPIView):
 
             # Hormonal Therapy
 
-            if dd.get('pr_status') == '+' or dd.get('er_status') == '+':
+            if dd.get('her2_status') == '+' or dd.get('er_status') == '+':
                 hormonal_therapy.append({'name': 'Tamoxifen',
                                          'number_of_treatments': 120,
                                          'administration': 'Monthly'})
