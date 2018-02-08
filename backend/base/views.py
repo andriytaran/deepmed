@@ -14,7 +14,8 @@ from lib.dataset import breast_cancer_by_grade, diagnosis, \
     distribution_of_stage_of_cancer, surgery_decisions, chemotherapy, \
     radiation, get_t_size_cm, breast_cancer_by_state, \
     breast_cancer_at_a_glance, breast_cancer_by_age, \
-    percent_women_annualy_diagnosed, percent_women_by_type
+    percent_women_annualy_diagnosed, percent_women_by_type, \
+    breast_cancer_by_state2, breast_cancer_at_a_glance2
 
 
 class ReportDataView(GenericAPIView):
@@ -261,7 +262,8 @@ class ReportDataView(GenericAPIView):
             # Chemo Therapy
 
             if chemo_response[0] == 'Yes' and \
-                    int(dd.get('tumor_size_in_mm')) > 20:
+                    int(dd.get('tumor_size_in_mm')) > 20 and \
+                    dd.get('her2_status') != '+':
                 chemo_therapy.append({
                     'plan': 'AC+T',
                     'number_of_treatments': [
@@ -279,7 +281,8 @@ class ReportDataView(GenericAPIView):
                     ]
                 })
             elif chemo_response[0] == 'Yes' and \
-                    int(dd.get('tumor_size_in_mm')) < 20:
+                    int(dd.get('tumor_size_in_mm')) < 20 and \
+                    dd.get('her2_status') != '+':
                 chemo_therapy.append({
                     'plan': 'C+T',
                     'number_of_treatments': [
@@ -378,7 +381,7 @@ class ReportDataView(GenericAPIView):
                 'overall': radiation(age),
             },
             'breast_cancer_by_state': breast_cancer_by_state(),
-            'breast_cancer_at_a_glance': breast_cancer_at_a_glance(),
+            'breast_cancer_at_a_glance': breast_cancer_at_a_glance2(),
             'breast_cancer_by_age': breast_cancer_by_age(),
         }
 
