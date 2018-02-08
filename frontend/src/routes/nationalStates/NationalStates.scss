@@ -19,3 +19,36 @@
   margin-top: auto;
   margin-bottom: auto;
 }
+
+.rangesCard {
+  background-color: #f0f0f2;
+  padding: 1rem;
+  border: 1px solid #f0f0f2;
+  border-radius: 5px;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.rangesCardHeader {
+  margin-bottom: 1rem;
+}
+
+.rangesCardContent {
+}
+
+.range {
+  display: flex;
+  align-items: center;
+}
+
+.rangeIndicator {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 3px;
+  display: block;
+}
+
+.rangeLabel {
+  font-size: 80%;
+  margin-left: .5rem;
+}

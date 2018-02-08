@@ -302,7 +302,7 @@ class Diagnosis extends React.Component {
                       </tr>
                       </thead>
                       <tbody>
-                      {data.recommended_treatment_plans.chemo_therapy && data.recommended_treatment_plans.chemo_therapy.length &&
+                      {data.recommended_treatment_plans.chemo_therapy && !!data.recommended_treatment_plans.chemo_therapy.length &&
                       data.recommended_treatment_plans.chemo_therapy.map((item, i) =>
                         <tr key={i}>
                           <td><p className='no-margin'><span
@@ -329,7 +329,7 @@ class Diagnosis extends React.Component {
                                     <p className='no-margin'>{m.name}</p>
                                   </td>
                                   {m.values.map((value, j) =>
-                                    <React.Fragment>
+                                    <React.Fragment key={j}>
                                       <td className='pad-left-1 pad-right-1'>
                                         <p className='no-margin'>{value.name}</p>
                                         <p className='push-bot-1 line-height-condensed small'>
@@ -368,7 +368,7 @@ class Diagnosis extends React.Component {
                       </tr>
                       </thead>
                       <tbody>
-                      {data.recommended_treatment_plans.radiation_therapy && data.recommended_treatment_plans.radiation_therapy.length ?
+                      {data.recommended_treatment_plans.radiation_therapy && !!data.recommended_treatment_plans.radiation_therapy.length ?
                         data.recommended_treatment_plans.radiation_therapy.map((item, i) =>
                           <tr key={i}>
                             <td><p className='no-margin'><span
