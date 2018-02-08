@@ -125,7 +125,7 @@ class SpecificStates extends React.Component {
                     }}
                     options={{
                       legend: {
-                        display: true,
+                        display: false,
                         position: 'bottom',
                         labels: chartsLabelsOptions
                       },
@@ -158,7 +158,7 @@ class SpecificStates extends React.Component {
                     }}
                     options={{
                       legend: {
-                        display: true,
+                        display: false,
                         position: 'bottom',
                         labels: chartsLabelsOptions
                       },
