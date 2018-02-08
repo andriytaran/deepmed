@@ -35,12 +35,17 @@ class ReportDataView(GenericAPIView):
             import re
             regex = r"\((.*?)\)"
 
-            if dd.get('ethnicity') == 'Caucasian':
+            ethnicity = dd.get('ethnicity')
+            if ethnicity == 'Caucasian':
                 v_ethnicity = 'White'
-            elif dd.get('ethnicity') == 'Other':
+            elif ethnicity == 'African American':
+                v_ethnicity = 'Black'
+            elif ethnicity == 'Asian':
+                v_ethnicity = 'Asian or Pacific Islander'
+            elif ethnicity == 'Other':
                 v_ethnicity = 'Unknown'
             else:
-                v_ethnicity = dd.get('ethnicity')
+                v_ethnicity = ethnicity
 
             # START SURGERY
             surgery_args = ','.join([dd.get('sex'),
@@ -334,9 +339,14 @@ class TestDataView(GenericAPIView):
             import re
             regex = r"\((.*?)\)"
 
-            if dd.get('ethnicity') == 'Caucasian':
+            ethnicity = dd.get('ethnicity')
+            if ethnicity == 'Caucasian':
                 v_ethnicity = 'White'
-            elif dd.get('ethnicity') == 'Other':
+            elif ethnicity == 'African American':
+                v_ethnicity = 'Black'
+            elif ethnicity == 'Asian':
+                v_ethnicity = 'Asian or Pacific Islander'
+            elif ethnicity == 'Other':
                 v_ethnicity = 'Unknown'
             else:
                 v_ethnicity = dd.get('ethnicity')
