@@ -12,7 +12,7 @@ class SimilarDiagnoses extends React.Component {
         <div className="row">
           <div className="col-md-12">
             <div className="custom-panel custom-panel-condensed push-bot-0">
-              <div className="scroll-y scroll-x max-height-700">
+              <div className="scroll-y scroll-x">
                 {data.similar_diagnosis && (
                   <table className="table table-responsive table-middle-cell-align table-hover">
                     <thead>

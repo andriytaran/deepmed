@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './Layout.css'
 import globalStyles from '../../styles/style.scss'
+import gridStyles from '../../styles/grid.scss'
 import {Link} from '../../components'
 import {
   DIAGNOSIS_ROUTE,
@@ -226,5 +227,6 @@ const mapDispatch = {}
 
 export default connect(mapState, mapDispatch)(withStyles(
   globalStyles,
+  gridStyles,
   s,
 )(AppLayout))
