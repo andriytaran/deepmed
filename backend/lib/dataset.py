@@ -365,7 +365,7 @@ def breast_cancer_by_age():
         'labels': list(map(lambda x: x['_id'], result)),
         'datasets': [{
             'data': list(map(lambda x: x['count'], result)),
-            'label': "Deaths",
+            'label': "Diagnosed",
             'borderColor': '#48ccf5',
             'fill': False
         }]
@@ -1030,7 +1030,7 @@ def cause_of_death_overall():
         'labels': list(map(lambda x: x, data.keys())),
         'datasets': [{
             'data': list(map(lambda x: x, data.values())),
-            'label': "Diagnosed",
+            'label': "Deaths",
             'borderColor': '#48ccf5',
             'fill': False
         }]
@@ -1101,7 +1101,7 @@ def cause_of_death(input_json):
         'labels': list(map(lambda x: x['_id']['cod-to-site-recode'], result)),
         'datasets': [{
             'data': list(map(lambda x: x['percentage'], result)),
-            'label': "Diagnosed",
+            'label': "Deaths",
             'borderColor': '#48ccf5',
             'fill': False
         }]
@@ -1293,7 +1293,7 @@ def chemotherapy(input_json):
         'labels': list(map(lambda x: x['_id']['chemo'], result)),
         'datasets': [{
             'data': list(map(lambda x: x['percentage'], result)),
-            'label': "Diagnosed",
+            'label': "Chemoterapies",
             'borderColor': '#48ccf5',
             'fill': False
         }]
@@ -1356,7 +1356,7 @@ def surgery_decisions(input_json):
         'labels': list(map(lambda x: x, data.keys())),
         'datasets': [{
             'data': list(map(lambda x: x, data.values())),
-            'label': "Diagnosed",
+            'label': "Surgeries",
             'borderColor': '#48ccf5',
             'fill': False
         }]
@@ -1415,7 +1415,7 @@ def distribution_of_stage_of_cancer(input_json):
         'labels': list(map(lambda x: x, data.keys())),
         'datasets': [{
             'data': list(map(lambda x: x, data.values())),
-            'label': "Diagnosed",
+            'label': "Size",
             'borderColor': '#48ccf5',
             'fill': False
         }]
