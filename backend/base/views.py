@@ -259,11 +259,13 @@ class ReportDataView(GenericAPIView):
 
         # Chemo Therapy
 
+
+
         data = {
             'recommended_treatment_plans': {
                 'overall_plans': overall_plans,
                 'hormonal_therapy': hormonal_therapy,
-                'radiation_therapy': radiation_therapy,
+                'radiation_therapy': radiation_therapy
             },
             'percent_women_annualy_diagnosed': percent_women_annualy_diagnosed(
                 age),

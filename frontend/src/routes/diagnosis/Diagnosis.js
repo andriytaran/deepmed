@@ -391,14 +391,15 @@ class Diagnosis extends React.Component {
                     </tr>
                     </thead>
                     <tbody>
-                    {data.recommended_treatment_plans.radiation_therapy.map((item, i) =>
-                      <tr key={i}>
-                        <td><p className='no-margin'><span
-                          className='number-circle blue-circle'>{i+1}</span> {item.name}</p></td>
-                        <td><p className="no-margin">{item.number_of_treatments}</p></td>
-                        <td><p className="no-margin">{item.administration}</p></td>
-                      </tr>
-                    )}
+                    {data.recommended_treatment_plans.radiation_therapy && data.recommended_treatment_plans.radiation_therapy.length ?
+                      data.recommended_treatment_plans.radiation_therapy.map((item, i) =>
+                        <tr key={i}>
+                          <td><p className='no-margin'><span
+                            className='number-circle blue-circle'>{i + 1}</span> {item.name}</p></td>
+                          <td><p className="no-margin">{item.number_of_treatments}</p></td>
+                          <td><p className="no-margin">{item.administration}</p></td>
+                        </tr>
+                      ) : <tr><td colSpan={3} style={{textAlign: 'center'}}>Not applicable</td></tr>}
                     </tbody>
                   </table>
                 </div>
@@ -424,7 +425,7 @@ class Diagnosis extends React.Component {
                     {data.recommended_treatment_plans.hormonal_therapy.map((item, i) =>
                       <tr key={i}>
                         <td><p className='no-margin'><span
-                          className='number-circle blue-circle'>{i+1}</span> {item.name}</p></td>
+                          className='number-circle blue-circle'>{i + 1}</span> {item.name}</p></td>
                         <td><p className="no-margin">{item.number_of_treatments}</p></td>
                         <td><p className="no-margin">{item.administration}</p></td>
                       </tr>
