@@ -148,10 +148,10 @@ def get_t_size_cm(size_mm):
     t_size_cm = None
     if size_mm >= 50:
         t_size_cm = ">5cm"
-    elif size_mm >= 30:
-        t_size_cm = ">3cm"
+    # elif size_mm >= 30:
+    #     t_size_cm = ">3cm"
     elif size_mm >= 20:
-        t_size_cm = "<3cm"
+        t_size_cm = {"$in": ["<3cm", ">3cm"]}
     elif size_mm >= 10:
         t_size_cm = "<2cm"
     elif size_mm < 10:
@@ -225,6 +225,12 @@ def diagnosis(input_json, limit=20):
     def get_race(race):
         if race == "White":
             return "Caucasian"
+        elif race == "Black":
+            return "African American"
+        elif race == "Asian or Pacific Islander":
+            return "Asian"
+        elif race in ['Unknown', 'American Indian/Alaska Native']:
+            return "Other"
         else:
             return race
 
@@ -234,101 +240,59 @@ def diagnosis(input_json, limit=20):
         else:
             return cod
 
+    def build_dict(item):
+        return {'age': item['age-recode-with-single-ages-and-85'],
+                'ethnicity': get_race(item['race-recode-w-b-ai-api']),
+                'size': item['t-size-cm'],
+                'grade': item['grade'],
+                'er': item['er-status-recode-breast-cancer-1990'],
+                'pr': item['pr-status-recode-breast-cancer-1990'],
+                'her2': item['derived-her2-recode-2010'],
+                'lat': item['laterality'],
+                'site': item['primary-site-labeled'],
+                'type': item['type'],
+                'stage': item['breast-adjusted-ajcc-6th-stage-1988'],
+                '+nodes': item['regional-nodes-positive-1988-1'],
+                'surgery': item['surgery'],
+                'chemo': item['chemo'],
+                'radiation': item['radiation'],
+                'year dx': item['year-of-diagnosis'],
+                'survival mos.': item['survival-months'],
+                'cod': get_cod(item['cod-to-site-recode'])}
+
     filters = create_filter(input_json)
     dataset = find(filters, limit=limit)
     results = []
     for item in dataset:
-        d = {'age': item['age-recode-with-single-ages-and-85'],
-             'ethnicity': get_race(item['race-recode-w-b-ai-api']),
-             'size': item['t-size-cm'],
-             'grade': item['grade'],
-             'er': item['er-status-recode-breast-cancer-1990'],
-             'pr': item['pr-status-recode-breast-cancer-1990'],
-             'her2': item['derived-her2-recode-2010'],
-             'lat': item['laterality'],
-             'site': item['primary-site-labeled'],
-             'type': item['type'],
-             'stage': item['breast-adjusted-ajcc-6th-stage-1988'],
-             '+nodes': item['regional-nodes-positive-1988-1'],
-             'surgery': item['surgery'],
-             'chemo': item['chemo'],
-             'radiation': item['radiation'],
-             'year dx': item['year-of-diagnosis'],
-             'survival mos.': item['survival-months'],
-             'cod': get_cod(item['cod-to-site-recode'])}
+        d = build_dict(item)
         results.append(d)
 
     if len(results) < 20:
+        print(len(results))
         filters['$and'] = [d for d in filters['$and'] if 't-size-cm' not in d]
+        # ts_mm = json.loads(input_json)['tumor_size_in_mm']
+        # ts_min = round(ts_mm * 0.8)
+        # ts_max = round(ts_mm *1.2)
+        # filters['$and'].append({"$and": [{"tumor_size_in_mm": {"$gte": ts_min}},
+        #                                  {"tumor_size_in_mm": {"$lte": ts_max}}]})
         dataset = find(filters, limit=limit)
         results = []
         for item in dataset:
-            d = {'age': item['age-recode-with-single-ages-and-85'],
-                 'ethnicity': get_race(item['race-recode-w-b-ai-api']),
-                 'size': item['t-size-cm'],
-                 'grade': item['grade'],
-                 'er': item['er-status-recode-breast-cancer-1990'],
-                 'pr': item['pr-status-recode-breast-cancer-1990'],
-                 'her2': item['derived-her2-recode-2010'],
-                 'lat': item['laterality'],
-                 'site': item['primary-site-labeled'],
-                 'type': item['type'],
-                 'stage': item['breast-adjusted-ajcc-6th-stage-1988'],
-                 '+nodes': item['regional-nodes-positive-1988-1'],
-                 'surgery': item['surgery'],
-                 'chemo': item['chemo'],
-                 'radiation': item['radiation'],
-                 'year dx': item['year-of-diagnosis'],
-                 'survival mos.': item['survival-months'],
-                 'cod': get_cod(item['cod-to-site-recode'])}
+            d = build_dict(item)
             results.append(d)
         if len(results) < 20:
             filters['$and'] = [d for d in filters['$and'] if 'race-recode-w-b-ai-api' not in d]
             dataset = find(filters, limit=limit)
             results = []
             for item in dataset:
-                d = {'age': item['age-recode-with-single-ages-and-85'],
-                     'ethnicity': get_race(item['race-recode-w-b-ai-api']),
-                     'size': item['t-size-cm'],
-                     'grade': item['grade'],
-                     'er': item['er-status-recode-breast-cancer-1990'],
-                     'pr': item['pr-status-recode-breast-cancer-1990'],
-                     'her2': item['derived-her2-recode-2010'],
-                     'lat': item['laterality'],
-                     'site': item['primary-site-labeled'],
-                     'type': item['type'],
-                     'stage': item['breast-adjusted-ajcc-6th-stage-1988'],
-                     '+nodes': item['regional-nodes-positive-1988-1'],
-                     'surgery': item['surgery'],
-                     'chemo': item['chemo'],
-                     'radiation': item['radiation'],
-                     'year dx': item['year-of-diagnosis'],
-                     'survival mos.': item['survival-months'],
-                     'cod': get_cod(item['cod-to-site-recode'])}
+                d = build_dict(item)
                 results.append(d)
             if len(results) < 20:
                 filters['$and'] = [d for d in filters['$and'] if 'age-recode-with-single-ages-and-85' not in d]
                 dataset = find(filters, limit=limit)
                 results = []
                 for item in dataset:
-                    d = {'age': item['age-recode-with-single-ages-and-85'],
-                         'ethnicity': get_race(item['race-recode-w-b-ai-api']),
-                         'size': item['t-size-cm'],
-                         'grade': item['grade'],
-                         'er': item['er-status-recode-breast-cancer-1990'],
-                         'pr': item['pr-status-recode-breast-cancer-1990'],
-                         'her2': item['derived-her2-recode-2010'],
-                         'lat': item['laterality'],
-                         'site': item['primary-site-labeled'],
-                         'type': item['type'],
-                         'stage': item['breast-adjusted-ajcc-6th-stage-1988'],
-                         '+nodes': item['regional-nodes-positive-1988-1'],
-                         'surgery': item['surgery'],
-                         'chemo': item['chemo'],
-                         'radiation': item['radiation'],
-                         'year dx': item['year-of-diagnosis'],
-                         'survival mos.': item['survival-months'],
-                         'cod': get_cod(item['cod-to-site-recode'])}
+                    d = build_dict(item)
                     results.append(d)
                 return results
             return results
@@ -371,14 +335,19 @@ def breast_cancer_at_a_glance2():
                    1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008,
                    2009, 2010, 2011, 2012, 2013, 2014],
         'datasets': [{
-            'data': [[105.1, 101.9, 100.8, 100.6, 102.1, 102.2, 106.4, 106.5, 111.1, 116, 124.3, 126.8, 134.5, 131.3,
-                      127.2, 131.9, 133.9, 132.1, 129.2, 131, 132.7, 133.8, 138.1, 141.5, 141.5, 136.6, 138.8, 135.9,
-                      127.1, 128.2, 126.7, 126.4, 128.3, 128.5, 130.9, 127, 130.4, 130.1, 130.8, 130.6],
-                     [31.4, 31.8, 32.5, 31.7, 31.2, 31.7, 31.9, 32.2, 32.1, 32.9, 33, 32.9, 32.7, 33.2, 33.2, 33.1,
-                      32.7, 31.6, 31.4, 30.9, 30.6, 29.5, 28.2, 27.5, 26.6, 26.6, 26, 25.6, 25.3, 24.5, 24.1, 23.6,
-                      23, 22.6, 22.2, 21.9, 21.5, 21.3, 20.7, 20.5]
-                     ],
-            'label': ["New Cases", "Deaths - US"],
+            'data': [105.1, 101.9, 100.8, 100.6, 102.1, 102.2, 106.4, 106.5, 111.1, 116, 124.3, 126.8, 134.5, 131.3,
+                     127.2, 131.9, 133.9, 132.1, 129.2, 131, 132.7, 133.8, 138.1, 141.5, 141.5, 136.6, 138.8, 135.9,
+                     127.1, 128.2, 126.7, 126.4, 128.3, 128.5, 130.9, 127, 130.4, 130.1, 130.8, 130.6]
+            ,
+            'label': ["New Cases"],
+            'borderColor': '#48ccf5',
+            'fill': False
+        }, {
+            'data': [31.4, 31.8, 32.5, 31.7, 31.2, 31.7, 31.9, 32.2, 32.1, 32.9, 33, 32.9, 32.7, 33.2, 33.2, 33.1,
+                     32.7, 31.6, 31.4, 30.9, 30.6, 29.5, 28.2, 27.5, 26.6, 26.6, 26, 25.6, 25.3, 24.5, 24.1, 23.6,
+                     23, 22.6, 22.2, 21.9, 21.5, 21.3, 20.7, 20.5]
+            ,
+            'label': ["Deaths - US"],
             'borderColor': '#48ccf5',
             'fill': False
         }]
@@ -1606,9 +1575,9 @@ def percent_race_with_cancer_by_age(input_json):
         if label == 'White':
             data['Caucasian'] = result[i]['percentage']
         elif label == 'Black':
-            data['Black'] = result[i]['percentage']
+            data['African American'] = result[i]['percentage']
         elif label == 'Asian or Pacific Islander':
-            data['Asian or Pacific Islander'] = result[i]['percentage']
+            data['Asian'] = result[i]['percentage']
         elif label in ['Unknown', 'American Indian/Alaska Native'] or label is None:
             data['Other'] += result[i]['percentage']
     data.move_to_end("Other")
@@ -2041,7 +2010,7 @@ if __name__ == '__main__':
     # pprint(distribution_of_stage_of_cancer(age_and_race))
     # pprint(breast_cancer_by_size(age_only))
     # pprint(percent_women_by_type())
-    pprint(percent_women_annualy_diagnosed(diag_request))
-    # diag = diagnosis(diag_request, limit=20)
-    # print(len(diag))
-    # pprint(diag)
+    # pprint(percent_women_annualy_diagnosed(diag_request))
+    diag = diagnosis(diag_request, limit=20)
+    print(len(diag))
+    pprint(diag)
