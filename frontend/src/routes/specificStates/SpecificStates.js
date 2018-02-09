@@ -179,7 +179,7 @@ class SpecificStates extends React.Component {
                       ...data.breast_cancer_by_grade_and_size.grade,
                       datasets: data.breast_cancer_by_grade_and_size.grade.datasets.map(item => ({
                         ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        backgroundColor: color_1,
                         borderColor: white,
                       }))
                     }}
@@ -212,7 +212,7 @@ class SpecificStates extends React.Component {
                       ...data.breast_cancer_by_grade_and_size.size,
                       datasets: data.breast_cancer_by_grade_and_size.size.datasets.map(item => ({
                         ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        backgroundColor: color_1,
                         borderColor: white,
                       }))
                     }}
