@@ -8,5 +8,5 @@ user_router.register('user', accounts.views.UsersViewSet,
                      base_name='users')
 
 urlpatterns = [
-    path('^', include(user_router.urls)),
+    path('', include(user_router.urls)),
 ]
