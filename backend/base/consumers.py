@@ -263,7 +263,8 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
 
             chemo_therapy = []
             if chemo_response[0] == 'Yes' and \
-                    int(dd.get('tumor_size_in_mm')) > 20 and \
+                    dd.get('tumor_size_in_mm') in ['>5cm', '>3cm',
+                                                   '<3cm'] and \
                     dd.get('her2_status') != '+':
                 chemo_therapy.append({
                     'plan': 'AC+T',
@@ -282,7 +283,8 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                     ]
                 })
             elif chemo_response[0] == 'Yes' and \
-                    int(dd.get('tumor_size_in_mm')) < 20 and \
+                    dd.get('tumor_size_in_mm') not in ['>5cm', '>3cm',
+                                                       '<3cm'] and \
                     dd.get('her2_status') != '+':
                 chemo_therapy.append({
                     'plan': 'C+T',
@@ -301,7 +303,8 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                     ]
                 })
             elif chemo_response[0] == 'Yes' and \
-                    int(dd.get('tumor_size_in_mm')) > 20 and \
+                    dd.get('tumor_size_in_mm') in ['>5cm', '>3cm',
+                                                   '<3cm'] and \
                     dd.get('her2_status') == '+':
                 chemo_therapy.append({
                     'plan': 'AC+T+HCP',
@@ -322,7 +325,8 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                     ]
                 })
             elif chemo_response[0] == 'Yes' and \
-                    int(dd.get('tumor_size_in_mm')) < 20 and \
+                    dd.get('tumor_size_in_mm') not in ['>5cm', '>3cm',
+                                                       '<3cm'] and \
                     dd.get('her2_status') == '+':
                 chemo_therapy.append({
                     'plan': 'A+T+HCP',
