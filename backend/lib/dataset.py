@@ -1188,20 +1188,20 @@ def breast_cancer_by_size(input_json):
         }},
         {"$sort": SON([("percentage", -1)])}]))
 
-    data = {'< 1cm': 0, '< 2cm': 0, '< 5cm': 0, '> 5cm': 0}
+    data = {'<1cm': 0, '1-2cm': 0, '2-5cm': 0, '5cm+': 0}
     for i, label in enumerate(list(map(lambda x: x['_id']['t-size-cm'], result))):
         if label == '< 1cm':
-            data['< 1cm'] += result[i]['percentage']
+            data['<1cm'] += result[i]['percentage']
         elif label == '<2cm':
-            data['< 2cm'] += result[i]['percentage']
+            data['1-2cm'] += result[i]['percentage']
         elif label == '<3cm':
-            data['< 5cm'] += result[i]['percentage']
+            data['2-5cm'] += result[i]['percentage']
         elif label == '>3cm':
-            data['< 5cm'] += result[i]['percentage']
+            data['2-5cm'] += result[i]['percentage']
         elif label == '>5cm':
-            data['> 5cm'] += result[i]['percentage']
+            data['5cm+'] += result[i]['percentage']
         elif label == 'Micro':
-            data['< 1cm'] += result[i]['percentage']
+            data['<1cm'] += result[i]['percentage']
 
     return {
         'labels': list(map(lambda x: x, data.keys())),
@@ -2071,9 +2071,9 @@ if __name__ == '__main__':
     # pprint(diagnosis(diag_request, limit=20))
     # age_and_race = '{"age": 48, "ethnicity":"White"}'
     # pprint(distribution_of_stage_of_cancer(age_and_race))
-    # pprint(breast_cancer_by_size(age_only))
+    pprint(breast_cancer_by_size(age_only))
     # pprint(percent_women_by_type())
-    pprint(percent_women_annualy_diagnosed(diag_request))
+    # pprint(percent_women_annualy_diagnosed(diag_request))
     # diag = diagnosis(diag_request, limit=20)
     # print(len(diag))
     # pprint(diag)
