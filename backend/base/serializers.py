@@ -25,6 +25,8 @@ class DiagnosisSerializer(serializers.Serializer):
 class DiagnosisDataSerializer(serializers.Serializer):
     age = serializers.IntegerField(required=True)
     tumor_size_in_mm = serializers.IntegerField(required=True)
+    tumor_size_in_mm_sd = serializers.CharField(
+        required=False)  # For similar diagnoses fuction
     tumor_grade = serializers.IntegerField(required=True)
     er_status = serializers.CharField(required=True)
     pr_status = serializers.CharField(required=True)
@@ -48,7 +50,7 @@ class DiagnosisDataSerializer(serializers.Serializer):
             data['ethnicity'] = 'Asian or Pacific Islander'
         elif data.get('ethnicity') == 'Other':
             data['ethnicity'] = 'Unknown'
-
+        data['tumor_size_in_mm_sd'] = data.get('tumor_size_in_mm')
         if data.get('tumor_size_in_mm') >= 50:
             data['tumor_size_in_mm'] = ">5cm"
         elif data.get('tumor_size_in_mm') >= 30:

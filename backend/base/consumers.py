@@ -450,10 +450,12 @@ class IndividualStatisticsConsumer(JsonWebsocketConsumer):
         self.send_json({'radiation': radiation_response})
 
         breast_cancer_by_state_response = breast_cancer_by_state2(1)
-        self.send_json({'breast_cancer_by_state': breast_cancer_by_state_response})
+        self.send_json(
+            {'breast_cancer_by_state': breast_cancer_by_state_response})
 
         breast_cancer_at_a_glance_response = breast_cancer_at_a_glance2()
-        self.send_json({'breast_cancer_at_a_glance': breast_cancer_at_a_glance_response})
+        self.send_json(
+            {'breast_cancer_at_a_glance': breast_cancer_at_a_glance_response})
 
         breast_cancer_by_age_response = breast_cancer_by_age()
         self.send_json({'breast_cancer_by_age': breast_cancer_by_age_response})
@@ -488,18 +490,10 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
         dd.pop('number_of_tumors', None)
         dd.pop('region', None)
 
+        dd['tumor_size_in_mm'] = dd.get('tumor_size_in_mm_sd')
+
         similar_diagnosis = diagnosis(json.dumps(dd, ensure_ascii=False),
                                       limit=20)
-
-        if len(similar_diagnosis) < 20:
-            dd.pop('race', None)
-            similar_diagnosis = diagnosis(
-                json.dumps(dd, ensure_ascii=False), limit=20)
-
-            if len(similar_diagnosis) < 20:
-                dd.pop('age', None)
-                similar_diagnosis = diagnosis(
-                    json.dumps(dd, ensure_ascii=False), limit=20)
 
         self.send_json({'similar_diagnosis': similar_diagnosis})
         self.close()
