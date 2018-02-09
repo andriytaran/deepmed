@@ -34,13 +34,6 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
 
         # Recommended Treatment Plans
 
-        response = {'overall_plans': None,
-                    'hormonal_therapy': None,
-                    'radiation_therapy': None,
-                    'chemo_therapy': None}
-
-        self.send_json(response)
-
         try:
             import subprocess
             import ast
@@ -56,7 +49,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                                      dd.get('type'),
                                      dd.get('stage'),
                                      dd.get('region'),
-                                     dd.get('tumor_size'),
+                                     dd.get('tumor_size_in_mm'),
                                      str(dd.get('number_of_tumors')),
                                      str(dd.get('num_pos_nodes'))])
 
@@ -88,7 +81,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 dd.get('type'),
                 dd.get('stage'),
                 dd.get('region'),
-                dd.get('tumor_size'),
+                dd.get('tumor_size_in_mm'),
                 str(dd.get('number_of_tumors')),
                 str(dd.get('num_pos_nodes')),
                 str(dd.get('er_status')),
@@ -126,7 +119,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 dd.get('type'),
                 dd.get('stage'),
                 dd.get('region'),
-                dd.get('tumor_size'),
+                dd.get('tumor_size_in_mm'),
                 str(dd.get('number_of_tumors')),
                 str(dd.get('num_pos_nodes')),
                 str(dd.get('er_status')),
@@ -243,8 +236,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                     'surgery': 'Y',
                     'level': 100 - surgery_level})
 
-            response['overall_plans'] = overall_plans
-            self.send_json(response)
+            self.send_json({'overall_plans': overall_plans})
 
             # Hormonal Therapy
             hormonal_therapy = []
@@ -253,8 +245,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                                          'number_of_treatments': 120,
                                          'administration': 'Monthly'})
 
-            response['hormonal_therapy'] = hormonal_therapy
-            self.send_json(response)
+            self.send_json({'hormonal_therapy': hormonal_therapy})
 
             # Radiation Therapy
 
@@ -264,8 +255,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                                           'number_of_treatments': 30,
                                           'administration': 'Daily'})
 
-            response['radiation_therapy'] = radiation_therapy
-            self.send_json(response)
+            self.send_json({'radiation_therapy': radiation_therapy})
 
             # Chemo Therapy
 
@@ -355,8 +345,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                     ]
                 })
 
-            response['chemo_therapy'] = chemo_therapy
-            self.send_json(response)
+            self.send_json({'chemo_therapy': chemo_therapy})
 
         except Exception as e:
             self.send_json({'error': 'Failed to run command.',

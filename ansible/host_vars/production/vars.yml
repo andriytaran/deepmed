@@ -76,4 +76,4 @@ nginx_sites:
           proxy_pass http://{{ deploy_project_name }}_api;
       }
 
-nginx_remove_sites: [default]
+nginx_remove_sites: [default, project_django]

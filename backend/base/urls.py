@@ -6,10 +6,10 @@ urlpatterns = [
     path('reports/',
          base_views.ReportDataView.as_view(),
          name='reports'),
-    path('^chart/$',
+    path('^chart/',
          base_views.ChartOneView.as_view(),
          name='chart'),
-    path('^test/$',
+    path('^test/',
          base_views.TestDataView.as_view(),
          name='tests'),
 ]

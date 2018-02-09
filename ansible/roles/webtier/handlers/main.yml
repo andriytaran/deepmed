@@ -27,6 +27,10 @@
   become: true
   command: supervisorctl restart {{ deploy_project_name }}-gunicorn
 
+- name: restart channels
+  become: true
+  command: supervisorctl restart {{ deploy_project_name }}-channels
+
 - name: restart webapp
   become: true
   command: supervisorctl restart {{ deploy_project_name }}-webapp

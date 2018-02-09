@@ -10,8 +10,8 @@ application = ProtocolTypeRouter({
 
     "websocket": oAuth2AuthMiddleware(URLRouter([
         path("api/diagnosis", DiagnosisConsumer),
-        path("api/individual-stats", IndividualStatisticsConsumer),
-        path("api/similar-diagnosis", SimilarDiagnosisConsumer),
+        path("api/individual-statistics", IndividualStatisticsConsumer),
+        path("api/similar-diagnoses", SimilarDiagnosisConsumer),
     ])),
 
 })
