@@ -1,7 +1,15 @@
+import json
+
 from channels.generic.websocket import JsonWebsocketConsumer
 from django.conf import settings
 
 from base.serializers import DiagnosisDataSerializer
+from lib.dataset import percent_women_by_type, breast_cancer_by_grade, \
+    breast_cancer_by_size, distribution_of_stage_of_cancer, \
+    percent_of_women_with_cancer_by_race_overall, surgery_decisions, \
+    chemotherapy, radiation, breakout_by_stage, \
+    percent_race_with_cancer_by_age, breast_cancer_by_state2, \
+    breast_cancer_at_a_glance2, breast_cancer_by_age, diagnosis
 
 
 class DiagnosisConsumer(JsonWebsocketConsumer):
@@ -48,7 +56,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                                      dd.get('type'),
                                      dd.get('stage'),
                                      dd.get('region'),
-                                     dd.get('tumor_size_in_mm'),
+                                     dd.get('tumor_size'),
                                      str(dd.get('number_of_tumors')),
                                      str(dd.get('num_pos_nodes'))])
 
@@ -80,7 +88,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 dd.get('type'),
                 dd.get('stage'),
                 dd.get('region'),
-                dd.get('tumor_size_in_mm'),
+                dd.get('tumor_size'),
                 str(dd.get('number_of_tumors')),
                 str(dd.get('num_pos_nodes')),
                 str(dd.get('er_status')),
@@ -118,7 +126,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 dd.get('type'),
                 dd.get('stage'),
                 dd.get('region'),
-                dd.get('tumor_size_in_mm'),
+                dd.get('tumor_size'),
                 str(dd.get('number_of_tumors')),
                 str(dd.get('num_pos_nodes')),
                 str(dd.get('er_status')),
@@ -358,6 +366,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
 
 
 class IndividualStatisticsConsumer(JsonWebsocketConsumer):
+    serializer_class = DiagnosisDataSerializer
 
     def connect(self):
         # Called on connection. Either call
@@ -367,10 +376,93 @@ class IndividualStatisticsConsumer(JsonWebsocketConsumer):
             self.close()
 
     def receive_json(self, content, **kwargs):
-        pass
+        serializer = self.serializer_class(data=content)
+
+        if not serializer.is_valid():
+            self.send_json({'error': 'Data not valid.',
+                            'extra': serializer.errors})
+            self.close()
+
+        dd = serializer.validated_data
+
+        age = json.dumps({'age': dd.get('age')})
+
+        percent_women_by_type_response = percent_women_by_type()
+        self.send_json(
+            {'percent_women_by_type': percent_women_by_type_response})
+
+        breast_cancer_by_grade_and_size_response = {
+            'grade': breast_cancer_by_grade(age),
+            'size': breast_cancer_by_size(age)
+        }
+        self.send_json({
+            'breast_cancer_by_grade_and_size': breast_cancer_by_grade_and_size_response})
+
+        distribution_of_stage_of_cancer_response = {
+            'overall': distribution_of_stage_of_cancer(age),
+            'by_race':
+                distribution_of_stage_of_cancer(
+                    json.dumps({'age': dd.get('age'),
+                                'ethnicity': dd.get('ethnicity')},
+                               ensure_ascii=False)),
+        }
+        self.send_json({
+            'distribution_of_stage_of_cancer': distribution_of_stage_of_cancer_response})
+
+        percent_of_women_with_cancer_by_race_response = {
+            'overall': percent_of_women_with_cancer_by_race_overall(),
+            'by_age': percent_race_with_cancer_by_age(json.dumps({
+                'age': dd.get('age'),
+                'sex': 'Female'
+            }, ensure_ascii=False))
+        }
+        self.send_json({'percent_of_women_with_cancer_by_race': \
+                            percent_of_women_with_cancer_by_race_response})
+
+        surgery_decisions_response = surgery_decisions(age)
+        self.send_json({'surgery_decisions': surgery_decisions_response})
+
+        chemotherapy_response = {
+            'overall': chemotherapy(age),
+            'breakout_by_stage': breakout_by_stage(
+                json.dumps({
+                    'age': dd.get('age'),
+                    'chemo': 'Yes',
+                    "breast-adjusted-ajcc-6th-stage-1988": {
+                        "$in": ["I", "IIA", "IIB", "IIIA",
+                                "IIIB", "IIIC", "IIINOS", "IV",
+                                0]
+                    }}, ensure_ascii=False))
+        }
+        self.send_json({'chemotherapy': chemotherapy_response})
+
+        radiation_response = {
+            'overall': radiation(age),
+            'breakout_by_stage': breakout_by_stage(json.dumps({
+                'age': dd.get('age'),
+                'radiation': 'Yes',
+                "breast-adjusted-ajcc-6th-stage-1988": {
+                    "$in": ["I", "IIA", "IIB", "IIIA",
+                            "IIIB", "IIIC", "IIINOS", "IV",
+                            0]
+                }}, ensure_ascii=False))
+        }
+        self.send_json({'radiation': radiation_response})
+
+        breast_cancer_by_state_response = breast_cancer_by_state2(1)
+        self.send_json({'breast_cancer_by_state': breast_cancer_by_state_response})
+
+        breast_cancer_at_a_glance_response = breast_cancer_at_a_glance2()
+        self.send_json({'breast_cancer_at_a_glance': breast_cancer_at_a_glance_response})
+
+        breast_cancer_by_age_response = breast_cancer_by_age()
+        self.send_json({'breast_cancer_by_age': breast_cancer_by_age_response})
+
+        self.close()
 
 
 class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
+    serializer_class = DiagnosisDataSerializer
 
     def connect(self):
         # Called on connection. Either call
@@ -380,4 +472,34 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
             self.close()
 
     def receive_json(self, content, **kwargs):
-        pass
+        serializer = self.serializer_class(data=content)
+
+        if not serializer.is_valid():
+            self.send_json({'error': 'Data not valid.',
+                            'extra': serializer.errors})
+            self.close()
+
+        dd = dict(serializer.validated_data)
+
+        dd.pop('laterality', None)
+        dd.pop('site', None)
+        dd.pop('type', None)
+        dd.pop('stage', None)
+        dd.pop('number_of_tumors', None)
+        dd.pop('region', None)
+
+        similar_diagnosis = diagnosis(json.dumps(dd, ensure_ascii=False),
+                                      limit=20)
+
+        if len(similar_diagnosis) < 20:
+            dd.pop('race', None)
+            similar_diagnosis = diagnosis(
+                json.dumps(dd, ensure_ascii=False), limit=20)
+
+            if len(similar_diagnosis) < 20:
+                dd.pop('age', None)
+                similar_diagnosis = diagnosis(
+                    json.dumps(dd, ensure_ascii=False), limit=20)
+
+        self.send_json({'similar_diagnosis': similar_diagnosis})
+        self.close()
