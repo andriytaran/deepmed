@@ -78,7 +78,7 @@
   command: 'true'
   when: run_handlers
   notify:
-    - restart gunicorn
+    - restart channels
     - restart nginx
     - restart celery
     - restart redis
