@@ -1712,7 +1712,10 @@ def percent_women_annualy_diagnosed(input_json):
                 "_id": "",
                 "count": {"$sum": 1}}},
             {"$sort": SON([("_id", 1)])}]))
-        return by_age[0]['count']
+        if len(by_age) > 0:
+            return by_age[0]['count']
+        else:
+            return 0
 
     def get_percent(only_age, year):
         return get_by_age(only_age, year) / get_total(year) * 100
@@ -1738,6 +1741,8 @@ def percent_women_annualy_diagnosed(input_json):
             data['2005-2009'] = get_percent(only_age, year)
         if year == 2010:
             data['2010-2014'] = get_percent(only_age, year)
+
+    # print(list(map(lambda x: x, data.values())))
 
     return {
         'labels': list(map(lambda x: x, data.keys())),
@@ -2071,9 +2076,10 @@ if __name__ == '__main__':
     # pprint(diagnosis(diag_request, limit=20))
     # age_and_race = '{"age": 48, "ethnicity":"White"}'
     # pprint(distribution_of_stage_of_cancer(age_and_race))
-    pprint(breast_cancer_by_size(age_only))
+    # pprint(breast_cancer_by_size(age_only))
     # pprint(percent_women_by_type())
-    # pprint(percent_women_annualy_diagnosed(diag_request))
+    age_only = '{"age": 95}'
+    pprint(percent_women_annualy_diagnosed(age_only))
     # diag = diagnosis(diag_request, limit=20)
     # print(len(diag))
     # pprint(diag)
