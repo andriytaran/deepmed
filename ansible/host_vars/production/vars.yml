@@ -76,4 +76,4 @@ nginx_sites:
           proxy_pass http://{{ django_channels_daphne_host }}:{{ django_channels_daphne_port }};
       }
 
-nginx_remove_sites: [default, project_django]
+nginx_remove_sites: [default]
