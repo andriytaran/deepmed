@@ -3,7 +3,7 @@ from django.urls import path
 from base import views as base_views
 
 urlpatterns = [
-    path('^reports/$',
+    path('reports/',
          base_views.ReportDataView.as_view(),
          name='reports'),
     path('^chart/$',
