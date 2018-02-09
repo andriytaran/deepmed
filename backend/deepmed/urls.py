@@ -1,13 +1,13 @@
-from django.conf.urls import include, url
 from django.contrib import admin
+from django.urls import path, include
 
 api_urlpatterns = [
-    url('^auth/', include('auth.urls')),
-    url('^accounts/', include('accounts.urls')),
-    url('^diagnosis/', include('base.urls')),
+    path('auth/', include('auth.urls')),
+    path('accounts/', include('accounts.urls')),
+    path('diagnosis/', include('base.urls')),
 ]
 
 urlpatterns = [
-    url('^api/v1/', include(api_urlpatterns)),
-    url('^admin/', admin.site.urls),
+    path('api/v1/', include(api_urlpatterns)),
+    path('admin/', admin.site.urls),
 ]

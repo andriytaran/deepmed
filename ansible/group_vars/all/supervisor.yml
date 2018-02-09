@@ -1,9 +1,18 @@
 ---
 supervisor_programs:
-# Django
-  dm-gunicorn:
-    name: '{{ deploy_project_name }}-gunicorn'
-    command: '{{ gunicorn_virtualenv }}/bin/gunicorn {{ django_app_name }}.wsgi --config {{ deploy_etc_dir }}/{{ gunicorn_app_name }}_gunicorn.py'
+## Django
+#  dm-gunicorn:
+#    name: '{{ deploy_project_name }}-gunicorn'
+#    command: '{{ gunicorn_virtualenv }}/bin/gunicorn {{ django_app_name }}.wsgi --config {{ deploy_etc_dir }}/{{ gunicorn_app_name }}_gunicorn.py'
+#    directory: '{{ django_dir }}'
+#    environment: 'DJANGO_SETTINGS_MODULE={{ django_settings }}'
+#    autostart: true
+#    autorestart: true
+#    user: '{{ deploy_user }}'
+# Django Channels
+  dm-channels:
+    name: '{{ deploy_project_name }}-channels'
+    command: '{{ gunicorn_virtualenv }}/bin/daphne -b {{ django_channels_daphne_host }} -p {{ django_channels_daphne_port }} {{ django_app_name }}.asgi:application'
     directory: '{{ django_dir }}'
     environment: 'DJANGO_SETTINGS_MODULE={{ django_settings }}'
     autostart: true

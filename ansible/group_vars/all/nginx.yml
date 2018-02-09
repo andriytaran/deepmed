@@ -72,8 +72,9 @@ nginx_sites:
           proxy_set_header X-Forwarded-Proto $scheme;
           proxy_set_header Host $http_host;
           proxy_set_header X-Real-IP $remote_addr;
-          proxy_pass http://{{ deploy_project_name }}_api;
+          proxy_pass http://{{ django_channels_daphne_host }}:{{ django_channels_daphne_port }};
       }
+
 
   project_flower:
     - listen 5550

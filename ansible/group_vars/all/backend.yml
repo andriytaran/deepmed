@@ -15,6 +15,11 @@ django_fixtures: # Path to fixture file. Example: '{{ django_dir }}/fixtures/ini
   - '{{ django_dir }}/fixtures/initial_data.json'
 
 
+### Django channels ###
+django_channels_daphne_host: 127.0.0.1                    # Local address to bind
+django_channels_daphne_port: 8085
+
+
 ### Local settings ###
 debug: False
 django_local_settings_file: '{{ django_dir }}/{{ django_app_name }}/local_settings.py'
