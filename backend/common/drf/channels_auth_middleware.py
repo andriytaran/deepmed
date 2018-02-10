@@ -14,10 +14,11 @@ class oAuth2AuthMiddleware:
 
     def __call__(self, scope):
         try:
+            from urllib.parse import parse_qs
+            qs = parse_qs(scope["query_string"].decode("utf-8"))
             token = \
                 AccessToken.objects.select_related('user').get(
-                    token=scope["query_string"].decode("utf-8").rsplit(
-                        'token=')[1])
+                    token=qs['token'][0])
             if not token.is_expired():
                 scope["user"] = token.user
             else:
