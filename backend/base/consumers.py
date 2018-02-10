@@ -352,8 +352,6 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
             self.send_json({'error': 'Failed to run command.',
                             'extra': e.__dict__})
 
-        self.close()
-
 
 class IndividualStatisticsConsumer(JsonWebsocketConsumer):
     serializer_class = DiagnosisDataSerializer
@@ -456,8 +454,6 @@ class IndividualStatisticsConsumer(JsonWebsocketConsumer):
         breast_cancer_by_age_response = breast_cancer_by_age()
         self.send_json({'breast_cancer_by_age': breast_cancer_by_age_response})
 
-        self.close()
-
 
 class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
     serializer_class = DiagnosisDataSerializer
@@ -492,4 +488,3 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
                                       limit=20)
 
         self.send_json({'similar_diagnosis': similar_diagnosis})
-        self.close()
