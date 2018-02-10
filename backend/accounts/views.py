@@ -40,25 +40,3 @@ class UsersViewSet(ActionPermissionClassesMixin,
             return Response(data, status=status.HTTP_200_OK)
         except:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-    @list_route(methods=['GET'], url_path='confirm-email')
-    def confirm_email(self, request, *args, **kwargs):
-        """
-        View for confirm email.
-
-        Receive an activation key as parameter and confirm email.
-        """
-        user = get_object_or_404(accounts.models.User,
-                                 activation_key=str(request.query_params
-                                                    .get('activation_key')))
-        if user.confirm_email():
-            return Response(status=status.HTTP_200_OK)
-
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    @list_route(methods=['GET'], url_path='email-status')
-    def email_status(self, request, *args, **kwargs):
-        """Retrieve user current confirmed_email status."""
-        user = self.request.user
-        return Response({'status': user.confirmed_email},
-                        status=status.HTTP_200_OK)

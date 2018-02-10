@@ -55,7 +55,7 @@ class AppLayout extends React.Component {
       'DeepMed is analyzing  over 1M patient records and treatments',
       'DeepMed is processing patient records as far as back as 1973',
       'DeepMed is covering actual data from hospitals and oncology clinics',
-      'DeepMed covers data spanning nearly 30% of the country from California to New Jersey'
+      'DeepMed covers data spanning nearly 30% of the country'
     ]
 
     return (

@@ -1,12 +1,15 @@
-from django.conf.urls import url
+from django.urls import path
 
 from base import views as base_views
 
 urlpatterns = [
-    url(r'^reports/$',
-        base_views.ReportDataView.as_view(),
-        name='reports'),
-    url(r'^test/$',
-        base_views.TestDataView.as_view(),
-        name='tests'),
+    path('reports/',
+         base_views.ReportDataView.as_view(),
+         name='reports'),
+    path('chart/',
+         base_views.ChartOneView.as_view(),
+         name='chart'),
+    path('test/',
+         base_views.TestDataView.as_view(),
+         name='tests'),
 ]

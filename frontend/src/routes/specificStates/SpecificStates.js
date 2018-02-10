@@ -24,7 +24,7 @@ class SpecificStates extends React.Component {
       fontSize: 10,
       padding: 8
     }
-    const {data, diagnosisForm} = this.props
+    const {data, chartData, diagnosisForm} = this.props
     const ageRange = diagnosisForm.age ? getAgeRangeLabel(diagnosisForm.age) : ''
     const ethnicity = diagnosisForm.ethnicity || ''
 
@@ -32,7 +32,7 @@ class SpecificStates extends React.Component {
       <div className='container container-full'>
         <div className='custom-panel custom-panel-condensed light-gray-bg'>
           <Row type='flex' gutter={16}>
-            {data.percent_women_annualy_diagnosed && (
+            {chartData.percent_women_annualy_diagnosed && (
               <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
@@ -40,8 +40,8 @@ class SpecificStates extends React.Component {
                   </h4>
                   <Bar
                     data={{
-                      ...data.percent_women_annualy_diagnosed,
-                      datasets: data.percent_women_annualy_diagnosed.datasets.map(item => ({
+                      ...chartData.percent_women_annualy_diagnosed,
+                      datasets: chartData.percent_women_annualy_diagnosed.datasets.map(item => ({
                         ...item,
                         backgroundColor: color_1,
                         hoverBackgroundColor: color_3,
@@ -179,7 +179,7 @@ class SpecificStates extends React.Component {
                       ...data.breast_cancer_by_grade_and_size.grade,
                       datasets: data.breast_cancer_by_grade_and_size.grade.datasets.map(item => ({
                         ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        backgroundColor: color_1,
                         borderColor: white,
                       }))
                     }}
@@ -212,7 +212,7 @@ class SpecificStates extends React.Component {
                       ...data.breast_cancer_by_grade_and_size.size,
                       datasets: data.breast_cancer_by_grade_and_size.size.datasets.map(item => ({
                         ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        backgroundColor: color_1,
                         borderColor: white,
                       }))
                     }}

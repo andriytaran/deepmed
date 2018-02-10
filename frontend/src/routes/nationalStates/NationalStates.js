@@ -12,6 +12,8 @@ import uniq from 'lodash/uniq'
 import sortBy from 'lodash/sortBy'
 
 const colors = ['#47cfd1', '#04a9a9', '#48ccf5', '#77c2d9']
+const chartColors = ['#88d0d1', '#48ccf5']
+const chartLabels = ['Incidence', 'Deaths']
 
 class NationalStates extends React.Component {
   render() {
@@ -86,12 +88,21 @@ class NationalStates extends React.Component {
                       females</strong></p>
                     {data.breast_cancer_at_a_glance && (
                       <Line
-                        data={data.breast_cancer_at_a_glance}
+                        data={{
+                          ...data.breast_cancer_at_a_glance,
+                          datasets: data.breast_cancer_at_a_glance.datasets.map((item, i) => ({
+                            ...item,
+                            label: [chartLabels[i]],
+                            backgroundColor: chartColors[i],
+                            borderColor: chartColors[i],
+                          }))
+                        }}
                         width={500}
-                        height={100}
+                        height={200}
                         options={{
                           legend: {
-                            display: false
+                            onClick: () => {},
+                            position: 'bottom',
                           }
                         }}
                       />
@@ -228,9 +239,10 @@ class NationalStates extends React.Component {
             </Col>
             <Col sm={24} md={12}>
               <div className={s.card}>
-                <p className='push-top-1 push-bot-2 text-center'><strong>Percent of U.S. Women Who
-                  Develop CancerAccording to o Their Age (2010-2012)</strong></p>
-                <div className='custom-panel custom-panel-condensed light-gray-bg push-bot-0'>
+                <p className='push-top-1 push-bot-2 text-center'>
+                  <strong>Percent of Women who Develop Cancer By Age</strong>
+                </p>
+                <div className='custom-panel custom-panel-condensed push-bot-0'>
                   <table className='table table-responsive table-middle-cell-align table-hover'>
                     <thead>
                     <tr>

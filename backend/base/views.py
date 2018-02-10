@@ -263,7 +263,7 @@ class ReportDataView(GenericAPIView):
 
             # Hormonal Therapy
 
-            if dd.get('pr_status') == '+' or dd.get('er_status') == '+':
+            if dd.get('her2_status') == '+' or dd.get('er_status') == '+':
                 hormonal_therapy.append({'name': 'Tamoxifen',
                                          'number_of_treatments': 120,
                                          'administration': 'Monthly'})
@@ -371,8 +371,6 @@ class ReportDataView(GenericAPIView):
                 'radiation_therapy': radiation_therapy,
                 'chemo_therapy': chemo_therapy
             },
-            'percent_women_annualy_diagnosed': percent_women_annualy_diagnosed(
-                age),
             'percent_women_by_type': percent_women_by_type(),
             'breast_cancer_by_grade_and_size': {
                 'grade': breast_cancer_by_grade(age),
@@ -448,6 +446,24 @@ class ReportDataView(GenericAPIView):
 
         data['similar_diagnosis'] = similar_diagnosis
 
+        return Response(data, status=status.HTTP_200_OK)
+
+
+class ChartOneView(GenericAPIView):
+    serializer_class = DiagnosisSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        serializer = self.get_serializer(data=request.query_params)
+
+        serializer.is_valid(raise_exception=True)
+        dd = dict(serializer.validated_data)
+
+        age = json.dumps({'age': dd.get('age')})
+        data = {
+            'percent_women_annualy_diagnosed': percent_women_annualy_diagnosed(
+                age),
+        }
         return Response(data, status=status.HTTP_200_OK)
 
 
