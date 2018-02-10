@@ -7,7 +7,7 @@ from pprint import pprint
 MONGODB_HOST = 'localhost'
 MONGODB_PORT = 27017
 DBS_NAME = 'bcancer'
-COLLECTION_NAME = 'dataset'
+COLLECTION_NAME = 'dataset2'
 
 STATES_NAME_ABRS = {
     "Alabama": "AL",
@@ -174,12 +174,12 @@ def get_node_range(number):
     if number >= 10:
         # n_size = {"$gte": 10}
         range_list = [x for x in range(10, 90)]
-        range_list.append(90)
+        range_list.append('>9')
         n_size = {"$in": range_list}
     elif number >= 4:
         n_size = {"$in": [4, 5, 6, 7, 8, 9]}
     elif number >= 1:
-        n_size = {"$in": [1, 2, 3, 97]}
+        n_size = {"$in": [1, 2, 3, '>1']}
     elif number == 0:
         n_size = {"$eq": 0}
     return n_size
@@ -206,7 +206,7 @@ def create_filter(input_data, operator='$and'):
         filter_list.append({"derived-her2-recode-2010": input_data['her2_status']})
     if 'num_pos_nodes' in input_data.keys():
         n_size = get_node_range(input_data['num_pos_nodes'])
-        filter_list.append({"regional-nodes-positive-1988-1": n_size})
+        filter_list.append({"regional-nodes-positive-1988": n_size})
     if 'ethnicity' in input_data.keys():
         filter_list.append({"race-recode-w-b-ai-api": input_data["ethnicity"]})
     if 'type' in input_data.keys():
@@ -252,7 +252,7 @@ def diagnosis(input_json, limit=20):
                 'site': item['primary-site-labeled'],
                 'type': item['type'],
                 'stage': item['breast-adjusted-ajcc-6th-stage-1988'],
-                '+nodes': item['regional-nodes-positive-1988-1'],
+                '+nodes': item['regional-nodes-positive-1988'],
                 'surgery': item['surgery'],
                 'chemo': item['chemo'],
                 'radiation': item['radiation'],
@@ -1106,6 +1106,30 @@ def cause_of_death(input_json):
             'fill': False
         }]
     }
+
+
+def helper_get_positive_nodes(input_json):
+    """
+    sample request input_json = '{"age": 48, ' \
+                   '"sex": "Female", ' \
+                   '"tumor_grade": 1, ' \
+                   '"er_status": "+", ' \
+                   '"pr_status": "+", ' \
+                   '"tumor_size_in_mm": 22, ' \
+                   '"num_pos_nodes": 0, ' \
+                   '"her2_status": "+", ' \
+                   '"ethnicity": "White"}'
+    :param input_json:
+    :return: json
+    """
+    filters = create_filter(input_json)
+    result = json.loads(aggregate([
+        # {"$match": filters},
+        {"$group": {
+            "_id": "$regional-nodes-positive-1988",
+            "count": {"$sum": 1}}},
+        {"$sort": SON([("_id", -1)])}]))
+    return result
 
 
 def survival_months(input_json):
@@ -2073,7 +2097,8 @@ if __name__ == '__main__':
     # pprint(distribution_of_stage_of_cancer(age_and_race))
     # pprint(breast_cancer_by_size(age_only))
     # pprint(percent_women_by_type())
-    pprint(percent_women_annualy_diagnosed(diag_request))
+    # pprint(percent_women_annualy_diagnosed(diag_request))
     # diag = diagnosis(diag_request, limit=20)
     # print(len(diag))
     # pprint(diag)
+    pprint(helper_get_positive_nodes(age_only))
