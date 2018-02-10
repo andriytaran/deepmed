@@ -9,7 +9,8 @@ from lib.dataset import percent_women_by_type, breast_cancer_by_grade, \
     percent_of_women_with_cancer_by_race_overall, surgery_decisions, \
     chemotherapy, radiation, breakout_by_stage, \
     percent_race_with_cancer_by_age, breast_cancer_by_state2, \
-    breast_cancer_at_a_glance2, breast_cancer_by_age, diagnosis
+    breast_cancer_at_a_glance2, breast_cancer_by_age, diagnosis, \
+    percent_women_annualy_diagnosed
 
 
 class DiagnosisConsumer(JsonWebsocketConsumer):
@@ -375,6 +376,12 @@ class IndividualStatisticsConsumer(JsonWebsocketConsumer):
         dd = serializer.validated_data
 
         age = json.dumps({'age': dd.get('age')})
+
+        percent_women_annualy_diagnosed_response = percent_women_annualy_diagnosed(
+            age)
+        self.send_json(
+            {
+                'percent_women_annualy_diagnosed': percent_women_annualy_diagnosed_response})
 
         percent_women_by_type_response = percent_women_by_type()
         self.send_json(
