@@ -65,6 +65,15 @@ nginx_sites:
           expires max;
       }
 
+    - location /ws {
+          proxy_pass http://{{ django_channels_daphne_host }}:{{ django_channels_daphne_port }};
+          proxy_http_version  1.1;
+          proxy_set_header    Upgrade $http_upgrade;
+          proxy_set_header    Connection "upgrade";
+          proxy_set_header    Host $http_host;
+          proxy_set_header    X-Real-IP $remote_addr;
+      }
+
     - location / {
           proxy_read_timeout 300;
           proxy_connect_timeout 300;
@@ -97,7 +106,7 @@ nginx_sites:
     - return 444
 
 
-nginx_remove_sites: [default]
+nginx_remove_sites: [default, project_block_ip]
 
 nginx_auth_basic_files:
   flower:
