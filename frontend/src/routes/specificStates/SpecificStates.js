@@ -238,7 +238,7 @@ class SpecificStates extends React.Component {
               <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
-                    <strong>% of Women with Cancer by Stage {ageRange}</strong>
+                    <strong>Percent of Women with Cancer by Stage {ageRange}</strong>
                   </h4>
                   <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
                   <Pie
