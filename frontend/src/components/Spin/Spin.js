@@ -1,17 +1,18 @@
 import React from 'react'
-import cn from 'classnames'
+import withStyles from 'isomorphic-style-loader/lib/withStyles'
+import s from './Spin.css'
 
-// TODO
 class Spin extends React.Component {
   render() {
-    return (
-      <div className="loader-spinner">
-        <div className="main">
-          <div className="inside"/>
+    const {spinning} = this.props
+    return spinning ? (
+      <div className={s.wrapper}>
+        <div className={s.spinner}>
+          <div className={s.inner}/>
         </div>
       </div>
-    )
+    ) : null
   }
 }
 
-export default Spin
+export default withStyles(s)(Spin)

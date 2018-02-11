@@ -75,10 +75,10 @@ class AppLayout extends React.Component {
           <div>
             <nav className={cn('sidebar active', sidebarOpened && 'sidebar-mobile-active')}>
               <div className="sidebar-header" style={{height: 56}}>
-                <a href={'/'}>
+                <Link to={HOME_ROUTE}>
                   <img src={require('../../static/deep-med-logo-new.png')} width="136" height="auto" alt="presentation"
                        style={{top: '15.5px'}}/>
-                </a>
+                </Link>
               </div>
               {currentRouteName !== HOME_ROUTE && (
                 <ul className="ul-no-bullets">

@@ -5,10 +5,11 @@ import s from './Diagnosis.scss'
 import {RACES, REGIONS, SITES, STAGES, TYPES} from '../../constants'
 import {createForm} from 'rc-form'
 import messages from '../../components/messages'
-import {Input, InputNumber, Select} from '../../components'
+import {Input, InputNumber, Select, Spin} from '../../components'
 import isEmpty from 'lodash/isEmpty'
 import {getData} from '../../reducers/diagnosis'
 import cn from 'classnames'
+import isNil from 'lodash/isNil'
 
 class Diagnosis extends React.Component {
   handleSubmit = (e) => {
@@ -98,20 +99,6 @@ class Diagnosis extends React.Component {
                       )}
                     </div>
                     <div className={s.col}>
-                      {getFieldDecorator('her2_status', {
-                        initialValue: diagnosisForm.her2_status,
-                        rules: [
-                          {required: true, message: messages.required},
-                        ]
-                      })(
-                        <Select error={getFieldError('her2_status')} label={'HER2 Status'}>
-                          <option value='' disabled hidden>Select...</option>
-                          <option value='+'>Positive</option>
-                          <option value='-'>Negative</option>
-                        </Select>
-                      )}
-                    </div>
-                    <div className={s.col}>
                       {getFieldDecorator('pr_status', {
                         initialValue: diagnosisForm.pr_status,
                         rules: [
@@ -119,6 +106,20 @@ class Diagnosis extends React.Component {
                         ]
                       })(
                         <Select error={getFieldError('pr_status')} label={'PR Status'}>
+                          <option value='' disabled hidden>Select...</option>
+                          <option value='+'>Positive</option>
+                          <option value='-'>Negative</option>
+                        </Select>
+                      )}
+                    </div>
+                    <div className={s.col}>
+                      {getFieldDecorator('her2_status', {
+                        initialValue: diagnosisForm.her2_status,
+                        rules: [
+                          {required: true, message: messages.required},
+                        ]
+                      })(
+                        <Select error={getFieldError('her2_status')} label={'HER2 Status'}>
                           <option value='' disabled hidden>Select...</option>
                           <option value='+'>Positive</option>
                           <option value='-'>Negative</option>
@@ -242,46 +243,47 @@ class Diagnosis extends React.Component {
                 </form>
               </div>
             )}
-            <div className='custom-panel custom-panel-condensed light-gray-bg push-bot-0'>
-              <h2 className='push-top-2'>Recommended Treatment Plans</h2>
-              <div className='push-top-5'>
-                <div
-                  className='custom-panel custom-panel-condensed custom-panel-no-vertical-pad no-border bg-transparent push-bot-0'>
-                  <p className='push-top-0 push-bot-1'><strong>Overall Plans</strong></p>
-                </div>
-                <div className='custom-panel custom-panel-condensed push-bot-0'>
-                  <table
-                    className='table table-responsive table-middle-cell-align table-hover tablesaw tablesaw-stack'
-                    data-tablesaw-mode='stack'>
+            <div className={s.card}>
+              <h2 className={s.cardHeader}>Recommended Treatment Plans</h2>
+              <section className={s.section}>
+                <header className={s.sectionHeader}>
+                  Overall Plans
+                </header>
+                <div className={s.sectionContent}>
+                  <table className={cn('table table-responsive', s.overallPlansTable)}>
                     <thead>
-                    <tr>
-                      <th><h6>TREATMENT PLANS</h6></th>
-                      <th><h6>SURGERY</h6></th>
-                      <th><h6>SURGERY CONFIDENCE LEVEL</h6></th>
-                      <th><h6>SURGERY TYPE</h6></th>
-                      <th><h6>RADIATION</h6></th>
-                      <th><h6>RADIATION CONFIDENCE LEVEL</h6></th>
-                      <th><h6>CHEMO</h6></th>
-                      <th><h6>CHEMO CONFIDENCE LEVEL</h6></th>
+                    <tr className={s.overallPlansTopHeader}>
+                      <th colSpan={3}><h6>SURGERY</h6></th>
+                      <th colSpan={2}><h6>RADIATION</h6></th>
+                      <th colSpan={2}><h6>CHEMOTHERAPY</h6></th>
+                    </tr>
+                    <tr className={s.overallPlansBottomHeader}>
+                      <th><h6>RECOMMENDATION</h6></th>
+                      <th><h6>TYPE</h6></th>
+                      <th className={s.borderRight}><h6>CONFIDENCE</h6></th>
+                      <th><h6>RECOMMENDATION</h6></th>
+                      <th className={s.borderRight}><h6>CONFIDENCE</h6></th>
+                      <th><h6>RECOMMENDATION</h6></th>
+                      <th><h6>CONFIDENCE</h6></th>
                     </tr>
                     </thead>
                     <tbody>
                     {diagnosis.overall_plans && diagnosis.overall_plans.map((item, i) =>
                       <tr key={i}>
-                        <td><p className="no-margin">{item.name}</p></td>
-                        <td><p className="no-margin">{item['surgery']}</p></td>
-                        <td><p className="no-margin">{item['surgery_confidence_level']}%</p></td>
-                        <td><p className="no-margin">{item['type']}</p></td>
-                        <td><p className="no-margin">{item['radiation']}</p></td>
-                        <td><p className="no-margin">{item['radiation_confidence_level']}%</p></td>
-                        <td><p className="no-margin">{item['chemo']}</p></td>
-                        <td><p className="no-margin">{item['chemo_confidence_level']}%</p></td>
+                        <td>{item.surgery}</td>
+                        <td>{item.type}</td>
+                        <td className={s.borderRight}>{item.surgery_confidence_level}%</td>
+                        <td>{item.radiation}</td>
+                        <td className={s.borderRight}>{item.radiation_confidence_level}%</td>
+                        <td>{item.chemo}</td>
+                        <td>{item.chemo_confidence_level}%</td>
                       </tr>
                     )}
                     </tbody>
                   </table>
+                  {isNil(diagnosis.overall_plans) && <Spin spinning/>}
                 </div>
-              </div>
+              </section>
               <div className='push-top-5'>
                 <div
                   className='custom-panel custom-panel-condensed custom-panel-no-vertical-pad no-border bg-transparent push-bot-0'>
@@ -344,9 +346,9 @@ class Diagnosis extends React.Component {
                     )}
                     </tbody>
                   </table>
+                  {isNil(diagnosis.chemo_therapy) && <Spin spinning/>}
                 </div>
               </div>
-
               <div className='push-top-5'>
                 <div
                   className='custom-panel custom-panel-condensed custom-panel-no-vertical-pad no-border bg-transparent push-bot-0'>
@@ -371,16 +373,16 @@ class Diagnosis extends React.Component {
                         <td><p className="no-margin">{item.number_of_treatments}</p></td>
                         <td><p className="no-margin">{item.administration}</p></td>
                       </tr>
-                    ) : (
+                    ) : !isNil(diagnosis.radiation_therapy) && (
                       <tr>
                         <td colSpan={3} style={{textAlign: 'center'}}>Not applicable</td>
                       </tr>
                     )}
                     </tbody>
                   </table>
+                  {isNil(diagnosis.radiation_therapy) && <Spin spinning/>}
                 </div>
               </div>
-
               <div className='push-top-5'>
                 <div
                   className='custom-panel custom-panel-condensed custom-panel-no-vertical-pad no-border bg-transparent push-bot-0'>
@@ -408,6 +410,7 @@ class Diagnosis extends React.Component {
                     )}
                     </tbody>
                   </table>
+                  {isNil(diagnosis.hormonal_therapy) && <Spin spinning/>}
                 </div>
               </div>
             </div>

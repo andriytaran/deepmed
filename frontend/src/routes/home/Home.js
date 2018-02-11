@@ -6,6 +6,20 @@ import DiagnosisForm from './DiagnosisForm'
 import {getData} from '../../reducers/diagnosis'
 
 class Home extends React.Component {
+  componentDidMount() {
+    if (this.props.diagnosisForm) {
+      const values = this.props.diagnosisForm
+      const fields = Object.keys(values)
+      const fieldsValues = {}
+      fields.forEach(field => {
+        fieldsValues[field] = {
+          value: values[field],
+        }
+      })
+      this.form.setFields(fieldsValues)
+    }
+  }
+
   handleSubmit = (e) => {
     e.preventDefault()
     this.form.validateFields((err, values) => {

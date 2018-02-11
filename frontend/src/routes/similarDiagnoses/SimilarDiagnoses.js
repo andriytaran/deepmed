@@ -3,6 +3,8 @@ import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './SimilarDiagnoses.scss'
 import {getAgeRangeLabel} from '../../utils'
+import {Spin} from '../../components'
+import isNil from 'lodash/isNil'
 
 class SimilarDiagnoses extends React.Component {
   render() {
@@ -78,6 +80,7 @@ class SimilarDiagnoses extends React.Component {
                   )}
                   </tbody>
                 </table>
+                {isNil(similarDiagnoses.similar_diagnosis) && <Spin spinning/>}
               </div>
             </div>
           </div>

@@ -28,7 +28,7 @@ module.exports = () => ({
     // require('postcss-nesting')(),
     // Unwraps nested rules like how Sass does it
     // https://github.com/postcss/postcss-nested
-    // require('postcss-nested')(),
+    require('postcss-nested')(),
     // W3C color() function, e.g. div { background: color(red alpha(90%)); }
     // https://github.com/postcss/postcss-color-function
     // require('postcss-color-function')(),
