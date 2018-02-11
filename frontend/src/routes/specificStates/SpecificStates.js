@@ -24,7 +24,7 @@ class SpecificStates extends React.Component {
       fontSize: 10,
       padding: 8
     }
-    const {data, chartData, diagnosisForm} = this.props
+    const {individualStatistics, diagnosisForm} = this.props
     const ageRange = diagnosisForm.age ? getAgeRangeLabel(diagnosisForm.age) : ''
     const ethnicity = diagnosisForm.ethnicity || ''
 
@@ -32,7 +32,7 @@ class SpecificStates extends React.Component {
       <div className='container container-full'>
         <div className='custom-panel custom-panel-condensed light-gray-bg'>
           <Row type='flex' gutter={16}>
-            {chartData.percent_women_annualy_diagnosed && (
+            {individualStatistics.percent_women_annualy_diagnosed && (
               <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
@@ -40,8 +40,8 @@ class SpecificStates extends React.Component {
                   </h4>
                   <Bar
                     data={{
-                      ...chartData.percent_women_annualy_diagnosed,
-                      datasets: chartData.percent_women_annualy_diagnosed.datasets.map(item => ({
+                      ...individualStatistics.percent_women_annualy_diagnosed,
+                      datasets: individualStatistics.percent_women_annualy_diagnosed.datasets.map(item => ({
                         ...item,
                         backgroundColor: color_1,
                         hoverBackgroundColor: color_3,
@@ -75,7 +75,7 @@ class SpecificStates extends React.Component {
                 </div>
               </Col>
             )}
-            {data.percent_women_by_type && (
+            {individualStatistics.percent_women_by_type && (
               <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
@@ -83,8 +83,8 @@ class SpecificStates extends React.Component {
                   </h4>
                   <Pie
                     data={{
-                      ...data.percent_women_by_type,
-                      datasets: data.percent_women_by_type.datasets.map(item => ({
+                      ...individualStatistics.percent_women_by_type,
+                      datasets: individualStatistics.percent_women_by_type.datasets.map(item => ({
                         ...item,
                         backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                         borderColor: white,
@@ -108,7 +108,7 @@ class SpecificStates extends React.Component {
                 </div>
               </Col>
             )}
-            {data.percent_of_women_with_cancer_by_race && (
+            {individualStatistics.percent_of_women_with_cancer_by_race && (
               <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
@@ -117,8 +117,8 @@ class SpecificStates extends React.Component {
                   <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
                   <Pie
                     data={{
-                      ...data.percent_of_women_with_cancer_by_race.overall,
-                      datasets: data.percent_of_women_with_cancer_by_race.overall.datasets.map(item => ({
+                      ...individualStatistics.percent_of_women_with_cancer_by_race.overall,
+                      datasets: individualStatistics.percent_of_women_with_cancer_by_race.overall.datasets.map(item => ({
                         ...item,
                         backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                         borderColor: white,
@@ -143,8 +143,8 @@ class SpecificStates extends React.Component {
                   </p>
                   <Pie
                     data={{
-                      ...data.percent_of_women_with_cancer_by_race.by_age,
-                      datasets: data.percent_of_women_with_cancer_by_race.by_age.datasets.map(item => ({
+                      ...individualStatistics.percent_of_women_with_cancer_by_race.by_age,
+                      datasets: individualStatistics.percent_of_women_with_cancer_by_race.by_age.datasets.map(item => ({
                         ...item,
                         backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                         borderColor: white,
@@ -168,7 +168,7 @@ class SpecificStates extends React.Component {
                 </div>
               </Col>
             )}
-            {data.breast_cancer_by_grade_and_size && (
+            {individualStatistics.breast_cancer_by_grade_and_size && (
               <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
@@ -176,8 +176,8 @@ class SpecificStates extends React.Component {
                   </h4>
                   <Bar
                     data={{
-                      ...data.breast_cancer_by_grade_and_size.grade,
-                      datasets: data.breast_cancer_by_grade_and_size.grade.datasets.map(item => ({
+                      ...individualStatistics.breast_cancer_by_grade_and_size.grade,
+                      datasets: individualStatistics.breast_cancer_by_grade_and_size.grade.datasets.map(item => ({
                         ...item,
                         backgroundColor: color_1,
                         borderColor: white,
@@ -201,7 +201,7 @@ class SpecificStates extends React.Component {
                 </div>
               </Col>
             )}
-            {data.breast_cancer_by_grade_and_size && (
+            {individualStatistics.breast_cancer_by_grade_and_size && (
               <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
@@ -209,8 +209,8 @@ class SpecificStates extends React.Component {
                   </h4>
                   <Bar
                     data={{
-                      ...data.breast_cancer_by_grade_and_size.size,
-                      datasets: data.breast_cancer_by_grade_and_size.size.datasets.map(item => ({
+                      ...individualStatistics.breast_cancer_by_grade_and_size.size,
+                      datasets: individualStatistics.breast_cancer_by_grade_and_size.size.datasets.map(item => ({
                         ...item,
                         backgroundColor: color_1,
                         borderColor: white,
@@ -234,7 +234,7 @@ class SpecificStates extends React.Component {
                 </div>
               </Col>
             )}
-            {data.distribution_of_stage_of_cancer && (
+            {individualStatistics.distribution_of_stage_of_cancer && (
               <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
@@ -243,8 +243,8 @@ class SpecificStates extends React.Component {
                   <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
                   <Pie
                     data={{
-                      ...data.distribution_of_stage_of_cancer.overall,
-                      datasets: data.distribution_of_stage_of_cancer.overall.datasets.map(item => ({
+                      ...individualStatistics.distribution_of_stage_of_cancer.overall,
+                      datasets: individualStatistics.distribution_of_stage_of_cancer.overall.datasets.map(item => ({
                         ...item,
                         backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                         borderColor: white,
@@ -269,8 +269,8 @@ class SpecificStates extends React.Component {
                   </p>
                   <Pie
                     data={{
-                      ...data.distribution_of_stage_of_cancer.by_race,
-                      datasets: data.distribution_of_stage_of_cancer.by_race.datasets.map(item => ({
+                      ...individualStatistics.distribution_of_stage_of_cancer.by_race,
+                      datasets: individualStatistics.distribution_of_stage_of_cancer.by_race.datasets.map(item => ({
                         ...item,
                         backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                         borderColor: white,
@@ -294,7 +294,7 @@ class SpecificStates extends React.Component {
                 </div>
               </Col>
             )}
-            {data.surgery_decisions && (
+            {individualStatistics.surgery_decisions && (
               <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
@@ -302,8 +302,8 @@ class SpecificStates extends React.Component {
                   </h4>
                   <Pie
                     data={{
-                      ...data.surgery_decisions,
-                      datasets: data.surgery_decisions.datasets.map(item => ({
+                      ...individualStatistics.surgery_decisions,
+                      datasets: individualStatistics.surgery_decisions.datasets.map(item => ({
                         ...item,
                         backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                         borderColor: white,
@@ -327,7 +327,7 @@ class SpecificStates extends React.Component {
                 </div>
               </Col>
             )}
-            {data.chemotherapy && (
+            {individualStatistics.chemotherapy && (
               <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
@@ -336,8 +336,8 @@ class SpecificStates extends React.Component {
                   <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
                   <Pie
                     data={{
-                      ...data.chemotherapy.overall,
-                      datasets: data.chemotherapy.overall.datasets.map(item => ({
+                      ...individualStatistics.chemotherapy.overall,
+                      datasets: individualStatistics.chemotherapy.overall.datasets.map(item => ({
                         ...item,
                         backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                         borderColor: white,
@@ -362,8 +362,8 @@ class SpecificStates extends React.Component {
                   </p>
                   <Pie
                     data={{
-                      ...data.chemotherapy.breakout_by_stage,
-                      datasets: data.chemotherapy.breakout_by_stage.datasets.map(item => ({
+                      ...individualStatistics.chemotherapy.breakout_by_stage,
+                      datasets: individualStatistics.chemotherapy.breakout_by_stage.datasets.map(item => ({
                         ...item,
                         backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                         borderColor: white,
@@ -387,7 +387,7 @@ class SpecificStates extends React.Component {
                 </div>
               </Col>
             )}
-            {data.radiation && (
+            {individualStatistics.radiation && (
               <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
@@ -396,8 +396,8 @@ class SpecificStates extends React.Component {
                   <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
                   <Pie
                     data={{
-                      ...data.radiation.overall,
-                      datasets: data.radiation.overall.datasets.map(item => ({
+                      ...individualStatistics.radiation.overall,
+                      datasets: individualStatistics.radiation.overall.datasets.map(item => ({
                         ...item,
                         backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                         borderColor: white,
@@ -422,8 +422,8 @@ class SpecificStates extends React.Component {
                   </p>
                   <Pie
                     data={{
-                      ...data.radiation.breakout_by_stage,
-                      datasets: data.radiation.breakout_by_stage.datasets.map(item => ({
+                      ...individualStatistics.radiation.breakout_by_stage,
+                      datasets: individualStatistics.radiation.breakout_by_stage.datasets.map(item => ({
                         ...item,
                         backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                         borderColor: white,

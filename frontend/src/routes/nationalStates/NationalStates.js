@@ -17,13 +17,13 @@ const chartLabels = ['Incidence', 'Deaths']
 
 class NationalStates extends React.Component {
   render() {
-    const {data} = this.props
+    const {individualStatistics} = this.props
 
     let states
     let ranges
-    if (data.breast_cancer_by_state && data.breast_cancer_by_state.length) {
-      states = reduce(data.breast_cancer_by_state, (acc, {State, Range}) => assign(acc, {[`US-${State}`]: Range}), {})
-      ranges = sortBy(uniq(data.breast_cancer_by_state.map(item => item.Range)), x => x)
+    if (individualStatistics.breast_cancer_by_state && individualStatistics.breast_cancer_by_state.length) {
+      states = reduce(individualStatistics.breast_cancer_by_state, (acc, {State, Range}) => assign(acc, {[`US-${State}`]: Range}), {})
+      ranges = sortBy(uniq(individualStatistics.breast_cancer_by_state.map(item => item.Range)), x => x)
     }
 
     return (
@@ -47,7 +47,7 @@ class NationalStates extends React.Component {
                       }]
                     }}
                     onRegionTipShow={(e, el, code) => {
-                      const currentState = data.breast_cancer_by_state.find(item => code.includes(item.State)) || {}
+                      const currentState = individualStatistics.breast_cancer_by_state.find(item => code.includes(item.State)) || {}
                       el.html(el.html() + `<div>Range: ${currentState.Range}<br/>Rate: ${currentState.Rate}</div>`)
                     }}
                     containerStyle={{width: '100%', height: 500}}
@@ -86,11 +86,11 @@ class NationalStates extends React.Component {
                   <div className='col-sm-12'>
                     <p className='push-top-1 push-bot-2 text-center'><strong>Number per 100,000
                       females</strong></p>
-                    {data.breast_cancer_at_a_glance && (
+                    {individualStatistics.breast_cancer_at_a_glance && (
                       <Line
                         data={{
-                          ...data.breast_cancer_at_a_glance,
-                          datasets: data.breast_cancer_at_a_glance.datasets.map((item, i) => ({
+                          ...individualStatistics.breast_cancer_at_a_glance,
+                          datasets: individualStatistics.breast_cancer_at_a_glance.datasets.map((item, i) => ({
                             ...item,
                             label: [chartLabels[i]],
                             backgroundColor: chartColors[i],
@@ -192,7 +192,7 @@ class NationalStates extends React.Component {
                     </p>
                     <p className='push-bot-1'>
                       Lifetime Risk of Developing Cancer: Approximately 12.4 percent of women will be diagnosed with
-                      female breast cancer at some point during their lifetime, based on 2012-2014 data.
+                      female breast cancer at some point during their lifetime, based on 2012-2014 individualStatistics.
                     </p>
                     <p>
                       Prevalence of This Cancer: In 2014, there were an estimated 3,327,552 women living with female
@@ -214,9 +214,9 @@ class NationalStates extends React.Component {
               <div className={s.card}>
                 <p className='push-top-1 push-bot-2 text-center'><strong>Age-Specific Rates of
                   Breast Cancer in the United States</strong></p>
-                {data.breast_cancer_by_age && (
+                {individualStatistics.breast_cancer_by_age && (
                   <Line
-                    data={data.breast_cancer_by_age}
+                    data={individualStatistics.breast_cancer_by_age}
                     options={{
                       legend: {
                         display: false,

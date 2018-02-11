@@ -3,14 +3,14 @@ import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './Home.scss'
 import DiagnosisForm from './DiagnosisForm'
-import {getDiagnosisData} from '../../reducers/diagnosis'
+import {getData} from '../../reducers/diagnosis'
 
 class Home extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault()
     this.form.validateFields((err, values) => {
       if (!err) {
-        this.props.getDiagnosisData(values)
+        this.props.getData(values)
       }
     })
   }
@@ -50,7 +50,7 @@ const mapState = state => ({
 })
 
 const mapDispatch = {
-  getDiagnosisData,
+  getData,
 }
 
 export default connect(mapState, mapDispatch)(withStyles(s)(Home))

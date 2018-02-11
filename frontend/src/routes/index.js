@@ -1,6 +1,7 @@
 import React from 'react'
 import {getUser, logout} from '../reducers/user'
 import {generateUrl} from '../router'
+import {wsConnect} from '../reducers/diagnosis'
 
 export const HOME_ROUTE = 'home'
 export const DIAGNOSIS_ROUTE = 'diagnosis'
@@ -90,6 +91,7 @@ const routes = {
 
   async action({store, next}) {
     await store.dispatch(getUser())
+    store.dispatch(wsConnect())
     // Execute each child route until one of them return the result
     const route = await next()
 
