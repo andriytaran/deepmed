@@ -4,7 +4,9 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './SpecificStates.scss'
 import {Bar, Pie} from 'react-chartjs-2'
 import {formatChartNumber, getAgeRangeLabel} from '../../utils'
-import {Col, Row} from '../../components'
+import {Card, Col, Row} from '../../components'
+import isNil from 'lodash/isNil'
+import isEmpty from 'lodash/isEmpty'
 
 class SpecificStates extends React.Component {
   render() {
@@ -24,7 +26,7 @@ class SpecificStates extends React.Component {
       fontSize: 10,
       padding: 8
     }
-    const {data, chartData, diagnosisForm} = this.props
+    const {individualStatistics, diagnosisForm} = this.props
     const ageRange = diagnosisForm.age ? getAgeRangeLabel(diagnosisForm.age) : ''
     const ethnicity = diagnosisForm.ethnicity || ''
 
@@ -32,16 +34,16 @@ class SpecificStates extends React.Component {
       <div className='container container-full'>
         <div className='custom-panel custom-panel-condensed light-gray-bg'>
           <Row type='flex' gutter={16}>
-            {chartData.percent_women_annualy_diagnosed && (
-              <Col xs={24} sm={12} md={8} className={s.col}>
-                <div className={s.card}>
-                  <h4 className={s.header}>
-                    <strong>Women Ages {ageRange} as a Percent of total Diagnoses</strong>
-                  </h4>
+            <Col xs={24} sm={12} md={8} className={s.col}>
+              <Card
+                title={`Women Ages ${ageRange} as a Percent of total Diagnoses`}
+                loading={isNil(individualStatistics.percent_women_annualy_diagnosed)}
+              >
+                {!isEmpty(individualStatistics.percent_women_annualy_diagnosed) && (
                   <Bar
                     data={{
-                      ...chartData.percent_women_annualy_diagnosed,
-                      datasets: chartData.percent_women_annualy_diagnosed.datasets.map(item => ({
+                      ...individualStatistics.percent_women_annualy_diagnosed,
+                      datasets: individualStatistics.percent_women_annualy_diagnosed.datasets.map(item => ({
                         ...item,
                         backgroundColor: color_1,
                         hoverBackgroundColor: color_3,
@@ -72,19 +74,19 @@ class SpecificStates extends React.Component {
                     height={400}
                     ref='chart'
                   />
-                </div>
-              </Col>
-            )}
-            {data.percent_women_by_type && (
-              <Col xs={24} sm={12} md={8} className={s.col}>
-                <div className={s.card}>
-                  <h4 className={s.header}>
-                    <strong>Percent of Women by Breast Cancer Type</strong>
-                  </h4>
+                )}
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={8} className={s.col}>
+              <Card
+                title={`Percent of Women by Breast Cancer Type`}
+                loading={isNil(individualStatistics.percent_women_by_type)}
+              >
+                {!isEmpty(individualStatistics.percent_women_by_type) && (
                   <Pie
                     data={{
-                      ...data.percent_women_by_type,
-                      datasets: data.percent_women_by_type.datasets.map(item => ({
+                      ...individualStatistics.percent_women_by_type,
+                      datasets: individualStatistics.percent_women_by_type.datasets.map(item => ({
                         ...item,
                         backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                         borderColor: white,
@@ -105,79 +107,81 @@ class SpecificStates extends React.Component {
                     width={400}
                     height={400}
                   />
-                </div>
-              </Col>
-            )}
-            {data.percent_of_women_with_cancer_by_race && (
-              <Col xs={24} sm={12} md={8} className={s.col}>
-                <div className={s.card}>
-                  <h4 className={s.header}>
-                    <strong>% of Women with Cancer by Ethnicity {ageRange}</strong>
-                  </h4>
-                  <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
-                  <Pie
-                    data={{
-                      ...data.percent_of_women_with_cancer_by_race.overall,
-                      datasets: data.percent_of_women_with_cancer_by_race.overall.datasets.map(item => ({
-                        ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                        borderColor: white,
-                      }))
-                    }}
-                    options={{
-                      legend: {
-                        display: true,
-                        position: 'right',
-                        labels: chartsLabelsOptions
-                      },
-                      tooltips: {
-                        callbacks: {
-                          label: formatChartNumber
-                        }
-                      },
-                    }}
-                    width={400}
-                    height={150}
-                  />
-                  <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>Within Your<br/>Age Bracket</strong>
-                  </p>
-                  <Pie
-                    data={{
-                      ...data.percent_of_women_with_cancer_by_race.by_age,
-                      datasets: data.percent_of_women_with_cancer_by_race.by_age.datasets.map(item => ({
-                        ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                        borderColor: white,
-                      }))
-                    }}
-                    options={{
-                      legend: {
-                        display: true,
-                        position: 'right',
-                        labels: chartsLabelsOptions
-                      },
-                      tooltips: {
-                        callbacks: {
-                          label: formatChartNumber
-                        }
-                      },
-                    }}
-                    width={400}
-                    height={150}
-                  />
-                </div>
-              </Col>
-            )}
-            {data.breast_cancer_by_grade_and_size && (
-              <Col xs={24} sm={12} md={8} className={s.col}>
-                <div className={s.card}>
-                  <h4 className={s.header}>
-                    <strong>Breast Cancer by Grade {ageRange}</strong>
-                  </h4>
+                )}
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={8} className={s.col}>
+              <Card
+                title={`Percent of Women with Cancer by Ethnicity ${ageRange}`}
+                loading={isNil(individualStatistics.percent_of_women_with_cancer_by_race)}
+              >
+                {!isEmpty(individualStatistics.percent_of_women_with_cancer_by_race) && (
+                  <React.Fragment>
+                    <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
+                    <Pie
+                      data={{
+                        ...individualStatistics.percent_of_women_with_cancer_by_race.overall,
+                        datasets: individualStatistics.percent_of_women_with_cancer_by_race.overall.datasets.map(item => ({
+                          ...item,
+                          backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                          borderColor: white,
+                        }))
+                      }}
+                      options={{
+                        legend: {
+                          display: true,
+                          position: 'right',
+                          labels: chartsLabelsOptions
+                        },
+                        tooltips: {
+                          callbacks: {
+                            label: formatChartNumber
+                          }
+                        },
+                      }}
+                      width={400}
+                      height={150}
+                    />
+                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>Within Your<br/>Age Bracket</strong>
+                    </p>
+                    <Pie
+                      data={{
+                        ...individualStatistics.percent_of_women_with_cancer_by_race.by_age,
+                        datasets: individualStatistics.percent_of_women_with_cancer_by_race.by_age.datasets.map(item => ({
+                          ...item,
+                          backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                          borderColor: white,
+                        }))
+                      }}
+                      options={{
+                        legend: {
+                          display: true,
+                          position: 'right',
+                          labels: chartsLabelsOptions
+                        },
+                        tooltips: {
+                          callbacks: {
+                            label: formatChartNumber
+                          }
+                        },
+                      }}
+                      width={400}
+                      height={150}
+                    />
+                  </React.Fragment>
+                )}
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={8} className={s.col}>
+              <Card
+                title={`Breast Cancer by Grade ${ageRange}`}
+                loading={isNil(individualStatistics.breast_cancer_by_grade_and_size)}
+              >
+                {!isEmpty(individualStatistics.breast_cancer_by_grade_and_size) && (
                   <Bar
                     data={{
-                      ...data.breast_cancer_by_grade_and_size.grade,
-                      datasets: data.breast_cancer_by_grade_and_size.grade.datasets.map(item => ({
+                      ...individualStatistics.breast_cancer_by_grade_and_size.grade,
+                      datasets: individualStatistics.breast_cancer_by_grade_and_size.grade.datasets.map(item => ({
                         ...item,
                         backgroundColor: color_1,
                         borderColor: white,
@@ -198,19 +202,19 @@ class SpecificStates extends React.Component {
                     width={400}
                     height={400}
                   />
-                </div>
-              </Col>
-            )}
-            {data.breast_cancer_by_grade_and_size && (
-              <Col xs={24} sm={12} md={8} className={s.col}>
-                <div className={s.card}>
-                  <h4 className={s.header}>
-                    <strong>Breast Cancer by Tumor Size {ageRange}</strong>
-                  </h4>
+                )}
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={8} className={s.col}>
+              <Card
+                title={`Breast Cancer by Tumor Size ${ageRange}`}
+                loading={isNil(individualStatistics.breast_cancer_by_grade_and_size)}
+              >
+                {!isEmpty(individualStatistics.breast_cancer_by_grade_and_size) && (
                   <Bar
                     data={{
-                      ...data.breast_cancer_by_grade_and_size.size,
-                      datasets: data.breast_cancer_by_grade_and_size.size.datasets.map(item => ({
+                      ...individualStatistics.breast_cancer_by_grade_and_size.size,
+                      datasets: individualStatistics.breast_cancer_by_grade_and_size.size.datasets.map(item => ({
                         ...item,
                         backgroundColor: color_1,
                         borderColor: white,
@@ -231,222 +235,253 @@ class SpecificStates extends React.Component {
                     width={400}
                     height={400}
                   />
-                </div>
-              </Col>
-            )}
-            {data.distribution_of_stage_of_cancer && (
-              <Col xs={24} sm={12} md={8} className={s.col}>
-                <div className={s.card}>
-                  <h4 className={s.header}>
-                    <strong>% of Women with Cancer by Stage {ageRange}</strong>
-                  </h4>
-                  <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
-                  <Pie
-                    data={{
-                      ...data.distribution_of_stage_of_cancer.overall,
-                      datasets: data.distribution_of_stage_of_cancer.overall.datasets.map(item => ({
-                        ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                        borderColor: white,
-                      }))
-                    }}
-                    options={{
-                      legend: {
-                        display: true,
-                        position: 'right',
-                        labels: chartsLabelsOptions
-                      },
-                      tooltips: {
-                        callbacks: {
-                          label: formatChartNumber
-                        }
-                      },
-                    }}
-                    width={400}
-                    height={150}
-                  />
-                  <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>{ethnicity} Women Only</strong>
-                  </p>
-                  <Pie
-                    data={{
-                      ...data.distribution_of_stage_of_cancer.by_race,
-                      datasets: data.distribution_of_stage_of_cancer.by_race.datasets.map(item => ({
-                        ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                        borderColor: white,
-                      }))
-                    }}
-                    options={{
-                      legend: {
-                        display: true,
-                        position: 'right',
-                        labels: chartsLabelsOptions
-                      },
-                      tooltips: {
-                        callbacks: {
-                          label: formatChartNumber
-                        }
-                      },
-                    }}
-                    width={400}
-                    height={150}
-                  />
-                </div>
-              </Col>
-            )}
-            {data.surgery_decisions && (
-              <Col xs={24} sm={12} md={8} className={s.col}>
-                <div className={s.card}>
-                  <h4 className={s.header}>
-                    <strong>Surgery Decisions for Women {ageRange}</strong>
-                  </h4>
-                  <Pie
-                    data={{
-                      ...data.surgery_decisions,
-                      datasets: data.surgery_decisions.datasets.map(item => ({
-                        ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                        borderColor: white,
-                      }))
-                    }}
-                    options={{
-                      legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: chartsLabelsOptions
-                      },
-                      tooltips: {
-                        callbacks: {
-                          label: formatChartNumber
-                        }
-                      },
-                    }}
-                    width={400}
-                    height={400}
-                  />
-                </div>
-              </Col>
-            )}
-            {data.chemotherapy && (
-              <Col xs={24} sm={12} md={8} className={s.col}>
-                <div className={s.card}>
-                  <h4 className={s.header}>
-                    <strong>Chemotherapy for Women {ageRange}</strong>
-                  </h4>
-                  <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
-                  <Pie
-                    data={{
-                      ...data.chemotherapy.overall,
-                      datasets: data.chemotherapy.overall.datasets.map(item => ({
-                        ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                        borderColor: white,
-                      }))
-                    }}
-                    options={{
-                      legend: {
-                        display: true,
-                        position: 'right',
-                        labels: chartsLabelsOptions
-                      },
-                      tooltips: {
-                        callbacks: {
-                          label: formatChartNumber
-                        }
-                      },
-                    }}
-                    width={400}
-                    height={150}
-                  />
-                  <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>by Stage</strong>
-                  </p>
-                  <Pie
-                    data={{
-                      ...data.chemotherapy.breakout_by_stage,
-                      datasets: data.chemotherapy.breakout_by_stage.datasets.map(item => ({
-                        ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                        borderColor: white,
-                      }))
-                    }}
-                    options={{
-                      legend: {
-                        display: true,
-                        position: 'right',
-                        labels: chartsLabelsOptions
-                      },
-                      tooltips: {
-                        callbacks: {
-                          label: formatChartNumber
-                        }
-                      },
-                    }}
-                    width={400}
-                    height={150}
-                  />
-                </div>
-              </Col>
-            )}
-            {data.radiation && (
-              <Col xs={24} sm={12} md={8} className={s.col}>
-                <div className={s.card}>
-                  <h4 className={s.header}>
-                    <strong>Radiation for Women {ageRange}</strong>
-                  </h4>
-                  <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
-                  <Pie
-                    data={{
-                      ...data.radiation.overall,
-                      datasets: data.radiation.overall.datasets.map(item => ({
-                        ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                        borderColor: white,
-                      }))
-                    }}
-                    options={{
-                      legend: {
-                        display: true,
-                        position: 'right',
-                        labels: chartsLabelsOptions,
-                      },
-                      tooltips: {
-                        callbacks: {
-                          label: formatChartNumber
-                        }
-                      },
-                    }}
-                    width={400}
-                    height={160}
-                  />
-                  <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>by Stage</strong>
-                  </p>
-                  <Pie
-                    data={{
-                      ...data.radiation.breakout_by_stage,
-                      datasets: data.radiation.breakout_by_stage.datasets.map(item => ({
-                        ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                        borderColor: white,
-                      }))
-                    }}
-                    options={{
-                      legend: {
-                        display: true,
-                        position: 'right',
-                        labels: chartsLabelsOptions,
-                      },
-                      tooltips: {
-                        callbacks: {
-                          label: formatChartNumber
-                        }
-                      },
-                    }}
-                    width={400}
-                    height={160}
-                  />
-                </div>
-              </Col>
-            )}
+                )}
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={8} className={s.col}>
+              <Card
+                title={`Percent of Women with Cancer by Stage ${ageRange}`}
+                loading={isNil(individualStatistics.distribution_of_stage_of_cancer)}
+              >
+                {!isEmpty(individualStatistics.distribution_of_stage_of_cancer) && (
+                  <React.Fragment>
+                    <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
+                    <Pie
+                      data={{
+                        ...individualStatistics.distribution_of_stage_of_cancer.overall,
+                        datasets: individualStatistics.distribution_of_stage_of_cancer.overall.datasets.map(item => ({
+                          ...item,
+                          backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                          borderColor: white,
+                        }))
+                      }}
+                      options={{
+                        legend: {
+                          display: true,
+                          position: 'right',
+                          labels: chartsLabelsOptions
+                        },
+                        tooltips: {
+                          callbacks: {
+                            label: formatChartNumber
+                          }
+                        },
+                      }}
+                      width={400}
+                      height={150}
+                    />
+                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>{ethnicity} Women Only</strong></p>
+                    <Pie
+                      data={{
+                        ...individualStatistics.distribution_of_stage_of_cancer.by_race,
+                        datasets: individualStatistics.distribution_of_stage_of_cancer.by_race.datasets.map(item => ({
+                          ...item,
+                          backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                          borderColor: white,
+                        }))
+                      }}
+                      options={{
+                        legend: {
+                          display: true,
+                          position: 'right',
+                          labels: chartsLabelsOptions
+                        },
+                        tooltips: {
+                          callbacks: {
+                            label: formatChartNumber
+                          }
+                        },
+                      }}
+                      width={400}
+                      height={150}
+                    />
+                  </React.Fragment>
+                )}
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={8} className={s.col}>
+              <Card
+                title={`Surgery Decisions for Women`}
+                loading={isNil(individualStatistics.surgery_decisions)}
+              >
+                {!isEmpty(individualStatistics.surgery_decisions) && (
+                  <React.Fragment>
+                    <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
+                    <Pie
+                      data={{
+                        ...individualStatistics.surgery_decisions.overall,
+                        datasets: individualStatistics.surgery_decisions.overall.datasets.map(item => ({
+                          ...item,
+                          backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                          borderColor: white,
+                        }))
+                      }}
+                      options={{
+                        legend: {
+                          display: true,
+                          position: 'right',
+                          labels: chartsLabelsOptions
+                        },
+                        tooltips: {
+                          callbacks: {
+                            label: formatChartNumber
+                          }
+                        },
+                      }}
+                      width={400}
+                      height={150}
+                    />
+                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>Within Your<br/>Age Bracket</strong></p>
+                    <Pie
+                      data={{
+                        ...individualStatistics.surgery_decisions.by_age,
+                        datasets: individualStatistics.surgery_decisions.by_age.datasets.map(item => ({
+                          ...item,
+                          backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                          borderColor: white,
+                        }))
+                      }}
+                      options={{
+                        legend: {
+                          display: true,
+                          position: 'right',
+                          labels: chartsLabelsOptions
+                        },
+                        tooltips: {
+                          callbacks: {
+                            label: formatChartNumber
+                          }
+                        },
+                      }}
+                      width={400}
+                      height={150}
+                    />
+                  </React.Fragment>
+                )}
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={8} className={s.col}>
+              <Card
+                title={`Chemotherapy for Women ${ageRange}`}
+                loading={isNil(individualStatistics.chemotherapy)}
+              >
+                {!isEmpty(individualStatistics.chemotherapy) && (
+                  <React.Fragment>
+                    <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
+                    <Pie
+                      data={{
+                        ...individualStatistics.chemotherapy.overall,
+                        datasets: individualStatistics.chemotherapy.overall.datasets.map(item => ({
+                          ...item,
+                          backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                          borderColor: white,
+                        }))
+                      }}
+                      options={{
+                        legend: {
+                          display: true,
+                          position: 'right',
+                          labels: chartsLabelsOptions
+                        },
+                        tooltips: {
+                          callbacks: {
+                            label: formatChartNumber
+                          }
+                        },
+                      }}
+                      width={400}
+                      height={150}
+                    />
+                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>by Stage</strong></p>
+                    <Pie
+                      data={{
+                        ...individualStatistics.chemotherapy.breakout_by_stage,
+                        datasets: individualStatistics.chemotherapy.breakout_by_stage.datasets.map(item => ({
+                          ...item,
+                          backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                          borderColor: white,
+                        }))
+                      }}
+                      options={{
+                        legend: {
+                          display: true,
+                          position: 'right',
+                          labels: chartsLabelsOptions
+                        },
+                        tooltips: {
+                          callbacks: {
+                            label: formatChartNumber
+                          }
+                        },
+                      }}
+                      width={400}
+                      height={150}
+                    />
+                  </React.Fragment>
+                )}
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={8} className={s.col}>
+              <Card
+                title={`Radiation for Women ${ageRange}`}
+                loading={isNil(individualStatistics.radiation)}
+              >
+                {!isEmpty(individualStatistics.radiation) && (
+                  <React.Fragment>
+                    <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
+                    <Pie
+                      data={{
+                        ...individualStatistics.radiation.overall,
+                        datasets: individualStatistics.radiation.overall.datasets.map(item => ({
+                          ...item,
+                          backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                          borderColor: white,
+                        }))
+                      }}
+                      options={{
+                        legend: {
+                          display: true,
+                          position: 'right',
+                          labels: chartsLabelsOptions,
+                        },
+                        tooltips: {
+                          callbacks: {
+                            label: formatChartNumber
+                          }
+                        },
+                      }}
+                      width={400}
+                      height={160}
+                    />
+                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>by Stage</strong></p>
+                    <Pie
+                      data={{
+                        ...individualStatistics.radiation.breakout_by_stage,
+                        datasets: individualStatistics.radiation.breakout_by_stage.datasets.map(item => ({
+                          ...item,
+                          backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                          borderColor: white,
+                        }))
+                      }}
+                      options={{
+                        legend: {
+                          display: true,
+                          position: 'right',
+                          labels: chartsLabelsOptions,
+                        },
+                        tooltips: {
+                          callbacks: {
+                            label: formatChartNumber
+                          }
+                        },
+                      }}
+                      width={400}
+                      height={160}
+                    />
+                  </React.Fragment>
+                )}
+              </Card>
+            </Col>
           </Row>
         </div>
       </div>

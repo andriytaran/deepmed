@@ -21,7 +21,7 @@ const whatwgFetch = createFetch(fetch, {
   apiUrl: window.App.apiUrl,
 })
 
-const store = configureStore(window.App.state, {history, fetch: whatwgFetch}, cookies)
+const store = configureStore(window.App.state, {history, fetch: whatwgFetch}, cookies, window.App.wsUrl)
 
 const context = {
   // Enables critical path CSS rendering
@@ -47,8 +47,6 @@ const scrollPositionsHistory = {}
 if (window.history && 'scrollRestoration' in window.history) {
   window.history.scrollRestoration = 'manual'
 }
-
-
 
 const container = document.getElementById('app')
 let currentLocation = history.location

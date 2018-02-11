@@ -7,33 +7,40 @@ type Options = {
   cookie?: string,
 }
 
-const transformFormData = (data) => {
+const transformFormUrlEncoded = (body) => {
   const str = []
-  for (let p in data) {
+  for (let p in body) {
     const key = encodeURIComponent(p)
-    const value = encodeURIComponent(data[p])
+    const value = encodeURIComponent(body[p])
     str.push(`${key}=${value}`)
   }
   return str.join('&')
 }
 
-const prepareRequestHeaders = (headers = {}, token, locale) => {
+const transformFormData = (body) => {
+  let formDataBody = new FormData()
+  Object.keys(body).forEach((key) => {
+    formDataBody.append(key, body[key])
+  })
+  return formDataBody
+}
+
+const prepareRequestHeaders = (contentType = 'application/json', token) => {
+  const headers = {}
   if (token) {
     headers['Authorization'] = `Bearer ${token}`
   }
-  if (locale) {
-    headers['Lang'] = locale.substring(0, 2)
+  headers['Accept'] = `application/json`
+  if (contentType !== 'multipart/form-data') {
+    headers['Content-Type'] = contentType
   }
   return headers
 }
 
-const prepareRequestBody = (body, formData) => {
-  if (formData) {
-    // TODO multiform part data
-    // let formDataBody = new FormData()
-    // Object.keys(body).forEach((key) => {
-    //   formDataBody.append(key, body[ key ])
-    // })
+const prepareRequestBody = (body, contentType) => {
+  if (contentType === 'application/x-www-form-urlencoded') {
+    return transformFormUrlEncoded(body)
+  } else if (contentType === 'multipart/form-data') {
     return transformFormData(body)
   } else {
     return JSON.stringify(body)
@@ -47,15 +54,11 @@ const prepareRequestBody = (body, formData) => {
  * https://developer.mozilla.org/docs/Web/API/Fetch_API/Using_Fetch
  */
 function createFetch(fetch: Fetch, {apiUrl}: Options) {
-  return async (url, { token, locale, formData, ...options }) => {
+  return async (url, { token, contentType, ...options }) => {
     const anotherDomainRequest = url.startsWith('http')
-    options.body = prepareRequestBody(options.body, formData)
+    options.body = prepareRequestBody(options.body, contentType)
     if (!anotherDomainRequest) {
-      options.headers = prepareRequestHeaders({
-        ...options.headers,
-        Accept: 'application/json',
-        'Content-Type': formData ? 'application/x-www-form-urlencoded' : 'application/json',
-      }, token, locale)
+      options.headers = prepareRequestHeaders(contentType, token)
     }
     try {
       const resp = await fetch(anotherDomainRequest ? url : `${apiUrl}${url}`, {

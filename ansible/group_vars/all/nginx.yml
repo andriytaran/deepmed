@@ -45,10 +45,10 @@ nginx_sites:
       }
 
   project_api:
-    - listen 80
+    - listen 8008
     - charset utf-8
     - server_tokens off
-    - server_name {{ api_domain }}
+    - server_name _
     - access_log {{ deploy_log_dir }}/nginx-access.log
     - error_log {{ deploy_log_dir }}/nginx-error.log
     - client_max_body_size 10M # Max upload size

@@ -11,7 +11,7 @@ export const SET_CONFIG_VARS = 'Global.SET_CONFIG_VARS'
 // ------------------------------------
 // Actions
 // ------------------------------------
-export const setConfigVars = ({clientId, clientSecret, googleTrackingId, apiUrl, appUrl, apiBaseUrl}) => ({
+export const setConfigVars = ({clientId, clientSecret, googleTrackingId, apiUrl, appUrl, apiBaseUrl, wsUrl}) => ({
   type: SET_CONFIG_VARS,
   clientId,
   clientSecret,
@@ -19,6 +19,7 @@ export const setConfigVars = ({clientId, clientSecret, googleTrackingId, apiUrl,
   apiUrl,
   appUrl,
   apiBaseUrl,
+  wsUrl,
 })
 
 export const setCurrentPathname = (currentPathname) => ({type: SET_CURRENT_PATHNAME, currentPathname})
@@ -36,6 +37,7 @@ const initialState = {
   apiUrl: null,
   appUrl: null,
   apiBaseUrl: null,
+  wsUrl: null,
 }
 
 export default createReducer(initialState, {
@@ -45,13 +47,13 @@ export default createReducer(initialState, {
   [SET_CURRENT_ROUTE_NAME]: (state, {currentRouteName}) => ({
     currentRouteName,
   }),
-  [SET_CONFIG_VARS]: (state, {clientId, clientSecret, googleTrackingId, apiUrl, appUrl, apiBaseUrl, defaultCountryCode}) => ({
+  [SET_CONFIG_VARS]: (state, {clientId, clientSecret, googleTrackingId, apiUrl, appUrl, apiBaseUrl, wsUrl}) => ({
     clientId,
     clientSecret,
     googleTrackingId,
     apiUrl,
     appUrl,
     apiBaseUrl,
-    defaultCountryCode,
+    wsUrl,
   }),
 })

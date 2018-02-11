@@ -64,6 +64,7 @@ app.get('*', async (req, res, next) => {
       apiUrl: `${config.api.url}/v1`,
       apiBaseUrl: config.api.url,
       appUrl: config.appUrl,
+      wsUrl: config.api.ws,
     }))
 
     const css = new Set()
@@ -112,6 +113,7 @@ app.get('*', async (req, res, next) => {
       apiUrl: `${config.api.url}/v1`,
       state: context.store.getState(),
       appUrl: config.appUrl,
+      wsUrl: config.api.ws,
     }
 
     const html = ReactDOM.renderToStaticMarkup(<Html {...data} />)

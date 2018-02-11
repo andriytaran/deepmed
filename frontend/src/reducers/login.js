@@ -24,7 +24,7 @@ export const login = (values, redirectUrl) => (dispatch, getState, {fetch}) => {
   const {clientId, clientSecret} = getState().global
   return fetch(`/auth/token/`, {
     method: 'POST',
-    formData: true,
+    contentType: 'application/x-www-form-urlencoded',
     body: {
       username: values.email,
       password: values.password,

@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './NationalStates.scss'
-import {Col, Row, VectorMap} from '../../components'
+import {Col, Row, VectorMap, Spin} from '../../components'
 import {Line} from 'react-chartjs-2'
 import {humanReadableNumber} from '../../utils'
 import cn from 'classnames'
@@ -10,6 +10,7 @@ import reduce from 'lodash/reduce'
 import assign from 'lodash/assign'
 import uniq from 'lodash/uniq'
 import sortBy from 'lodash/sortBy'
+import isEmpty from 'lodash/isEmpty'
 
 const colors = ['#47cfd1', '#04a9a9', '#48ccf5', '#77c2d9']
 const chartColors = ['#88d0d1', '#48ccf5']
@@ -17,13 +18,13 @@ const chartLabels = ['Incidence', 'Deaths']
 
 class NationalStates extends React.Component {
   render() {
-    const {data} = this.props
+    const {individualStatistics} = this.props
 
     let states
     let ranges
-    if (data.breast_cancer_by_state && data.breast_cancer_by_state.length) {
-      states = reduce(data.breast_cancer_by_state, (acc, {State, Range}) => assign(acc, {[`US-${State}`]: Range}), {})
-      ranges = sortBy(uniq(data.breast_cancer_by_state.map(item => item.Range)), x => x)
+    if (individualStatistics.breast_cancer_by_state && individualStatistics.breast_cancer_by_state.length) {
+      states = reduce(individualStatistics.breast_cancer_by_state, (acc, {State, Range}) => assign(acc, {[`US-${State}`]: Range}), {})
+      ranges = sortBy(uniq(individualStatistics.breast_cancer_by_state.map(item => item.Range)), x => x)
     }
 
     return (
@@ -36,7 +37,7 @@ class NationalStates extends React.Component {
               <h2 className='text-center'>Breast Cancer Incidence per 100,000 Women</h2>
 
               <div className={s.mapWrapper}>
-                {states && (
+                {states ? (
                   <VectorMap
                     map='us_aea'
                     backgroundColor='transparent'
@@ -47,7 +48,7 @@ class NationalStates extends React.Component {
                       }]
                     }}
                     onRegionTipShow={(e, el, code) => {
-                      const currentState = data.breast_cancer_by_state.find(item => code.includes(item.State)) || {}
+                      const currentState = individualStatistics.breast_cancer_by_state.find(item => code.includes(item.State)) || {}
                       el.html(el.html() + `<div>Range: ${currentState.Range}<br/>Rate: ${currentState.Rate}</div>`)
                     }}
                     containerStyle={{width: '100%', height: 500}}
@@ -59,6 +60,8 @@ class NationalStates extends React.Component {
                       },
                     }}
                   />
+                ) : (
+                  <Spin spinning/>
                 )}
               </div>
               {ranges && (
@@ -84,13 +87,14 @@ class NationalStates extends React.Component {
               <div className='custom-panel custom-panel-condensed push-top-2'>
                 <div className='row row-condensed'>
                   <div className='col-sm-12'>
-                    <p className='push-top-1 push-bot-2 text-center'><strong>Number per 100,000
-                      females</strong></p>
-                    {data.breast_cancer_at_a_glance && (
+                    <p className='push-top-1 push-bot-2 text-center'>
+                      <strong>Number per 100,000 females</strong>
+                    </p>
+                    {!isEmpty(individualStatistics.breast_cancer_at_a_glance) ? (
                       <Line
                         data={{
-                          ...data.breast_cancer_at_a_glance,
-                          datasets: data.breast_cancer_at_a_glance.datasets.map((item, i) => ({
+                          ...individualStatistics.breast_cancer_at_a_glance,
+                          datasets: individualStatistics.breast_cancer_at_a_glance.datasets.map((item, i) => ({
                             ...item,
                             label: [chartLabels[i]],
                             backgroundColor: chartColors[i],
@@ -101,11 +105,21 @@ class NationalStates extends React.Component {
                         height={200}
                         options={{
                           legend: {
-                            onClick: () => {},
+                            onClick: () => {
+                            },
                             position: 'bottom',
-                          }
+                          },
+                          scales: {
+                            yAxes: [{
+                              ticks: {
+                                beginAtZero: true,
+                              }
+                            }]
+                          },
                         }}
                       />
+                    ) : (
+                      <Spin spinning/>
                     )}
                   </div>
                 </div>
@@ -192,7 +206,7 @@ class NationalStates extends React.Component {
                     </p>
                     <p className='push-bot-1'>
                       Lifetime Risk of Developing Cancer: Approximately 12.4 percent of women will be diagnosed with
-                      female breast cancer at some point during their lifetime, based on 2012-2014 data.
+                      female breast cancer at some point during their lifetime, based on 2012-2014 individualStatistics.
                     </p>
                     <p>
                       Prevalence of This Cancer: In 2014, there were an estimated 3,327,552 women living with female
@@ -214,9 +228,9 @@ class NationalStates extends React.Component {
               <div className={s.card}>
                 <p className='push-top-1 push-bot-2 text-center'><strong>Age-Specific Rates of
                   Breast Cancer in the United States</strong></p>
-                {data.breast_cancer_by_age && (
+                {!isEmpty(individualStatistics.breast_cancer_by_age) ? (
                   <Line
-                    data={data.breast_cancer_by_age}
+                    data={individualStatistics.breast_cancer_by_age}
                     options={{
                       legend: {
                         display: false,
@@ -234,6 +248,8 @@ class NationalStates extends React.Component {
                     width={275}
                     height={100}
                   />
+                ) : (
+                  <Spin spinning/>
                 )}
               </div>
             </Col>
@@ -254,36 +270,35 @@ class NationalStates extends React.Component {
                     </thead>
                     <tbody>
                     <tr>
-                      <td><p className='no-margin'>30</p></td>
-                      <td><p className='no-margin'>0.44</p></td>
-                      <td><p className='no-margin'>1.87</p></td>
-                      <td><p className='no-margin'>4.05</p></td>
+                      <td><p>30</p></td>
+                      <td><p>0.44</p></td>
+                      <td><p>1.87</p></td>
+                      <td><p>4.05</p></td>
                     </tr>
                     <tr>
-                      <td><p className='no-margin'>40</p></td>
-                      <td><p className='no-margin'>1.44</p></td>
-                      <td><p className='no-margin'>3.65</p></td>
-                      <td><p className='no-margin'>6.80</p></td>
+                      <td><p>40</p></td>
+                      <td><p>1.44</p></td>
+                      <td><p>3.65</p></td>
+                      <td><p>6.80</p></td>
                     </tr>
                     <tr>
-                      <td><p className='no-margin'>50</p></td>
-                      <td><p className='no-margin'>2.28</p></td>
-                      <td><p className='no-margin'>5.53</p></td>
-                      <td><p className='no-margin'>8.75</p></td>
+                      <td><p>50</p></td>
+                      <td><p>2.28</p></td>
+                      <td><p>5.53</p></td>
+                      <td><p>8.75</p></td>
                     </tr>
                     <tr>
-                      <td><p className='no-margin'>60</p></td>
-                      <td><p className='no-margin'>3.46</p></td>
-                      <td><p className='no-margin'>6.89</p></td>
-                      <td><p className='no-margin'>8.89</p></td>
+                      <td><p>60</p></td>
+                      <td><p>3.46</p></td>
+                      <td><p>6.89</p></td>
+                      <td><p>8.89</p></td>
                     </tr>
                     <tr>
-                      <td><p className='no-margin'>70</p></td>
-                      <td><p className='no-margin'>3.89</p></td>
-                      <td><p className='no-margin'>6.16</p></td>
-                      <td><p className='no-margin'>N/A</p></td>
+                      <td><p>70</p></td>
+                      <td><p>3.89</p></td>
+                      <td><p>6.16</p></td>
+                      <td><p>N/A</p></td>
                     </tr>
-
                     </tbody>
                   </table>
                 </div>
