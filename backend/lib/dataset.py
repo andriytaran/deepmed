@@ -104,40 +104,22 @@ def find(request, **kwargs):
 
 def get_age_group(age):
     age_group = None
-    # if age >= 85:
-    #     age_group = "85+ years"
     if age >= 80:
         age_group = ["80-84 years", "85+ years"]
-    # elif age >= 75:
-    #     age_group = "75-79 years"
     elif age >= 70:
         age_group = ["70-74 years", "75-79 years"]
-    # elif age >= 65:
-    #     age_group = "65-69 years"
     elif age >= 60:
         age_group = ["60-64 years", "65-69 years"]
-    # elif age >= 55:
-    #     age_group = "55-59 years"
     elif age >= 50:
         age_group = ["50-54 years", "55-59 years"]
-    # elif age >= 45:
-    #     age_group = "45-49 years"
     elif age >= 40:
         age_group = ["40-44 years", "45-49 years"]
-    # elif age >= 35:
-    #     age_group = "35-39 years"
     elif age >= 30:
         age_group = ["30-34 years", "35-39 years"]
-    # elif age >= 25:
-    #     age_group = "25-29 years"
     elif age >= 20:
         age_group = ["20-24 years", "25-29 years"]
-    # elif age >= 15:
-    #     age_group = "15-19 years"
     elif age >= 10:
         age_group = ["10-14 years", "15-19 years"]
-    # elif age >= 5:
-    #     age_group = "05-09 years"
     elif age >= 0:
         age_group = ["00-04 years", "05-09 years"]
 
@@ -148,8 +130,6 @@ def get_t_size_cm(size_mm):
     t_size_cm = None
     if size_mm >= 50:
         t_size_cm = ">5cm"
-    # elif size_mm >= 30:
-    #     t_size_cm = ">3cm"
     elif size_mm >= 20:
         t_size_cm = {"$in": ["<3cm", ">3cm"]}
     elif size_mm >= 10:
@@ -186,6 +166,23 @@ def get_node_range(number):
 
 
 def create_filter(input_data, operator='$and'):
+    """
+    Converts json request to list of dicts formated for use as a match filter in mongodb.
+    "age" takes integer age, and groups ages by decades, ex: input 44 (years), outputs ["40-44 years", "45-49 years"]
+    "tumor_size_in_mm" takes integer size in mm, and groups by size in cm, ex: input 18 (mm), outputs "<2cm"
+    "num_pos_nodes" takes integer number, and groups by custom groups, ex: input 4, output {"$in": [4, 5, 6, 7, 8, 9]}
+    :param input_data: json = '{"age": int, ' \
+                   '"sex": string, ' \
+                   '"tumor_grade": int, ' \
+                   '"er_status": "+" or "-", ' \
+                   '"pr_status": "+" or "-", ' \
+                   '"tumor_size_in_mm": int, ' \
+                   '"num_pos_nodes": int, ' \
+                   '"her2_status": "+" or "-", ' \
+                   '"ethnicity": string}'
+    :param operator: {"$and"} or {"or"} as filtering operators
+    :return: list of dicts
+    """
     input_data = json.loads(input_data)
     filter_list = []
     if 'age' in input_data.keys():
@@ -222,6 +219,16 @@ def create_filter(input_data, operator='$and'):
 
 
 def diagnosis(input_json, limit=20):
+    """
+    Returned values are grouped by these groups:
+    "ethnicity": "White" -> "Caucasian", "Black" -> "African American", "Asian or Pacific Islander" -> "Asian",
+        ['Unknown', 'American Indian/Alaska Native'] -> "Other"
+    "cod": "Alive" -> "Alive", "Breast" -> "Breast", any_other_value -> "Other"
+    Other values are returned as in database
+    :param input_json: json
+    :param limit: int
+    :return: list
+    """
     def get_race(race):
         if race == "White":
             return "Caucasian"
