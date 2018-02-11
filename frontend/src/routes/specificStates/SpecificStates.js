@@ -112,7 +112,7 @@ class SpecificStates extends React.Component {
               <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
-                    <strong>% of Women with Cancer by Ethnicity {ageRange}</strong>
+                    <strong>Percent of Women with Cancer by Ethnicity {ageRange}</strong>
                   </h4>
                   <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
                   <Pie
@@ -294,16 +294,18 @@ class SpecificStates extends React.Component {
                 </div>
               </Col>
             )}
+
             {individualStatistics.surgery_decisions && (
               <Col xs={24} sm={12} md={8} className={s.col}>
                 <div className={s.card}>
                   <h4 className={s.header}>
-                    <strong>Surgery Decisions for Women {ageRange}</strong>
+                    <strong>Surgery Decisions for Women</strong>
                   </h4>
+                  <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
                   <Pie
                     data={{
-                      ...individualStatistics.surgery_decisions,
-                      datasets: individualStatistics.surgery_decisions.datasets.map(item => ({
+                      ...individualStatistics.surgery_decisions.overall,
+                      datasets: individualStatistics.surgery_decisions.overall.datasets.map(item => ({
                         ...item,
                         backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
                         borderColor: white,
@@ -312,7 +314,7 @@ class SpecificStates extends React.Component {
                     options={{
                       legend: {
                         display: true,
-                        position: 'bottom',
+                        position: 'right',
                         labels: chartsLabelsOptions
                       },
                       tooltips: {
@@ -322,7 +324,33 @@ class SpecificStates extends React.Component {
                       },
                     }}
                     width={400}
-                    height={400}
+                    height={150}
+                  />
+                  <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>Within Your<br/>Age Bracket</strong>
+                  </p>
+                  <Pie
+                    data={{
+                      ...individualStatistics.surgery_decisions.by_age,
+                      datasets: individualStatistics.surgery_decisions.by_age.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: true,
+                        position: 'right',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={150}
                   />
                 </div>
               </Col>
