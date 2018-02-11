@@ -91,13 +91,13 @@ class DiagnosisForm extends React.Component {
               )}
             </div>
             <div className="col-xs-6">
-              {getFieldDecorator('her2_status', {
+              {getFieldDecorator('pr_status', {
                 initialValue: '',
                 rules: [
                   {required: true, message: messages.required},
                 ]
               })(
-                <Select error={getFieldError('her2_status')} label={'HER2 Status'}>
+                <Select error={getFieldError('pr_status')} label={'PR Status'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value='+'>Positive</option>
                   <option value='-'>Negative</option>
@@ -107,13 +107,13 @@ class DiagnosisForm extends React.Component {
           </div>
           <div className="row push-top-2">
             <div className="col-xs-6">
-              {getFieldDecorator('pr_status', {
+              {getFieldDecorator('her2_status', {
                 initialValue: '',
                 rules: [
                   {required: true, message: messages.required},
                 ]
               })(
-                <Select error={getFieldError('pr_status')} label={'PR Status'}>
+                <Select error={getFieldError('her2_status')} label={'HER2 Status'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value='+'>Positive</option>
                   <option value='-'>Negative</option>
