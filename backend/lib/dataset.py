@@ -7,7 +7,7 @@ from pprint import pprint
 MONGODB_HOST = 'localhost'
 MONGODB_PORT = 27017
 DBS_NAME = 'bcancer'
-COLLECTION_NAME = 'dataset'
+COLLECTION_NAME = 'dataset2'
 
 STATES_NAME_ABRS = {
     "Alabama": "AL",
@@ -104,40 +104,22 @@ def find(request, **kwargs):
 
 def get_age_group(age):
     age_group = None
-    # if age >= 85:
-    #     age_group = "85+ years"
     if age >= 80:
         age_group = ["80-84 years", "85+ years"]
-    # elif age >= 75:
-    #     age_group = "75-79 years"
     elif age >= 70:
         age_group = ["70-74 years", "75-79 years"]
-    # elif age >= 65:
-    #     age_group = "65-69 years"
     elif age >= 60:
         age_group = ["60-64 years", "65-69 years"]
-    # elif age >= 55:
-    #     age_group = "55-59 years"
     elif age >= 50:
         age_group = ["50-54 years", "55-59 years"]
-    # elif age >= 45:
-    #     age_group = "45-49 years"
     elif age >= 40:
         age_group = ["40-44 years", "45-49 years"]
-    # elif age >= 35:
-    #     age_group = "35-39 years"
     elif age >= 30:
         age_group = ["30-34 years", "35-39 years"]
-    # elif age >= 25:
-    #     age_group = "25-29 years"
     elif age >= 20:
         age_group = ["20-24 years", "25-29 years"]
-    # elif age >= 15:
-    #     age_group = "15-19 years"
     elif age >= 10:
         age_group = ["10-14 years", "15-19 years"]
-    # elif age >= 5:
-    #     age_group = "05-09 years"
     elif age >= 0:
         age_group = ["00-04 years", "05-09 years"]
 
@@ -148,8 +130,6 @@ def get_t_size_cm(size_mm):
     t_size_cm = None
     if size_mm >= 50:
         t_size_cm = ">5cm"
-    # elif size_mm >= 30:
-    #     t_size_cm = ">3cm"
     elif size_mm >= 20:
         t_size_cm = {"$in": ["<3cm", ">3cm"]}
     elif size_mm >= 10:
@@ -174,18 +154,35 @@ def get_node_range(number):
     if number >= 10:
         # n_size = {"$gte": 10}
         range_list = [x for x in range(10, 90)]
-        range_list.append(90)
+        range_list.append('>9')
         n_size = {"$in": range_list}
     elif number >= 4:
         n_size = {"$in": [4, 5, 6, 7, 8, 9]}
     elif number >= 1:
-        n_size = {"$in": [1, 2, 3, 97]}
+        n_size = {"$in": [1, 2, 3, '>1']}
     elif number == 0:
         n_size = {"$eq": 0}
     return n_size
 
 
 def create_filter(input_data, operator='$and'):
+    """
+    Converts json request to list of dicts formated for use as a match filter in mongodb.
+    "age" takes integer age, and groups ages by decades, ex: input 44 (years), outputs ["40-44 years", "45-49 years"]
+    "tumor_size_in_mm" takes integer size in mm, and groups by size in cm, ex: input 18 (mm), outputs "<2cm"
+    "num_pos_nodes" takes integer number, and groups by custom groups, ex: input 4, output {"$in": [4, 5, 6, 7, 8, 9]}
+    :param input_data: json = '{"age": int, ' \
+                   '"sex": string, ' \
+                   '"tumor_grade": int, ' \
+                   '"er_status": "+" or "-", ' \
+                   '"pr_status": "+" or "-", ' \
+                   '"tumor_size_in_mm": int, ' \
+                   '"num_pos_nodes": int, ' \
+                   '"her2_status": "+" or "-", ' \
+                   '"ethnicity": string}'
+    :param operator: {"$and"} or {"or"} as filtering operators
+    :return: list of dicts
+    """
     input_data = json.loads(input_data)
     filter_list = []
     if 'age' in input_data.keys():
@@ -206,7 +203,7 @@ def create_filter(input_data, operator='$and'):
         filter_list.append({"derived-her2-recode-2010": input_data['her2_status']})
     if 'num_pos_nodes' in input_data.keys():
         n_size = get_node_range(input_data['num_pos_nodes'])
-        filter_list.append({"regional-nodes-positive-1988-1": n_size})
+        filter_list.append({"regional-nodes-positive-1988": n_size})
     if 'ethnicity' in input_data.keys():
         filter_list.append({"race-recode-w-b-ai-api": input_data["ethnicity"]})
     if 'type' in input_data.keys():
@@ -222,6 +219,16 @@ def create_filter(input_data, operator='$and'):
 
 
 def diagnosis(input_json, limit=20):
+    """
+    Returned values are grouped by these groups:
+    "ethnicity": "White" -> "Caucasian", "Black" -> "African American", "Asian or Pacific Islander" -> "Asian",
+        ['Unknown', 'American Indian/Alaska Native'] -> "Other"
+    "cod": "Alive" -> "Alive", "Breast" -> "Breast", any_other_value -> "Other"
+    Other values are returned as in database
+    :param input_json: json
+    :param limit: int
+    :return: list
+    """
     def get_race(race):
         if race == "White":
             return "Caucasian"
@@ -252,7 +259,7 @@ def diagnosis(input_json, limit=20):
                 'site': item['primary-site-labeled'],
                 'type': item['type'],
                 'stage': item['breast-adjusted-ajcc-6th-stage-1988'],
-                '+nodes': item['regional-nodes-positive-1988-1'],
+                '+nodes': item['regional-nodes-positive-1988'],
                 'surgery': item['surgery'],
                 'chemo': item['chemo'],
                 'radiation': item['radiation'],
@@ -1108,6 +1115,30 @@ def cause_of_death(input_json):
     }
 
 
+def helper_get_positive_nodes(input_json):
+    """
+    sample request input_json = '{"age": 48, ' \
+                   '"sex": "Female", ' \
+                   '"tumor_grade": 1, ' \
+                   '"er_status": "+", ' \
+                   '"pr_status": "+", ' \
+                   '"tumor_size_in_mm": 22, ' \
+                   '"num_pos_nodes": 0, ' \
+                   '"her2_status": "+", ' \
+                   '"ethnicity": "White"}'
+    :param input_json:
+    :return: json
+    """
+    filters = create_filter(input_json)
+    result = json.loads(aggregate([
+        # {"$match": filters},
+        {"$group": {
+            "_id": "$regional-nodes-positive-1988",
+            "count": {"$sum": 1}}},
+        {"$sort": SON([("_id", -1)])}]))
+    return result
+
+
 def survival_months(input_json):
     """
     sample request input_json = '{"age": 48, ' \
@@ -1188,20 +1219,20 @@ def breast_cancer_by_size(input_json):
         }},
         {"$sort": SON([("percentage", -1)])}]))
 
-    data = {'<1cm': 0, '1-2cm': 0, '2-5cm': 0, '5cm+': 0}
+    data = {'< 1cm': 0, '< 2cm': 0, '< 5cm': 0, '> 5cm': 0}
     for i, label in enumerate(list(map(lambda x: x['_id']['t-size-cm'], result))):
         if label == '< 1cm':
-            data['<1cm'] += result[i]['percentage']
+            data['< 1cm'] += result[i]['percentage']
         elif label == '<2cm':
-            data['1-2cm'] += result[i]['percentage']
+            data['< 2cm'] += result[i]['percentage']
         elif label == '<3cm':
-            data['2-5cm'] += result[i]['percentage']
+            data['< 5cm'] += result[i]['percentage']
         elif label == '>3cm':
-            data['2-5cm'] += result[i]['percentage']
+            data['< 5cm'] += result[i]['percentage']
         elif label == '>5cm':
-            data['5cm+'] += result[i]['percentage']
+            data['> 5cm'] += result[i]['percentage']
         elif label == 'Micro':
-            data['<1cm'] += result[i]['percentage']
+            data['< 1cm'] += result[i]['percentage']
 
     return {
         'labels': list(map(lambda x: x, data.keys())),
@@ -1712,10 +1743,7 @@ def percent_women_annualy_diagnosed(input_json):
                 "_id": "",
                 "count": {"$sum": 1}}},
             {"$sort": SON([("_id", 1)])}]))
-        if len(by_age) > 0:
-            return by_age[0]['count']
-        else:
-            return 0
+        return by_age[0]['count']
 
     def get_percent(only_age, year):
         return get_by_age(only_age, year) / get_total(year) * 100
@@ -1741,8 +1769,6 @@ def percent_women_annualy_diagnosed(input_json):
             data['2005-2009'] = get_percent(only_age, year)
         if year == 2010:
             data['2010-2014'] = get_percent(only_age, year)
-
-    # print(list(map(lambda x: x, data.values())))
 
     return {
         'labels': list(map(lambda x: x, data.keys())),
@@ -2078,8 +2104,8 @@ if __name__ == '__main__':
     # pprint(distribution_of_stage_of_cancer(age_and_race))
     # pprint(breast_cancer_by_size(age_only))
     # pprint(percent_women_by_type())
-    age_only = '{"age": 95}'
-    pprint(percent_women_annualy_diagnosed(age_only))
+    # pprint(percent_women_annualy_diagnosed(diag_request))
     # diag = diagnosis(diag_request, limit=20)
     # print(len(diag))
     # pprint(diag)
+    pprint(helper_get_positive_nodes(age_only))
