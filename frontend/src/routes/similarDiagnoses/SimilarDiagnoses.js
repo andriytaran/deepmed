@@ -57,7 +57,7 @@ class SimilarDiagnoses extends React.Component {
                   <tbody>
                   {similarDiagnoses.similar_diagnosis && similarDiagnoses.similar_diagnosis.map((item, i) =>
                     <tr key={i}>
-                      <td><p className="no-margin">{getAgeRangeLabel(+item['Age'])}</p></td>
+                      <td><p className="no-margin">{item['Age']}</p></td>
                       <td><p className="no-margin">{item['Race_group']}</p></td>
                       <td><p className="no-margin">{item['Tumor_Size']}</p></td>
                       <td><p className="no-margin">{item['Grade']}</p></td>
