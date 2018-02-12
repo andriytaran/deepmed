@@ -138,15 +138,28 @@ class DiagnosisForm extends React.Component {
           </div>
           <div className="row push-top-2">
             <div className="col-xs-6">
-              {getFieldDecorator('stage', {
+              {/*{getFieldDecorator('stage', {*/}
+                {/*initialValue: '',*/}
+                {/*rules: [*/}
+                  {/*{required: true, message: messages.required},*/}
+                {/*]*/}
+              {/*})(*/}
+                {/*<Select error={getFieldError('stage')} label={'Stage'}>*/}
+                  {/*<option value='' disabled hidden>Select...</option>*/}
+                  {/*{STAGES.map((item, i) =>*/}
+                    {/*<option key={i} value={item.value}>{item.label}</option>*/}
+                  {/*)}*/}
+                {/*</Select>*/}
+              {/*)}*/}
+              {getFieldDecorator('region', {
                 initialValue: '',
                 rules: [
                   {required: true, message: messages.required},
                 ]
               })(
-                <Select error={getFieldError('stage')} label={'Stage'}>
+                <Select error={getFieldError('region')} label={'Region'}>
                   <option value='' disabled hidden>Select...</option>
-                  {STAGES.map((item, i) =>
+                  {REGIONS.map((item, i) =>
                     <option key={i} value={item.value}>{item.label}</option>
                   )}
                 </Select>
@@ -163,38 +176,6 @@ class DiagnosisForm extends React.Component {
                   <option value='' disabled hidden>Select...</option>
                   <option value='left'>Left</option>
                   <option value='right'>Right</option>
-                </Select>
-              )}
-            </div>
-          </div>
-          <div className="row push-top-2">
-            <div className="col-xs-6">
-              {getFieldDecorator('region', {
-                initialValue: '',
-                rules: [
-                  {required: true, message: messages.required},
-                ]
-              })(
-                <Select error={getFieldError('region')} label={'Region'}>
-                  <option value='' disabled hidden>Select...</option>
-                  {REGIONS.map((item, i) =>
-                    <option key={i} value={item.value}>{item.label}</option>
-                  )}
-                </Select>
-              )}
-            </div>
-            <div className="col-xs-6">
-              {getFieldDecorator('number_of_tumors', {
-                initialValue: '',
-                rules: [
-                  {required: true, message: messages.required},
-                ]
-              })(
-                <Select error={getFieldError('number_of_tumors')} label={'Number of tumors'}>
-                  <option value='' disabled hidden>Select...</option>
-                  {Array.from(new Array(8), (val, i) =>
-                    <option key={i} value={i}>{i}</option>
-                  )}
                 </Select>
               )}
             </div>
@@ -226,6 +207,25 @@ class DiagnosisForm extends React.Component {
                   <option value='' disabled hidden>Select...</option>
                   {TYPES.map((item, i) =>
                     <option key={i} value={item.value}>{item.label}</option>
+                  )}
+                </Select>
+              )}
+            </div>
+          </div>
+
+          <div className="row push-top-2">
+            
+            <div className="col-xs-6">
+              {getFieldDecorator('number_of_tumors', {
+                initialValue: '',
+                rules: [
+                  {required: true, message: messages.required},
+                ]
+              })(
+                <Select error={getFieldError('number_of_tumors')} label={'Number of tumors'}>
+                  <option value='' disabled hidden>Select...</option>
+                  {Array.from(new Array(8), (val, i) =>
+                    <option key={i} value={i}>{i}</option>
                   )}
                 </Select>
               )}

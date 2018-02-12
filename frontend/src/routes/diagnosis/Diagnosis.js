@@ -143,21 +143,21 @@ class Diagnosis extends React.Component {
                         </Select>
                       )}
                     </div>
-                    <div className={s.col}>
-                      {getFieldDecorator('stage', {
-                        initialValue: diagnosisForm.stage,
-                        rules: [
-                          {required: true, message: messages.required},
-                        ]
-                      })(
-                        <Select error={getFieldError('stage')} label={'Stage'}>
-                          <option value='' disabled hidden>Select...</option>
-                          {STAGES.map((item, i) =>
-                            <option key={i} value={item.value}>{item.label}</option>
-                          )}
-                        </Select>
-                      )}
-                    </div>
+                    {/*<div className={s.col}>*/}
+                      {/*{getFieldDecorator('stage', {*/}
+                        {/*initialValue: diagnosisForm.stage,*/}
+                        {/*rules: [*/}
+                          {/*{required: true, message: messages.required},*/}
+                        {/*]*/}
+                      {/*})(*/}
+                        {/*<Select error={getFieldError('stage')} label={'Stage'}>*/}
+                          {/*<option value='' disabled hidden>Select...</option>*/}
+                          {/*{STAGES.map((item, i) =>*/}
+                            {/*<option key={i} value={item.value}>{item.label}</option>*/}
+                          {/*)}*/}
+                        {/*</Select>*/}
+                      {/*)}*/}
+                    {/*</div>*/}
                     <div className={s.col}>
                       {getFieldDecorator('site', {
                         initialValue: diagnosisForm.site,

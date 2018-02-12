@@ -193,23 +193,23 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 overall_plans.append({
                     'name': 'Preferred Outcome A',
                     'type': surgery_response[0],
-                    'radiation': 'Y' if sm_radiation_response[
-                                            0] == 'Yes' else 'N',
+                    'radiation': 'Yes' if sm_radiation_response[
+                                            0] == 'Yes' else 'No',
                     'radiation_confidence_level': sm_radiation_level,
-                    'chemo': 'Y' if chemo_response[0] == 'Yes' else 'N',
+                    'chemo': 'Yes' if chemo_response[0] == 'Yes' else 'No',
                     'chemo_confidence_level': chemo_level,
-                    'surgery': 'Y',
+                    'surgery': 'Yes',
                     'surgery_confidence_level': surgery_level,
                     'level': surgery_level})
                 overall_plans.append({
                     'name': 'Preferred Outcome B',
                     'type': 'Lumpectomy',
-                    'radiation': 'Y' if sl_radiation_response[
-                                            0] == 'Yes' else 'N',
+                    'radiation': 'Yes' if sl_radiation_response[
+                                            0] == 'Yes' else 'No',
                     'radiation_confidence_level': sl_radiation_level,
-                    'chemo': 'Y' if chemo_response[0] == 'Yes' else 'N',
+                    'chemo': 'Yes' if chemo_response[0] == 'Yes' else 'No',
                     'chemo_confidence_level': chemo_level,
-                    'surgery': 'Y',
+                    'surgery': 'Yes',
                     'surgery_confidence_level': 100 - surgery_level,
                     'level': 100 - surgery_level})
             else:
@@ -217,24 +217,24 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 overall_plans.append({
                     'name': 'Preferred Outcome A',
                     'type': surgery_response[0],
-                    'radiation': 'Y' if sl_radiation_response[
-                                            0] == 'Yes' else 'N',
+                    'radiation': 'Yes' if sl_radiation_response[
+                                            0] == 'Yes' else 'No',
                     'radiation_confidence_level': sl_radiation_level,
-                    'chemo': 'Y' if chemo_response[0] == 'Yes' else 'N',
+                    'chemo': 'Yes' if chemo_response[0] == 'Yes' else 'No',
                     'chemo_confidence_level': chemo_level,
                     'surgery_confidence_level': surgery_level,
-                    'surgery': 'Y',
+                    'surgery': 'Yes',
                     'level': surgery_level})
                 overall_plans.append({
                     'name': 'Preferred Outcome B',
                     'type': 'Mastectomy',
-                    'radiation': 'Y' if sm_radiation_response[
-                                            0] == 'Yes' else 'N',
+                    'radiation': 'Yes' if sm_radiation_response[
+                                            0] == 'Yes' else 'No',
                     'radiation_confidence_level': sm_radiation_level,
-                    'chemo': 'Y' if chemo_response[0] == 'Yes' else 'N',
+                    'chemo': 'Yes' if chemo_response[0] == 'Yes' else 'No',
                     'chemo_confidence_level': chemo_level,
                     'surgery_confidence_level': 100 - surgery_level,
-                    'surgery': 'Y',
+                    'surgery': 'Yes',
                     'level': 100 - surgery_level})
 
             self.send_json({'overall_plans': overall_plans})
