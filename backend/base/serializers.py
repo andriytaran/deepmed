@@ -96,18 +96,18 @@ class DiagnosisDataSerializer(serializers.Serializer):
               and data.get('num_pos_nodes') < 9) \
                 or (data.get('tumor_size_in_mm') == '>5cm'
                     and data.get('num_pos_nodes') < 3):
-            data['stage'] = 'IIIA'
+            data['stage'] = 'III'
         # IIIB. 1. Any tumor size and IBC and <9 positive nodes
         elif data.get('tumor_size_in_mm') in ['<1cm', '<2cm', '<3cm',
                                          '>3cm', '>5cm'] \
               and data.get('type') == 'IBC' \
                 and data.get('num_pos_nodes') < 9:
-            data['stage'] = 'IIIB'
+            data['stage'] = 'III'
         # IIIC. 1. >10 positive nodes and any tumor size
         elif data.get('tumor_size_in_mm') in ['<1cm', '<2cm', '<3cm',
                                         '>3cm', '>5cm'] \
                 and data.get('num_pos_nodes') > 10:
-            data['stage'] = 'IIIC'
+            data['stage'] = 'III'
         # IV.   1. Regional - Distant
         elif data.get('region') == 'Distant':
             data['stage'] = 'IV'
