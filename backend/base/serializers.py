@@ -65,46 +65,46 @@ class DiagnosisDataSerializer(serializers.Serializer):
             data['tumor_size_in_mm'] = "<1cm"
 
         # 0.    1. Any tumor size, dcis or in situ, and No positive lymph nodes
-        if data.get('tumor_size') in ['<1cm', '<2cm', '<3cm',
+        if data.get('tumor_size_in_mm') in ['<1cm', '<2cm', '<3cm',
                                       '>3cm', '>5cm'] \
                 and data.get('num_pos_nodes') == '0' \
                 and (data.get('type') == 'DCIS'
                      or data.get('region') == 'In Situ'):
             data['stage'] = '0'
         # I.    1. Tumor size <2cm and no positive nodes
-        elif data.get('tumor_size') == '<2cm' and \
+        elif data.get('tumor_size_in_mm') == '<2cm' and \
                 data.get('num_pos_nodes') == 0:
             data['stage'] = 'I'
         # IIA.  1. Tumor size <5cm and no positive nodes.
         #       2. Tumor size of <2cm and <3 positive nodes
-        elif (data.get('tumor_size') in ['<3cm', '>3cm']
+        elif (data.get('tumor_size_in_mm') in ['<3cm', '>3cm']
               and data.get('num_pos_nodes') == '0') \
-                or (data.get('tumor_size') == '<2cm'
+                or (data.get('tumor_size_in_mm') == '<2cm'
                     and data.get('num_pos_nodes') < 3):
             data['stage'] = 'IIA'
         # IIB.  1. Tumor size <5cm and <3 positive nodes
         #       2. Tumor size >5cm and no positive nodes
-        elif (data.get('tumor_size') in ['<3cm', '>3cm']
+        elif (data.get('tumor_size_in_mm') in ['<3cm', '>3cm']
               and data.get('num_pos_nodes') < 3) \
-                or (data.get('tumor_size') == '>5cm'
+                or (data.get('tumor_size_in_mm') == '>5cm'
                     and data.get('num_pos_nodes') == 0):
             data['stage'] = 'IIB'
         # IIIA. 1. Any tumor size and <9 positive nodes
         #       2. Tumor size >5cm and <3 nodes
-        elif (data.get('tumor_size') in ['<1cm', '<2cm', '<3cm',
+        elif (data.get('tumor_size_in_mm') in ['<1cm', '<2cm', '<3cm',
                                          '>3cm', '>5cm']
               and data.get('num_pos_nodes') < 9) \
-                or (data.get('tumor_size') == '>5cm'
+                or (data.get('tumor_size_in_mm') == '>5cm'
                     and data.get('num_pos_nodes') < 3):
             data['stage'] = 'IIIA'
         # IIIB. 1. Any tumor size and IBC and <9 positive nodes
-        elif data.get('tumor_size') in ['<1cm', '<2cm', '<3cm',
+        elif data.get('tumor_size_in_mm') in ['<1cm', '<2cm', '<3cm',
                                          '>3cm', '>5cm'] \
               and data.get('type') == 'IBC' \
                 and data.get('num_pos_nodes') < 9:
             data['stage'] = 'IIIB'
         # IIIC. 1. >10 positive nodes and any tumor size
-        elif data.get('tumor_size') in ['<1cm', '<2cm', '<3cm',
+        elif data.get('tumor_size_in_mm') in ['<1cm', '<2cm', '<3cm',
                                         '>3cm', '>5cm'] \
                 and data.get('num_pos_nodes') > 10:
             data['stage'] = 'IIIC'
