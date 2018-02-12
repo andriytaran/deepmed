@@ -194,7 +194,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                     'name': 'Preferred Outcome A',
                     'type': surgery_response[0],
                     'radiation': 'Yes' if sm_radiation_response[
-                                            0] == 'Yes' else 'No',
+                                              0] == 'Yes' else 'No',
                     'radiation_confidence_level': sm_radiation_level,
                     'chemo': 'Yes' if chemo_response[0] == 'Yes' else 'No',
                     'chemo_confidence_level': chemo_level,
@@ -205,7 +205,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                     'name': 'Preferred Outcome B',
                     'type': 'Lumpectomy',
                     'radiation': 'Yes' if sl_radiation_response[
-                                            0] == 'Yes' else 'No',
+                                              0] == 'Yes' else 'No',
                     'radiation_confidence_level': sl_radiation_level,
                     'chemo': 'Yes' if chemo_response[0] == 'Yes' else 'No',
                     'chemo_confidence_level': chemo_level,
@@ -218,7 +218,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                     'name': 'Preferred Outcome A',
                     'type': surgery_response[0],
                     'radiation': 'Yes' if sl_radiation_response[
-                                            0] == 'Yes' else 'No',
+                                              0] == 'Yes' else 'No',
                     'radiation_confidence_level': sl_radiation_level,
                     'chemo': 'Yes' if chemo_response[0] == 'Yes' else 'No',
                     'chemo_confidence_level': chemo_level,
@@ -229,7 +229,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                     'name': 'Preferred Outcome B',
                     'type': 'Mastectomy',
                     'radiation': 'Yes' if sm_radiation_response[
-                                            0] == 'Yes' else 'No',
+                                              0] == 'Yes' else 'No',
                     'radiation_confidence_level': sm_radiation_level,
                     'chemo': 'Yes' if chemo_response[0] == 'Yes' else 'No',
                     'chemo_confidence_level': chemo_level,
@@ -477,17 +477,48 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
             self.close()
 
         dd = dict(serializer.validated_data)
+        similar_diagnosis = []
 
-        dd.pop('laterality', None)
-        dd.pop('site', None)
-        dd.pop('type', None)
-        dd.pop('stage', None)
-        dd.pop('number_of_tumors', None)
-        dd.pop('region', None)
+        try:
+            import subprocess
+            import ast
+            import re
+            regex = r"\[\{(.*?)\}\]"
 
-        dd['tumor_size_in_mm'] = dd.get('tumor_size_in_mm_sd')
+            # START SURGERY
+            simdx_args = ','.join([
+                str(dd.get('age')),
+                str(dd.get('number_of_tumors')),
+                str(dd.get('num_pos_nodes')),
+                str(float(dd.get('tumor_grade', 'unk'))),
+                dd.get('type'),
+                dd.get('stage'),
+                dd.get('tumor_size_in_mm'),
+                dd.get('er_status'),
+                dd.get('pr_status'),
+                dd.get('her2_status'),
 
-        similar_diagnosis = diagnosis(json.dumps(dd, ensure_ascii=False),
-                                      limit=20)
+            ])
+
+            simdx_command_str = [settings.ML_PYTHON_PATH,
+                                 settings.ML_COMMAND_FILE,
+                                 simdx_args, 'simdx']
+
+            simdx_command = subprocess.Popen(simdx_command_str,
+                                             stdout=subprocess.PIPE,
+                                             stderr=subprocess.PIPE,
+                                             cwd=settings.ML_COMMAND_DIR)
+            simdx_output, err = simdx_command.communicate()
+
+            if not simdx_output:
+                self.send_json({'error': 'Simdx command failed'})
+                self.close()
+
+            simdx_response = ast.literal_eval(
+                re.search(regex,
+                          str(simdx_output.decode('utf8'))).group())
+            similar_diagnosis = simdx_response
+        except:
+            pass
 
         self.send_json({'similar_diagnosis': similar_diagnosis})
