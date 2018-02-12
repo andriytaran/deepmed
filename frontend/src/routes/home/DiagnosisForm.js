@@ -138,19 +138,6 @@ class DiagnosisForm extends React.Component {
           </div>
           <div className="row push-top-2">
             <div className="col-xs-6">
-              {/*{getFieldDecorator('stage', {*/}
-                {/*initialValue: '',*/}
-                {/*rules: [*/}
-                  {/*{required: true, message: messages.required},*/}
-                {/*]*/}
-              {/*})(*/}
-                {/*<Select error={getFieldError('stage')} label={'Stage'}>*/}
-                  {/*<option value='' disabled hidden>Select...</option>*/}
-                  {/*{STAGES.map((item, i) =>*/}
-                    {/*<option key={i} value={item.value}>{item.label}</option>*/}
-                  {/*)}*/}
-                {/*</Select>*/}
-              {/*)}*/}
               {getFieldDecorator('region', {
                 initialValue: '',
                 rules: [
@@ -233,7 +220,7 @@ class DiagnosisForm extends React.Component {
           </div>
           <div className="row push-top-2">
             <div className="col-xs-12 text-center position-relative">
-              <button type="submit" className='btn btn-lg btn-primary btn-offset'>
+              <button type="submit" className='btn btn-primary'>
                 Analyze
               </button>
             </div>

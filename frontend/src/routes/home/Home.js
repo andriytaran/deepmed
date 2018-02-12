@@ -36,8 +36,7 @@ class Home extends React.Component {
           <div className='col-md-12'>
             <div className='custom-panel custom-panel-md transparent-bg no-border push-bot-0'>
               <h2 className='no-margin'>
-                Feel free to list your conditions and let us figure it out or use Advanced Search to input your
-                diagnosis in detail.
+                Please input your diagnosis in detail below
               </h2>
             </div>
           </div>

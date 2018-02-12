@@ -253,7 +253,8 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
             # Radiation Therapy
 
             radiation_therapy = []
-            if is_radiation_therapy == 'Yes':
+            if sm_radiation_response[0] == 'Yes' or \
+                    sl_radiation_response[0] == 'Yes':
                 radiation_therapy.append({'name': 'Beam Radiation',
                                           'number_of_treatments': 30,
                                           'administration': 'Daily'})

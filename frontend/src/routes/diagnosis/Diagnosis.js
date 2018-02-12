@@ -143,32 +143,17 @@ class Diagnosis extends React.Component {
                         </Select>
                       )}
                     </div>
-                    {/*<div className={s.col}>*/}
-                      {/*{getFieldDecorator('stage', {*/}
-                        {/*initialValue: diagnosisForm.stage,*/}
-                        {/*rules: [*/}
-                          {/*{required: true, message: messages.required},*/}
-                        {/*]*/}
-                      {/*})(*/}
-                        {/*<Select error={getFieldError('stage')} label={'Stage'}>*/}
-                          {/*<option value='' disabled hidden>Select...</option>*/}
-                          {/*{STAGES.map((item, i) =>*/}
-                            {/*<option key={i} value={item.value}>{item.label}</option>*/}
-                          {/*)}*/}
-                        {/*</Select>*/}
-                      {/*)}*/}
-                    {/*</div>*/}
                     <div className={s.col}>
-                      {getFieldDecorator('site', {
-                        initialValue: diagnosisForm.site,
+                      {getFieldDecorator('region', {
+                        initialValue: diagnosisForm.region,
                         rules: [
                           {required: true, message: messages.required},
                         ]
                       })(
-                        <Select error={getFieldError('site')} label={'Site'}>
+                        <Select error={getFieldError('region')} label={'Region'}>
                           <option value='' disabled hidden>Select...</option>
-                          {SITES.map((site, i) =>
-                            <option key={i} value={site.value}>{site.label}</option>
+                          {REGIONS.map((item, i) =>
+                            <option key={i} value={item.value}>{item.label}</option>
                           )}
                         </Select>
                       )}
@@ -188,6 +173,21 @@ class Diagnosis extends React.Component {
                       )}
                     </div>
                     <div className={s.col}>
+                      {getFieldDecorator('site', {
+                        initialValue: diagnosisForm.site,
+                        rules: [
+                          {required: true, message: messages.required},
+                        ]
+                      })(
+                        <Select error={getFieldError('site')} label={'Site'}>
+                          <option value='' disabled hidden>Select...</option>
+                          {SITES.map((site, i) =>
+                            <option key={i} value={site.value}>{site.label}</option>
+                          )}
+                        </Select>
+                      )}
+                    </div>
+                    <div className={s.col}>
                       {getFieldDecorator('type', {
                         initialValue: diagnosisForm.type,
                         rules: [
@@ -197,21 +197,6 @@ class Diagnosis extends React.Component {
                         <Select error={getFieldError('type')} label={'Type'}>
                           <option value='' disabled hidden>Select...</option>
                           {TYPES.map((item, i) =>
-                            <option key={i} value={item.value}>{item.label}</option>
-                          )}
-                        </Select>
-                      )}
-                    </div>
-                    <div className={s.col}>
-                      {getFieldDecorator('region', {
-                        initialValue: diagnosisForm.region,
-                        rules: [
-                          {required: true, message: messages.required},
-                        ]
-                      })(
-                        <Select error={getFieldError('region')} label={'Region'}>
-                          <option value='' disabled hidden>Select...</option>
-                          {REGIONS.map((item, i) =>
                             <option key={i} value={item.value}>{item.label}</option>
                           )}
                         </Select>
@@ -235,7 +220,7 @@ class Diagnosis extends React.Component {
                   </div>
                   <div className={s.row}>
                     <div className="col-xs-12 text-center position-relative">
-                      <button type="submit" className={cn('btn btn-lg btn-primary', s.analyzeBtn)}>
+                      <button type="submit" className={cn('btn btn-primary', s.analyzeBtn)}>
                         Analyze
                       </button>
                     </div>
@@ -301,7 +286,7 @@ class Diagnosis extends React.Component {
                     </tr>
                     </thead>
                     <tbody>
-                    {diagnosis.chemo_therapy && diagnosis.chemo_therapy.map((item, i) =>
+                    {!isEmpty(diagnosis.chemo_therapy) ? diagnosis.chemo_therapy.map((item, i) =>
                       <tr key={i}>
                         <td><p className='no-margin'><span
                           className='number-circle blue-circle'>{i + 1}</span> {item.plan}</p></td>
@@ -343,6 +328,10 @@ class Diagnosis extends React.Component {
                           </table>
                         </td>
                       </tr>
+                    ): !isNil(diagnosis.chemo_therapy) && (
+                      <tr>
+                        <td colSpan={3} style={{textAlign: 'center'}}>N/A</td>
+                      </tr>
                     )}
                     </tbody>
                   </table>
@@ -375,7 +364,7 @@ class Diagnosis extends React.Component {
                       </tr>
                     ) : !isNil(diagnosis.radiation_therapy) && (
                       <tr>
-                        <td colSpan={3} style={{textAlign: 'center'}}>Not applicable</td>
+                        <td colSpan={3} style={{textAlign: 'center'}}>N/A</td>
                       </tr>
                     )}
                     </tbody>
@@ -400,12 +389,16 @@ class Diagnosis extends React.Component {
                     </tr>
                     </thead>
                     <tbody>
-                    {diagnosis.hormonal_therapy && diagnosis.hormonal_therapy.map((item, i) =>
+                    {!isEmpty(diagnosis.hormonal_therapy) ? diagnosis.hormonal_therapy.map((item, i) =>
                       <tr key={i}>
                         <td><p className='no-margin'><span
                           className='number-circle blue-circle'>{i + 1}</span> {item.name}</p></td>
                         <td><p className="no-margin">{item.number_of_treatments}</p></td>
                         <td><p className="no-margin">{item.administration}</p></td>
+                      </tr>
+                    ) : !isNil(diagnosis.hormonal_therapy) && (
+                      <tr>
+                        <td colSpan={3} style={{textAlign: 'center'}}>N/A</td>
                       </tr>
                     )}
                     </tbody>
