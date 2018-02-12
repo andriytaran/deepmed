@@ -188,7 +188,8 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
             sm_radiation_level = round(sm_radiation_response[1] * 100)
             sl_radiation_level = round(sl_radiation_response[1] * 100)
 
-            if surgery_response[0] == 'Mastectomy':
+            if (surgery_response[0] == 'Lumpectomy' and surgery_level < 50) \
+                or (surgery_response[0] == 'Mastectomy' and surgery_level >= 50):
                 is_radiation_therapy = sm_radiation_response[0]
                 overall_plans.append({
                     'name': 'Preferred Outcome A',
@@ -212,7 +213,8 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                     'surgery': 'Yes',
                     'surgery_confidence_level': 100 - surgery_level,
                     'level': 100 - surgery_level})
-            else:
+            elif (surgery_response[0] == 'Mastectomy' and surgery_level < 50) \
+                or (surgery_response[0] == 'Lumpectomy' and surgery_level > 50):
                 is_radiation_therapy = sl_radiation_response[0]
                 overall_plans.append({
                     'name': 'Preferred Outcome A',
