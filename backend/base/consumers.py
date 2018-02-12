@@ -162,7 +162,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
 
             sl_radiation_command_str = [settings.ML_PYTHON_PATH,
                                         settings.ML_COMMAND_FILE,
-                                        ','.join(sm_radiation_args),
+                                        ','.join(sl_radiation_args),
                                         'Radiation']
 
             sl_radiation_command = subprocess.Popen(sl_radiation_command_str,
