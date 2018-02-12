@@ -42,6 +42,7 @@ class DiagnosisDataSerializer(serializers.Serializer):
     region = serializers.CharField(required=True)
 
     def validate(self, data):
+        data = dict(data)
         if data.get('ethnicity') == 'Caucasian':
             data['ethnicity'] = 'White'
         elif data.get('ethnicity') == 'African American':
