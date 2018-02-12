@@ -58,24 +58,24 @@ class SimilarDiagnoses extends React.Component {
                   <tbody>
                   {similarDiagnoses.similar_diagnosis && similarDiagnoses.similar_diagnosis.map((item, i) =>
                     <tr key={i}>
-                      <td><p className="no-margin">{getAgeRangeLabel(+item['age'].replace(/[^0-9]/g,''))}</p></td>
-                      <td><p className="no-margin">{item['ethnicity']}</p></td>
-                      <td><p className="no-margin">{item['size']}</p></td>
-                      <td><p className="no-margin">{item['grade']}</p></td>
-                      <td><p className="no-margin">{item['er']}</p></td>
-                      <td><p className="no-margin">{item['pr']}</p></td>
-                      <td><p className="no-margin">{item['her2']}</p></td>
-                      <td><p className="no-margin">{item['lat']}</p></td>
-                      <td><p className="no-margin">{item['site']}</p></td>
-                      <td><p className="no-margin">{item['type']}</p></td>
-                      <td><p className="no-margin">{item['stage']}</p></td>
-                      <td><p className="no-margin">{item['+nodes']}</p></td>
-                      <td><p className="no-margin">{item['surgery']}</p></td>
-                      <td><p className="no-margin">{item['chemo']}</p></td>
-                      <td><p className="no-margin">{item['radiation']}</p></td>
-                      <td><p className="no-margin">{item['year dx']}</p></td>
-                      <td><p className="no-margin">{item['survival mos.']}</p></td>
-                      <td><p className="no-margin">{item['cod']}</p></td>
+                      <td><p className="no-margin">{getAgeRangeLabel(+item['Age'])}</p></td>
+                      <td><p className="no-margin">{item['Race_group']}</p></td>
+                      <td><p className="no-margin">{item['Tumor_Size']}</p></td>
+                      <td><p className="no-margin">{item['Grade']}</p></td>
+                      <td><p className="no-margin">{item['ER_status']}</p></td>
+                      <td><p className="no-margin">{item['PR_status']}</p></td>
+                      <td><p className="no-margin">{item['HER2_Status']}</p></td>
+                      <td><p className="no-margin">{item['Laterality']}</p></td>
+                      <td><p className="no-margin">{item['Primary_site']}</p></td>
+                      <td><p className="no-margin">{item['Type']}</p></td>
+                      <td><p className="no-margin">{item['Stage']}</p></td>
+                      <td><p className="no-margin">{item['Nodes_Pos']}</p></td>
+                      <td><p className="no-margin">{item['Surgery']}</p></td>
+                      <td><p className="no-margin">{item['Chemo']}</p></td>
+                      <td><p className="no-margin">{item['Radiation']}</p></td>
+                      <td><p className="no-margin">{item['Year_dx']}</p></td>
+                      <td><p className="no-margin">{item['Survival_months']}</p></td>
+                      <td><p className="no-margin">{item['COD to site recode']}</p></td>
                     </tr>
                   )}
                   </tbody>

@@ -517,6 +517,16 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
             simdx_response = ast.literal_eval(
                 re.search(regex,
                           str(simdx_output.decode('utf8'))).group())
+            for obj in simdx_response:
+                if obj.get('Race_group') == 'White':
+                    obj['Race_group'] = 'Caucasian'
+                elif obj.get('Race_group') == 'Black':
+                    obj['Race_group'] = 'African American'
+                elif obj.get('Race_group') == 'Asian or Pacific Islander':
+                    obj['Race_group'] = 'Asian'
+                elif obj.get('Race_group') == 'Unknown':
+                    obj['Race_group'] = 'Other'
+
             similar_diagnosis = simdx_response
         except:
             pass
