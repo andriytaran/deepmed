@@ -44,7 +44,6 @@ class SimilarDiagnoses extends React.Component {
                     <th><h6 className="push-top-1">Lat</h6></th>
                     <th><h6 className="push-top-1">Site</h6></th>
                     <th><h6 className="push-top-1">Type</h6></th>
-                    <th><h6 className="push-top-1">Stage</h6></th>
                     <th><h6 className="push-top-1">+Nodes</h6></th>
 
                     <th><h6 className="push-top-1">Surgery</h6></th>
@@ -68,7 +67,6 @@ class SimilarDiagnoses extends React.Component {
                       <td><p className="no-margin">{item['Laterality']}</p></td>
                       <td><p className="no-margin">{item['Primary_site']}</p></td>
                       <td><p className="no-margin">{item['Type']}</p></td>
-                      <td><p className="no-margin">{item['Stage']}</p></td>
                       <td><p className="no-margin">{item['Nodes_Pos']}</p></td>
                       <td><p className="no-margin">{item['Surgery']}</p></td>
                       <td><p className="no-margin">{item['Chemo']}</p></td>
