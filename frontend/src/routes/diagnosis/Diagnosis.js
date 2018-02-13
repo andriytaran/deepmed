@@ -52,6 +52,10 @@ const OverallPlansTable = ({items = [], visibleRowIndex}) =>
   </div>
 
 class Diagnosis extends React.Component {
+  state = {
+    tab: 0,
+  }
+
   handleSubmit = (e) => {
     e.preventDefault()
     this.props.form.validateFields((err, values) => {
@@ -61,9 +65,21 @@ class Diagnosis extends React.Component {
     })
   }
 
+  changeTab = (tab) => {
+    this.setState({tab})
+  }
+
   render() {
+    const {tab} = this.state
     const {diagnosis, diagnosisForm} = this.props
     const {getFieldDecorator, getFieldError} = this.props.form
+
+    let showRadiation = false
+
+    if (diagnosis.overall_plans && diagnosis.overall_plans[tab] && diagnosis.overall_plans[tab].radiation === 'Yes') {
+      showRadiation = true
+    }
+
     return (
       <div className='container container-full'>
         <div className='row'>
@@ -275,16 +291,17 @@ class Diagnosis extends React.Component {
                 </header>
                 <div className={s.sectionContent}>
                   <Tabs
-                    defaultActiveKey={1}
+                    activeKey={tab}
+                    onSelect={this.changeTab}
                     id='overallPlansTabs'
                     justified
                     animation={false}
                     className={s.overallPlansTabs}
                   >
-                    <Tab eventKey={1} title='PREFERRED RECOMMENDATION'>
+                    <Tab eventKey={0} title='PREFERRED RECOMMENDATION'>
                       <OverallPlansTable items={diagnosis.overall_plans} visibleRowIndex={0}/>
                     </Tab>
-                    <Tab eventKey={2} title='ALTERNATIVE RECOMMENDATION'>
+                    <Tab eventKey={1} title='ALTERNATIVE RECOMMENDATION'>
                       <OverallPlansTable items={diagnosis.overall_plans} visibleRowIndex={1}/>
                     </Tab>
                   </Tabs>
@@ -377,7 +394,7 @@ class Diagnosis extends React.Component {
                     </tr>
                     </thead>
                     <tbody>
-                    {!isEmpty(diagnosis.radiation_therapy) ? diagnosis.radiation_therapy.map((item, i) =>
+                    {showRadiation && !isEmpty(diagnosis.radiation_therapy) ? diagnosis.radiation_therapy.map((item, i) =>
                       <tr key={i}>
                         <td><p className='no-margin'><span
                           className='number-circle blue-circle'>{i + 1}</span> {item.name}</p></td>

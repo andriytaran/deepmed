@@ -209,7 +209,7 @@ class NationalStates extends React.Component {
                       female breast cancer at some point during their lifetime, based on 2012-2014 individualStatistics.
                     </p>
                     <p>
-                      Prevalence of This Cancer: In 2014, there were an estimated 3,327,552 women living with female
+                      Prevalence of Breast Cancer: In 2014, there were an estimated 3,327,552 women living with female
                       breast cancer in the United States.
                     </p>
                   </div>
@@ -256,7 +256,7 @@ class NationalStates extends React.Component {
             <Col xs={24} md={12}>
               <div className={s.card}>
                 <p className='push-top-1 push-bot-2 text-center'>
-                  <strong>Percent of Women who Develop Cancer By Age</strong>
+                  <strong>Percent of Women who Develop Breast Cancer By Age</strong>
                 </p>
                 <div className='custom-panel custom-panel-condensed push-bot-0'>
                   <table className='table table-responsive table-middle-cell-align table-hover'>
