@@ -200,9 +200,6 @@ class AppLayout extends React.Component {
                   <div className="row push-bot-3 hidden-md">
                     <div className="col-md-12">
                       <h1 className="no-margin">Thrax</h1>
-                      <p className="no-margin line-height-condensed text-light">
-                        Search
-                      </p>
                     </div>
                   </div>
                 </div>
