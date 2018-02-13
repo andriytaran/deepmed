@@ -319,7 +319,7 @@ class Diagnosis extends React.Component {
                     data-tablesaw-mode='stack'>
                     <thead>
                     <tr>
-                      <th><h6>CHEMO TREATMENT PLANS</h6></th>
+                      <th><h6>TREATMENT PLANS</h6></th>
                       <th><h6>NUMBER OF TREATMENTS</h6></th>
                       <th><h6>ADMINISTRATION</h6></th>
                     </tr>
@@ -388,7 +388,7 @@ class Diagnosis extends React.Component {
                     data-tablesaw-mode='stack'>
                     <thead>
                     <tr>
-                      <th><h6>RADIATION TREATMENT PLANS</h6></th>
+                      <th><h6>TREATMENT PLANS</h6></th>
                       <th><h6>NUMBER OF TREATMENTS</h6></th>
                       <th><h6>ADMINISTRATION</h6></th>
                     </tr>
@@ -422,7 +422,7 @@ class Diagnosis extends React.Component {
                     data-tablesaw-mode='stack'>
                     <thead>
                     <tr>
-                      <th><h6>HORMONAL TREATMENT PLANS</h6></th>
+                      <th><h6>TREATMENT PLANS</h6></th>
                       <th><h6>NUMBER OF TREATMENTS</h6></th>
                       <th><h6>ADMINISTRATION</h6></th>
                     </tr>
