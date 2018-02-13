@@ -524,6 +524,9 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
                 elif obj.get('Race_group') == 'Unknown':
                     obj['Race_group'] = 'Other'
 
+                if obj.get('Surgery') == 'Partial Mastectomy':
+                    obj['Surgery'] = 'Lumpectomy'
+
             similar_diagnosis = simdx_response
         except:
             pass
