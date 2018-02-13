@@ -4,6 +4,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './Login.scss'
 import {createForm} from 'rc-form'
 import {login} from '../../reducers/login'
+import {AutofillInput} from '../../components'
 
 class Login extends React.Component {
   handleSubmit = (e) => {
@@ -37,14 +38,14 @@ class Login extends React.Component {
               {getFieldDecorator('email', {
                 initialValue: '',
               })(
-                <input className='form-control' placeholder='Email'/>
+                <AutofillInput className='form-control' placeholder='Email'/>
               )}
             </div>
             <div className="form-group">
               {getFieldDecorator('password', {
                 initialValue: '',
               })(
-                <input className='form-control' type='password' placeholder='Password'/>
+                <AutofillInput className='form-control' type='password' placeholder='Password'/>
               )}
             </div>
             <button
