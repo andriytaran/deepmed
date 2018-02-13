@@ -196,13 +196,6 @@ class AppLayout extends React.Component {
                 </div>
               </nav>
               <div className="content-wrapper">
-                <div className="container container-full text-center">
-                  <div className="row push-bot-3 hidden-md">
-                    <div className="col-md-12">
-                      <h1 className="no-margin">Thrax</h1>
-                    </div>
-                  </div>
-                </div>
                 {this.props.children}
               </div>
             </div>
