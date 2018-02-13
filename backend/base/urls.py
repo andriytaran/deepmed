@@ -12,4 +12,7 @@ urlpatterns = [
     path('test/',
          base_views.TestDataView.as_view(),
          name='tests'),
+    path('resources/',
+         base_views.ResourcesView.as_view(),
+         name='resources'),
 ]
