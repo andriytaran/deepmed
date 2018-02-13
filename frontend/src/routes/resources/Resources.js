@@ -20,7 +20,8 @@ class Resources extends React.Component {
                     <div className="scrollbar-inner">
                       {resources.google_links.map(item =>
                         <div key={item} className="push-top-3">
-                          <a rel='nofollow' href={item}>{item}</a>
+                          <a rel='nofollow' href={item.link}>{item.title}</a>
+                          <p>{item.description}</p>
                         </div>
                       )}
                     </div>
@@ -35,7 +36,8 @@ class Resources extends React.Component {
                     <div className="scrollbar-inner">
                       {resources.pubmed.map(item =>
                         <div key={item} className="push-top-3">
-                          <a rel='nofollow' href={item}>{item}</a>
+                          <a rel='nofollow' href={item.link}>{item.title}</a>
+                          <p>{item.description}</p>
                         </div>
                       )}
                     </div>
@@ -52,7 +54,8 @@ class Resources extends React.Component {
                     <div className="scrollbar-inner">
                       {resources.blogs_and_posts.map(item =>
                         <div key={item} className="push-top-3">
-                          <a rel='nofollow' href={item}>{item}</a>
+                          <a rel='nofollow' href={item.link}>{item.title}</a>
+                          <p>{item.description}</p>
                         </div>
                       )}
                     </div>
@@ -67,7 +70,8 @@ class Resources extends React.Component {
                     <div className="scrollbar-inner">
                       {resources.news_articles.map(item =>
                         <div key={item} className="push-top-3">
-                          <a rel='nofollow' href={item}>{item}</a>
+                          <a rel='nofollow' href={item.link}>{item.title}</a>
+                          <p>{item.description}</p>
                         </div>
                       )}
                     </div>
