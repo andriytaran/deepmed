@@ -4,8 +4,7 @@ import React from 'react'
 // https://github.com/facebook/react/issues/1159
 class AutofillInput extends React.Component {
   componentDidMount(){
-    this.input.addEventListener('change', (e)=> {
-      console.log('change')
+    this.input.addEventListener('blur', (e)=> {
       this.props.onChange(e)
     })
   }
