@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './Diagnosis.scss'
-import {RACES, REGIONS, SITES, STAGES, TYPES} from '../../constants'
+import {RACES, REGIONS, SITES, TYPES} from '../../constants'
 import {createForm} from 'rc-form'
 import messages from '../../components/messages'
 import {Input, InputNumber, Select, Spin} from '../../components'
@@ -10,6 +10,46 @@ import isEmpty from 'lodash/isEmpty'
 import {getData} from '../../reducers/diagnosis'
 import cn from 'classnames'
 import isNil from 'lodash/isNil'
+import {Tab, Tabs} from 'react-bootstrap'
+
+const OverallPlansTable = ({items = [], visibleRowIndex}) =>
+  <div className='table-responsive'>
+    <table className={cn('table', s.overallPlansTable)}>
+      <thead>
+      <tr className={s.overallPlansTopHeader}>
+        <th colSpan={3}><h6>SURGERY</h6></th>
+        <th colSpan={2}><h6>RADIATION</h6></th>
+        <th colSpan={2}><h6>CHEMOTHERAPY</h6></th>
+      </tr>
+      <tr className={s.overallPlansBottomHeader}>
+        <th><h6>RECOMMENDATION</h6></th>
+        <th><h6>TYPE</h6></th>
+        <th className={s.borderRight}><h6>CONFIDENCE</h6></th>
+        <th><h6>RECOMMENDATION</h6></th>
+        <th className={s.borderRight}><h6>CONFIDENCE</h6></th>
+        <th><h6>RECOMMENDATION</h6></th>
+        <th><h6>CONFIDENCE</h6></th>
+      </tr>
+      </thead>
+      <tbody>
+      {items[visibleRowIndex] ? (
+        <tr>
+          <td>{items[visibleRowIndex].surgery}</td>
+          <td>{items[visibleRowIndex].type}</td>
+          <td className={s.borderRight}>{items[visibleRowIndex].surgery_confidence_level}%</td>
+          <td>{items[visibleRowIndex].radiation}</td>
+          <td className={s.borderRight}>{items[visibleRowIndex].radiation_confidence_level}%</td>
+          <td>{items[visibleRowIndex].chemo}</td>
+          <td>{items[visibleRowIndex].chemo_confidence_level}%</td>
+        </tr>
+      ) : (
+        <tr>
+          <td colSpan={7} style={{textAlign: 'center'}}>N/A</td>
+        </tr>
+      )}
+      </tbody>
+    </table>
+  </div>
 
 class Diagnosis extends React.Component {
   handleSubmit = (e) => {
@@ -126,8 +166,6 @@ class Diagnosis extends React.Component {
                         </Select>
                       )}
                     </div>
-                  </div>
-                  <div className={s.row}>
                     <div className={s.col}>
                       {getFieldDecorator('ethnicity', {
                         initialValue: diagnosisForm.ethnicity,
@@ -217,6 +255,7 @@ class Diagnosis extends React.Component {
                         </Select>
                       )}
                     </div>
+                    <div className={s.col}/>
                   </div>
                   <div className={s.row}>
                     <div className="col-xs-12 text-center position-relative">
@@ -235,37 +274,20 @@ class Diagnosis extends React.Component {
                   Overall Plans
                 </header>
                 <div className={s.sectionContent}>
-                  <table className={cn('table table-responsive', s.overallPlansTable)}>
-                    <thead>
-                    <tr className={s.overallPlansTopHeader}>
-                      <th colSpan={3}><h6>SURGERY</h6></th>
-                      <th colSpan={2}><h6>RADIATION</h6></th>
-                      <th colSpan={2}><h6>CHEMOTHERAPY</h6></th>
-                    </tr>
-                    <tr className={s.overallPlansBottomHeader}>
-                      <th><h6>RECOMMENDATION</h6></th>
-                      <th><h6>TYPE</h6></th>
-                      <th className={s.borderRight}><h6>CONFIDENCE</h6></th>
-                      <th><h6>RECOMMENDATION</h6></th>
-                      <th className={s.borderRight}><h6>CONFIDENCE</h6></th>
-                      <th><h6>RECOMMENDATION</h6></th>
-                      <th><h6>CONFIDENCE</h6></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {diagnosis.overall_plans && diagnosis.overall_plans.map((item, i) =>
-                      <tr key={i}>
-                        <td>{item.surgery}</td>
-                        <td>{item.type}</td>
-                        <td className={s.borderRight}>{item.surgery_confidence_level}%</td>
-                        <td>{item.radiation}</td>
-                        <td className={s.borderRight}>{item.radiation_confidence_level}%</td>
-                        <td>{item.chemo}</td>
-                        <td>{item.chemo_confidence_level}%</td>
-                      </tr>
-                    )}
-                    </tbody>
-                  </table>
+                  <Tabs
+                    defaultActiveKey={1}
+                    id='overallPlansTabs'
+                    justified
+                    animation={false}
+                    className={s.overallPlansTabs}
+                  >
+                    <Tab eventKey={1} title='PREFERRED RECOMMENDATION'>
+                      <OverallPlansTable items={diagnosis.overall_plans} visibleRowIndex={0}/>
+                    </Tab>
+                    <Tab eventKey={2} title='ALTERNATIVE RECOMMENDATION'>
+                      <OverallPlansTable items={diagnosis.overall_plans} visibleRowIndex={1}/>
+                    </Tab>
+                  </Tabs>
                   {isNil(diagnosis.overall_plans) && <Spin spinning/>}
                 </div>
               </section>
@@ -328,7 +350,7 @@ class Diagnosis extends React.Component {
                           </table>
                         </td>
                       </tr>
-                    ): !isNil(diagnosis.chemo_therapy) && (
+                    ) : !isNil(diagnosis.chemo_therapy) && (
                       <tr>
                         <td colSpan={3} style={{textAlign: 'center'}}>N/A</td>
                       </tr>

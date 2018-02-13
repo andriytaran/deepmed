@@ -29,7 +29,6 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
         if not serializer.is_valid():
             self.send_json({'error': 'Data not valid.',
                             'extra': serializer.errors})
-            self.close()
 
         dd = serializer.validated_data
 
@@ -66,7 +65,6 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
 
             if not surgery_output:
                 self.send_json({'error': 'Surgery command failed'})
-                self.close()
 
             surgery_response = ast.literal_eval(
                 re.search(regex,
@@ -101,7 +99,6 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
 
             if not chemo_output:
                 self.send_json({'error': 'Chemo command failed'})
-                self.close()
 
             chemo_response = ast.literal_eval(
                 re.search(regex, str(chemo_output.decode('utf8'))).group())
@@ -148,7 +145,6 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
             if not sm_radiation_output:
                 self.send_json(
                     {'error': 'Radiation "Mastectomy" command failed'})
-                self.close()
 
             sm_radiation_response = ast.literal_eval(
                 re.search(regex,
@@ -174,7 +170,6 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
             if not sl_radiation_output:
                 self.send_json(
                     {'error': 'Radiation "Lumpectomy" command failed'})
-                self.close()
 
             sl_radiation_response = ast.literal_eval(
                 re.search(regex,
@@ -515,7 +510,6 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
 
             if not simdx_output:
                 self.send_json({'error': 'Simdx command failed'})
-                self.close()
 
             simdx_response = ast.literal_eval(
                 re.search(regex,

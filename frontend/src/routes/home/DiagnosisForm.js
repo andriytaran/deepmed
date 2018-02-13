@@ -1,8 +1,9 @@
 import React from 'react'
 import {createForm} from 'rc-form'
-import {RACES, SITES, TYPES, REGIONS, STAGES} from '../../constants'
+import {RACES, REGIONS, SITES, TYPES} from '../../constants'
 import messages from '../../components/messages'
-import {Input, Select, InputNumber} from '../../components'
+import {Col, Input, InputNumber, Row, Select} from '../../components'
+import cn from 'classnames'
 
 class DiagnosisForm extends React.Component {
   render() {
@@ -11,17 +12,13 @@ class DiagnosisForm extends React.Component {
     return (
       <form onSubmit={onSubmit}>
         <div className="detailedDiagnosis text-left">
-          <div className="row">
-            <div className="col-md-12">
-              <div className="display-table display-table-100">
-                <div className="display-table-cell pad-right-1">
-                  <h3 className="no-margin text-light">Detailed Diagnosis</h3>
-                </div>
-              </div>
+          <div className="display-table display-table-100">
+            <div className="display-table-cell pad-right-1">
+              <h3 className="no-margin text-light">Detailed Diagnosis</h3>
             </div>
           </div>
-          <div className="row push-top-5">
-            <div className="col-xs-6">
+          <Row gutter={16} className={cn('push-top-5')}>
+            <Col xs={24} sm={12}>
               {getFieldDecorator('age', {
                 initialValue: '',
                 rules: [
@@ -31,8 +28,8 @@ class DiagnosisForm extends React.Component {
               })(
                 <InputNumber error={getFieldError('age')} label={'Age at Diagnosis'}/>
               )}
-            </div>
-            <div className="col-xs-6">
+            </Col>
+            <Col xs={24} sm={12}>
               {getFieldDecorator('tumor_size_in_mm', {
                 initialValue: '',
                 rules: [
@@ -41,10 +38,10 @@ class DiagnosisForm extends React.Component {
               })(
                 <Input error={getFieldError('tumor_size_in_mm')} label={'Tumor Size in mm'}/>
               )}
-            </div>
-          </div>
-          <div className="row push-top-2">
-            <div className="col-xs-6">
+            </Col>
+          </Row>
+          <Row gutter={16} className={cn('push-top-2')}>
+            <Col xs={24} sm={12}>
               {getFieldDecorator('tumor_grade', {
                 initialValue: '',
                 rules: [
@@ -58,8 +55,8 @@ class DiagnosisForm extends React.Component {
                   <option value={3}>3 (High)</option>
                 </Select>
               )}
-            </div>
-            <div className="col-xs-6">
+            </Col>
+            <Col xs={24} sm={12}>
               {getFieldDecorator('num_pos_nodes', {
                 initialValue: '',
                 rules: [
@@ -73,10 +70,10 @@ class DiagnosisForm extends React.Component {
                   )}
                 </Select>
               )}
-            </div>
-          </div>
-          <div className="row push-top-2">
-            <div className="col-xs-6">
+            </Col>
+          </Row>
+          <Row gutter={16} className={cn('push-top-2')}>
+            <Col xs={24} sm={12}>
               {getFieldDecorator('er_status', {
                 initialValue: '',
                 rules: [
@@ -89,8 +86,8 @@ class DiagnosisForm extends React.Component {
                   <option value='-'>Negative</option>
                 </Select>
               )}
-            </div>
-            <div className="col-xs-6">
+            </Col>
+            <Col xs={24} sm={12}>
               {getFieldDecorator('pr_status', {
                 initialValue: '',
                 rules: [
@@ -103,10 +100,10 @@ class DiagnosisForm extends React.Component {
                   <option value='-'>Negative</option>
                 </Select>
               )}
-            </div>
-          </div>
-          <div className="row push-top-2">
-            <div className="col-xs-6">
+            </Col>
+          </Row>
+          <Row gutter={16} className={cn('push-top-2')}>
+            <Col xs={24} sm={12}>
               {getFieldDecorator('her2_status', {
                 initialValue: '',
                 rules: [
@@ -119,8 +116,8 @@ class DiagnosisForm extends React.Component {
                   <option value='-'>Negative</option>
                 </Select>
               )}
-            </div>
-            <div className="col-xs-6">
+            </Col>
+            <Col xs={24} sm={12}>
               {getFieldDecorator('ethnicity', {
                 initialValue: '',
                 rules: [
@@ -134,10 +131,10 @@ class DiagnosisForm extends React.Component {
                   )}
                 </Select>
               )}
-            </div>
-          </div>
-          <div className="row push-top-2">
-            <div className="col-xs-6">
+            </Col>
+          </Row>
+          <Row gutter={16} className={cn('push-top-2')}>
+            <Col xs={24} sm={12}>
               {getFieldDecorator('region', {
                 initialValue: '',
                 rules: [
@@ -151,8 +148,8 @@ class DiagnosisForm extends React.Component {
                   )}
                 </Select>
               )}
-            </div>
-            <div className="col-xs-6">
+            </Col>
+            <Col xs={24} sm={12}>
               {getFieldDecorator('laterality', {
                 initialValue: '',
                 rules: [
@@ -165,10 +162,10 @@ class DiagnosisForm extends React.Component {
                   <option value='right'>Right</option>
                 </Select>
               )}
-            </div>
-          </div>
-          <div className="row push-top-2">
-            <div className="col-xs-6">
+            </Col>
+          </Row>
+          <Row gutter={16} className={cn('push-top-2')}>
+            <Col xs={24} sm={12}>
               {getFieldDecorator('site', {
                 initialValue: '',
                 rules: [
@@ -182,8 +179,8 @@ class DiagnosisForm extends React.Component {
                   )}
                 </Select>
               )}
-            </div>
-            <div className="col-xs-6">
+            </Col>
+            <Col xs={24} sm={12}>
               {getFieldDecorator('type', {
                 initialValue: '',
                 rules: [
@@ -197,12 +194,12 @@ class DiagnosisForm extends React.Component {
                   )}
                 </Select>
               )}
-            </div>
-          </div>
+            </Col>
+          </Row>
 
-          <div className="row push-top-2">
+          <Row gutter={16} className={cn('push-top-2')}>
 
-            <div className="col-xs-6">
+            <Col xs={24} sm={12}>
               {getFieldDecorator('number_of_tumors', {
                 initialValue: '',
                 rules: [
@@ -216,14 +213,12 @@ class DiagnosisForm extends React.Component {
                   )}
                 </Select>
               )}
-            </div>
-          </div>
-          <div className="row push-top-2">
-            <div className="col-xs-12 text-center position-relative">
-              <button type="submit" className='btn btn-primary'>
-                Analyze
-              </button>
-            </div>
+            </Col>
+          </Row>
+          <div className="push-top-2 text-center position-relative">
+            <button type="submit" className='btn btn-primary'>
+              Analyze
+            </button>
           </div>
         </div>
       </form>

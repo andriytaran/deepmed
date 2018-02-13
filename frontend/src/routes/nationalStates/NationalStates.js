@@ -31,7 +31,7 @@ class NationalStates extends React.Component {
       <div className='container container-full'>
 
         <Row type='flex' gutter={16}>
-          <Col sm={24} md={12} className={s.col}>
+          <Col xs={24} md={12} className={s.col}>
             <div className={cn(s.card, s.mapCard)}>
 
               <h2 className='text-center'>Breast Cancer Incidence per 100,000 Women</h2>
@@ -80,7 +80,7 @@ class NationalStates extends React.Component {
             </div>
           </Col>
 
-          <Col sm={24} md={12} className={s.col}>
+          <Col xs={24} md={12} className={s.col}>
             <div className={s.card}>
 
               <h2 className='no-margin text-center'>Breast Cancer Incidence over Time</h2>
@@ -224,7 +224,7 @@ class NationalStates extends React.Component {
           <h2 className='no-margin text-center'>Breast Cancer by Age</h2>
 
           <Row type='flex' gutter={16}>
-            <Col sm={24} md={12}>
+            <Col xs={24} md={12}>
               <div className={s.card}>
                 <p className='push-top-1 push-bot-2 text-center'><strong>Age-Specific Rates of
                   Breast Cancer in the United States</strong></p>
@@ -253,7 +253,7 @@ class NationalStates extends React.Component {
                 )}
               </div>
             </Col>
-            <Col sm={24} md={12}>
+            <Col xs={24} md={12}>
               <div className={s.card}>
                 <p className='push-top-1 push-bot-2 text-center'>
                   <strong>Percent of Women who Develop Cancer By Age</strong>

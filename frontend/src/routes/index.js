@@ -79,6 +79,7 @@ const routes = {
         if (!loggedIn) {
           return {redirect: `/login?next=${pathname}`}
         }
+        store.dispatch(wsConnect())
         return await next()
       },
     },
@@ -91,7 +92,6 @@ const routes = {
 
   async action({store, next}) {
     await store.dispatch(getUser())
-    store.dispatch(wsConnect())
     // Execute each child route until one of them return the result
     const route = await next()
 

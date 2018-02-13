@@ -1,6 +1,7 @@
 import createReducer, {RESET_STORE} from '../createReducer'
 import {getToken} from './user'
 import {WS_CONNECT, WS_OPEN, WS_SEND} from '../store/socketMiddleware'
+import qs from 'query-string'
 
 // ------------------------------------
 // Constants
@@ -16,6 +17,10 @@ export const GET_SIMILAR_DIAGNOSES_FAILURE = 'Diagnosis.GET_SIMILAR_DIAGNOSES_FA
 export const GET_INDIVIDUAL_STATISTICS_REQUEST = 'Diagnosis.GET_INDIVIDUAL_STATISTICS_REQUEST'
 export const GET_INDIVIDUAL_STATISTICS_SUCCESS = 'Diagnosis.GET_INDIVIDUAL_STATISTICS_SUCCESS'
 export const GET_INDIVIDUAL_STATISTICS_FAILURE = 'Diagnosis.GET_INDIVIDUAL_STATISTICS_FAILURE'
+
+export const GET_RESOURCES_REQUEST = 'Diagnosis.GET_RESOURCES_REQUEST'
+export const GET_RESOURCES_SUCCESS = 'Diagnosis.GET_RESOURCES_SUCCESS'
+export const GET_RESOURCES_FAILURE = 'Diagnosis.GET_RESOURCES_FAILURE'
 
 export const CLEAR = 'Diagnosis.CLEAR'
 
@@ -59,6 +64,7 @@ export const getData = (values) => (dispatch, getState, {history}) => {
     dispatch(getDiagnosis(values))
     dispatch(getSimilarDiagnoses(values))
     dispatch(getIndividualStatistics(values))
+    dispatch(getResources(values))
     history.push('/diagnosis')
   }
 }
@@ -81,6 +87,17 @@ export const getIndividualStatistics = (values) => (dispatch, getState) => {
   dispatch({type: WS_SEND, path: SIMILAR_DIAGNOSES, query: {token}, message: values})
 }
 
+export const getResources = (values) => (dispatch, getState, {fetch}) => {
+  const {token} = dispatch(getToken())
+  dispatch({type: GET_RESOURCES_REQUEST})
+  return fetch(`/diagnosis/resources/?${qs.stringify(values)}`, {
+    method: 'GET',
+    token,
+    success: (resources) => dispatch({type: GET_RESOURCES_SUCCESS, resources}),
+    failure: (err) => dispatch({type: GET_RESOURCES_FAILURE})
+  })
+}
+
 export const clear = () => ({type: CLEAR})
 
 // ------------------------------------
@@ -93,6 +110,7 @@ const initialState = {
   similarDiagnoses: {},
   individualStatistics: {},
   wsConnected: false,
+  resources: {},
 }
 
 export default createReducer(initialState, {
@@ -131,6 +149,9 @@ export default createReducer(initialState, {
       ...state.individualStatistics,
       ...data,
     },
+  }),
+  [GET_RESOURCES_SUCCESS]: (state, {resources}) => ({
+    resources,
   }),
   [CLEAR]: (state, action) => RESET_STORE,
 })
