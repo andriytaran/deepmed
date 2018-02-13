@@ -35,12 +35,14 @@ class Login extends React.Component {
             )}
             <div className="form-group">
               {getFieldDecorator('email', {
+                initialValue: '',
               })(
                 <input className='form-control' placeholder='Email'/>
               )}
             </div>
             <div className="form-group">
               {getFieldDecorator('password', {
+                initialValue: '',
               })(
                 <input className='form-control' type='password' placeholder='Password'/>
               )}
