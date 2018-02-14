@@ -41,34 +41,37 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
             regex = r"\((.*?)\)"
 
             # START SURGERY
-            surgery_args = ','.join([dd.get('sex'),
-                                     str(dd.get('age')),
-                                     dd.get('ethnicity'),
-                                     str(float(dd.get('tumor_grade', 'unk'))),
-                                     dd.get('site'),
-                                     dd.get('type'),
-                                     dd.get('stage'),
-                                     dd.get('region'),
-                                     dd.get('tumor_size_in_mm'),
-                                     str(dd.get('number_of_tumors')),
-                                     str(dd.get('num_pos_nodes'))])
+            if dd.get('tumor_size_in_mm_sd') > 0:
+                surgery_args = ','.join([dd.get('sex'),
+                                         str(dd.get('age')),
+                                         dd.get('ethnicity'),
+                                         str(float(dd.get('tumor_grade', 'unk'))),
+                                         dd.get('site'),
+                                         dd.get('type'),
+                                         dd.get('stage'),
+                                         dd.get('region'),
+                                         dd.get('tumor_size_in_mm'),
+                                         str(dd.get('number_of_tumors')),
+                                         str(dd.get('num_pos_nodes'))])
 
-            surgery_command_str = [settings.ML_PYTHON_PATH,
-                                   settings.ML_COMMAND_FILE,
-                                   surgery_args, 'Surgery']
+                surgery_command_str = [settings.ML_PYTHON_PATH,
+                                       settings.ML_COMMAND_FILE,
+                                       surgery_args, 'Surgery']
 
-            surgery_command = subprocess.Popen(surgery_command_str,
-                                               stdout=subprocess.PIPE,
-                                               stderr=subprocess.PIPE,
-                                               cwd=settings.ML_COMMAND_DIR)
-            surgery_output, err = surgery_command.communicate()
+                surgery_command = subprocess.Popen(surgery_command_str,
+                                                   stdout=subprocess.PIPE,
+                                                   stderr=subprocess.PIPE,
+                                                   cwd=settings.ML_COMMAND_DIR)
+                surgery_output, err = surgery_command.communicate()
 
-            if not surgery_output:
-                self.send_json({'error': 'Surgery command failed'})
+                if not surgery_output:
+                    self.send_json({'error': 'Surgery command failed'})
 
-            surgery_response = ast.literal_eval(
-                re.search(regex,
-                          str(surgery_output.decode('utf8'))).group())
+                surgery_response = ast.literal_eval(
+                    re.search(regex,
+                              str(surgery_output.decode('utf8'))).group())
+            else:
+                pass
             # END SURGERY
 
             # START CHEMO
@@ -124,112 +127,169 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 str(dd.get('pr_status')),
                 str(dd.get('her2_status'))]
 
-            sm_radiation_args = copy.deepcopy(
-                radiation_args)  # Copy base list of args
+            if dd.get('tumor_size_in_mm_sd') == 0:
+                none_radiation_args = copy.deepcopy(
+                    radiation_args)  # Copy base list of args
 
-            sm_radiation_args.append('Mastectomy')
-            sm_radiation_args.append(chemo_response[0])
+                none_radiation_args.append('None')
+                none_radiation_args.append(chemo_response[0])
 
-            sm_radiation_command_str = [settings.ML_PYTHON_PATH,
-                                        settings.ML_COMMAND_FILE,
-                                        ','.join(sm_radiation_args),
-                                        'Radiation']
+                none_radiation_command_str = [settings.ML_PYTHON_PATH,
+                                              settings.ML_COMMAND_FILE,
+                                              ','.join(none_radiation_args),
+                                              'Radiation']
 
-            sm_radiation_command = subprocess.Popen(sm_radiation_command_str,
-                                                    stdout=subprocess.PIPE,
-                                                    stderr=subprocess.PIPE,
-                                                    cwd=settings.ML_COMMAND_DIR)
+                none_radiation_command = subprocess.Popen(
+                    none_radiation_command_str,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    cwd=settings.ML_COMMAND_DIR)
 
-            sm_radiation_output, err = sm_radiation_command.communicate()
+                none_radiation_output, err = none_radiation_command.communicate()
 
-            if not sm_radiation_output:
-                self.send_json(
-                    {'error': 'Radiation "Mastectomy" command failed'})
+                if not none_radiation_output:
+                    self.send_json(
+                        {'error': 'Radiation "None" command failed'})
 
-            sm_radiation_response = ast.literal_eval(
-                re.search(regex,
-                          str(sm_radiation_output.decode('utf8'))).group())
+                none_radiation_response = ast.literal_eval(
+                    re.search(regex,
+                              str(none_radiation_output.decode(
+                                  'utf8'))).group())
 
-            sl_radiation_args = copy.deepcopy(
-                radiation_args)  # Copy base list of args
+            elif dd.get('tumor_size_in_mm_sd') > 0:
 
-            sl_radiation_args.append('Lumpectomy')
-            sl_radiation_args.append(chemo_response[0])
+                sm_radiation_args = copy.deepcopy(
+                    radiation_args)  # Copy base list of args
 
-            sl_radiation_command_str = [settings.ML_PYTHON_PATH,
-                                        settings.ML_COMMAND_FILE,
-                                        ','.join(sl_radiation_args),
-                                        'Radiation']
+                sm_radiation_args.append('Mastectomy')
+                sm_radiation_args.append(chemo_response[0])
 
-            sl_radiation_command = subprocess.Popen(sl_radiation_command_str,
-                                                    stdout=subprocess.PIPE,
-                                                    stderr=subprocess.PIPE,
-                                                    cwd=settings.ML_COMMAND_DIR)
-            sl_radiation_output, err = sl_radiation_command.communicate()
+                sm_radiation_command_str = [settings.ML_PYTHON_PATH,
+                                            settings.ML_COMMAND_FILE,
+                                            ','.join(sm_radiation_args),
+                                            'Radiation']
 
-            if not sl_radiation_output:
-                self.send_json(
-                    {'error': 'Radiation "Lumpectomy" command failed'})
+                sm_radiation_command = subprocess.Popen(
+                    sm_radiation_command_str,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    cwd=settings.ML_COMMAND_DIR)
 
-            sl_radiation_response = ast.literal_eval(
-                re.search(regex,
-                          str(sl_radiation_output.decode('utf8'))).group())
+                sm_radiation_output, err = sm_radiation_command.communicate()
+
+                if not sm_radiation_output:
+                    self.send_json(
+                        {'error': 'Radiation "Mastectomy" command failed'})
+
+                sm_radiation_response = ast.literal_eval(
+                    re.search(regex,
+                              str(sm_radiation_output.decode('utf8'))).group())
+
+                sl_radiation_args = copy.deepcopy(
+                    radiation_args)  # Copy base list of args
+
+                sl_radiation_args.append('Lumpectomy')
+                sl_radiation_args.append(chemo_response[0])
+
+                sl_radiation_command_str = [settings.ML_PYTHON_PATH,
+                                            settings.ML_COMMAND_FILE,
+                                            ','.join(sl_radiation_args),
+                                            'Radiation']
+
+                sl_radiation_command = subprocess.Popen(
+                    sl_radiation_command_str,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    cwd=settings.ML_COMMAND_DIR)
+                sl_radiation_output, err = sl_radiation_command.communicate()
+
+                if not sl_radiation_output:
+                    self.send_json(
+                        {'error': 'Radiation "Lumpectomy" command failed'})
+
+                sl_radiation_response = ast.literal_eval(
+                    re.search(regex,
+                              str(sl_radiation_output.decode('utf8'))).group())
 
             # END RADIATION
 
             overall_plans = []
-            surgery_level = round(surgery_response[1] * 100)
-            chemo_level = round(chemo_response[1] * 100)
-            sm_radiation_level = round(sm_radiation_response[1] * 100)
-            sl_radiation_level = round(sl_radiation_response[1] * 100)
 
-            if (surgery_response[0] == 'Lumpectomy' and surgery_level < 50) \
-                or (surgery_response[0] == 'Mastectomy' and surgery_level >= 50):
+            chemo_level = round(chemo_response[1] * 100)
+
+            if dd.get('tumor_size_in_mm_sd') > 0:
+                surgery_level = round(surgery_response[1] * 100)
+                sm_radiation_level = round(sm_radiation_response[1] * 100)
+                sl_radiation_level = round(sl_radiation_response[1] * 100)
+
+                if (surgery_response[0] == 'Lumpectomy' and surgery_level < 50) \
+                        or (surgery_response[
+                                0] == 'Mastectomy' and surgery_level >= 50):
+                    overall_plans.append({
+                        'name': 'Preferred Outcome A',
+                        'type': 'Mastectomy',
+                        'radiation': 'Yes' if sm_radiation_response[
+                                                  0] == 'Yes' else 'No',
+                        'radiation_confidence_level': sm_radiation_level,
+                        'chemo': 'Yes' if chemo_response[0] == 'Yes' else 'No',
+                        'chemo_confidence_level': chemo_level,
+                        'surgery': 'Yes',
+                        'surgery_confidence_level': surgery_level if
+                        surgery_response[
+                            0] == 'Mastectomy' else 100 - surgery_level
+                    })
+                    overall_plans.append({
+                        'name': 'Preferred Outcome B',
+                        'type': 'Lumpectomy',
+                        'radiation': 'Yes' if sl_radiation_response[
+                                                  0] == 'Yes' else 'No',
+                        'radiation_confidence_level': sl_radiation_level,
+                        'chemo': 'Yes' if chemo_response[0] == 'Yes' else 'No',
+                        'chemo_confidence_level': chemo_level,
+                        'surgery': 'Yes',
+                        'surgery_confidence_level': 100 - surgery_level if
+                        surgery_response[0] == 'Mastectomy' else surgery_level
+                    })
+                elif (surgery_response[0] == 'Mastectomy' and surgery_level < 50) \
+                        or (surgery_response[
+                                0] == 'Lumpectomy' and surgery_level > 50):
+                    overall_plans.append({
+                        'name': 'Preferred Outcome A',
+                        'type': 'Lumpectomy',
+                        'radiation': 'Yes' if sl_radiation_response[
+                                                  0] == 'Yes' else 'No',
+                        'radiation_confidence_level': sl_radiation_level,
+                        'chemo': 'Yes' if chemo_response[0] == 'Yes' else 'No',
+                        'chemo_confidence_level': chemo_level,
+                        'surgery': 'Yes',
+                        'surgery_confidence_level': surgery_level if
+                        surgery_response[
+                            0] == 'Lumpectomy' else 100 - surgery_level
+                    })
+                    overall_plans.append({
+                        'name': 'Preferred Outcome B',
+                        'type': 'Mastectomy',
+                        'radiation': 'Yes' if sm_radiation_response[
+                                                  0] == 'Yes' else 'No',
+                        'radiation_confidence_level': sm_radiation_level,
+                        'chemo': 'Yes' if chemo_response[0] == 'Yes' else 'No',
+                        'chemo_confidence_level': chemo_level,
+                        'surgery': 'Yes',
+                        'surgery_confidence_level': 100 - surgery_level if
+                        surgery_response[0] == 'Lumpectomy' else surgery_level
+                    })
+            elif dd.get('tumor_size_in_mm_sd') == 0:
+                none_radiation_level = round(none_radiation_response[1] * 100)
                 overall_plans.append({
-                    'name': 'Preferred Outcome A',
-                    'type': 'Mastectomy',
-                    'radiation': 'Yes' if sm_radiation_response[
+                    'name': 'None',
+                    'type': 'N/A',
+                    'radiation': 'Yes' if none_radiation_response[
                                               0] == 'Yes' else 'No',
-                    'radiation_confidence_level': sm_radiation_level,
+                    'radiation_confidence_level': none_radiation_level,
                     'chemo': 'Yes' if chemo_response[0] == 'Yes' else 'No',
                     'chemo_confidence_level': chemo_level,
-                    'surgery': 'Yes',
-                    'surgery_confidence_level': surgery_level if surgery_response[0] == 'Mastectomy' else 100 - surgery_level
-                })
-                overall_plans.append({
-                    'name': 'Preferred Outcome B',
-                    'type': 'Lumpectomy',
-                    'radiation': 'Yes' if sl_radiation_response[
-                                              0] == 'Yes' else 'No',
-                    'radiation_confidence_level': sl_radiation_level,
-                    'chemo': 'Yes' if chemo_response[0] == 'Yes' else 'No',
-                    'chemo_confidence_level': chemo_level,
-                    'surgery': 'Yes',
-                    'surgery_confidence_level': 100 - surgery_level if surgery_response[0] == 'Mastectomy' else surgery_level
-                })
-            elif (surgery_response[0] == 'Mastectomy' and surgery_level < 50) \
-                or (surgery_response[0] == 'Lumpectomy' and surgery_level > 50):
-                overall_plans.append({
-                    'name': 'Preferred Outcome A',
-                    'type': 'Lumpectomy',
-                    'radiation': 'Yes' if sl_radiation_response[
-                                              0] == 'Yes' else 'No',
-                    'radiation_confidence_level': sl_radiation_level,
-                    'chemo': 'Yes' if chemo_response[0] == 'Yes' else 'No',
-                    'chemo_confidence_level': chemo_level,
-                    'surgery': 'Yes',
-                    'surgery_confidence_level': surgery_level if surgery_response[0] == 'Lumpectomy' else 100 - surgery_level
-                })
-                overall_plans.append({
-                    'name': 'Preferred Outcome B',
-                    'type': 'Mastectomy',
-                    'radiation': 'Yes' if sm_radiation_response[
-                                              0] == 'Yes' else 'No',
-                    'radiation_confidence_level': sm_radiation_level,
-                    'chemo': 'Yes' if chemo_response[0] == 'Yes' else 'No',
-                    'chemo_confidence_level': chemo_level,
-                    'surgery': 'Yes',
-                    'surgery_confidence_level': 100 - surgery_level if surgery_response[0] == 'Lumpectomy' else surgery_level
+                    'surgery': 'No',
+                    'surgery_confidence_level': 'N/A'
                 })
 
             self.send_json({'overall_plans': overall_plans})
@@ -247,7 +307,8 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
 
             radiation_therapy = []
             if sm_radiation_response[0] == 'Yes' or \
-                    sl_radiation_response[0] == 'Yes':
+                    sl_radiation_response[0] == 'Yes' or \
+                    none_radiation_response[0] == 'Yes':
                 radiation_therapy.append({'name': 'Beam Radiation',
                                           'number_of_treatments': 30,
                                           'administration': 'Daily'})
