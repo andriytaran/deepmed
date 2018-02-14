@@ -256,7 +256,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                     })
                 elif (surgery_response[0] == 'Mastectomy' and surgery_level < 50) \
                         or (surgery_response[
-                                0] == 'Lumpectomy' and surgery_level > 50):
+                                0] == 'Lumpectomy' and surgery_level >= 50):
                     overall_plans.append({
                         'name': 'Preferred Outcome A',
                         'type': 'Lumpectomy',
