@@ -36,7 +36,8 @@ const OverallPlansTable = ({items = [], visibleRowIndex}) =>
         <tr>
           <td>{items[visibleRowIndex].surgery}</td>
           <td>{items[visibleRowIndex].type}</td>
-          <td className={s.borderRight}>{items[visibleRowIndex].surgery_confidence_level}%</td>
+          <td
+            className={s.borderRight}>{items[visibleRowIndex].surgery_confidence_level}{items[visibleRowIndex].type === 'N/A' ? '' : '%'} </td>
           <td>{items[visibleRowIndex].radiation}</td>
           <td className={s.borderRight}>{items[visibleRowIndex].radiation_confidence_level}%</td>
           <td>{items[visibleRowIndex].chemo}</td>

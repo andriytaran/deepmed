@@ -40,6 +40,10 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
             import re
             regex = r"\((.*?)\)"
 
+            surgery_response = (None, None)
+            sm_radiation_response = (None, None)
+            sl_radiation_response = (None, None)
+            none_radiation_response = (None, None)
             # START SURGERY
             if dd.get('tumor_size_in_mm_sd') > 0:
                 surgery_args = ','.join([dd.get('sex'),
