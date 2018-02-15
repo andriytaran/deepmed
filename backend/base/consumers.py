@@ -590,6 +590,9 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
                 if obj.get('Surgery') == 'Partial Mastectomy':
                     obj['Surgery'] = 'Lumpectomy'
 
+                if obj.get('T_size'):
+                    obj['T_size'] = '{}cm'.format(round(obj.get('T_size')/10))
+
             similar_diagnosis = simdx_response
         except:
             pass

@@ -45,8 +45,7 @@ class SimilarDiagnoses extends React.Component {
                     <th className={s.borderRight}><h6 className="push-top-1">Radiation</h6></th>
 
                     <th><h6 className="push-top-1">Year Dx</h6></th>
-                    <th><h6 className="push-top-1">Survival Mos.</h6></th>
-                    <th><h6 className="push-top-1">CoD</h6></th>
+                    <th><h6 className="push-top-1">Status</h6></th>
                   </tr>
                   </thead>
                   <tbody>
@@ -69,7 +68,6 @@ class SimilarDiagnoses extends React.Component {
                       <td className={s.borderRight}>{item['Radiation']}</td>
 
                       <td>{item['Year_dx']}</td>
-                      <td>{item['Survival_months']}</td>
                       <td>{item['COD to site recode']}</td>
                     </tr>
                   )}

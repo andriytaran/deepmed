@@ -53,7 +53,7 @@ class AppLayout extends React.Component {
     const {sidebarOpened} = this.state
     const spinnerTexts = [
       'DeepMed is analyzing  over 1M patient records and treatments',
-      'DeepMed is processing patient records as far as back as 1973',
+      'DeepMed is processing over 40 years of patient records',
       'DeepMed is covering actual data from hospitals and oncology clinics',
       'DeepMed covers data spanning nearly 30% of the country'
     ]
