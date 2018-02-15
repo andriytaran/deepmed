@@ -614,13 +614,17 @@ class CustomAnalyticsConsumer(JsonWebsocketConsumer):
             self.close()
 
     def receive_json(self, content, **kwargs):
-        serializer = self.serializer_class(data=content.get('filters', {}))
         group = content.get('group', None)
 
-        if group not in ['grade', 'stage', 'type', 'race', 'cod', 'radiation',
-                         'chemo', 'surgery']:
+        if group not in ['grade', 'stage', 'type', 'ethnicity', 'cod',
+                         'radiation', 'chemo', 'surgery']:
             self.send_json({'error': 'Invalid group parameter'})
             self.close()
+
+        if group == 'ethnicity':
+            group = 'race'
+
+        serializer = self.serializer_class(data=content.get('filters', {}))
 
         if not serializer.is_valid():
             self.send_json({'error': 'Data not valid.',
