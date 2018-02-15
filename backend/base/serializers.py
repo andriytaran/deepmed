@@ -15,6 +15,18 @@ class CustomAnalyticsSerializer(serializers.Serializer):
     type = serializers.CharField(required=False)
     number_of_tumors = serializers.IntegerField(required=False)
 
+    def validate(self, data):
+        data = dict(data)
+        if data.get('ethnicity') == 'Caucasian':
+            data['ethnicity'] = 'White'
+        elif data.get('ethnicity') == 'African American':
+            data['ethnicity'] = 'Black'
+        elif data.get('ethnicity') == 'Asian':
+            data['ethnicity'] = 'Asian or Pacific Islander'
+        elif data.get('ethnicity') == 'Other':
+            data['ethnicity'] = 'Unknown'
+        return data
+
 
 class DiagnosisSerializer(serializers.Serializer):
     """
