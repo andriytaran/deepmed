@@ -1,0 +1,49 @@
+@import "../../styles/variables.css";
+
+.filter {
+  margin-bottom: 1rem;
+}
+
+.chartColumn {
+  display: flex;
+  flex-direction: column;
+
+  @media (--sm-down) {
+    margin-top: 1rem;
+  }
+}
+
+.chartWrapper {
+  margin-top: 2rem;
+  flex: 1;
+}
+
+.chartCard {
+  display: flex;
+  align-items: center;
+}
+
+.submitBtnWrapper {
+}
+
+.groupWrapper {
+  position: relative;
+
+  .field {
+    margin: 0 auto;
+  }
+}
+
+.field {
+  @media (--md-up) {
+    max-width: 200px;
+  }
+}
+
+.clearFiltersBtn {
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}

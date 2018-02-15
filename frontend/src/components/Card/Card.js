@@ -8,7 +8,7 @@ class Card extends React.Component {
   render () {
     const {className, title, children, loading} = this.props
     return (
-      <div className={cn(className, s.card)}>
+      <div className={cn(s.card, className)}>
         {!loading ? (
           <React.Fragment>
             {title && <h4 className={s.header}>{title}</h4>}

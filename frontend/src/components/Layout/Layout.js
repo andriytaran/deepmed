@@ -8,13 +8,13 @@ import {Link} from '../../components'
 import {
   DIAGNOSIS_ROUTE,
   HOME_ROUTE,
-  LOGOUT_ROUTE,
   NATIONAL_STATES_ROUTE,
   RESOURCES_ROUTE,
   SIMILAR_DIAGNOSES_ROUTE,
   SPECIFIC_STATES_ROUTE
 } from '../../routes'
 import cn from 'classnames'
+import {CUSTOM_ANALYTICS_ROUTE} from '../../routes/index'
 
 /*
 * TODO All html comes from another developer - refactor all html and css in project - do it in React way
@@ -104,6 +104,14 @@ class AppLayout extends React.Component {
               <i className="fa fa-bar-chart"/>
               </span>
                       Individual Statistics
+                    </Link>
+                  </li>
+                  <li className={cn(currentRouteName === CUSTOM_ANALYTICS_ROUTE && 'active')}>
+                    <Link to={CUSTOM_ANALYTICS_ROUTE}>
+                      <span className="icon-container">
+                        <i className="fa fa-bar-chart"/>
+                      </span>
+                      Custom Analytics
                     </Link>
                   </li>
                   <li

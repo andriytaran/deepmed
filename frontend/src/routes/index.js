@@ -8,6 +8,7 @@ export const DIAGNOSIS_ROUTE = 'diagnosis'
 export const NATIONAL_STATES_ROUTE = 'national-statistics'
 export const SPECIFIC_STATES_ROUTE = 'specific-states'
 export const SIMILAR_DIAGNOSES_ROUTE = 'individual-statistics'
+export const CUSTOM_ANALYTICS_ROUTE = 'custom-analytics'
 export const RESOURCES_ROUTE = 'resources'
 export const LOGIN_ROUTE = 'login'
 export const REGISTER_ROUTE = 'register'
@@ -63,6 +64,11 @@ const routes = {
           path: '/resources',
           name: `${RESOURCES_ROUTE}`,
           action: require('./resources').default,
+        },
+        {
+          path: '/custom-analytics',
+          name: `${CUSTOM_ANALYTICS_ROUTE}`,
+          action: require('./customAnalytics').default,
         },
         {
           path: '/logout',

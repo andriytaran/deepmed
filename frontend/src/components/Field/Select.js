@@ -3,9 +3,9 @@ import cn from 'classnames'
 
 class Select extends React.Component {
   render() {
-    const {label, error, children, ...otherProps} = this.props
+    const {className, label, error, children, ...otherProps} = this.props
     return (
-      <div className={cn(error && 'has-error')}>
+      <div className={cn(className, error && 'has-error')}>
         {label && <label className='control-label'>{label}</label>}
         <select className="form-control" {...otherProps}>
           {children}

@@ -1,6 +1,14 @@
 export const WEEK = 7
 export const YEAR = 365
 export const RACES = ['Asian', 'African American', 'Caucasian', 'American Indian/Alaska Native', 'Other']
+export const AGES = [
+  {value: 25, label: '21-30'},
+  {value: 35, label: '31-40'},
+  {value: 45, label: '41-50'},
+  {value: 55, label: '51-60'},
+  {value: 65, label: '61-70'},
+  {value: 75, label: '71-80'},
+]
 
 export const SITES = [
   {value: 'Axillary', label: 'Axillary'},

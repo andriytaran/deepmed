@@ -22,11 +22,16 @@ export const GET_RESOURCES_REQUEST = 'Diagnosis.GET_RESOURCES_REQUEST'
 export const GET_RESOURCES_SUCCESS = 'Diagnosis.GET_RESOURCES_SUCCESS'
 export const GET_RESOURCES_FAILURE = 'Diagnosis.GET_RESOURCES_FAILURE'
 
+export const GET_CUSTOM_ANALYTICS_REQUEST = 'Diagnosis.GET_CUSTOM_ANALYTICS_REQUEST'
+export const GET_CUSTOM_ANALYTICS_SUCCESS = 'Diagnosis.GET_CUSTOM_ANALYTICS_SUCCESS'
+export const GET_CUSTOM_ANALYTICS_FAILURE = 'Diagnosis.GET_CUSTOM_ANALYTICS_FAILURE'
+
 export const CLEAR = 'Diagnosis.CLEAR'
 
 const DIAGNOSIS = '/diagnosis/'
 const SIMILAR_DIAGNOSES = '/similar-diagnoses/'
 const INDIVIDUAL_STATISTICS = '/individual-statistics/'
+const CUSTOM_ANALYTICS = '/custom-analytics/'
 
 // ------------------------------------
 // Actions
@@ -55,6 +60,13 @@ export const wsConnect = () => (dispatch, getState) => {
       query: {token},
       success: (data) => dispatch({type: GET_INDIVIDUAL_STATISTICS_SUCCESS, data}),
       failure: () => dispatch({type: GET_INDIVIDUAL_STATISTICS_FAILURE}),
+    })
+    dispatch({
+      type: WS_CONNECT,
+      path: CUSTOM_ANALYTICS,
+      query: {token},
+      success: (data) => dispatch({type: GET_CUSTOM_ANALYTICS_SUCCESS, data}),
+      failure: () => dispatch({type:GET_CUSTOM_ANALYTICS_FAILURE}),
     })
   }
 }
@@ -87,6 +99,12 @@ export const getIndividualStatistics = (values) => (dispatch, getState) => {
   dispatch({type: WS_SEND, path: SIMILAR_DIAGNOSES, query: {token}, message: values})
 }
 
+export const getCustomAnalytics = (values) => (dispatch, getState) => {
+  const {token} = dispatch(getToken())
+  dispatch({type: GET_CUSTOM_ANALYTICS_REQUEST})
+  dispatch({type: WS_SEND, path: CUSTOM_ANALYTICS, query: {token}, message: values})
+}
+
 export const getResources = (values) => (dispatch, getState, {fetch}) => {
   const {token} = dispatch(getToken())
   dispatch({type: GET_RESOURCES_REQUEST})
@@ -109,8 +127,10 @@ const initialState = {
   diagnosis: {},
   similarDiagnoses: {},
   individualStatistics: {},
+  customAnalytics: {},
   wsConnected: false,
   resources: {},
+  customAnalyticsLoading: false,
 }
 
 export default createReducer(initialState, {
@@ -149,6 +169,17 @@ export default createReducer(initialState, {
       ...state.individualStatistics,
       ...data,
     },
+  }),
+  [GET_CUSTOM_ANALYTICS_REQUEST]: (state, action) => ({
+    customAnalytics: {},
+    customAnalyticsLoading: true,
+  }),
+  [GET_CUSTOM_ANALYTICS_SUCCESS]: (state, {data}) => ({
+    customAnalytics: {
+      ...state.customAnalytics,
+      ...data,
+    },
+    customAnalyticsLoading: false,
   }),
   [GET_RESOURCES_SUCCESS]: (state, {resources}) => ({
     resources,
