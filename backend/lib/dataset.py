@@ -214,6 +214,8 @@ def create_filter(input_data, operator='$and'):
         filter_list.append({"chemo": input_data["chemo"]})
     if 'radiation' in input_data.keys():
         filter_list.append({"radiation": input_data["radiation"]})
+    if 'surgery' in input_data.keys():
+        filter_list.append({"surgery": input_data["surgery"]})
 
     return {operator: filter_list}
 
@@ -229,6 +231,7 @@ def diagnosis(input_json, limit=20):
     :param limit: int
     :return: list
     """
+
     def get_race(race):
         if race == "White":
             return "Caucasian"
@@ -275,7 +278,7 @@ def diagnosis(input_json, limit=20):
         results.append(d)
 
     if len(results) < 20:
-        print(len(results))
+        # print(len(results))
         filters['$and'] = [d for d in filters['$and'] if 't-size-cm' not in d]
         # ts_mm = json.loads(input_json)['tumor_size_in_mm']
         # ts_min = round(ts_mm * 0.8)
@@ -305,6 +308,35 @@ def diagnosis(input_json, limit=20):
             return results
         return results
     return results
+
+
+def custom_analytics(input_json, grouping):
+    filters = create_filter(input_json)
+    if grouping == 'grade':
+        filters['$and'] = [d for d in filters['$and'] if 'grade' not in d]
+        return breast_cancer_by_grade(input_json)
+    elif grouping == 'stage':
+        filters['$and'] = [d for d in filters['$and'] if 'breast-adjusted-ajcc-6th-stage-1988' not in d]
+        return distribution_of_stage_of_cancer(input_json)
+    # elif grouping == 'type':
+    #     filters['$and'] = [d for d in filters['$and'] if 'type' not in d]
+    #     return percent_women_by_type(input_json)
+    elif grouping == 'race':
+        filters['$and'] = [d for d in filters['$and'] if 'race-recode-w-b-ai-api' not in d]
+        return percent_race_with_cancer_by_age(input_json)
+    elif grouping == 'cod':
+        filters['$and'] = [d for d in filters['$and'] if 'cod-to-site-recode' not in d]
+        return cause_of_death(input_json)
+    elif grouping == 'radiation':
+        filters['$and'] = [d for d in filters['$and'] if 'radiation' not in d]
+        return radiation(input_json)
+    elif grouping == 'chemo':
+        filters['$and'] = [d for d in filters['$and'] if 'chemo' not in d]
+        return chemotherapy(input_json)
+    elif grouping == 'surgery':
+        filters['$and'] = [d for d in filters['$and'] if 'surgery' not in d]
+        return surgery_decisions(input_json)
+
 
 
 def breast_cancer_at_a_glance():
@@ -1104,10 +1136,19 @@ def cause_of_death(input_json):
         }},
         {"$sort": SON([("count", -1)])}]))
 
+    data = {"Alive": 0, "Breast": 0, "Other": 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['cod-to-site-recode'], result))):
+        if label == 'Breast':
+            data['Breast'] += result[i]['percentage']
+        elif label == 'Alive':
+            data['Alive'] += result[i]['percentage']
+        else:
+            data['Other'] += result[i]['percentage']
+
     return {
-        'labels': list(map(lambda x: x['_id']['cod-to-site-recode'], result)),
+        'labels': list(map(lambda x: x, data.keys())),
         'datasets': [{
-            'data': list(map(lambda x: x['percentage'], result)),
+            'data': list(map(lambda x: x, data.values())),
             'label': "Deaths",
             'borderColor': '#48ccf5',
             'fill': False
@@ -1275,13 +1316,13 @@ def radiation(input_json):
             "count": 1,
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
-        {"$sort": SON([("_id", 1)])}]))
+        {"$sort": SON([("_id", -1)])}]))
 
     return {
         'labels': list(map(lambda x: x['_id']['radiation'], result)),
         'datasets': [{
             'data': list(map(lambda x: x['percentage'], result)),
-            'label': "Diagnosed",
+            'label': "Radiation",
             'borderColor': '#48ccf5',
             'fill': False
         }]
@@ -1318,13 +1359,13 @@ def chemotherapy(input_json):
             "count": 1,
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
-        {"$sort": SON([("_id", 1)])}]))
+        {"$sort": SON([("_id", -1)])}]))
 
     return {
         'labels': list(map(lambda x: x['_id']['chemo'], result)),
         'datasets': [{
             'data': list(map(lambda x: x['percentage'], result)),
-            'label': "Chemoterapies",
+            'label': "Chemotherapy",
             'borderColor': '#48ccf5',
             'fill': False
         }]
@@ -1446,7 +1487,7 @@ def distribution_of_stage_of_cancer(input_json):
         'labels': list(map(lambda x: x, data.keys())),
         'datasets': [{
             'data': list(map(lambda x: x, data.values())),
-            'label': "Size",
+            'label': "Stage",
             'borderColor': '#48ccf5',
             'fill': False
         }]
@@ -1605,13 +1646,16 @@ def percent_race_with_cancer_by_age(input_json):
 
     data = OrderedDict()
     data['Other'] = 0
+    data['Caucasian'] = 0
+    data['African American'] = 0
+    data['Asian'] = 0
     for i, label in enumerate(list(map(lambda x: x['_id']['race-recode-w-b-ai-api'], result))):
         if label == 'White':
-            data['Caucasian'] = result[i]['percentage']
+            data['Caucasian'] += result[i]['percentage']
         elif label == 'Black':
-            data['African American'] = result[i]['percentage']
+            data['African American'] += result[i]['percentage']
         elif label == 'Asian or Pacific Islander':
-            data['Asian'] = result[i]['percentage']
+            data['Asian'] += result[i]['percentage']
         elif label in ['Unknown', 'American Indian/Alaska Native'] or label is None:
             data['Other'] += result[i]['percentage']
     data.move_to_end("Other")
@@ -1780,6 +1824,75 @@ def percent_women_annualy_diagnosed(input_json):
         }]
     }
 
+
+if __name__ == '__main__':
+    diag_request = '{"age": 42, ' \
+                   '"sex": "Female", ' \
+                   '"tumor_grade": 1, ' \
+                   '"er_status": "+", ' \
+                   '"pr_status": "+", ' \
+                   '"tumor_size_in_mm": 22, ' \
+                   '"num_pos_nodes": 1, ' \
+                   '"her2_status": "+", ' \
+                   '"ethnicity": "White"}'
+
+    diag_request_age_only = '{"age": 48}'
+    age_only = '{"age": 55}'
+
+    pprint(custom_analytics(diag_request, 'stage'))
+    exit()
+
+    # pprint(breast_cancer_by_size(diag_request_age_only))
+
+    # d = diagnosis(diag_request, limit=25)
+    # pprint(d)
+    type_idc = '{"type": "IDC"}'
+    type_insitu = '{"type": "In-Situ"}'
+    type_ilc = '{"type": "ILC"}'
+    type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
+
+    # pprint(growth_by_specific_type(type_others, "$or"))
+    diag_request_age_for_stage = '{"age": 48, ' \
+                                 '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
+                                 '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
+
+    # pprint(breakout_by_stage(diag_request_age_for_stage))
+    # pprint(cause_of_death_within_ages_30_40())
+
+    input_json = '{"age": 48, ' \
+                 '"chemo": "Yes", ' \
+                 '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
+                 '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
+
+    # pprint(breakout_by_stage(input_json))
+
+    # diag_request = '{"sex": "Female"}'
+    # pprint(breast_cancer_by_size(age_only))
+    # pprint(percent_of_women_with_cancer_by_race_overall())
+    # pprint(surgery_decisions(age_only))
+
+    # def wrapper(full_request):
+    #     only_age = {"age": json.loads(full_request)['age']}
+    #     return woman_annualy_diagnosed(json.dumps(only_age))
+    #
+    #
+    # pprint(wrapper(diag_request))
+
+    # pprint(growth_by_specific_type('{"type": "Other", "type": "IDC", "type": "ILC", "type": "In Situ"}', operator="$and"))
+
+    # type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
+    # pprint(growth_by_specific_type(age_only, "$and"))
+
+    # pprint(diagnosis(diag_request, limit=20))
+    # age_and_race = '{"age": 48, "ethnicity":"White"}'
+    # pprint(distribution_of_stage_of_cancer(age_and_race))
+    # pprint(breast_cancer_by_size(age_only))
+    # pprint(percent_women_by_type())
+    # pprint(percent_women_annualy_diagnosed(diag_request))
+    # diag = diagnosis(diag_request, limit=20)
+    # print(len(diag))
+    # pprint(diag)
+    pprint(helper_get_positive_nodes(age_only))
 
 # def cause_of_death_within_ages_30_40():
 #     result = json.loads(aggregate([{"$match": {
@@ -2042,70 +2155,3 @@ def percent_women_annualy_diagnosed(input_json):
 #             'fill': False
 #         }]
 #     }
-
-
-if __name__ == '__main__':
-    diag_request = '{"age": 52, ' \
-                   '"sex": "Female", ' \
-                   '"tumor_grade": 1, ' \
-                   '"er_status": "+", ' \
-                   '"pr_status": "+", ' \
-                   '"tumor_size_in_mm": 22, ' \
-                   '"num_pos_nodes": 1, ' \
-                   '"her2_status": "+", ' \
-                   '"ethnicity": "White"}'
-
-    diag_request_age_only = '{"age": 48}'
-    age_only = '{"age": 55}'
-
-    # pprint(breast_cancer_by_size(diag_request_age_only))
-
-    # d = diagnosis(diag_request, limit=25)
-    # pprint(d)
-    type_idc = '{"type": "IDC"}'
-    type_insitu = '{"type": "In-Situ"}'
-    type_ilc = '{"type": "ILC"}'
-    type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
-
-    # pprint(growth_by_specific_type(type_others, "$or"))
-    diag_request_age_for_stage = '{"age": 48, ' \
-                                 '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
-                                 '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
-
-    # pprint(breakout_by_stage(diag_request_age_for_stage))
-    # pprint(cause_of_death_within_ages_30_40())
-
-    input_json = '{"age": 48, ' \
-                 '"chemo": "Yes", ' \
-                 '"breast-adjusted-ajcc-6th-stage-1988": {"$in": ' \
-                 '["I", "IIA", "IIB", "IIIA", "IIIB", "IIIC", "IIINOS", "IV", 0]}}'
-
-    # pprint(breakout_by_stage(input_json))
-
-    # diag_request = '{"sex": "Female"}'
-    # pprint(breast_cancer_by_size(age_only))
-    # pprint(percent_of_women_with_cancer_by_race_overall())
-    # pprint(surgery_decisions(age_only))
-
-    # def wrapper(full_request):
-    #     only_age = {"age": json.loads(full_request)['age']}
-    #     return woman_annualy_diagnosed(json.dumps(only_age))
-    #
-    #
-    # pprint(wrapper(diag_request))
-
-    # pprint(growth_by_specific_type('{"type": "Other", "type": "IDC", "type": "ILC", "type": "In Situ"}', operator="$and"))
-
-    # type_others = '{"type": "Other", "type": "Mixed", "type": "IBC", "type": "Mixed "}'
-    # pprint(growth_by_specific_type(age_only, "$and"))
-
-    # pprint(diagnosis(diag_request, limit=20))
-    # age_and_race = '{"age": 48, "ethnicity":"White"}'
-    # pprint(distribution_of_stage_of_cancer(age_and_race))
-    # pprint(breast_cancer_by_size(age_only))
-    # pprint(percent_women_by_type())
-    # pprint(percent_women_annualy_diagnosed(diag_request))
-    # diag = diagnosis(diag_request, limit=20)
-    # print(len(diag))
-    # pprint(diag)
-    pprint(helper_get_positive_nodes(age_only))
