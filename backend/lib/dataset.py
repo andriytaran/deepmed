@@ -329,14 +329,13 @@ def custom_analytics(input_json, grouping):
         return cause_of_death(input_json)
     elif grouping == 'radiation':
         filters['$and'] = [d for d in filters['$and'] if 'radiation' not in d]
-        return radiation(input_json)
+        return radiation_filter(input_json)
     elif grouping == 'chemo':
         filters['$and'] = [d for d in filters['$and'] if 'chemo' not in d]
-        return chemotherapy(input_json)
+        return chemotherapy_filter(input_json)
     elif grouping == 'surgery':
         filters['$and'] = [d for d in filters['$and'] if 'surgery' not in d]
         return surgery_decisions(input_json)
-
 
 
 def breast_cancer_at_a_glance():
@@ -1286,7 +1285,7 @@ def breast_cancer_by_size(input_json):
     }
 
 
-def radiation(input_json):
+def radiation_filter(input_json):
     """
     sample request input_json = '{"age": 48, ' \
                    '"sex": "Female", ' \
@@ -1329,7 +1328,38 @@ def radiation(input_json):
     }
 
 
-def chemotherapy(input_json):
+def radiation():
+    """
+    :return: json
+    """
+    result = json.loads(aggregate([
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "data_subset": {"$push": "$radiation"}
+        }},
+        {"$unwind": "$data_subset"},
+        {"$group": {
+            "_id": {"radiation": "$data_subset", "total": "$total"},
+            "count": {"$sum": 1}}},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("_id", -1)])}]))
+
+    return {
+        'labels': list(map(lambda x: x['_id']['radiation'], result)),
+        'datasets': [{
+            'data': list(map(lambda x: x['percentage'], result)),
+            'label': "Radiation",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
+def chemotherapy_filter(input_json):
     """
     sample request input_json = '{"age": 48, ' \
                    '"sex": "Female", ' \
@@ -1346,6 +1376,37 @@ def chemotherapy(input_json):
     filters = create_filter(input_json)
     result = json.loads(aggregate([
         {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "chemo_set": {"$push": "$chemo"}
+        }},
+        {"$unwind": "$chemo_set"},
+        {"$group": {
+            "_id": {"chemo": "$chemo_set", "total": "$total"},
+            "count": {"$sum": 1}}},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("_id", -1)])}]))
+
+    return {
+        'labels': list(map(lambda x: x['_id']['chemo'], result)),
+        'datasets': [{
+            'data': list(map(lambda x: x['percentage'], result)),
+            'label': "Chemotherapy",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
+def chemotherapy():
+    """
+    :return:
+    """
+    result = json.loads(aggregate([
         {"$group": {
             "_id": "",
             "total": {"$sum": 1},
@@ -1881,7 +1942,8 @@ if __name__ == '__main__':
     diag_request_age_only = '{"age": 48}'
     age_only = '{"age": 55}'
 
-    pprint(custom_analytics(diag_request, 'type'))
+    pprint(custom_analytics(diag_request, 'radiation'))
+    pprint(radiation())
     exit()
 
     # pprint(breast_cancer_by_size(diag_request_age_only))
