@@ -318,9 +318,9 @@ def custom_analytics(input_json, grouping):
     elif grouping == 'stage':
         filters['$and'] = [d for d in filters['$and'] if 'breast-adjusted-ajcc-6th-stage-1988' not in d]
         return distribution_of_stage_of_cancer(input_json)
-    # elif grouping == 'type':
-    #     filters['$and'] = [d for d in filters['$and'] if 'type' not in d]
-    #     return percent_women_by_type(input_json)
+    elif grouping == 'type':
+        filters['$and'] = [d for d in filters['$and'] if 'type' not in d]
+        return by_type(input_json)
     elif grouping == 'race':
         filters['$and'] = [d for d in filters['$and'] if 'race-recode-w-b-ai-api' not in d]
         return percent_race_with_cancer_by_age(input_json)
@@ -1765,6 +1765,48 @@ def percent_women_by_type():
     }
 
 
+def by_type(input_json):
+    filters = create_filter(input_json)
+    result = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "subset": {"$push": "$type"}
+        }},
+        {"$unwind": "$subset"},
+        {"$group": {
+            "_id": {"type": "$subset", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}]))
+
+    data = {"IDC": 0, "DCIS": 0, "ILC": 0, "Other": 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['type'], result))):
+        if label == 'IDC':
+            data['IDC'] += result[i]['percentage']
+        elif label == 'In-Situ':
+            data['DCIS'] += result[i]['percentage']
+        elif label in ['Other', 'Mixed', 'IBC', 'Mixed ']:
+            data['Other'] += result[i]['percentage']
+        elif label == 'ILC':
+            data['ILC'] += result[i]['percentage']
+
+    return {
+        'labels': list(map(lambda x: x, data.keys())),
+        'datasets': [{
+            'data': list(map(lambda x: x, data.values())),
+            'label': "Diagnosed",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
 def percent_women_annualy_diagnosed(input_json):
     def get_total(year):
         ff = {"$and": [{"year-of-diagnosis": {"$gte": year}},
@@ -1839,7 +1881,7 @@ if __name__ == '__main__':
     diag_request_age_only = '{"age": 48}'
     age_only = '{"age": 55}'
 
-    pprint(custom_analytics(diag_request, 'stage'))
+    pprint(custom_analytics(diag_request, 'type'))
     exit()
 
     # pprint(breast_cancer_by_size(diag_request_age_only))
