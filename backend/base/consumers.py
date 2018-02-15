@@ -3,14 +3,14 @@ import json
 from channels.generic.websocket import JsonWebsocketConsumer
 from django.conf import settings
 
-from base.serializers import DiagnosisDataSerializer
+from base.serializers import DiagnosisDataSerializer, CustomAnalyticsSerializer
 from lib.dataset import percent_women_by_type, breast_cancer_by_grade, \
     breast_cancer_by_size, distribution_of_stage_of_cancer, \
     percent_of_women_with_cancer_by_race_overall, surgery_decisions, \
     chemotherapy, radiation, breakout_by_stage, \
     percent_race_with_cancer_by_age, breast_cancer_by_state2, \
     breast_cancer_at_a_glance2, breast_cancer_by_age, diagnosis, \
-    percent_women_annualy_diagnosed
+    percent_women_annualy_diagnosed, custom_analytics
 
 
 class DiagnosisConsumer(JsonWebsocketConsumer):
@@ -49,7 +49,8 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 surgery_args = ','.join([dd.get('sex'),
                                          str(dd.get('age')),
                                          dd.get('ethnicity'),
-                                         str(float(dd.get('tumor_grade', 'unk'))),
+                                         str(float(
+                                             dd.get('tumor_grade', 'unk'))),
                                          dd.get('site'),
                                          dd.get('type'),
                                          dd.get('stage'),
@@ -254,7 +255,8 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                         'surgery_confidence_level': 100 - surgery_level if
                         surgery_response[0] == 'Mastectomy' else surgery_level
                     })
-                elif (surgery_response[0] == 'Mastectomy' and surgery_level < 50) \
+                elif (surgery_response[
+                          0] == 'Mastectomy' and surgery_level < 50) \
                         or (surgery_response[
                                 0] == 'Lumpectomy' and surgery_level >= 50):
                     overall_plans.append({
@@ -591,10 +593,43 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
                     obj['Surgery'] = 'Lumpectomy'
 
                 if obj.get('T_size'):
-                    obj['T_size'] = '{}cm'.format(round(obj.get('T_size')/10))
+                    obj['T_size'] = '{}cm'.format(
+                        round(obj.get('T_size') / 10, 1))
 
             similar_diagnosis = simdx_response
         except:
             pass
 
         self.send_json({'similar_diagnosis': similar_diagnosis})
+
+
+class CustomAnalyticsConsumer(JsonWebsocketConsumer):
+    serializer_class = CustomAnalyticsSerializer
+
+    def connect(self):
+        # Called on connection. Either call
+        if self.scope['user']:
+            self.accept()
+        else:
+            self.close()
+
+    def receive_json(self, content, **kwargs):
+        serializer = self.serializer_class(data=content.get('filters', {}))
+        group = content.get('group', None)
+
+        if group not in ['grade', 'stage', 'type', 'race', 'cod', 'radiation',
+                         'chemo', 'surgery']:
+            self.send_json({'error': 'Invalid group parameter'})
+            self.close()
+
+        if not serializer.is_valid():
+            self.send_json({'error': 'Data not valid.',
+                            'extra': serializer.errors})
+            self.close()
+
+        dd = dict(serializer.validated_data)
+
+        custom_analytics_response = custom_analytics(
+            json.dumps(dd, ensure_ascii=False), group)
+
+        self.send_json({'custom_analytics': custom_analytics_response})

@@ -1,6 +1,21 @@
 from rest_framework import serializers
 
 
+class CustomAnalyticsSerializer(serializers.Serializer):
+    """
+    Serializer for custom analytics request input details.
+    """
+    age = serializers.IntegerField(required=False)
+    ethnicity = serializers.CharField(required=False)
+    tumor_grade = serializers.IntegerField(required=False)
+    num_pos_nodes = serializers.IntegerField(required=False)
+    er_status = serializers.CharField(required=False)
+    pr_status = serializers.CharField(required=False)
+    her2_status = serializers.CharField(required=False)
+    type = serializers.CharField(required=False)
+    number_of_tumors = serializers.IntegerField(required=False)
+
+
 class DiagnosisSerializer(serializers.Serializer):
     """
     Serializer for diagnosis request input details.
