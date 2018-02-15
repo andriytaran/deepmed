@@ -10,7 +10,8 @@ from lib.dataset import percent_women_by_type, breast_cancer_by_grade, \
     chemotherapy, radiation, breakout_by_stage, \
     percent_race_with_cancer_by_age, breast_cancer_by_state2, \
     breast_cancer_at_a_glance2, breast_cancer_by_age, diagnosis, \
-    percent_women_annualy_diagnosed, custom_analytics
+    percent_women_annualy_diagnosed, custom_analytics, chemotherapy_filter, \
+    radiation_filter
 
 
 class DiagnosisConsumer(JsonWebsocketConsumer):
@@ -483,29 +484,14 @@ class IndividualStatisticsConsumer(JsonWebsocketConsumer):
         self.send_json({'surgery_decisions': surgery_decisions_response})
 
         chemotherapy_response = {
-            'overall': chemotherapy(age),
-            'breakout_by_stage': breakout_by_stage(
-                json.dumps({
-                    'age': dd.get('age'),
-                    'chemo': 'Yes',
-                    "breast-adjusted-ajcc-6th-stage-1988": {
-                        "$in": ["I", "IIA", "IIB", "IIIA",
-                                "IIIB", "IIIC", "IIINOS", "IV",
-                                0]
-                    }}, ensure_ascii=False))
+            'overall': chemotherapy(),
+            'breakout_by_stage': chemotherapy_filter(age)
         }
         self.send_json({'chemotherapy': chemotherapy_response})
 
         radiation_response = {
-            'overall': radiation(age),
-            'breakout_by_stage': breakout_by_stage(json.dumps({
-                'age': dd.get('age'),
-                'radiation': 'Yes',
-                "breast-adjusted-ajcc-6th-stage-1988": {
-                    "$in": ["I", "IIA", "IIB", "IIIA",
-                            "IIIB", "IIIC", "IIINOS", "IV",
-                            0]
-                }}, ensure_ascii=False))
+            'overall': radiation(),
+            'breakout_by_stage': radiation_filter(age)
         }
         self.send_json({'radiation': radiation_response})
 
