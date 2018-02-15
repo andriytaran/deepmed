@@ -54,7 +54,7 @@ class SimilarDiagnoses extends React.Component {
                     <tr key={i}>
                       <td>{item['Age']}</td>
                       <td>{item['Race_group']}</td>
-                      <td>{item['T_Size']}</td>
+                      <td>{item['T_size']}</td>
                       <td>{item['Grade']}</td>
                       <td>{item['ER_status']}</td>
                       <td>{item['PR_status']}</td>
