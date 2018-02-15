@@ -392,7 +392,7 @@ class SpecificStates extends React.Component {
                       width={400}
                       height={150}
                     />
-                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>by Stage</strong></p>
+                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>Within Your<br/>Age Bracket</strong></p>
                     <Pie
                       data={{
                         ...individualStatistics.chemotherapy.breakout_by_stage,
@@ -453,7 +453,7 @@ class SpecificStates extends React.Component {
                       width={400}
                       height={160}
                     />
-                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>by Stage</strong></p>
+                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>Within Your<br/>Age Bracket</strong></p>
                     <Pie
                       data={{
                         ...individualStatistics.radiation.breakout_by_stage,
