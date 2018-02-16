@@ -1,6 +1,89 @@
-export const WEEK = 7
-export const YEAR = 365
+export const WEEK = 604800
+export const YEAR = 31536000
+
 export const RACES = ['Asian', 'African American', 'Caucasian', 'American Indian/Alaska Native', 'Other']
+
+export const GROUPED_RACES = [
+  {
+    label: 'Caucasian',
+    values: [
+      'Caucasian'
+    ]
+  },
+  {
+    label: 'African American',
+    values: [
+      'African American'
+    ]
+  },
+  {
+    label: 'Filipino',
+    values: [
+      'Filipino'
+    ]
+  },
+  {
+    label: 'Chinese',
+    values: [
+      'Chinese',
+      'Hmong'
+    ]
+  },
+  {
+    label: 'Japanese',
+    values: [
+      'Japanese'
+    ]
+  },
+  {
+    label: 'Korean',
+    values: [
+      'Korean'
+    ]
+  },
+  {
+    label: 'American Indian/Alaska Native',
+    values: [
+      'American Indian'
+    ]
+  },
+  {
+    label: 'Vietnamese',
+    values: [
+      'Vietnamese'
+    ]
+  },
+  {
+    label: 'South Asian',
+    values: [
+      'Asian Indian',
+      'Pakistani'
+    ]
+  },
+  {
+    label: 'Pacific Islander',
+    values: [
+      'Pacific Islander',
+      'Samoan',
+      'Tongan',
+      'Fiji Islander',
+      'Guamanian',
+      'Micronesian',
+      'Melanesian',
+      'Polynesian',
+      'New Guinean',
+      'Chamorran',
+      'Tahitian'
+    ]
+  },
+  {
+    label: 'Thai',
+    values: [
+      'Thai'
+    ]
+  }
+]
+
 export const AGES = [
   {value: 35, label: '30-40'},
   {value: 45, label: '40-50'},
@@ -57,6 +140,6 @@ export const REGIONS = [
   {value: 'Regional', label: 'Regional'},
   {value: 'unk', label: 'Unknown'},
 ]
-export const PREV_TOKEN_COOKIE = '_prev_token'
-export const TOKEN_COOKIE = '_token'
-export const REFRESH_TOKEN_COOKIE = '_refresh_token'
+export const PREV_TOKEN_COOKIE = '_prev_token_'
+export const TOKEN_COOKIE = '_token_'
+export const REFRESH_TOKEN_COOKIE = '_refresh_token_'

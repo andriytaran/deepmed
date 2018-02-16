@@ -1,6 +1,5 @@
 import path from 'path'
 import express from 'express'
-import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
 import nodeFetch from 'node-fetch'
 import React from 'react'
@@ -19,7 +18,7 @@ import {
   setCurrentPathname,
 } from './reducers/global'
 import config from './config'
-import Cookies from 'cookies'
+import cookiesMiddleware from 'universal-cookie-express'
 
 const app = express()
 
@@ -34,7 +33,7 @@ global.navigator.userAgent = global.navigator.userAgent || 'all'
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
 app.use(express.static(path.resolve(__dirname, 'public')))
-app.use(cookieParser())
+app.use(cookiesMiddleware())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
@@ -43,18 +42,21 @@ app.use(bodyParser.json())
 // -----------------------------------------------------------------------------
 app.get('*', async (req, res, next) => {
   try {
-    const cookies = new Cookies(req, res)
+    const cookies = req.universalCookies
+
     // Universal HTTP client
     const fetch = createFetch(nodeFetch, {
       apiUrl: `${config.api.url}/v1`,
+      cookies,
     })
 
     const initialState = {}
 
     const store = configureStore(initialState, {
       fetch,
+      cookies,
       // I should not use `history` on server.. but how I do redirection? follow universal-router
-    }, cookies)
+    })
 
     store.dispatch(setCurrentPathname(req.path))
     store.dispatch(setConfigVars({

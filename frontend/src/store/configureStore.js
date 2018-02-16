@@ -1,15 +1,13 @@
 import {applyMiddleware, compose, createStore} from 'redux'
-import {createCookieMiddleware} from 'redux-cookie'
 import thunk from 'redux-thunk'
 import rootReducer from '../reducers'
 import createHelpers from './createHelpers'
 import socketMiddleware from './socketMiddleware'
 
-export default function configureStore(initialState, helpersConfig, cookies, wsUrl) {
+export default function configureStore(initialState, helpersConfig, wsUrl) {
   const helpers = createHelpers(helpersConfig)
   const middleware = [
     thunk.withExtraArgument(helpers),
-    createCookieMiddleware(cookies),
   ]
 
   if (process.env.BROWSER) {

@@ -10,18 +10,21 @@ import configureStore from './store/configureStore'
 import history from './history'
 import {updateMeta} from './DOMUtils'
 import router from './router'
-import cookies from 'js-cookie'
 import {setCurrentPathname} from './reducers/global'
+import Cookies from 'universal-cookie'
 
 /* eslint-disable global-require */
+
+const cookies = new Cookies()
 
 // Global (context) variables that can be easily accessed from any React component
 // https://facebook.github.io/react/docs/context.html
 const whatwgFetch = createFetch(fetch, {
   apiUrl: window.App.apiUrl,
+  cookies,
 })
 
-const store = configureStore(window.App.state, {history, fetch: whatwgFetch}, cookies, window.App.wsUrl)
+const store = configureStore(window.App.state, {history, fetch: whatwgFetch, cookies}, window.App.wsUrl)
 
 const context = {
   // Enables critical path CSS rendering

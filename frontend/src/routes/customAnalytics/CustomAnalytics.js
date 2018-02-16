@@ -4,7 +4,7 @@ import {createForm} from 'rc-form'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './CustomAnalytics.scss'
 import {Row, Col, Select, Card} from '../../components'
-import {RACES, AGES, TYPES, TUMOR_SIZES, SITES, NUMBER_OF_NODES} from '../../constants'
+import {AGES, TYPES, TUMOR_SIZES, SITES, NUMBER_OF_NODES, GROUPED_RACES} from '../../constants'
 import {getCustomAnalytics} from '../../reducers/diagnosis'
 import messages from '../../components/messages'
 import pickBy from 'lodash/pickBy'
@@ -95,8 +95,12 @@ class CustomAnalytics extends React.Component {
                   label={'Ethnicity'}
                 >
                   <option value='' disabled hidden>Select...</option>
-                  {RACES.map((item, i) =>
-                    <option key={i}>{item}</option>
+                  {GROUPED_RACES.map((raceGroup, i) =>
+                    <optgroup key={i} label={raceGroup.label}>
+                      {raceGroup.values.map((item, j) =>
+                        <option key={j}>{item}</option>
+                      )}
+                    </optgroup>
                   )}
                 </Select>
               )}
@@ -243,36 +247,40 @@ class CustomAnalytics extends React.Component {
             </div>
           </Col>
           <Col xs={24} md={16} className={s.chartColumn}>
-            <div className={s.groupWrapper}>
-              {getFieldDecorator('group', {
-                initialValue: '',
-                rules: [
-                  {required: true, message: messages.required},
-                ]
-              })(
-                <Select className={s.field} error={getFieldError('group')} label={'Group by'}>
-                  <option value='' disabled hidden>Select...</option>
-                  <option value={'grade'} disabled={fields.grade}>Tumor Grade</option>
-                  <option value={'size'} disabled={fields.size}>Tumor Size</option>
-                  <option value={'stage'}>Stage</option>
-                  <option value={'type'} disabled={fields.type}>Type</option>
-                  <option value={'ethnicity'} disabled={fields.ethnicity}>Ethnicity</option>
-                  <option value={'cod'}>Status</option>
-                  <option value={'radiation'}>Radiation</option>
-                  <option value={'chemo'}>Chemotherapy</option>
-                  <option value={'surgery'}>Surgery</option>
-                </Select>
-              )}
-              <a
-                className={s.clearFiltersBtn}
-                onClick={this.clearFilters}
-              >
-                Clear filters
-              </a>
-              <div className={s.submitBtnWrapper}>
-                <button className='btn btn-primary' type='submit'>Submit</button>
-              </div>
-            </div>
+            <Row type='flex' align='middle'>
+              <Col xs={{span: 24, offset: 0}} md={{span: 8, offset: 8}} className={s.groupWrapper}>
+                {getFieldDecorator('group', {
+                  initialValue: '',
+                  rules: [
+                    {required: true, message: messages.required},
+                  ]
+                })(
+                  <Select className={s.field} error={getFieldError('group')} label={'Group by'}>
+                    <option value='' disabled hidden>Select...</option>
+                    <option value={'grade'} disabled={fields.grade}>Tumor Grade</option>
+                    <option value={'size'} disabled={fields.size}>Tumor Size</option>
+                    <option value={'stage'}>Stage</option>
+                    <option value={'type'} disabled={fields.type}>Type</option>
+                    <option value={'ethnicity'} disabled={fields.ethnicity}>Ethnicity</option>
+                    <option value={'cod'}>Status</option>
+                    <option value={'radiation'}>Radiation</option>
+                    <option value={'chemo'}>Chemotherapy</option>
+                    <option value={'surgery'}>Surgery</option>
+                  </Select>
+                )}
+              </Col>
+              <Col xs={24} md={8} className={s.actions}>
+                <a
+                  className={s.clearFiltersBtn}
+                  onClick={this.clearFilters}
+                >
+                  Clear filters
+                </a>
+                <div className={s.submitBtnWrapper}>
+                  <button className='btn btn-primary' type='submit'>Submit</button>
+                </div>
+              </Col>
+            </Row>
             <div className={s.chartWrapper}>
               <Card
                 className={s.chartCard}
