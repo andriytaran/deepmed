@@ -10,6 +10,13 @@ export const AGES = [
   {value: 75, label: '71-80'},
 ]
 
+export const TUMOR_SIZES = [
+  {value: 0, label: 'n = 0'},
+  {value: 2, label: 'n < 3'},
+  {value: 6, label: 'n > 3'},
+  {value: 10, label: 'n > 9'},
+]
+
 export const SITES = [
   {value: 'Axillary', label: 'Axillary'},
   {value: 'Center', label: 'Center'},

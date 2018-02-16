@@ -4,7 +4,7 @@ import {createForm} from 'rc-form'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './CustomAnalytics.scss'
 import {Row, Col, Select, Card} from '../../components'
-import {RACES, AGES, TYPES} from '../../constants'
+import {RACES, AGES, TYPES, TUMOR_SIZES} from '../../constants'
 import {getCustomAnalytics} from '../../reducers/diagnosis'
 import messages from '../../components/messages'
 import pickBy from 'lodash/pickBy'
@@ -42,6 +42,7 @@ class CustomAnalytics extends React.Component {
 
   clearFilters = () => {
     this.props.form.resetFields()
+    this.setState({fields: {}})
   }
 
   render() {
@@ -95,6 +96,22 @@ class CustomAnalytics extends React.Component {
                   <option value='' disabled hidden>Select...</option>
                   {RACES.map((item, i) =>
                     <option key={i}>{item}</option>
+                  )}
+                </Select>
+              )}
+            </div>
+            <div className={s.filter}>
+              {getFieldDecorator('filters[size]', {
+                initialValue: '',
+              })(
+                <Select
+                  onChange={(e) => this.changeField(e.target.value, 'size')}
+                  className={s.field}
+                  error={getFieldError('filters[size]')}
+                  label={'Tumor Size'}>
+                  <option value='' disabled hidden>Select...</option>
+                  {TUMOR_SIZES.map((item, i) =>
+                    <option key={i} value={item.value}>{item.label}</option>
                   )}
                 </Select>
               )}
@@ -205,10 +222,11 @@ class CustomAnalytics extends React.Component {
                 <Select className={s.field} error={getFieldError('group')} label={'Group by'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value={'grade'} disabled={fields.grade}>Tumor Grade</option>
+                  <option value={'size'} disabled={fields.size}>Tumor Size</option>
                   <option value={'stage'}>Stage</option>
                   <option value={'type'} disabled={fields.type}>Type</option>
                   <option value={'ethnicity'} disabled={fields.ethnicity}>Ethnicity</option>
-                  <option value={'cod'}>Cause of Death</option>
+                  <option value={'cod'}>Status</option>
                   <option value={'radiation'}>Radiation</option>
                   <option value={'chemo'}>Chemotherapy</option>
                   <option value={'surgery'}>Surgery</option>

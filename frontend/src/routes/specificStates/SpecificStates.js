@@ -36,7 +36,7 @@ class SpecificStates extends React.Component {
           <Row type='flex' gutter={16}>
             <Col xs={24} sm={12} md={8} className={s.col}>
               <Card
-                title={`Women Ages ${ageRange} as a Percent of total Diagnoses`}
+                title={`Women ${ageRange} as a Percent of total Diagnoses`}
                 loading={isNil(individualStatistics.percent_women_annualy_diagnosed)}
               >
                 {!isEmpty(individualStatistics.percent_women_annualy_diagnosed) && (
@@ -301,7 +301,7 @@ class SpecificStates extends React.Component {
             </Col>
             <Col xs={24} sm={12} md={8} className={s.col}>
               <Card
-                title={`Surgery Decisions for Women Ages ${ageRange}`}
+                title={`Surgery Decisions for Women ${ageRange}`}
                 loading={isNil(individualStatistics.surgery_decisions)}
               >
                 {!isEmpty(individualStatistics.surgery_decisions) && (
@@ -331,7 +331,7 @@ class SpecificStates extends React.Component {
                       width={400}
                       height={150}
                     />
-                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>Within Your<br/>Age Bracket</strong></p>
+                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>{ageRange}</strong></p>
                     <Pie
                       data={{
                         ...individualStatistics.surgery_decisions.by_age,
@@ -392,7 +392,7 @@ class SpecificStates extends React.Component {
                       width={400}
                       height={150}
                     />
-                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>Within Your<br/>Age Bracket</strong></p>
+                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>{ageRange}</strong></p>
                     <Pie
                       data={{
                         ...individualStatistics.chemotherapy.breakout_by_stage,
@@ -453,7 +453,7 @@ class SpecificStates extends React.Component {
                       width={400}
                       height={160}
                     />
-                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>Within Your<br/>Age Bracket</strong></p>
+                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>{ageRange}</strong></p>
                     <Pie
                       data={{
                         ...individualStatistics.radiation.breakout_by_stage,
