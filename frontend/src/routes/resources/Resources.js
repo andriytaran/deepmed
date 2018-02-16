@@ -30,7 +30,7 @@ class Resources extends React.Component {
               </Col>
               <Col xs={24} md={12} className={s.col}>
                 <div className={s.card}>
-                  <h2 className="push-top-2 push-bot-2">Links to Pubmed Studies Studies <span className="text-light">({resources.pubmed.length})</span>
+                  <h2 className="push-top-2 push-bot-2">Links to Pubmed Studies <span className="text-light">({resources.pubmed.length})</span>
                   </h2>
                   <div className="custom-scroll-bar-wrapper max-height-300">
                     <div className="scrollbar-inner">

@@ -9,7 +9,7 @@ class CustomAnalyticsSerializer(serializers.Serializer):
     ethnicity = serializers.CharField(required=False)
     tumor_grade = serializers.IntegerField(required=False)
     tumor_size = serializers.CharField(required=False)
-    num_pos_nodes = serializers.IntegerField(required=False)
+    num_pos_nodes = serializers.CharField(required=False)
     er_status = serializers.CharField(required=False)
     pr_status = serializers.CharField(required=False)
     her2_status = serializers.CharField(required=False)

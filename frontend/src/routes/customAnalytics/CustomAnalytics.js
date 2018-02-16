@@ -4,14 +4,14 @@ import {createForm} from 'rc-form'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './CustomAnalytics.scss'
 import {Row, Col, Select, Card} from '../../components'
-import {RACES, AGES, TYPES, TUMOR_SIZES} from '../../constants'
+import {RACES, AGES, TYPES, TUMOR_SIZES, SITES, NUMBER_OF_NODES} from '../../constants'
 import {getCustomAnalytics} from '../../reducers/diagnosis'
 import messages from '../../components/messages'
 import pickBy from 'lodash/pickBy'
 import identity from 'lodash/identity'
 import isEmpty from 'lodash/isEmpty'
 import {Pie} from 'react-chartjs-2'
-import {formatChartNumber} from '../../utils'
+import {formatChartNumber, getAverageAge} from '../../utils'
 
 class CustomAnalytics extends React.Component {
   state = {
@@ -64,7 +64,8 @@ class CustomAnalytics extends React.Component {
       padding: 8
     }
     const {fields} = this.state
-    const {customAnalytics, customAnalyticsLoading} = this.props
+    const {customAnalytics, customAnalyticsLoading, diagnosisForm} = this.props
+    const averageAge = diagnosisForm.age ? getAverageAge(diagnosisForm.age) : ''
     const {getFieldDecorator, getFieldError} = this.props.form
 
     return (
@@ -73,7 +74,7 @@ class CustomAnalytics extends React.Component {
           <Col xs={24} md={6}>
             <div className={s.filter}>
               {getFieldDecorator('filters[age]', {
-                initialValue: '',
+                initialValue: averageAge,
               })(
                 <Select className={s.field} error={getFieldError('filters[age]')} label={'Age'}>
                   <option value='' disabled hidden>Select...</option>
@@ -85,7 +86,7 @@ class CustomAnalytics extends React.Component {
             </div>
             <div className={s.filter}>
               {getFieldDecorator('filters[ethnicity]', {
-                initialValue: '',
+                initialValue: diagnosisForm.ethnicity,
               })(
                 <Select
                   onChange={(e) => this.changeField(e.target.value, 'ethnicity')}
@@ -102,7 +103,7 @@ class CustomAnalytics extends React.Component {
             </div>
             <div className={s.filter}>
               {getFieldDecorator('filters[size]', {
-                initialValue: '',
+                initialValue: diagnosisForm.tumor_size_in_mm,
               })(
                 <Select
                   onChange={(e) => this.changeField(e.target.value, 'size')}
@@ -118,7 +119,7 @@ class CustomAnalytics extends React.Component {
             </div>
             <div className={s.filter}>
               {getFieldDecorator('filters[tumor_grade]', {
-                initialValue: '',
+                initialValue: diagnosisForm.tumor_grade,
               })(
                 <Select
                   onChange={(e) => this.changeField(e.target.value, 'grade')}
@@ -135,19 +136,19 @@ class CustomAnalytics extends React.Component {
             </div>
             <div className={s.filter}>
               {getFieldDecorator('filters[num_pos_nodes]', {
-                initialValue: '',
+                initialValue: diagnosisForm.num_pos_nodes,
               })(
                 <Select className={s.field} error={getFieldError('filters[num_pos_nodes]')} label={'Number of Positive Nodes'}>
                   <option value='' disabled hidden>Select...</option>
-                  {Array.from(new Array(24), (val, i) =>
-                    <option key={i} value={i}>{i === 23 ? i + '+' : i}</option>
+                  {NUMBER_OF_NODES.map((item, i) =>
+                    <option key={i} value={item.value}>{item.label}</option>
                   )}
                 </Select>
               )}
             </div>
             <div className={s.filter}>
               {getFieldDecorator('filters[er_status]', {
-                initialValue: '',
+                initialValue: diagnosisForm.er_status,
               })(
                 <Select className={s.field} error={getFieldError('filters[er_status]')} label={'ER Status'}>
                   <option value='' disabled hidden>Select...</option>
@@ -158,7 +159,7 @@ class CustomAnalytics extends React.Component {
             </div>
             <div className={s.filter}>
               {getFieldDecorator('filters[pr_status]', {
-                initialValue: '',
+                initialValue: diagnosisForm.pr_status,
               })(
                 <Select className={s.field} error={getFieldError('filters[pr_status]')} label={'PR Status'}>
                   <option value='' disabled hidden>Select...</option>
@@ -169,7 +170,7 @@ class CustomAnalytics extends React.Component {
             </div>
             <div className={s.filter}>
               {getFieldDecorator('filters[her2_status]', {
-                initialValue: '',
+                initialValue: diagnosisForm.her2_status,
               })(
                 <Select className={s.field} error={getFieldError('filters[her2_status]')} label={'HER2 Status'}>
                   <option value='' disabled hidden>Select...</option>
@@ -179,8 +180,41 @@ class CustomAnalytics extends React.Component {
               )}
             </div>
             <div className={s.filter}>
+              {getFieldDecorator('filters[laterality]', {
+                initialValue: diagnosisForm.laterality,
+              })(
+                <Select
+                  onChange={(e) => this.changeField(e.target.value, 'laterality')}
+                  className={s.field}
+                  error={getFieldError('filters[laterality]')}
+                  label={'Laterality'}
+                >
+                  <option value='' disabled hidden>Select...</option>
+                  <option value='left'>Left</option>
+                  <option value='right'>Right</option>
+                </Select>
+              )}
+            </div>
+            <div className={s.filter}>
+              {getFieldDecorator('filters[site]', {
+                initialValue: diagnosisForm.site,
+              })(
+                <Select
+                  onChange={(e) => this.changeField(e.target.value, 'site')}
+                  className={s.field}
+                  error={getFieldError('filters[site]')}
+                  label={'Site'}
+                >
+                  <option value='' disabled hidden>Select...</option>
+                  {SITES.map((site, i) =>
+                    <option key={i} value={site.value}>{site.label}</option>
+                  )}
+                </Select>
+              )}
+            </div>
+            <div className={s.filter}>
               {getFieldDecorator('filters[type]', {
-                initialValue: '',
+                initialValue: diagnosisForm.type,
               })(
                 <Select
                   onChange={(e) => this.changeField(e.target.value, 'type')}
@@ -197,7 +231,7 @@ class CustomAnalytics extends React.Component {
             </div>
             <div className={s.filter}>
               {getFieldDecorator('filters[number_of_tumors]', {
-                initialValue: '',
+                initialValue: diagnosisForm.number_of_tumors,
               })(
                 <Select className={s.field} error={getFieldError('filters[number_of_tumors]')} label={'Number of tumors'}>
                   <option value='' disabled hidden>Select...</option>
@@ -206,9 +240,6 @@ class CustomAnalytics extends React.Component {
                   )}
                 </Select>
               )}
-            </div>
-            <div className={s.submitBtnWrapper}>
-              <button className='btn btn-primary' type='submit'>Submit</button>
             </div>
           </Col>
           <Col xs={24} md={16} className={s.chartColumn}>
@@ -238,6 +269,9 @@ class CustomAnalytics extends React.Component {
               >
                 Clear filters
               </a>
+              <div className={s.submitBtnWrapper}>
+                <button className='btn btn-primary' type='submit'>Submit</button>
+              </div>
             </div>
             <div className={s.chartWrapper}>
               <Card

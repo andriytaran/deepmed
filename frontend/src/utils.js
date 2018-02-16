@@ -16,3 +16,8 @@ export const getAgeRangeLabel = (age) => {
   const nearestRoundedDown10 = parseInt(+age / 10, 10) * 10
   return `Ages ${nearestRoundedDown10}-${nearestRoundedDown10 + 10}`
 }
+
+export const getAverageAge = (age) => {
+  const nearestRoundedDown10 = parseInt(+age / 10, 10) * 10
+  return parseInt(nearestRoundedDown10 + 5)
+}

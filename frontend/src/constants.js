@@ -2,20 +2,25 @@ export const WEEK = 7
 export const YEAR = 365
 export const RACES = ['Asian', 'African American', 'Caucasian', 'American Indian/Alaska Native', 'Other']
 export const AGES = [
-  {value: 25, label: '21-30'},
-  {value: 35, label: '31-40'},
-  {value: 45, label: '41-50'},
-  {value: 55, label: '51-60'},
-  {value: 65, label: '61-70'},
-  {value: 75, label: '71-80'},
+  {value: 35, label: '30-40'},
+  {value: 45, label: '40-50'},
+  {value: 55, label: '50-60'},
+  {value: 65, label: '60-70'},
+  {value: 75, label: '70-80'},
   {value: 81, label: '80+'},
 ]
 
 export const TUMOR_SIZES = [
-  {value: 0, label: 'n = 0'},
-  {value: 2, label: 'n < 3'},
-  {value: 6, label: 'n > 3'},
-  {value: 10, label: 'n > 9'},
+  {value: '0-2cm', label: '0-2cm'},
+  {value: '2-5cm', label: '2-5cm'},
+  {value: '5cm+', label: '5cm+'},
+]
+
+export const NUMBER_OF_NODES = [
+  {value: '0', label: '0'},
+  {value: '1-3', label: '1-3'},
+  {value: '4-8', label: '4-8'},
+  {value: '9+', label: '9+'},
 ]
 
 export const SITES = [
