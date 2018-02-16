@@ -323,7 +323,7 @@ def custom_analytics(input_json, grouping):
         return by_type(input_json)
     elif grouping == 'size':
         filters['$and'] = [d for d in filters['$and'] if 't-size-cm' not in d]
-        return breast_cancer_by_size(input_json)
+        return ca_by_size(input_json)
     elif grouping == 'race':
         filters['$and'] = [d for d in filters['$and'] if 'race-recode-w-b-ai-api' not in d]
         return percent_by_race(input_json)
@@ -1276,6 +1276,64 @@ def breast_cancer_by_size(input_json):
             data['> 5cm'] += result[i]['percentage']
         elif label == 'Micro':
             data['< 1cm'] += result[i]['percentage']
+
+    return {
+        'labels': list(map(lambda x: x, data.keys())),
+        'datasets': [{
+            'data': list(map(lambda x: x, data.values())),
+            'label': "Diagnosed",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
+def ca_by_size(input_json):
+    """
+    sample request input_json = '{"age": 48, ' \
+                   '"sex": "Female", ' \
+                   '"tumor_grade": 1, ' \
+                   '"er_status": "+", ' \
+                   '"pr_status": "+", ' \
+                   '"tumor_size_in_mm": 22, ' \
+                   '"num_pos_nodes": 0, ' \
+                   '"her2_status": "+", ' \
+                   '"ethnicity": "White"}'
+    :param input_json:
+    :return: json
+    """
+    only_age = {"age": json.loads(input_json)['age']}
+    filters = create_filter(json.dumps(only_age))
+    sizes = ['< 1cm', '<2cm', '<3cm', '>3cm', '>5cm', 'Micro']
+    filters['$and'].append({"t-size-cm": {"$in": sizes}})
+    result = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "subset": {"$push": "$t-size-cm"}
+        }},
+        {"$unwind": "$subset"},
+        {"$group": {
+            "_id": {"t-size-cm": "$subset", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}]))
+
+    data = {'0-2cm': 0, '2-5cm': 0, '5cm+': 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['t-size-cm'], result))):
+        if label in ['Micro', '< 1cm', '<2cm']:
+            data['0-2cm'] += result[i]['percentage']
+        elif label in ['<3cm', '>3cm']:
+            data['2-5cm'] += result[i]['percentage']
+        elif label == '>5cm':
+            data['5cm+'] += result[i]['percentage']
+        else:
+            print(label)
 
     return {
         'labels': list(map(lambda x: x, data.keys())),
