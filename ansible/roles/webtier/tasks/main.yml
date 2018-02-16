@@ -12,8 +12,8 @@
   register: site_git_clone
   tags: [backend, frontend]
 
-#- include: backend.yml
-#  tags: [backend]
+- include: backend.yml
+  tags: [backend]
 
 - include: frontend.yml
   tags: [frontend]
