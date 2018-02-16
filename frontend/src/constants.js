@@ -8,6 +8,7 @@ export const AGES = [
   {value: 55, label: '51-60'},
   {value: 65, label: '61-70'},
   {value: 75, label: '71-80'},
+  {value: 81, label: '80+'},
 ]
 
 export const TUMOR_SIZES = [
