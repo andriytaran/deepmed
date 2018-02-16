@@ -582,6 +582,9 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
                     obj['T_size'] = '{}cm'.format(
                         round(obj.get('T_size') / 10, 1))
 
+                if obj.get('COD to site recode') not in ['Breast', 'Alive']:
+                    obj['COD to site recode'] = 'Other'
+
             similar_diagnosis = simdx_response
         except:
             pass
