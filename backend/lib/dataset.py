@@ -321,9 +321,12 @@ def custom_analytics(input_json, grouping):
     elif grouping == 'type':
         filters['$and'] = [d for d in filters['$and'] if 'type' not in d]
         return by_type(input_json)
+    elif grouping == 'size':
+        filters['$and'] = [d for d in filters['$and'] if 't-size-cm' not in d]
+        return breast_cancer_by_size(input_json)
     elif grouping == 'race':
         filters['$and'] = [d for d in filters['$and'] if 'race-recode-w-b-ai-api' not in d]
-        return percent_race_with_cancer_by_age(input_json)
+        return percent_by_race(input_json)
     elif grouping == 'cod':
         filters['$and'] = [d for d in filters['$and'] if 'cod-to-site-recode' not in d]
         return cause_of_death(input_json)
@@ -1732,6 +1735,85 @@ def percent_race_with_cancer_by_age(input_json):
     }
 
 
+def percent_by_race(input_json):
+    """
+    sample request input_json = '{"age": 48, ' \
+                   '"sex": "Female", ' \
+                   '"tumor_grade": 1, ' \
+                   '"er_status": "+", ' \
+                   '"pr_status": "+", ' \
+                   '"tumor_size_in_mm": 22, ' \
+                   '"num_pos_nodes": 0, ' \
+                   '"her2_status": "+", ' \
+                   '"ethnicity": "White"}'
+    :param input_json:
+    :return: json
+    """
+    filters = create_filter(input_json)
+    result = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "race_set": {"$push": "$race-ethnicity"}
+        }},
+        {"$unwind": "$race_set"},
+        {"$group": {
+            "_id": {"race-ethnicity": "$race_set", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}]))
+
+    data = {"Caucasian": 0, "African American": 0, "Filipino": 0, "Chinese": 0, "Japanese": 0, "Other Asian": 0,
+            "Korean": 0, "American Indian": 0, "Vietnamese": 0, "Other": 0, "Hawaiian": 0, "South Asian": 0,
+            "Thai": 0, "Pacific Islander": 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['race-ethnicity'], result))):
+        if label == 'White':
+            data['Caucasian'] += result[i]['percentage']
+        elif label == 'Black':
+            data['African American'] += result[i]['percentage']
+        elif label == 'Filipino':
+            data['Filipino'] += result[i]['percentage']
+        elif label in ['Chinese', 'Hmong (1988+)']:
+            data['Chinese'] += result[i]['percentage']
+        elif label == 'Japanese':
+            data['Japanese'] += result[i]['percentage']
+        elif label in ['Other Asian (1991+)', 'Kampuchean (1988+)', 'Laotian (1988+)']:
+            data['Other Asian'] += result[i]['percentage']
+        elif label == 'Korean (1988+)':
+            data['Korean'] += result[i]['percentage']
+        elif label == 'American Indian/Alaska Native':
+            data['American Indian'] += result[i]['percentage']
+        elif label == 'Vietnamese (1988+)':
+            data['Vietnamese'] += result[i]['percentage']
+        elif label == 'Hawaiian':
+            data['Hawaiian'] += result[i]['percentage']
+        elif label in ['Asian Indian (2010+)', 'Asian Indian or Pakistani, NOS (1988+)', 'Pakistani (2010+)']:
+            data['South Asian'] += result[i]['percentage']
+        elif label == 'Thai (1994+)':
+            data['Thai'] += result[i]['percentage']
+        elif label in ['Pacific Islander, NOS (1991+)', 'Samoan (1991+)', 'Tongan (1991+)', 'Fiji Islander (1991+)',
+                       'Guamanian, NOS (1991+)', 'Micronesian, NOS (1991+)', 'Melanesian, NOS (1991+)',
+                       'Polynesian, NOS (1991+)', 'New Guinean (1991+)', 'Chamorran (1991+)', 'Tahitian (1991+)']:
+            data['Pacific Islander'] += result[i]['percentage']
+        elif label in ['Unknown', 'NOS (1988+)', 'Other', 'NOS (1991+)'] or label is None:
+            data['Other'] += result[i]['percentage']
+
+    return {
+        'labels': list(map(lambda x: x, data.keys())),
+        'datasets': [{
+            'data': list(map(lambda x: x, data.values())),
+            'label': "Diagnosed",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
 def breakout_by_stage(input_json):
     """
     Returns breakeout by stage discarding the nulls and "Blank" fields
@@ -1929,7 +2011,7 @@ def percent_women_annualy_diagnosed(input_json):
 
 
 if __name__ == '__main__':
-    diag_request = '{"age": 42, ' \
+    diag_request = '{"age": 32, ' \
                    '"sex": "Female", ' \
                    '"tumor_grade": 1, ' \
                    '"er_status": "+", ' \
@@ -1939,11 +2021,11 @@ if __name__ == '__main__':
                    '"her2_status": "+", ' \
                    '"ethnicity": "White"}'
 
-    diag_request_age_only = '{"age": 48}'
+    diag_request_age_only = '{"age": 85}'
     age_only = '{"age": 55}'
 
-    pprint(custom_analytics(diag_request, 'radiation'))
-    pprint(radiation())
+    pprint(custom_analytics(diag_request_age_only, 'size'))
+    # pprint(radiation())
     exit()
 
     # pprint(breast_cancer_by_size(diag_request_age_only))
