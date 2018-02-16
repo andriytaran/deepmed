@@ -321,6 +321,9 @@ def custom_analytics(input_json, grouping):
     elif grouping == 'type':
         filters['$and'] = [d for d in filters['$and'] if 'type' not in d]
         return by_type(input_json)
+    elif grouping == 'size':
+        filters['$and'] = [d for d in filters['$and'] if 't-size-cm' not in d]
+        return breast_cancer_by_size(input_json)
     elif grouping == 'race':
         filters['$and'] = [d for d in filters['$and'] if 'race-recode-w-b-ai-api' not in d]
         return percent_by_race(input_json)
@@ -1765,31 +1768,40 @@ def percent_by_race(input_json):
         }},
         {"$sort": SON([("percentage", -1)])}]))
 
-    return {
-        'labels': list(map(lambda x: x['_id']['race-ethnicity'], result)),
-        'datasets': [{
-            'data': list(map(lambda x: x['percentage'], result)),
-            'label': "Diagnosed",
-            'borderColor': '#48ccf5',
-            'fill': False
-        }]
-    }
-
-    data = OrderedDict()
-    data['Other'] = 0
-    data['Caucasian'] = 0
-    data['African American'] = 0
-    data['Asian'] = 0
+    data = {"Caucasian": 0, "African American": 0, "Filipino": 0, "Chinese": 0, "Japanese": 0, "Other Asian": 0,
+            "Korean": 0, "American Indian": 0, "Vietnamese": 0, "Other": 0, "Hawaiian": 0, "South Asian": 0,
+            "Thai": 0, "Pacific Islander": 0}
     for i, label in enumerate(list(map(lambda x: x['_id']['race-ethnicity'], result))):
         if label == 'White':
             data['Caucasian'] += result[i]['percentage']
         elif label == 'Black':
             data['African American'] += result[i]['percentage']
-        elif label == 'Asian or Pacific Islander':
-            data['Asian'] += result[i]['percentage']
-        elif label in ['Unknown', 'American Indian/Alaska Native'] or label is None:
+        elif label == 'Filipino':
+            data['Filipino'] += result[i]['percentage']
+        elif label in ['Chinese', 'Hmong (1988+)']:
+            data['Chinese'] += result[i]['percentage']
+        elif label == 'Japanese':
+            data['Japanese'] += result[i]['percentage']
+        elif label in ['Other Asian (1991+)', 'Kampuchean (1988+)', 'Laotian (1988+)']:
+            data['Other Asian'] += result[i]['percentage']
+        elif label == 'Korean (1988+)':
+            data['Korean'] += result[i]['percentage']
+        elif label == 'American Indian/Alaska Native':
+            data['American Indian'] += result[i]['percentage']
+        elif label == 'Vietnamese (1988+)':
+            data['Vietnamese'] += result[i]['percentage']
+        elif label == 'Hawaiian':
+            data['Hawaiian'] += result[i]['percentage']
+        elif label in ['Asian Indian (2010+)', 'Asian Indian or Pakistani, NOS (1988+)', 'Pakistani (2010+)']:
+            data['South Asian'] += result[i]['percentage']
+        elif label == 'Thai (1994+)':
+            data['Thai'] += result[i]['percentage']
+        elif label in ['Pacific Islander, NOS (1991+)', 'Samoan (1991+)', 'Tongan (1991+)', 'Fiji Islander (1991+)',
+                       'Guamanian, NOS (1991+)', 'Micronesian, NOS (1991+)', 'Melanesian, NOS (1991+)',
+                       'Polynesian, NOS (1991+)', 'New Guinean (1991+)', 'Chamorran (1991+)', 'Tahitian (1991+)']:
+            data['Pacific Islander'] += result[i]['percentage']
+        elif label in ['Unknown', 'NOS (1988+)', 'Other', 'NOS (1991+)'] or label is None:
             data['Other'] += result[i]['percentage']
-    data.move_to_end("Other")
 
     return {
         'labels': list(map(lambda x: x, data.keys())),
@@ -2009,10 +2021,10 @@ if __name__ == '__main__':
                    '"her2_status": "+", ' \
                    '"ethnicity": "White"}'
 
-    diag_request_age_only = '{"age": 48}'
+    diag_request_age_only = '{"age": 85}'
     age_only = '{"age": 55}'
 
-    pprint(custom_analytics(diag_request_age_only, 'race'))
+    pprint(custom_analytics(diag_request_age_only, 'size'))
     # pprint(radiation())
     exit()
 
