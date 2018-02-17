@@ -529,13 +529,10 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
         similar_diagnosis = []
 
         try:
-            import subprocess
-            import ast
-            import re
-            regex = r"\[\{(.*?)\}\]"
+            from ..ML.command_line import make_pred
 
             # START SURGERY
-            simdx_args = ','.join([
+            simdx_args = [
                 str(dd.get('age')),
                 str(dd.get('number_of_tumors')),
                 str(dd.get('num_pos_nodes')),
@@ -546,25 +543,10 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
                 dd.get('er_status'),
                 dd.get('pr_status'),
                 dd.get('her2_status'),
+            ]
 
-            ])
+            simdx_response = make_pred(simdx_args, 'simdx')
 
-            simdx_command_str = [settings.ML_PYTHON_PATH,
-                                 settings.ML_COMMAND_FILE,
-                                 simdx_args, 'simdx']
-
-            simdx_command = subprocess.Popen(simdx_command_str,
-                                             stdout=subprocess.PIPE,
-                                             stderr=subprocess.PIPE,
-                                             cwd=settings.ML_COMMAND_DIR)
-            simdx_output, err = simdx_command.communicate()
-
-            if not simdx_output:
-                self.send_json({'error': 'Simdx command failed'})
-
-            simdx_response = ast.literal_eval(
-                re.search(regex,
-                          str(simdx_output.decode('utf8'))).group())
             for obj in simdx_response:
                 if obj.get('Race_group') == 'White':
                     obj['Race_group'] = 'Caucasian'
