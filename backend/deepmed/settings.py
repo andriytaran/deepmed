@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'oauth2_provider',
+    'social_django',
+    'rest_framework_social_oauth2',
     'common',
     'accounts',
     'base'
@@ -80,6 +82,31 @@ USE_TZ = True
 AUTH_USER_MODEL = 'accounts.User'
 
 ACCOUNT_ACTIVATION_DAYS = 7  # days
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.social_auth.associate_by_email',
+    'auth.pipeline.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH_SCOPE = [
+    'https://www.googleapis.com/auth/plus.me'
+    'https://www.googleapis.com/auth/plus.login'
+    'https://www.googleapis.com/auth/userinfo.email'
+]
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '965686848849-amh20q30s0pis9eui9q1nh8i9cpufu15.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'Hy7a3DZbuBXxjQoSKaThSpcb'
 
 # -----------------
 # CORS
@@ -139,6 +166,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_social_oauth2.authentication.SocialAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',

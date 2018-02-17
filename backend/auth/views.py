@@ -28,6 +28,7 @@ def token(request):
 
     The endpoint is used in the following flows: authorization code,
     password, client credentials.
+
     """
     return MyTokenView().dispatch(request)
 
@@ -37,7 +38,6 @@ def token(request):
 def revoke_token(request):
     """
     Revokes access token
-    The endpoint is used in the following flows: access_token,
-    client credentials.
+
     """
     return RevokeTokenView().dispatch(request)
