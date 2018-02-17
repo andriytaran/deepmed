@@ -18,26 +18,6 @@ class CustomAnalytics extends React.Component {
     fields: {}
   }
 
-  componentDidMount() {
-    if (this.props.diagnosisForm) {
-      const values = this.props.diagnosisForm
-      const fields = Object.keys(values)
-      const fieldsValues = {}
-      fields.forEach(field => {
-        if (field === 'age') {
-          fieldsValues[`filters[${field}]`] = {
-            value: getAverageAge(values[field]),
-          }
-        } else {
-          fieldsValues[`filters[${field}]`] = {
-            value: values[field],
-          }
-        }
-      })
-      this.props.form.setFields(fieldsValues)
-    }
-  }
-
   changeField = (value, key) => {
     this.setState({
       fields: {

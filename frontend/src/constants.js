@@ -3,6 +3,37 @@ export const YEAR = 31536000
 
 export const RACES = ['Asian', 'African American', 'Caucasian', 'American Indian/Alaska Native', 'Other']
 
+export const NEW_GROUPED_RACES = [
+  {
+    label: 'African American',
+    value:  'African American'
+  },
+  {
+    label: 'American Indian',
+    value:  'American Indian'
+  },
+  {
+    label: 'Asian',
+    value:  [
+      'Chinese',
+      'Japanese',
+      'Korean',
+      'Pacific Islander',
+      'South Asian',
+      'Thai',
+      'Vietnamese'
+    ]
+  },
+  {
+    label: 'Caucasian',
+    value:  'Caucasian'
+  },
+  {
+    label: 'Other',
+    value:  'Other'
+  },
+]
+
 export const GROUPED_RACES = [
   {
     label: 'Caucasian',

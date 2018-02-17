@@ -112,7 +112,7 @@ class SpecificStates extends React.Component {
             </Col>
             <Col xs={24} sm={12} md={8} className={s.col}>
               <Card
-                title={`Percent of Women with Cancer by Ethnicity ${ageRange}`}
+                title={`Percent of Women with Cancer by Ethnicity`}
                 loading={isNil(individualStatistics.percent_of_women_with_cancer_by_race)}
               >
                 {!isEmpty(individualStatistics.percent_of_women_with_cancer_by_race) && (
@@ -142,7 +142,7 @@ class SpecificStates extends React.Component {
                       width={400}
                       height={150}
                     />
-                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>Within Your<br/>Age Bracket</strong>
+                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>{ageRange}</strong>
                     </p>
                     <Pie
                       data={{
@@ -301,7 +301,7 @@ class SpecificStates extends React.Component {
             </Col>
             <Col xs={24} sm={12} md={8} className={s.col}>
               <Card
-                title={`Surgery Decisions for Women ${ageRange}`}
+                title={`Surgery Decisions for Women`}
                 loading={isNil(individualStatistics.surgery_decisions)}
               >
                 {!isEmpty(individualStatistics.surgery_decisions) && (
@@ -362,7 +362,7 @@ class SpecificStates extends React.Component {
             </Col>
             <Col xs={24} sm={12} md={8} className={s.col}>
               <Card
-                title={`Chemotherapy for Women ${ageRange}`}
+                title={`Chemotherapy for Women`}
                 loading={isNil(individualStatistics.chemotherapy)}
               >
                 {!isEmpty(individualStatistics.chemotherapy) && (
@@ -423,7 +423,7 @@ class SpecificStates extends React.Component {
             </Col>
             <Col xs={24} sm={12} md={8} className={s.col}>
               <Card
-                title={`Radiation for Women ${ageRange}`}
+                title={`Radiation for Women`}
                 loading={isNil(individualStatistics.radiation)}
               >
                 {!isEmpty(individualStatistics.radiation) && (
