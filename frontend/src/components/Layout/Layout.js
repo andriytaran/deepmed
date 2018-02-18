@@ -10,11 +10,12 @@ import {
   DIAGNOSIS_ROUTE,
   HOME_ROUTE,
   LOGOUT_ROUTE,
+  LOGIN_ROUTE,
   NATIONAL_STATES_ROUTE,
   RESOURCES_ROUTE,
   SIMILAR_DIAGNOSES_ROUTE,
   SPECIFIC_STATES_ROUTE,
-  USER_ROUTE
+  USER_ROUTE,
 } from '../../routes'
 import cn from 'classnames'
 import {Dropdown} from 'react-bootstrap'
@@ -185,7 +186,7 @@ class AppLayout extends React.Component {
                        style={{top: '15.5px'}}/>
                 </Link>
               </div>
-              {currentRouteName !== HOME_ROUTE && (
+              {![HOME_ROUTE, LOGIN_ROUTE].includes(currentRouteName) && (
                 <ul className="ul-no-bullets">
                   <li className={cn(currentRouteName === DIAGNOSIS_ROUTE && 'active')}>
                     <Link to={DIAGNOSIS_ROUTE}>
