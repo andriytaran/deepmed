@@ -76,7 +76,7 @@ const routes = {
           async action({store, query}) {
             // TODO fix redirecting if not needed
             await store.dispatch(logout())
-            return {redirect: generateUrl(query.next || HOME_ROUTE)}
+            return {redirect: query.next || generateUrl(HOME_ROUTE)}
           },
         },
       ],

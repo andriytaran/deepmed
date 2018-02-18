@@ -3,21 +3,22 @@ import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './Login.scss'
 import {createForm} from 'rc-form'
-import {login} from '../../reducers/login'
-import {AutofillInput} from '../../components'
+import {googleLogin, googleLoginFailure, login} from '../../reducers/login'
+import {AutofillInput, Row, Col} from '../../components'
+import GoogleLogin from 'react-google-login'
 
 class Login extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault()
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.props.login(values)
+        this.props.login(values, this.props.redirectUrl)
       }
     })
   }
 
   render() {
-    const {loading, error} = this.props
+    const {loading, error, googleClientId, googleLogin, googleLoading, googleLoginFailure, redirectUrl} = this.props
     const {getFieldDecorator} = this.props.form
 
     return (
@@ -48,13 +49,30 @@ class Login extends React.Component {
                 <AutofillInput className='form-control' type='password' placeholder='Password'/>
               )}
             </div>
-            <button
-              disabled={loading}
-              type="submit"
-              className="btn btn-primary btn-block"
-            >
-              Submit
-            </button>
+            <Row type='flex' gutter={16}>
+              <Col xs={24} sm={12}>
+                <button
+                  disabled={loading}
+                  type="submit"
+                  className="btn btn-primary btn-block"
+                >
+                  Submit
+                </button>
+              </Col>
+              <Col xs={24} sm={12}>
+                <GoogleLogin
+                  clientId={googleClientId}
+                  scope='email'
+                  onSuccess={(res) => googleLogin(res, redirectUrl)}
+                  onFailure={googleLoginFailure}
+                  style=''
+                  className={s.googleLoginBtn}
+                  disabled={googleLoading}
+                >
+                  Sign in with Google
+                </GoogleLogin>
+              </Col>
+            </Row>
           </form>
         </div>
       </div>
@@ -65,10 +83,13 @@ class Login extends React.Component {
 
 const mapState = state => ({
   ...state.login,
+  googleClientId: state.global.googleClientId,
 })
 
 const mapDispatch = {
   login,
+  googleLogin,
+  googleLoginFailure,
 }
 
 export default connect(mapState, mapDispatch)(createForm()(withStyles(s)(Login)))

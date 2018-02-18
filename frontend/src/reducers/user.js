@@ -39,7 +39,7 @@ export const refreshToken = (token, refresh_token) => (dispatch, getState, {fetc
   }
   refreshing = true
   dispatch({type: REFRESH_TOKEN_REQUEST})
-  const {clientId, clientSecret, currentPathname} = getState().global
+  const {clientId, clientSecret, currentPathname, query} = getState().global
   return fetch(`/auth/token/`, {
     method: 'POST',
     contentType: 'application/x-www-form-urlencoded',
@@ -50,7 +50,7 @@ export const refreshToken = (token, refresh_token) => (dispatch, getState, {fetc
       refresh_token,
     },
     success: (res) => {
-      dispatch(loginSuccess(res, true, currentPathname))
+      dispatch(loginSuccess(res, true, query.next || currentPathname))
       dispatch({type: REFRESH_TOKEN_SUCCESS})
     },
     failure: (err) => {

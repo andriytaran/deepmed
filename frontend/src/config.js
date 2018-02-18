@@ -18,6 +18,7 @@ module.exports = {
   },
 
   appUrl: process.env.APP_URL || 'http://localhost:3000',
+  googleClientId: process.env.GOOGLE_CLIENT_ID || '77496750645-hpae5mv6veo934phqnq9c304n2o0n0hs.apps.googleusercontent.com',
 
   // Web analytics
   analytics: {

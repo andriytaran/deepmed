@@ -9,6 +9,10 @@ export const LOGIN_REQUEST = 'Login.LOGIN_REQUEST'
 export const LOGIN_SUCCESS = 'Login.LOGIN_SUCCESS'
 export const LOGIN_FAILURE = 'Login.LOGIN_FAILURE'
 
+export const GOOGLE_LOGIN_REQUEST = 'Login.GOOGLE_LOGIN_REQUEST'
+export const GOOGLE_LOGIN_SUCCESS = 'Login.GOOGLE_LOGIN_SUCCESS'
+export const GOOGLE_LOGIN_FAILURE = 'Login.GOOGLE_LOGIN_FAILURE'
+
 export const ACTIVATE_REQUEST = 'Login.ACTIVATE_REQUEST'
 export const ACTIVATE_SUCCESS = 'Login.ACTIVATE_SUCCESS'
 export const ACTIVATE_FAILURE = 'Login.ACTIVATE_FAILURE'
@@ -47,6 +51,32 @@ export const loginSuccess = (auth, redirectUrl = '/') => (dispatch, getState, {h
   }
 }
 
+
+export const googleLoginFailure = (err) => (dispatch, getState) => {
+  dispatch({type: GOOGLE_LOGIN_FAILURE, error: (err && err.error_description) || 'Something went wrong. Please try again.'})
+}
+
+export const googleLogin = ({accessToken}, redirectUrl) => (dispatch, getState, {fetch}) => {
+  const {clientId, clientSecret} = getState().global
+  dispatch({type: GOOGLE_LOGIN_REQUEST})
+  return fetch(`/auth/convert-token/`, {
+    method: 'POST',
+    contentType: 'application/x-www-form-urlencoded',
+    body: {
+      grant_type: 'convert_token',
+      backend: 'google-oauth2',
+      client_id: clientId,
+      client_secret: clientSecret,
+      token: accessToken,
+    },
+    success: (res) => {
+      dispatch(loginSuccess(res, redirectUrl))
+      dispatch({type: GOOGLE_LOGIN_SUCCESS})
+    },
+    failure: (err) => dispatch(googleLoginFailure(err))
+  })
+}
+
 export const activate = (key) => (dispatch, getState, {fetch, history}) => {
   dispatch({type: ACTIVATE_REQUEST})
   return fetch(`/user/activate/`, {
@@ -79,6 +109,7 @@ export const clear = () => ({type: CLEAR})
 // ------------------------------------
 const initialState = {
   loading: false,
+  googleLoading: false,
   error: null,
   success: null,
 }
@@ -107,6 +138,19 @@ export default createReducer(initialState, {
   }),
   [ACTIVATE_FAILURE]: (state, {error}) => ({
     success: null,
+    error,
+  }),
+  [GOOGLE_LOGIN_REQUEST]: (state, action) => ({
+    googleLoading: true,
+    success: null,
+    error: null,
+  }),
+  [GOOGLE_LOGIN_SUCCESS]: (state, action) => ({
+    googleLoading: false,
+    error: null,
+  }),
+  [GOOGLE_LOGIN_FAILURE]: (state, {error}) => ({
+    googleLoading: false,
     error,
   }),
   [CLEAR]: (state, action) => RESET_STORE,

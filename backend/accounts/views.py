@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from rest_framework import status, mixins, permissions
 from rest_framework.decorators import list_route
 from rest_framework.response import Response

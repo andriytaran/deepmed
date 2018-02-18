@@ -10,7 +10,7 @@ import configureStore from './store/configureStore'
 import history from './history'
 import {updateMeta} from './DOMUtils'
 import router from './router'
-import {setCurrentPathname} from './reducers/global'
+import {setCurrentPathname, setQuery} from './reducers/global'
 import Cookies from 'universal-cookie'
 
 /* eslint-disable global-require */
@@ -70,6 +70,7 @@ async function onLocationChange(location, action) {
 
   if (currentLocation !== null) {
     store.dispatch(setCurrentPathname(location.pathname))
+    store.dispatch(setQuery(queryString.parse(location.search)))
   }
 
   const isInitialRender = !action
