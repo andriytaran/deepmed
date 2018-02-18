@@ -314,7 +314,7 @@ def custom_analytics(input_json, grouping):
     filters = create_filter(input_json)
     if grouping == 'grade':
         filters['$and'] = [d for d in filters['$and'] if 'grade' not in d]
-        return breast_cancer_by_grade(input_json)
+        return by_grade(input_json)
     elif grouping == 'stage':
         filters['$and'] = [d for d in filters['$and'] if 'breast-adjusted-ajcc-6th-stage-1988' not in d]
         return distribution_of_stage_of_cancer(input_json)
@@ -1302,8 +1302,7 @@ def ca_by_size(input_json):
     :param input_json:
     :return: json
     """
-    only_age = {"age": json.loads(input_json)['age']}
-    filters = create_filter(json.dumps(only_age))
+    filters = create_filter(input_json)
     sizes = ['< 1cm', '<2cm', '<3cm', '>3cm', '>5cm', 'Micro']
     filters['$and'].append({"t-size-cm": {"$in": sizes}})
     result = json.loads(aggregate([
@@ -2008,6 +2007,47 @@ def by_type(input_json):
     }
 
 
+def by_grade(input_json):
+    filters = create_filter(input_json)
+    stages = [1.0, 2.0, 3.0, 4.0]
+    filters['$and'].append({"grade": {"$in": stages}})
+    result = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "subset": {"$push": "$grade"}
+        }},
+        {"$unwind": "$subset"},
+        {"$group": {
+            "_id": {"grade": "$subset", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}]))
+
+    data = {'Grade 1': 0, 'Grade 2': 0, 'Grade 3': 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['grade'], result))):
+        if label == 1.0:
+            data['Grade 1'] += result[i]['percentage']
+        elif label == 2.0:
+            data['Grade 2'] += result[i]['percentage']
+        elif label in [3.0, 4.0]:
+            data['Grade 3'] += result[i]['percentage']
+
+    return {
+        'labels': list(map(lambda x: x, data.keys())),
+        'datasets': [{
+            'data': list(map(lambda x: x, data.values())),
+            'label': "Diagnosed",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
 def percent_women_annualy_diagnosed(input_json):
     def get_total(year):
         ff = {"$and": [{"year-of-diagnosis": {"$gte": year}},
@@ -2082,7 +2122,7 @@ if __name__ == '__main__':
     diag_request_age_only = '{"age": 85}'
     age_only = '{"age": 55}'
 
-    pprint(custom_analytics(diag_request_age_only, 'size'))
+    pprint(custom_analytics(diag_request, 'size'))
     # pprint(radiation())
     exit()
 
