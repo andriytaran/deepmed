@@ -11,8 +11,8 @@ ml_python_path: '/home/deepmed/anaconda3/bin/python'
 skip_checkout: no
 run_mongo: no
 site_domain: 'portal.deepmed.com'
-api_domain: 'portal.deepmed.com'
-api_port: 8000
+api_domain: 'api-portal.deepmed.com'
+api_port: 80
 
 
 ### Local settings ###
