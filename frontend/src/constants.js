@@ -9,6 +9,7 @@ export const GROUPED_RACES = [
   {
     label: 'Asian',
     values: [
+      'All Asians',
       'Chinese',
       'Japanese',
       'Korean',

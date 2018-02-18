@@ -22,7 +22,7 @@ class CustomAnalyticsSerializer(serializers.Serializer):
             data['ethnicity'] = 'White'
         elif data.get('ethnicity') == 'African American':
             data['ethnicity'] = 'Black'
-        elif data.get('ethnicity') == 'Asian':
+        elif data.get('ethnicity') == 'All Asian':
             data['ethnicity'] = 'Asian or Pacific Islander'
         elif data.get('ethnicity') == 'Other':
             data['ethnicity'] = 'Unknown'
