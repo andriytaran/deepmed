@@ -61,7 +61,6 @@ class Login extends React.Component {
               </Col>
               <Col xs={24} sm={12}>
                 <GoogleLogin
-                  fetchBasicProfile={false}
                   clientId={googleClientId}
                   scope='email'
                   onSuccess={(res) => googleLogin(res, redirectUrl)}

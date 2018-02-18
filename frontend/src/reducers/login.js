@@ -151,7 +151,7 @@ export default createReducer(initialState, {
   }),
   [GOOGLE_LOGIN_FAILURE]: (state, {error}) => ({
     googleLoading: false,
-    error,
+    // error,
   }),
   [CLEAR]: (state, action) => RESET_STORE,
 })
