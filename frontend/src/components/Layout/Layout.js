@@ -6,19 +6,124 @@ import globalStyles from '../../styles/style.scss'
 import gridStyles from '../../styles/grid.scss'
 import {Link} from '../../components'
 import {
+  CUSTOM_ANALYTICS_ROUTE,
   DIAGNOSIS_ROUTE,
   HOME_ROUTE,
+  LOGOUT_ROUTE,
   NATIONAL_STATES_ROUTE,
   RESOURCES_ROUTE,
   SIMILAR_DIAGNOSES_ROUTE,
-  SPECIFIC_STATES_ROUTE
+  SPECIFIC_STATES_ROUTE,
+  USER_ROUTE
 } from '../../routes'
 import cn from 'classnames'
-import {CUSTOM_ANALYTICS_ROUTE} from '../../routes/index'
+import {Dropdown} from 'react-bootstrap'
+import RootCloseWrapper from 'react-overlays/lib/RootCloseWrapper'
 
 /*
 * TODO All html comes from another developer - refactor all html and css in project - do it in React way
 * */
+
+class CustomToggle extends React.Component {
+  handleClick = (e) => {
+    e.preventDefault()
+
+    this.props.onClick(e)
+  }
+
+  render() {
+    return (
+      <a
+        className="dropdown-toggle user-dropdown inline-block"
+        id="userDropdownMenu"
+        onClick={this.handleClick}
+      >
+        {this.props.children}
+      </a>
+    )
+  }
+}
+
+class CustomMenu extends React.Component {
+  handleRootClose = (event) => {
+    this.props.onClose(event, {source: 'rootClose'})
+  }
+
+  render() {
+    const {children, open, onSelect} = this.props
+    return (
+      <RootCloseWrapper
+        disabled={!open}
+        onRootClose={this.handleRootClose}
+        event={'click'}
+      >
+        <ul className="dropdown-menu dropdown-menu-right dropdown-menu-keep-open">
+          {React.Children.map(children, child => (
+            React.cloneElement(child, {
+              onSelect,
+            })
+          ))}
+        </ul>
+      </RootCloseWrapper>
+    )
+  }
+}
+
+
+class MenuItem extends React.Component {
+  static defaultProps = {
+    divider: false,
+    disabled: false,
+    header: false,
+  }
+
+  handleClick = (event) => {
+    const {disabled, onSelect, eventKey} = this.props
+
+    if (disabled) {
+      event.preventDefault()
+    }
+
+    if (disabled) {
+      return
+    }
+
+    if (onSelect) {
+      onSelect(eventKey, event)
+    }
+  }
+
+  render() {
+    const {
+      active,
+      disabled,
+      divider,
+      header,
+      onClick,
+      className,
+      style,
+      children,
+      to,
+      ...props
+    } = this.props
+    return (
+      <li
+        role="presentation"
+        className={cn(className, {active, disabled})}
+        style={style}
+      >
+        <Link
+          to={to}
+          role="menuitem"
+          tabIndex="-1"
+          onClick={this.handleClick}
+        >
+          {children}
+        </Link>
+      </li>
+    )
+  }
+}
 
 class AppLayout extends React.Component {
   state = {
@@ -49,7 +154,7 @@ class AppLayout extends React.Component {
   }
 
   render() {
-    const {currentRouteName, loading, title} = this.props
+    const {currentRouteName, loading, title, loggedIn} = this.props
     const {sidebarOpened} = this.state
     const spinnerTexts = [
       'DeepMed is analyzing  over 1M patient records and treatments',
@@ -156,49 +261,45 @@ class AppLayout extends React.Component {
                   </div>
                   <div className="display-table-cell text-right top-nav-tools">
                     <div className="inline-block">
-                      {/*<div className="display-table">*/}
-                      {/*<div className="display-table-cell pad-right-3">*/}
-                      {/*<p className="inline-block">*/}
-                      {/*<a className="alerts-wrapper">*/}
-                      {/*<span className="circle">*/}
-                      {/*<span>12</span>*/}
-                      {/*</span>*/}
-                      {/*<i className="font-size-18 fa fa-bell-o"/>*/}
-                      {/*</a>*/}
-                      {/*</p>*/}
-                      {/*</div>*/}
-                      {/*<div className="display-table-cell">*/}
-                      {/*<div className="inline-block">*/}
-                      {/*<div className="dropdown">*/}
-                      {/*<a*/}
-                      {/*className="dropdown-toggle user-dropdown inline-block"*/}
-                      {/*data-toggle="dropdown"*/}
-                      {/*id="userDropdownMenu"*/}
-                      {/*>*/}
-                      {/*<span className="avatar inline-block"*/}
-                      {/*style={{backgroundImage: require('../../static/avatar.png')}}/>*/}
-                      {/*<img className="arrow"*/}
-                      {/*src={require('../../static/caret-down.png')}*/}
-                      {/*width="10"*/}
-                      {/*height="auto"*/}
-                      {/*alt="presentation"*/}
-                      {/*/>*/}
-                      {/*</a>*/}
-                      {/*<ul aria-labelledby="userDropdownMenu"*/}
-                      {/*className="dropdown-menu dropdown-menu-right dropdown-menu-keep-open">*/}
-                      {/*<li>*/}
-                      {/*<a>Menu Item 1</a></li>*/}
-                      {/*<li>*/}
-                      {/*<a>Menu Item 1</a>*/}
-                      {/*</li>*/}
-                      {/*<li>*/}
-                      {/*<Link to={LOGOUT_ROUTE}>Log Out</Link>*/}
-                      {/*</li>*/}
-                      {/*</ul>*/}
-                      {/*</div>*/}
-                      {/*</div>*/}
-                      {/*</div>*/}
-                      {/*</div>*/}
+                      <div className="display-table">
+                        {/*<div className="display-table-cell pad-right-3">*/}
+                        {/*<p className="inline-block">*/}
+                        {/*<a className="alerts-wrapper">*/}
+                        {/*<span className="circle">*/}
+                        {/*<span>12</span>*/}
+                        {/*</span>*/}
+                        {/*<i className="font-size-18 fa fa-bell-o"/>*/}
+                        {/*</a>*/}
+                        {/*</p>*/}
+                        {/*</div>*/}
+                        {loggedIn && (
+                          <div className="display-table-cell">
+                            <div className="inline-block">
+                              <Dropdown
+                                bsStyle='default'
+                                id='user'
+                              >
+                                <CustomToggle bsRole="toggle">
+                                  <span
+                                    className="avatar inline-block"
+                                    style={{backgroundImage: `url('${require('../../static/avatar.png')}')`}}
+                                  />
+                                  <img
+                                    className="arrow"
+                                    src={require('../../static/caret-down.png')}
+                                    width="10"
+                                    height="auto"
+                                  />
+                                </CustomToggle>
+                                <CustomMenu bsRole="menu" rootCloseEvent={'click'}>
+                                  <MenuItem to={USER_ROUTE}>Account</MenuItem>
+                                  <MenuItem to={LOGOUT_ROUTE}>Log Out</MenuItem>
+                                </CustomMenu>
+                              </Dropdown>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>

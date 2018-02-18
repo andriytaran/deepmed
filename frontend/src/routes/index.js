@@ -13,6 +13,7 @@ export const RESOURCES_ROUTE = 'resources'
 export const LOGIN_ROUTE = 'login'
 export const REGISTER_ROUTE = 'register'
 export const LOGOUT_ROUTE = 'logout'
+export const USER_ROUTE = 'user'
 
 // The top-level (parent) route
 const routes = {
@@ -71,12 +72,16 @@ const routes = {
           action: require('./customAnalytics').default,
         },
         {
+          path: '/account',
+          name: `${USER_ROUTE}`,
+          action: require('./user').default,
+        },
+        {
           path: '/logout',
           name: `${LOGOUT_ROUTE}`,
-          async action({store, query}) {
-            // TODO fix redirecting if not needed
+          async action({store}) {
             await store.dispatch(logout())
-            return {redirect: query.next || generateUrl(HOME_ROUTE)}
+            return {redirect: '/'}
           },
         },
       ],
