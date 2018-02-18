@@ -26,6 +26,9 @@ class UsersViewSet(ActionPermissionClassesMixin,
         'email_status': [permissions.AllowAny],
     }
 
+    def get_object(self):
+        return self.request.user
+
     def get_queryset(self):
         return self.model.objects.all()
 

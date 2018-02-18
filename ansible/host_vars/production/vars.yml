@@ -10,8 +10,8 @@ ml_command_dir: '/home/deepmed/ML_Testing/'
 ml_python_path: '/home/deepmed/anaconda3/bin/python'
 skip_checkout: no
 run_mongo: no
-site_domain: 52.14.12.34
-api_domain: 52.14.12.34
+site_domain: 'portal.deepmed.com'
+api_domain: 'portal.deepmed.com'
 api_port: 8000
 
 
