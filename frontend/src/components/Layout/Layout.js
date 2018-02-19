@@ -240,6 +240,7 @@ class AppLayout extends React.Component {
                 </ul>
               )}
             </nav>
+
             <div className="main-wrapper" style={sidebarOpened ? {left: 210} : {}}>
               <nav className={cn('navbar navbar-fixed-top', sidebarOpened && 'has-sidebar-open')}>
                 <a className="mobile-sidebar-trigger-container" onClick={this.toggleSidebarOpened}>
@@ -260,6 +261,7 @@ class AppLayout extends React.Component {
                       </div>
                     </div>
                   </div>
+                  {![HOME_ROUTE, LOGIN_ROUTE].includes(currentRouteName) && (
                   <div className="display-table-cell text-right top-nav-tools">
                     <div className="inline-block">
                       <div className="display-table">
@@ -303,6 +305,7 @@ class AppLayout extends React.Component {
                       </div>
                     </div>
                   </div>
+                  )}
                 </div>
               </nav>
               <div className="content-wrapper">
