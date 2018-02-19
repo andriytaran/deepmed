@@ -38,6 +38,13 @@ export const TUMOR_SIZES = [
   {value: '5cm+', label: '5cm+'},
 ]
 
+export const NUMBER_OF_TUMORS = [
+  {value: '0', label: '0'},
+  {value: '1', label: '1'},
+  {value: '2', label: '2'},
+  {value: '3+', label: '3+'},
+]
+
 export const NUMBER_OF_NODES = [
   {value: '0', label: '0'},
   {value: '1-3', label: '1-3'},

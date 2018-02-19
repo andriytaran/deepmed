@@ -4,7 +4,7 @@ import {createForm} from 'rc-form'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './CustomAnalytics.scss'
 import {Row, Col, Select, Card} from '../../components'
-import {AGES, TYPES, TUMOR_SIZES, SITES, NUMBER_OF_NODES, GROUPED_RACES} from '../../constants'
+import {AGES, TYPES, TUMOR_SIZES, SITES, NUMBER_OF_NODES, GROUPED_RACES, NUMBER_OF_TUMORS} from '../../constants'
 import {getCustomAnalytics} from '../../reducers/diagnosis'
 import messages from '../../components/messages'
 import pickBy from 'lodash/pickBy'
@@ -242,8 +242,8 @@ class CustomAnalytics extends React.Component {
               })(
                 <Select className={s.field} error={getFieldError('filters[number_of_tumors]')} label={'Number of tumors'}>
                   <option value='' disabled hidden>Select...</option>
-                  {Array.from(new Array(8), (val, i) =>
-                    <option key={i} value={i}>{i}</option>
+                  {NUMBER_OF_TUMORS.map((item, i) =>
+                    <option key={i} value={item.value}>{item.label}</option>
                   )}
                 </Select>
               )}
