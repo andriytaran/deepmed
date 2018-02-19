@@ -415,6 +415,70 @@ def custom_analytics(input_json, grouping):
             }},
             {"$sort": SON([("percentage", -1)])}]))
 
+        data = {"Caucasian": 0, "African American": 0, "Asian": 0,
+                "American Indian": 0, "Other": 0}
+        for i, label in enumerate(list(map(lambda x: x['_id']['race-ethnicity'], result))):
+            if label == 'White':
+                data['Caucasian'] += result[i]['percentage']
+            elif label == 'Black':
+                data['African American'] += result[i]['percentage']
+            elif label in ['Pacific Islander, NOS (1991+)', 'Samoan (1991+)', 'Tongan (1991+)', 'Fiji Islander (1991+)',
+                           'Guamanian, NOS (1991+)', 'Micronesian, NOS (1991+)', 'Melanesian, NOS (1991+)',
+                           'Polynesian, NOS (1991+)', 'New Guinean (1991+)', 'Chamorran (1991+)', 'Tahitian (1991+)',
+                           'Filipino', 'Chinese', 'Hmong (1988+)', 'Japanese', 'Other Asian (1991+)',
+                           'Kampuchean (1988+)',
+                           'Laotian (1988+)', 'Korean (1988+)', 'Vietnamese (1988+)', 'Hawaiian',
+                           'Asian Indian (2010+)',
+                           'Asian Indian or Pakistani, NOS (1988+)', 'Pakistani (2010+)', 'Thai (1994+)']:
+                data['Asian'] += result[i]['percentage']
+            elif label == 'American Indian/Alaska Native':
+                data['American Indian'] += result[i]['percentage']
+            elif label in ['Unknown', 'NOS (1988+)', 'Other', 'NOS (1991+)'] or label is None:
+                data['Other'] += result[i]['percentage']
+
+        return {
+            'labels': list(map(lambda x: x, data.keys())),
+            'datasets': [{
+                'data': list(map(lambda x: x, data.values())),
+                'label': "Diagnosed",
+                'borderColor': '#48ccf5',
+                'fill': False
+            }]
+        }
+
+    def ca_by_race_old(input_json):
+        """
+        sample request input_json = '{"age": 48, ' \
+                       '"sex": "Female", ' \
+                       '"tumor_grade": 1, ' \
+                       '"er_status": "+", ' \
+                       '"pr_status": "+", ' \
+                       '"tumor_size_in_mm": 22, ' \
+                       '"num_pos_nodes": 0, ' \
+                       '"her2_status": "+", ' \
+                       '"ethnicity": "White"}'
+        :param input_json:
+        :return: json
+        """
+        filters = ca_create_filter(input_json)
+        result = json.loads(aggregate([
+            {"$match": filters},
+            {"$group": {
+                "_id": "",
+                "total": {"$sum": 1},
+                "race_set": {"$push": "$race-ethnicity"}
+            }},
+            {"$unwind": "$race_set"},
+            {"$group": {
+                "_id": {"race-ethnicity": "$race_set", "total": "$total"},
+                "count": {"$sum": 1}
+            }},
+            {"$project": {
+                "count": 1,
+                "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+            }},
+            {"$sort": SON([("percentage", -1)])}]))
+
         data = {"Caucasian": 0, "African American": 0, "Filipino": 0, "Chinese": 0, "Japanese": 0, "Other Asian": 0,
                 "Korean": 0, "American Indian": 0, "Vietnamese": 0, "Other": 0, "Hawaiian": 0, "South Asian": 0,
                 "Thai": 0, "Pacific Islander": 0}
@@ -688,16 +752,16 @@ def custom_analytics(input_json, grouping):
 
 
 if __name__ == '__main__':
-    ca_diag_request = '{"age": 35, ' \
+    ca_diag_request = '{"1age": 35, ' \
                       '"sex": "Female", ' \
                       '"1tumor_grade": 1, ' \
                       '"1er_status": "+", ' \
                       '"1pr_status": "+", ' \
-                      '"tumor_size": "2-5cm", ' \
+                      '"1tumor_size": "2-5cm", ' \
                       '"1num_pos_nodes": "4-8", ' \
                       '"1her2_status": "+", ' \
-                      '"ethnicity": "Caucasian"}'
+                      '"1ethnicity": "Caucasian"}'
 
-    pprint(custom_analytics(ca_diag_request, 'cod'))
+    pprint(custom_analytics(ca_diag_request, 'race'))
     # pprint(custom_analytics(ca_diag_request, 'size'))
     # pprint(custom_analytics(ca_diag_request, 'grade'))
