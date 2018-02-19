@@ -16,12 +16,6 @@ class CustomAnalyticsSerializer(serializers.Serializer):
     type = serializers.CharField(required=False)
     number_of_tumors = serializers.IntegerField(required=False)
 
-    def validate(self, data):
-        data = dict(data)
-        if data.get('ethnicity') == 'All Asian':
-            data['ethnicity'] = 'Asian'
-        return data
-
 
 class DiagnosisSerializer(serializers.Serializer):
     """
@@ -88,7 +82,7 @@ class DiagnosisDataSerializer(serializers.Serializer):
 
         # 0.    1. Any tumor size, dcis or in situ, and No positive lymph nodes
         if data.get('tumor_size_in_mm') in ['<1cm', '<2cm', '<3cm',
-                                      '>3cm', '>5cm'] \
+                                            '>3cm', '>5cm'] \
                 and data.get('num_pos_nodes') == '0' \
                 and (data.get('type') == 'DCIS'
                      or data.get('region') == 'In Situ'):
@@ -114,20 +108,20 @@ class DiagnosisDataSerializer(serializers.Serializer):
         # IIIA. 1. Any tumor size and <9 positive nodes
         #       2. Tumor size >5cm and <3 nodes
         elif (data.get('tumor_size_in_mm') in ['<1cm', '<2cm', '<3cm',
-                                         '>3cm', '>5cm']
+                                               '>3cm', '>5cm']
               and data.get('num_pos_nodes') < 9) \
                 or (data.get('tumor_size_in_mm') == '>5cm'
                     and data.get('num_pos_nodes') < 3):
             data['stage'] = 'III'
         # IIIB. 1. Any tumor size and IBC and <9 positive nodes
         elif data.get('tumor_size_in_mm') in ['<1cm', '<2cm', '<3cm',
-                                         '>3cm', '>5cm'] \
-              and data.get('type') == 'IBC' \
+                                              '>3cm', '>5cm'] \
+                and data.get('type') == 'IBC' \
                 and data.get('num_pos_nodes') < 9:
             data['stage'] = 'III'
         # IIIC. 1. >10 positive nodes and any tumor size
         elif data.get('tumor_size_in_mm') in ['<1cm', '<2cm', '<3cm',
-                                        '>3cm', '>5cm'] \
+                                              '>3cm', '>5cm'] \
                 and data.get('num_pos_nodes') > 10:
             data['stage'] = 'III'
         # IV.   1. Regional - Distant
