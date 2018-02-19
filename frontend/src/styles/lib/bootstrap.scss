@@ -4171,7 +4171,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navbar {
   position: relative;
-  min-height: 52px;
+  height: 56px;
   margin-bottom: 0;
   border: 1px solid transparent;
 }
@@ -4270,7 +4270,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navbar-fixed-top {
   top: 0;
-  border-width: 0 0 1px;
+  border-width: 0;
 }
 .navbar-fixed-bottom {
   bottom: 0;

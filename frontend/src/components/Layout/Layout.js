@@ -180,13 +180,13 @@ class AppLayout extends React.Component {
           :
           <div>
             <nav className={cn('sidebar active', sidebarOpened && 'sidebar-mobile-active')}>
-              <div className="sidebar-header" style={{height: 56}}>
+              <div className="sidebar-header">
                 <Link to={HOME_ROUTE}>
                   <img src={require('../../static/deep-med-logo-new.png')} width="136" height="auto" alt="presentation"
                        style={{top: '15.5px'}}/>
                 </Link>
               </div>
-              {![HOME_ROUTE, LOGIN_ROUTE].includes(currentRouteName) && (
+              {![HOME_ROUTE, LOGIN_ROUTE, USER_ROUTE].includes(currentRouteName) && (
                 <ul className="ul-no-bullets">
                   <li className={cn(currentRouteName === DIAGNOSIS_ROUTE && 'active')}>
                     <Link to={DIAGNOSIS_ROUTE}>
@@ -254,44 +254,42 @@ class AppLayout extends React.Component {
                   <div className="display-table-cell pad-right-2">
                     <div className="display-table">
                       <div className="display-table-cell pad-right-2 hidden-md">
-                        <img src={require('../../static/icon-logo.png')} width="50" height="auto"/>
+                        <img src={require('../../static/icon-logo.png')} className={s.logo}/>
                       </div>
                       <div className="display-table-cell hidden-sm">
-                        <h1 className="no-margin">{title}</h1>
+                        <h1 className="no-margin" style={{lineHeight: '35px'}}>{title}</h1>
                       </div>
                     </div>
                   </div>
-                  {![LOGIN_ROUTE].includes(currentRouteName) && (
-                  <div className="display-table-cell text-right top-nav-tools">
-                    <div className="inline-block">
-                      <div className="display-table">
-                        {loggedIn && (
-                          <div className="display-table-cell">
-                            <div className="inline-block">
-                              <Dropdown
-                                bsStyle='default'
-                                id='user'
-                              >
-                                <CustomToggle bsRole="toggle">
-                                  <img
-                                    className="arrow"
-                                    src={require('../../static/caret-down.png')}
-                                    width="10"
-                                    height="auto"
-                                  />
-                                </CustomToggle>
-                                <CustomMenu bsRole="menu" rootCloseEvent={'click'}>
-                                  <MenuItem to={USER_ROUTE}>Account</MenuItem>
-                                  <MenuItem to={LOGOUT_ROUTE}>Log Out</MenuItem>
-                                </CustomMenu>
-                              </Dropdown>
+                    <div className="display-table-cell text-right top-nav-tools">
+                      <div className="inline-block">
+                        <div className="display-table">
+                          {loggedIn && (
+                            <div className="display-table-cell">
+                              <div className="inline-block">
+                                <Dropdown
+                                  bsStyle='default'
+                                  id='user'
+                                >
+                                  <CustomToggle bsRole="toggle">
+                                    <img
+                                      className="arrow"
+                                      src={require('../../static/caret-down.png')}
+                                      width="10"
+                                      height="auto"
+                                    />
+                                  </CustomToggle>
+                                  <CustomMenu bsRole="menu" rootCloseEvent={'click'}>
+                                    <MenuItem to={USER_ROUTE}>Account</MenuItem>
+                                    <MenuItem to={LOGOUT_ROUTE}>Log Out</MenuItem>
+                                  </CustomMenu>
+                                </Dropdown>
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  )}
                 </div>
               </nav>
               <div className="content-wrapper">

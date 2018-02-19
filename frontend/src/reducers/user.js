@@ -123,14 +123,17 @@ export const getUser = () => (dispatch, getState, {fetch}) => {
   }
 }
 
-export const updateUser = (values) => (dispatch, getState, {fetch}) => {
+export const updateUser = (values) => (dispatch, getState, {fetch, history}) => {
   const {token} = dispatch(getToken())
   dispatch({type: UPDATE_USER_REQUEST})
   return fetch(`/accounts/user/`, {
     method: 'PATCH',
     body: values,
     token,
-    success: (user) => dispatch({type: UPDATE_USER_SUCCESS, user}),
+    success: (user) => {
+      dispatch({type: UPDATE_USER_SUCCESS, user})
+      history.push('/')
+    },
     failure: (err) => dispatch({type: UPDATE_USER_FAILURE, err})
   })
 }

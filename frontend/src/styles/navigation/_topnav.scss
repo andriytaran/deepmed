@@ -37,7 +37,8 @@
 
 		i {
 			position:relative;
-			top:16px;
+			top: 50%;
+      transform: translateY(-50%);
 			font-size:30px;
 			color:#fff!important;
 		}

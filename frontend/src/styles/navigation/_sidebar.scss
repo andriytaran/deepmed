@@ -25,9 +25,9 @@
   }
 
   .sidebar-header {
-    padding:0 30px;
+    padding: 0 30px;
     display: block;
-    height:$container__topbar_height;
+    height: 56px;
     @include brand_gradient();
 
     @include media (max-width $screen_size__tablet) {
@@ -35,7 +35,7 @@
       background:$color__brand_green;
       border-right:1px solid #8bdaf4;
     }
-       
+
     h1 {
       line-height: 100%;
       font-size:1.714em;
@@ -47,7 +47,7 @@
       top:20.5px;
     }
   }
-    
+
 	ul {
 
 		li {
@@ -58,7 +58,7 @@
         min-width: 2.3rem;
         display: inline-block;
       }
-      
+
 		  &.active {
 
         &::after {
@@ -89,7 +89,7 @@
           text-decoration: none;
           color:#fff;
         }
-  		}  	
-    }	
+  		}
+    }
 	}
 }
