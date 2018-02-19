@@ -383,9 +383,10 @@ def breast_cancer_by_age():
 
 
 def breast_cancer_by_state():
-    result = json.loads(aggregate([{"$group": {
-        "_id": "$state",
-        "count": {"$sum": 1}}},
+    result = json.loads(aggregate([
+        {"$group": {
+            "_id": "$state",
+            "count": {"$sum": 1}}},
         {"$sort": SON([("count", -1), ("_id", -1)])}]))
 
     values = {}

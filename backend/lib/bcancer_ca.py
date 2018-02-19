@@ -417,6 +417,65 @@ def custom_analytics(input_json, grouping):
         :return: json
         """
         filters = ca_create_filter(input_json)
+        pre_filters = {'$and': [d for d in filters['$and'] if 'race-ethnicity' not in d]}
+        full_result = json.loads(aggregate([
+            {"$match": pre_filters},
+            {"$group": {
+                "_id": "",
+                "count": {"$sum": 1}}},
+            {"$sort": SON([("count", -1), ("_id", -1)])}]))
+
+        totalCount = full_result[0]['count']
+
+        result = json.loads(aggregate([
+            {"$match": filters},
+            {"$group": {
+                "_id": "",
+                "total": {"$sum": 1},
+                "totalFull": {"$sum": 1},
+                "race_set": {"$push": "$race-ethnicity"}
+            }},
+            {"$unwind": "$race_set"},
+            {"$group": {
+                "_id": {"race-ethnicity": "$race_set", "total": "$total"},
+                "count": {"$sum": 1}
+            }},
+            {"$project": {
+                "percentage": {"$multiply": [{"$divide": [100, totalCount]}, "$count"], },
+            }},
+            {"$sort": SON([("percentage", -1)])}]))
+
+        data = {"Other": 0}
+        input_dict = json.loads(input_json)
+        if 'ethnicity' in input_dict:
+            data[input_dict['ethnicity']] = result[0]['percentage']
+            data['Other'] = 100.0 - result[0]['percentage']
+
+        return {
+            'labels': list(map(lambda x: x, data.keys())),
+            'datasets': [{
+                'data': list(map(lambda x: x, data.values())),
+                'label': "Diagnosed",
+                'borderColor': '#48ccf5',
+                'fill': False
+            }]
+        }
+
+    def ca_by_race2(input_json):
+        """
+        sample request input_json = '{"age": 48, ' \
+                       '"sex": "Female", ' \
+                       '"tumor_grade": 1, ' \
+                       '"er_status": "+", ' \
+                       '"pr_status": "+", ' \
+                       '"tumor_size_in_mm": 22, ' \
+                       '"num_pos_nodes": 0, ' \
+                       '"her2_status": "+", ' \
+                       '"ethnicity": "White"}'
+        :param input_json:
+        :return: json
+        """
+        filters = ca_create_filter(input_json)
         result = json.loads(aggregate([
             {"$match": filters},
             {"$group": {
@@ -755,8 +814,10 @@ def custom_analytics(input_json, grouping):
         filters['$and'] = [d for d in filters['$and'] if 't-size-cm' not in d]
         return ca_by_size(input_json)
     elif grouping == 'race':
-        filters['$and'] = [d for d in filters['$and'] if 'race-recode-w-b-ai-api' not in d]
-        return ca_by_race(input_json)
+        for d in filters['$and']:
+            if 'race-ethnicity' in d:
+                return ca_by_race(input_json)
+        return ca_by_race2(input_json)
     elif grouping == 'cod':
         filters['$and'] = [d for d in filters['$and'] if 'cod-to-site-recode' not in d]
         return ca_cause_of_death(input_json)
@@ -772,21 +833,21 @@ def custom_analytics(input_json, grouping):
 
 
 if __name__ == '__main__':
-    ca_diag_request = '{"1age": 35, ' \
-                      '"1sex": "Female", ' \
+    ca_diag_request = '{"age": 35, ' \
+                      '"sex": "Female", ' \
                       '"1tumor_grade": 1, ' \
                       '"1er_status": "+", ' \
                       '"1pr_status": "+", ' \
                       '"1tumor_size": "2-5cm", ' \
                       '"1num_pos_nodes": "4-8", ' \
                       '"1her2_status": "+", ' \
-                      '"tumor_number": "0", ' \
-                      '"1ethnicity": "Caucasian"}'
+                      '"1tumor_number": "0", ' \
+                      '"ethnicity": "Caucasian"}'
 
-    pprint(custom_analytics(ca_diag_request, 'size'))
+    pprint(custom_analytics(ca_diag_request, 'race'))
 
     # ca_find_request = '{"ethnicity": "Chinese"}'
-    # filters = ca_create_filter(ca_find_request)
-    # pprint(find(filters, limit=10))
+    # filters = ca_create_filter(ca_diag_request)
+    # print(len(find(filters, limit=100)))
     # pprint(custom_analytics(ca_diag_request, 'size'))
     # pprint(custom_analytics(ca_diag_request, 'grade'))
