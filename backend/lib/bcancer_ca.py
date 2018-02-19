@@ -127,6 +127,19 @@ def ca_get_node_range(group):
     return n_size
 
 
+def get_tumor_number(group):
+    t_number = None
+    if group == "3+":
+        t_number = {"$gte": 3}
+    elif group == "2":
+        t_number = {"$eq": 2}
+    elif group == "1":
+        t_number = {"$eq": 1}
+    elif group == "0":
+        t_number = {"$eq": 0}
+    return t_number
+
+
 def ca_create_filter(input_data, operator='$and'):
     """
     Converts json request to list of dicts formated for use as a match filter in mongodb.
@@ -155,6 +168,10 @@ def ca_create_filter(input_data, operator='$and'):
         t_size_cm = ca_get_t_size_cm(input_data['tumor_size'])
         if t_size_cm:
             filter_list.append({"t-size-cm": t_size_cm})
+    if 'tumor_number' in input_data.keys():
+        t_number = get_tumor_number(input_data['tumor_number'])
+        if t_number:
+            filter_list.append({"total-number-of-in-situ-malignant-tumors-for-patient": t_number})
     if 'sex' in input_data.keys():
         filter_list.append({"sex": input_data["sex"]})
     if 'tumor_grade' in input_data.keys():
@@ -761,11 +778,12 @@ if __name__ == '__main__':
                       '"1er_status": "+", ' \
                       '"1pr_status": "+", ' \
                       '"1tumor_size": "2-5cm", ' \
-                      '"num_pos_nodes": "4-8", ' \
+                      '"1num_pos_nodes": "4-8", ' \
                       '"1her2_status": "+", ' \
+                      '"tumor_number": "0", ' \
                       '"1ethnicity": "Caucasian"}'
 
-    pprint(custom_analytics(ca_diag_request, 'race'))
+    pprint(custom_analytics(ca_diag_request, 'size'))
 
     # ca_find_request = '{"ethnicity": "Chinese"}'
     # filters = ca_create_filter(ca_find_request)
