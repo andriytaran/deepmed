@@ -15,6 +15,10 @@ export const GET_USER_REQUEST = 'User.GET_USER_REQUEST'
 export const GET_USER_SUCCESS = 'User.GET_USER_SUCCESS'
 export const GET_USER_FAILURE = 'User.GET_USER_FAILURE'
 
+export const UPDATE_USER_REQUEST = 'User.UPDATE_USER_REQUEST'
+export const UPDATE_USER_SUCCESS = 'User.UPDATE_USER_SUCCESS'
+export const UPDATE_USER_FAILURE = 'User.UPDATE_USER_FAILURE'
+
 export const REFRESH_TOKEN_REQUEST = 'User.REFRESH_TOKEN_REQUEST'
 export const REFRESH_TOKEN_SUCCESS = 'User.REFRESH_TOKEN_SUCCESS'
 export const REFRESH_TOKEN_FAILURE = 'User.REFRESH_TOKEN_FAILURE'
@@ -39,7 +43,7 @@ export const refreshToken = (token, refresh_token) => (dispatch, getState, {fetc
   }
   refreshing = true
   dispatch({type: REFRESH_TOKEN_REQUEST})
-  const {clientId, clientSecret, currentPathname} = getState().global
+  const {clientId, clientSecret, currentPathname, query} = getState().global
   return fetch(`/auth/token/`, {
     method: 'POST',
     contentType: 'application/x-www-form-urlencoded',
@@ -50,7 +54,7 @@ export const refreshToken = (token, refresh_token) => (dispatch, getState, {fetc
       refresh_token,
     },
     success: (res) => {
-      dispatch(loginSuccess(res, true, currentPathname))
+      dispatch(loginSuccess(res, true, query.next || currentPathname))
       dispatch({type: REFRESH_TOKEN_SUCCESS})
     },
     failure: (err) => {
@@ -119,6 +123,18 @@ export const getUser = () => (dispatch, getState, {fetch}) => {
   }
 }
 
+export const updateUser = (values) => (dispatch, getState, {fetch}) => {
+  const {token} = dispatch(getToken())
+  dispatch({type: UPDATE_USER_REQUEST})
+  return fetch(`/accounts/user/`, {
+    method: 'PATCH',
+    body: values,
+    token,
+    success: (user) => dispatch({type: UPDATE_USER_SUCCESS, user}),
+    failure: (err) => dispatch({type: UPDATE_USER_FAILURE, err})
+  })
+}
+
 // ------------------------------------
 // Reducer
 // ------------------------------------
@@ -137,5 +153,8 @@ export default createReducer(initialState, {
   [GET_USER_SUCCESS]: (state, {user}) => ({
     user,
     loggedIn: true,
+  }),
+  [UPDATE_USER_SUCCESS]: (state, {user}) => ({
+    user,
   }),
 })

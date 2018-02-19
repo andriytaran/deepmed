@@ -94,12 +94,16 @@ class CustomAnalytics extends React.Component {
                   label={'Ethnicity'}
                 >
                   <option value='' disabled hidden>Select...</option>
-                  {GROUPED_RACES.map((raceGroup, i) =>
-                    <optgroup key={i} label={raceGroup.label}>
-                      {raceGroup.values.map((item, j) =>
-                        <option key={j}>{item}</option>
-                      )}
-                    </optgroup>
+                  {GROUPED_RACES.map((race, i) =>
+                    race.label ? (
+                      <optgroup key={i} label={race.label}>
+                        {race.values.map((item, j) =>
+                          <option key={j}>{item}</option>
+                        )}
+                      </optgroup>
+                    ) : (
+                      <option key={i}>{race}</option>
+                    )
                   )}
                 </Select>
               )}

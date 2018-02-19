@@ -10,9 +10,9 @@ ml_command_dir: '/home/deepmed/ML_Testing/'
 ml_python_path: '/home/deepmed/anaconda3/bin/python'
 skip_checkout: no
 run_mongo: no
-site_domain: 52.14.12.34
-api_domain: 52.14.12.34
-api_port: 8000
+site_domain: 'portal.deepmed.com'
+api_domain: 'api-portal.deepmed.com'
+api_port: 80
 
 
 ### Local settings ###
@@ -27,6 +27,7 @@ environment_config:
 nginx_sites:
   project_webapp:
     - listen 80
+    - server_name {{ site_domain }}
     - charset utf-8
     - server_tokens off
     - auth_basic "Restricted"
@@ -48,6 +49,7 @@ nginx_sites:
 
   project_django:
     - listen {{ api_port }}
+    - server_name {{ api_domain }}
     - charset utf-8
     - server_tokens off
     - access_log {{ deploy_log_dir }}/nginx-access.log

@@ -15,7 +15,7 @@ import assets from './assets.json'
 import configureStore from './store/configureStore'
 import {
   setConfigVars,
-  setCurrentPathname,
+  setCurrentPathname, setQuery,
 } from './reducers/global'
 import config from './config'
 import cookiesMiddleware from 'universal-cookie-express'
@@ -59,10 +59,12 @@ app.get('*', async (req, res, next) => {
     })
 
     store.dispatch(setCurrentPathname(req.path))
+    store.dispatch(setQuery(req.query))
     store.dispatch(setConfigVars({
       clientId: config.api.clientId,
       clientSecret: config.api.clientSecret,
       googleTrackingId: config.analytics.googleTrackingId,
+      googleClientId: config.googleClientId,
       apiUrl: `${config.api.url}/v1`,
       apiBaseUrl: config.api.url,
       appUrl: config.appUrl,

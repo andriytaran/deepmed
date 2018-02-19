@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from rest_framework import status, mixins, permissions
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
@@ -26,6 +25,9 @@ class UsersViewSet(ActionPermissionClassesMixin,
         'confirm_email': [permissions.AllowAny],
         'email_status': [permissions.AllowAny],
     }
+
+    def get_object(self):
+        return self.request.user
 
     def get_queryset(self):
         return self.model.objects.all()

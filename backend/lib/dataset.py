@@ -1711,89 +1711,91 @@ def percent_women_by_type():
         }]
     }
 
-    def radiation_filter(input_json):
-        """
-        sample request input_json = '{"age": 48, ' \
-                       '"sex": "Female", ' \
-                       '"tumor_grade": 1, ' \
-                       '"er_status": "+", ' \
-                       '"pr_status": "+", ' \
-                       '"tumor_size_in_mm": 22, ' \
-                       '"num_pos_nodes": 0, ' \
-                       '"her2_status": "+", ' \
-                       '"ethnicity": "White"}'
-        :param input_json:
-        :return: json
-        """
-        filters = create_filter(input_json)
-        result = json.loads(aggregate([
-            {"$match": filters},
-            {"$group": {
-                "_id": "",
-                "total": {"$sum": 1},
-                "data_subset": {"$push": "$radiation"}
-            }},
-            {"$unwind": "$data_subset"},
-            {"$group": {
-                "_id": {"radiation": "$data_subset", "total": "$total"},
-                "count": {"$sum": 1}}},
-            {"$project": {
-                "count": 1,
-                "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
-            }},
-            {"$sort": SON([("_id", -1)])}]))
 
-        return {
-            'labels': list(map(lambda x: x['_id']['radiation'], result)),
-            'datasets': [{
-                'data': list(map(lambda x: x['percentage'], result)),
-                'label': "Radiation",
-                'borderColor': '#48ccf5',
-                'fill': False
-            }]
-        }
+def radiation_filter(input_json):
+    """
+    sample request input_json = '{"age": 48, ' \
+                   '"sex": "Female", ' \
+                   '"tumor_grade": 1, ' \
+                   '"er_status": "+", ' \
+                   '"pr_status": "+", ' \
+                   '"tumor_size_in_mm": 22, ' \
+                   '"num_pos_nodes": 0, ' \
+                   '"her2_status": "+", ' \
+                   '"ethnicity": "White"}'
+    :param input_json:
+    :return: json
+    """
+    filters = create_filter(input_json)
+    result = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "data_subset": {"$push": "$radiation"}
+        }},
+        {"$unwind": "$data_subset"},
+        {"$group": {
+            "_id": {"radiation": "$data_subset", "total": "$total"},
+            "count": {"$sum": 1}}},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("_id", -1)])}]))
 
-    def chemotherapy_filter(input_json):
-        """
-        sample request input_json = '{"age": 48, ' \
-                       '"sex": "Female", ' \
-                       '"tumor_grade": 1, ' \
-                       '"er_status": "+", ' \
-                       '"pr_status": "+", ' \
-                       '"tumor_size_in_mm": 22, ' \
-                       '"num_pos_nodes": 0, ' \
-                       '"her2_status": "+", ' \
-                       '"ethnicity": "White"}'
-        :param input_json:
-        :return:
-        """
-        filters = create_filter(input_json)
-        result = json.loads(aggregate([
-            {"$match": filters},
-            {"$group": {
-                "_id": "",
-                "total": {"$sum": 1},
-                "chemo_set": {"$push": "$chemo"}
-            }},
-            {"$unwind": "$chemo_set"},
-            {"$group": {
-                "_id": {"chemo": "$chemo_set", "total": "$total"},
-                "count": {"$sum": 1}}},
-            {"$project": {
-                "count": 1,
-                "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
-            }},
-            {"$sort": SON([("_id", -1)])}]))
+    return {
+        'labels': list(map(lambda x: x['_id']['radiation'], result)),
+        'datasets': [{
+            'data': list(map(lambda x: x['percentage'], result)),
+            'label': "Radiation",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
 
-        return {
-            'labels': list(map(lambda x: x['_id']['chemo'], result)),
-            'datasets': [{
-                'data': list(map(lambda x: x['percentage'], result)),
-                'label': "Chemotherapy",
-                'borderColor': '#48ccf5',
-                'fill': False
-            }]
-        }
+
+def chemotherapy_filter(input_json):
+    """
+    sample request input_json = '{"age": 48, ' \
+                   '"sex": "Female", ' \
+                   '"tumor_grade": 1, ' \
+                   '"er_status": "+", ' \
+                   '"pr_status": "+", ' \
+                   '"tumor_size_in_mm": 22, ' \
+                   '"num_pos_nodes": 0, ' \
+                   '"her2_status": "+", ' \
+                   '"ethnicity": "White"}'
+    :param input_json:
+    :return:
+    """
+    filters = create_filter(input_json)
+    result = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "chemo_set": {"$push": "$chemo"}
+        }},
+        {"$unwind": "$chemo_set"},
+        {"$group": {
+            "_id": {"chemo": "$chemo_set", "total": "$total"},
+            "count": {"$sum": 1}}},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("_id", -1)])}]))
+
+    return {
+        'labels': list(map(lambda x: x['_id']['chemo'], result)),
+        'datasets': [{
+            'data': list(map(lambda x: x['percentage'], result)),
+            'label': "Chemotherapy",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
 
 
 def percent_women_annualy_diagnosed(input_json):

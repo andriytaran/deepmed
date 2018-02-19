@@ -3,18 +3,13 @@ export const YEAR = 31536000
 
 export const RACES = ['Asian', 'African American', 'Caucasian', 'American Indian/Alaska Native', 'Other']
 
-export const NEW_GROUPED_RACES = [
-  {
-    label: 'African American',
-    value:  'African American'
-  },
-  {
-    label: 'American Indian',
-    value:  'American Indian'
-  },
+export const GROUPED_RACES = [
+  'African American',
+  'American Indian',
   {
     label: 'Asian',
-    value:  [
+    values: [
+      'All Asians',
       'Chinese',
       'Japanese',
       'Korean',
@@ -24,95 +19,8 @@ export const NEW_GROUPED_RACES = [
       'Vietnamese'
     ]
   },
-  {
-    label: 'Caucasian',
-    value:  'Caucasian'
-  },
-  {
-    label: 'Other',
-    value:  'Other'
-  },
-]
-
-export const GROUPED_RACES = [
-  {
-    label: 'Caucasian',
-    values: [
-      'Caucasian'
-    ]
-  },
-  {
-    label: 'African American',
-    values: [
-      'African American'
-    ]
-  },
-  {
-    label: 'Filipino',
-    values: [
-      'Filipino'
-    ]
-  },
-  {
-    label: 'Chinese',
-    values: [
-      'Chinese',
-      'Hmong'
-    ]
-  },
-  {
-    label: 'Japanese',
-    values: [
-      'Japanese'
-    ]
-  },
-  {
-    label: 'Korean',
-    values: [
-      'Korean'
-    ]
-  },
-  {
-    label: 'American Indian/Alaska Native',
-    values: [
-      'American Indian'
-    ]
-  },
-  {
-    label: 'Vietnamese',
-    values: [
-      'Vietnamese'
-    ]
-  },
-  {
-    label: 'South Asian',
-    values: [
-      'Asian Indian',
-      'Pakistani'
-    ]
-  },
-  {
-    label: 'Pacific Islander',
-    values: [
-      'Pacific Islander',
-      'Samoan',
-      'Tongan',
-      'Fiji Islander',
-      'Guamanian',
-      'Micronesian',
-      'Melanesian',
-      'Polynesian',
-      'New Guinean',
-      'Chamorran',
-      'Tahitian'
-    ]
-  },
-  {
-    label: 'Thai',
-    values: [
-      'Thai'
-    ]
-  }
+  'Caucasian',
+  'Other',
 ]
 
 export const AGES = [

@@ -4,14 +4,14 @@ from channels.generic.websocket import JsonWebsocketConsumer
 from django.conf import settings
 
 from base.serializers import DiagnosisDataSerializer, CustomAnalyticsSerializer
+from lib.bcancer_ca import custom_analytics
 from lib.dataset import percent_women_by_type, breast_cancer_by_grade, \
     breast_cancer_by_size, distribution_of_stage_of_cancer, \
     percent_of_women_with_cancer_by_race_overall, surgery_decisions, \
-    chemotherapy, radiation, breakout_by_stage, \
-    percent_race_with_cancer_by_age, breast_cancer_by_state2, \
-    breast_cancer_at_a_glance2, breast_cancer_by_age, diagnosis, \
-    percent_women_annualy_diagnosed, custom_analytics, chemotherapy_filter, \
-    radiation_filter
+    chemotherapy, radiation, percent_race_with_cancer_by_age, \
+    breast_cancer_by_state2, \
+    breast_cancer_at_a_glance2, breast_cancer_by_age, \
+    percent_women_annualy_diagnosed, chemotherapy_filter, radiation_filter
 
 
 class DiagnosisConsumer(JsonWebsocketConsumer):
