@@ -418,12 +418,19 @@ def custom_analytics(input_json, grouping):
         """
         filters = ca_create_filter(input_json)
         pre_filters = {'$and': [d for d in filters['$and'] if 'race-ethnicity' not in d]}
-        full_result = json.loads(aggregate([
-            {"$match": pre_filters},
-            {"$group": {
-                "_id": "",
-                "count": {"$sum": 1}}},
-            {"$sort": SON([("count", -1), ("_id", -1)])}]))
+        if len(pre_filters) > 1:
+            full_result = json.loads(aggregate([
+                {"$match": pre_filters},
+                {"$group": {
+                    "_id": "",
+                    "count": {"$sum": 1}}},
+                {"$sort": SON([("count", -1), ("_id", -1)])}]))
+        else:
+            full_result = json.loads(aggregate([
+                {"$group": {
+                    "_id": "",
+                    "count": {"$sum": 1}}},
+                {"$sort": SON([("count", -1), ("_id", -1)])}]))
 
         totalCount = full_result[0]['count']
 
@@ -833,8 +840,8 @@ def custom_analytics(input_json, grouping):
 
 
 if __name__ == '__main__':
-    ca_diag_request = '{"age": 35, ' \
-                      '"sex": "Female", ' \
+    ca_diag_request = '{"1age": 35, ' \
+                      '"1sex": "Female", ' \
                       '"1tumor_grade": 1, ' \
                       '"1er_status": "+", ' \
                       '"1pr_status": "+", ' \
@@ -842,7 +849,7 @@ if __name__ == '__main__':
                       '"1num_pos_nodes": "4-8", ' \
                       '"1her2_status": "+", ' \
                       '"1tumor_number": "0", ' \
-                      '"ethnicity": "Caucasian"}'
+                      '"ethnicity": "Japanese"}'
 
     pprint(custom_analytics(ca_diag_request, 'race'))
 
