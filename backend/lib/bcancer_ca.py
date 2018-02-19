@@ -65,7 +65,7 @@ def get_race_group(race):
     elif race == 'Filipino':
         race_group = ["Filipino"]
     elif race == 'Chinese':
-        race_group = ['Chinese', 'Hmong (1988+)']
+        race_group = ['Chinese']
     elif race == 'Japanese':
         race_group = ["Japanese"]
     elif race == 'Other Asian':
@@ -99,93 +99,96 @@ def get_race_group(race):
     return race_group
 
 
+def ca_get_t_size_cm(group):
+    if group == '0-2cm':
+        t_size_cm = {"$in": ["<1cm", "<2cm", "Micro"]}
+    elif group == '2-5cm':
+        t_size_cm = {"$in": ["<3cm", ">3cm"]}
+    elif group == '5cm+':
+        t_size_cm = ">5cm"
+    else:
+        t_size_cm = None
+    return t_size_cm
+
+
+def ca_get_node_range(group):
+    n_size = None
+    if group == "9+":
+        # n_size = {"$gte": 10}
+        range_list = [x for x in range(10, 90)]
+        range_list.append('>9')
+        n_size = {"$in": range_list}
+    elif group == "4-8":
+        n_size = {"$in": [4, 5, 6, 7, 8, 9]}
+    elif group == "1-3":
+        n_size = {"$in": [1, 2, 3, '>1']}
+    elif group == "0":
+        n_size = {"$eq": 0}
+    return n_size
+
+
+def ca_create_filter(input_data, operator='$and'):
+    """
+    Converts json request to list of dicts formated for use as a match filter in mongodb.
+    "age" takes integer age, and groups ages by decades, ex: input 44 (years), outputs ["40-44 years", "45-49 years"]
+    "tumor_size_in_mm" takes integer size in mm, and groups by size in cm, ex: input 18 (mm), outputs "<2cm"
+    "num_pos_nodes" takes integer number, and groups by custom groups, ex: input 4, output {"$in": [4, 5, 6, 7, 8, 9]}
+    :param input_data: json = '{"age": int, ' \
+                   '"sex": string, ' \
+                   '"tumor_grade": int, ' \
+                   '"er_status": "+" or "-", ' \
+                   '"pr_status": "+" or "-", ' \
+                   '"tumor_size": string, ' \
+                   '"num_pos_nodes": string, ' \
+                   '"her2_status": "+" or "-", ' \
+                   '"ethnicity": string}'
+    :param operator: {"$and"} or {"or"} as filtering operators
+    :return: list of dicts
+    """
+    input_data = json.loads(input_data)
+    filter_list = []
+    if 'age' in input_data.keys():
+        age = get_age_group(input_data['age'])
+        if age:
+            filter_list.append({"age-recode-with-1-year-olds": {"$in": age}})
+    if 'tumor_size' in input_data.keys():
+        t_size_cm = ca_get_t_size_cm(input_data['tumor_size'])
+        if t_size_cm:
+            filter_list.append({"t-size-cm": t_size_cm})
+    if 'sex' in input_data.keys():
+        filter_list.append({"sex": input_data["sex"]})
+    if 'tumor_grade' in input_data.keys():
+        filter_list.append({"grade": input_data["tumor_grade"]})
+    if 'er_status' in input_data.keys():
+        filter_list.append({"er-status-recode-breast-cancer-1990": input_data["er_status"]})
+    if 'pr_status' in input_data.keys():
+        filter_list.append({"pr-status-recode-breast-cancer-1990": input_data["pr_status"]})
+    if 'her2_status' in input_data.keys():
+        filter_list.append({"derived-her2-recode-2010": input_data['her2_status']})
+    if 'num_pos_nodes' in input_data.keys():
+        n_size = ca_get_node_range(input_data['num_pos_nodes'])
+        if n_size:
+            filter_list.append({"regional-nodes-positive-1988": n_size})
+    if 'ethnicity' in input_data.keys():
+        race = get_race_group(input_data['ethnicity'])
+        if race:
+            filter_list.append({"race-ethnicity": {"$in": race}})
+    if 'type' in input_data.keys():
+        filter_list.append({"type": input_data["type"]})
+    if 'breast-adjusted-ajcc-6th-stage-1988' in input_data.keys():
+        filter_list.append(
+            {"breast-adjusted-ajcc-6th-stage-1988": input_data["breast-adjusted-ajcc-6th-stage-1988"]})
+    if 'chemo' in input_data.keys():
+        filter_list.append({"chemo": input_data["chemo"]})
+    if 'radiation' in input_data.keys():
+        filter_list.append({"radiation": input_data["radiation"]})
+    if 'surgery' in input_data.keys():
+        filter_list.append({"surgery": input_data["surgery"]})
+
+    return {operator: filter_list}
+
+
 def custom_analytics(input_json, grouping):
-    def ca_get_t_size_cm(group):
-        if group == '0-2cm':
-            t_size_cm = {"$in": ["<1cm", "<2cm", "Micro"]}
-        elif group == '2-5cm':
-            t_size_cm = {"$in": ["<3cm", ">3cm"]}
-        elif group == '5cm+':
-            t_size_cm = ">5cm"
-        else:
-            t_size_cm = None
-        return t_size_cm
-
-    def ca_get_node_range(group):
-        n_size = None
-        if group == "9+":
-            # n_size = {"$gte": 10}
-            range_list = [x for x in range(10, 90)]
-            range_list.append('>9')
-            n_size = {"$in": range_list}
-        elif group == "4-8":
-            n_size = {"$in": [4, 5, 6, 7, 8, 9]}
-        elif group == "1-3":
-            n_size = {"$in": [1, 2, 3, '>1']}
-        elif group == "0":
-            n_size = {"$eq": 0}
-        return n_size
-
-    def ca_create_filter(input_data, operator='$and'):
-        """
-        Converts json request to list of dicts formated for use as a match filter in mongodb.
-        "age" takes integer age, and groups ages by decades, ex: input 44 (years), outputs ["40-44 years", "45-49 years"]
-        "tumor_size_in_mm" takes integer size in mm, and groups by size in cm, ex: input 18 (mm), outputs "<2cm"
-        "num_pos_nodes" takes integer number, and groups by custom groups, ex: input 4, output {"$in": [4, 5, 6, 7, 8, 9]}
-        :param input_data: json = '{"age": int, ' \
-                       '"sex": string, ' \
-                       '"tumor_grade": int, ' \
-                       '"er_status": "+" or "-", ' \
-                       '"pr_status": "+" or "-", ' \
-                       '"tumor_size": string, ' \
-                       '"num_pos_nodes": string, ' \
-                       '"her2_status": "+" or "-", ' \
-                       '"ethnicity": string}'
-        :param operator: {"$and"} or {"or"} as filtering operators
-        :return: list of dicts
-        """
-        input_data = json.loads(input_data)
-        filter_list = []
-        if 'age' in input_data.keys():
-            age = get_age_group(input_data['age'])
-            if age:
-                filter_list.append({"age-recode-with-1-year-olds": {"$in": age}})
-        if 'tumor_size' in input_data.keys():
-            t_size_cm = ca_get_t_size_cm(input_data['tumor_size'])
-            if t_size_cm:
-                filter_list.append({"t-size-cm": t_size_cm})
-        if 'sex' in input_data.keys():
-            filter_list.append({"sex": input_data["sex"]})
-        if 'tumor_grade' in input_data.keys():
-            filter_list.append({"grade": input_data["tumor_grade"]})
-        if 'er_status' in input_data.keys():
-            filter_list.append({"er-status-recode-breast-cancer-1990": input_data["er_status"]})
-        if 'pr_status' in input_data.keys():
-            filter_list.append({"pr-status-recode-breast-cancer-1990": input_data["pr_status"]})
-        if 'her2_status' in input_data.keys():
-            filter_list.append({"derived-her2-recode-2010": input_data['her2_status']})
-        if 'num_pos_nodes' in input_data.keys():
-            n_size = ca_get_node_range(input_data['num_pos_nodes'])
-            if n_size:
-                filter_list.append({"regional-nodes-positive-1988": n_size})
-        if 'ethnicity' in input_data.keys():
-            race = get_race_group(input_data['ethnicity'])
-            if race:
-                filter_list.append({"race-recode-w-b-ai-api": {"$in": race}})
-        if 'type' in input_data.keys():
-            filter_list.append({"type": input_data["type"]})
-        if 'breast-adjusted-ajcc-6th-stage-1988' in input_data.keys():
-            filter_list.append(
-                {"breast-adjusted-ajcc-6th-stage-1988": input_data["breast-adjusted-ajcc-6th-stage-1988"]})
-        if 'chemo' in input_data.keys():
-            filter_list.append({"chemo": input_data["chemo"]})
-        if 'radiation' in input_data.keys():
-            filter_list.append({"radiation": input_data["radiation"]})
-        if 'surgery' in input_data.keys():
-            filter_list.append({"surgery": input_data["surgery"]})
-
-        return {operator: filter_list}
-
     def ca_by_grade(input_json):
         filters = ca_create_filter(input_json)
         stages = [1.0, 2.0, 3.0, 4.0]
@@ -753,15 +756,19 @@ def custom_analytics(input_json, grouping):
 
 if __name__ == '__main__':
     ca_diag_request = '{"1age": 35, ' \
-                      '"sex": "Female", ' \
+                      '"1sex": "Female", ' \
                       '"1tumor_grade": 1, ' \
                       '"1er_status": "+", ' \
                       '"1pr_status": "+", ' \
                       '"1tumor_size": "2-5cm", ' \
-                      '"1num_pos_nodes": "4-8", ' \
+                      '"num_pos_nodes": "4-8", ' \
                       '"1her2_status": "+", ' \
                       '"1ethnicity": "Caucasian"}'
 
     pprint(custom_analytics(ca_diag_request, 'race'))
+
+    # ca_find_request = '{"ethnicity": "Chinese"}'
+    # filters = ca_create_filter(ca_find_request)
+    # pprint(find(filters, limit=10))
     # pprint(custom_analytics(ca_diag_request, 'size'))
     # pprint(custom_analytics(ca_diag_request, 'grade'))
