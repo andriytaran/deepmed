@@ -18,14 +18,8 @@ class CustomAnalyticsSerializer(serializers.Serializer):
 
     def validate(self, data):
         data = dict(data)
-        if data.get('ethnicity') == 'Caucasian':
-            data['ethnicity'] = 'White'
-        elif data.get('ethnicity') == 'African American':
-            data['ethnicity'] = 'Black'
-        elif data.get('ethnicity') == 'All Asian':
-            data['ethnicity'] = 'Asian or Pacific Islander'
-        elif data.get('ethnicity') == 'Other':
-            data['ethnicity'] = 'Unknown'
+        if data.get('ethnicity') == 'All Asian':
+            data['ethnicity'] = 'Asian'
         return data
 
 
