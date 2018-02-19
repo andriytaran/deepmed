@@ -264,7 +264,7 @@ class CustomAnalytics extends React.Component {
                     <option value={'size'} disabled={fields.size}>Tumor Size</option>
                     <option value={'stage'}>Stage</option>
                     <option value={'type'} disabled={fields.type}>Type</option>
-                    <option value={'ethnicity'} disabled={fields.ethnicity}>Ethnicity</option>
+                    <option value={'ethnicity'}>Ethnicity</option>
                     <option value={'cod'}>Status</option>
                     <option value={'radiation'}>Radiation</option>
                     <option value={'chemo'}>Chemotherapy</option>

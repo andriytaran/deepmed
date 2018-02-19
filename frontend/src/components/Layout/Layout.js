@@ -261,7 +261,7 @@ class AppLayout extends React.Component {
                       </div>
                     </div>
                   </div>
-                  {![HOME_ROUTE, LOGIN_ROUTE].includes(currentRouteName) && (
+                  {![LOGIN_ROUTE].includes(currentRouteName) && (
                   <div className="display-table-cell text-right top-nav-tools">
                     <div className="inline-block">
                       <div className="display-table">
