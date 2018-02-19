@@ -56,6 +56,40 @@ def get_age_group(age):
     return age_group
 
 
+def get_race_group(race):
+    race_group = None
+    if race == 'Caucasian':
+        race_group = ["White"]
+    elif race == 'African American':
+        race_group = ["Black"]
+    elif race == 'Filipino':
+        race_group = ["Filipino"]
+    elif race == 'Chinese':
+        race_group = ['Chinese', 'Hmong (1988+)']
+    elif race == 'Japanese':
+        race_group = ["Japanese"]
+    elif race == 'Other Asian':
+        race_group = ['Other Asian (1991+)', 'Kampuchean (1988+)', 'Laotian (1988+)']
+    elif race == 'Korean':
+        race_group = ["Korean (1988+)"]
+    elif race == 'American Indian':
+        race_group = ["American Indian/Alaska Native"]
+    elif race == 'Vietnamese':
+        race_group = ["Vietnamese (1988+)"]
+    elif race == 'Hawaiian':
+        race_group = ["Hawaiian"]
+    elif race == 'South Asian':
+        race_group = ['Asian Indian (2010+)', 'Asian Indian or Pakistani, NOS (1988+)', 'Pakistani (2010+)']
+    elif race == 'Thai':
+        race_group = ["Thai (1994+)"]
+    elif race == 'Pacific Islander':
+        race_group = ['Pacific Islander, NOS (1991+)', 'Samoan (1991+)', 'Tongan (1991+)', 'Fiji Islander (1991+)',
+                      'Guamanian, NOS (1991+)', 'Micronesian, NOS (1991+)', 'Melanesian, NOS (1991+)',
+                      'Polynesian, NOS (1991+)', 'New Guinean (1991+)', 'Chamorran (1991+)', 'Tahitian (1991+)']
+
+    return race_group
+
+
 def custom_analytics(input_json, grouping):
     def ca_get_t_size_cm(group):
         if group == '0-2cm':
@@ -126,7 +160,9 @@ def custom_analytics(input_json, grouping):
             if n_size:
                 filter_list.append({"regional-nodes-positive-1988": n_size})
         if 'ethnicity' in input_data.keys():
-            filter_list.append({"race-recode-w-b-ai-api": input_data["ethnicity"]})
+            race = get_race_group(input_data['ethnicity'])
+            if race:
+                filter_list.append({"race-recode-w-b-ai-api": {"$in": race}})
         if 'type' in input_data.keys():
             filter_list.append({"type": input_data["type"]})
         if 'breast-adjusted-ajcc-6th-stage-1988' in input_data.keys():
@@ -643,16 +679,16 @@ def custom_analytics(input_json, grouping):
 
 
 if __name__ == '__main__':
-    ca_diag_request = '{"age": 52, ' \
+    ca_diag_request = '{"age": 35, ' \
                       '"sex": "Female", ' \
-                      '"tumor_grade": 1, ' \
-                      '"er_status": "+", ' \
-                      '"pr_status": "+", ' \
-                      '"tumor_size": "0-2cm", ' \
-                      '"num_pos_nodes": "4-8", ' \
-                      '"her2_status": "+", ' \
-                      '"ethnicity": "White"}'
+                      '"1tumor_grade": 1, ' \
+                      '"1er_status": "+", ' \
+                      '"1pr_status": "+", ' \
+                      '"tumor_size": "2-5cm", ' \
+                      '"1num_pos_nodes": "4-8", ' \
+                      '"1her2_status": "+", ' \
+                      '"ethnicity": "Caucasian"}'
 
-    pprint(custom_analytics(ca_diag_request, 'race'))
-    pprint(custom_analytics(ca_diag_request, 'size'))
-    pprint(custom_analytics(ca_diag_request, 'grade'))
+    pprint(custom_analytics(ca_diag_request, 'cod'))
+    # pprint(custom_analytics(ca_diag_request, 'size'))
+    # pprint(custom_analytics(ca_diag_request, 'grade'))
