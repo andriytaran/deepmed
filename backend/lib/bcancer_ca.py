@@ -86,6 +86,15 @@ def get_race_group(race):
         race_group = ['Pacific Islander, NOS (1991+)', 'Samoan (1991+)', 'Tongan (1991+)', 'Fiji Islander (1991+)',
                       'Guamanian, NOS (1991+)', 'Micronesian, NOS (1991+)', 'Melanesian, NOS (1991+)',
                       'Polynesian, NOS (1991+)', 'New Guinean (1991+)', 'Chamorran (1991+)', 'Tahitian (1991+)']
+    elif race == 'All Asians':
+        race_group = ['Pacific Islander, NOS (1991+)', 'Samoan (1991+)', 'Tongan (1991+)', 'Fiji Islander (1991+)',
+                      'Guamanian, NOS (1991+)', 'Micronesian, NOS (1991+)', 'Melanesian, NOS (1991+)',
+                      'Polynesian, NOS (1991+)', 'New Guinean (1991+)', 'Chamorran (1991+)', 'Tahitian (1991+)',
+                      'Filipino', 'Chinese', 'Hmong (1988+)', 'Japanese', 'Other Asian (1991+)', 'Kampuchean (1988+)',
+                      'Laotian (1988+)', 'Korean (1988+)', 'Vietnamese (1988+)', 'Asian Indian (2010+)',
+                      'Asian Indian or Pakistani, NOS (1988+)', 'Pakistani (2010+)', 'Thai (1994+)']
+    elif race == 'Other':
+        race_group = ['Unknown', 'NOS (1988+)', 'Other', 'NOS (1991+)']
 
     return race_group
 
