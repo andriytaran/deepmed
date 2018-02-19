@@ -14,7 +14,7 @@ class CustomAnalyticsSerializer(serializers.Serializer):
     pr_status = serializers.CharField(required=False)
     her2_status = serializers.CharField(required=False)
     type = serializers.CharField(required=False)
-    number_of_tumors = serializers.IntegerField(required=False)
+    tumor_number = serializers.CharField(required=False)
 
 
 class DiagnosisSerializer(serializers.Serializer):

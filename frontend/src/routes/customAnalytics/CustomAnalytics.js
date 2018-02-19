@@ -237,10 +237,10 @@ class CustomAnalytics extends React.Component {
               )}
             </div>
             <div className={s.filter}>
-              {getFieldDecorator('filters[number_of_tumors]', {
+              {getFieldDecorator('filters[tumor_number]', {
                 initialValue: '',
               })(
-                <Select className={s.field} error={getFieldError('filters[number_of_tumors]')} label={'Number of tumors'}>
+                <Select className={s.field} error={getFieldError('filters[tumor_number]')} label={'Number of tumors'}>
                   <option value='' disabled hidden>Select...</option>
                   {NUMBER_OF_TUMORS.map((item, i) =>
                     <option key={i} value={item.value}>{item.label}</option>

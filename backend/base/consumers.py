@@ -606,7 +606,8 @@ class CustomAnalyticsConsumer(JsonWebsocketConsumer):
         group = content.get('group', None)
 
         if group not in ['grade', 'stage', 'type', 'ethnicity', 'cod',
-                         'radiation', 'chemo', 'surgery', 'size']:
+                         'radiation', 'chemo', 'surgery', 'size',
+                         'tumor_number']:
             self.send_json({'error': 'Invalid group parameter'})
             self.close()
 
