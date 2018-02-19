@@ -265,16 +265,6 @@ class AppLayout extends React.Component {
                   <div className="display-table-cell text-right top-nav-tools">
                     <div className="inline-block">
                       <div className="display-table">
-                        {/*<div className="display-table-cell pad-right-3">*/}
-                        {/*<p className="inline-block">*/}
-                        {/*<a className="alerts-wrapper">*/}
-                        {/*<span className="circle">*/}
-                        {/*<span>12</span>*/}
-                        {/*</span>*/}
-                        {/*<i className="font-size-18 fa fa-bell-o"/>*/}
-                        {/*</a>*/}
-                        {/*</p>*/}
-                        {/*</div>*/}
                         {loggedIn && (
                           <div className="display-table-cell">
                             <div className="inline-block">
@@ -283,10 +273,6 @@ class AppLayout extends React.Component {
                                 id='user'
                               >
                                 <CustomToggle bsRole="toggle">
-                                  <span
-                                    className="avatar inline-block"
-                                    style={{backgroundImage: `url('${require('../../static/avatar.png')}')`}}
-                                  />
                                   <img
                                     className="arrow"
                                     src={require('../../static/caret-down.png')}
