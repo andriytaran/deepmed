@@ -1,0 +1,69 @@
+@import '../../variables.css';
+
+.smallLogo {
+  /*TODO*/
+  height: 35px;
+
+  @media (--md-up) {
+    display: none;
+  }
+}
+
+.title {
+  @media (--md-down) {
+    display: none;
+  }
+}
+
+.header {
+  background: #f0f0f2;
+  padding-right: 30px;
+
+  /*TODO*/
+  z-index: 1036;
+  height: var(--header-height);
+
+  @media (--md-up) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    /*TODO*/
+    padding-left: 240px;
+  }
+
+  @media (--md-down) {
+    position: relative;
+    /*TODO*/
+    padding-left: 115px;
+  }
+}
+
+.toggler {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100px;
+  height: 100%;
+  /*TODO*/
+  background: #47cfd1;
+  background: linear-gradient(to right, #47cfd1 0%, #48ccf5 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#47cfd1', endColorstr='#48ccf5', GradientType=1);
+  text-align: center;
+  /*TODO*/
+  z-index: 2;
+  cursor: pointer;
+
+  @media (--md-up) {
+    display: none;
+  }
+}
+
+.togglerIcon {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 30px;
+  color: var(--white);
+}

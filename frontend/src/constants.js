@@ -9,7 +9,7 @@ export const GROUPED_RACES = [
   {
     label: 'Asian',
     values: [
-      'All Asians',
+      'All Asian',
       'Chinese',
       'Japanese',
       'Korean',
@@ -24,6 +24,7 @@ export const GROUPED_RACES = [
 ]
 
 export const AGES = [
+  {value: 25, label: '20-30'},
   {value: 35, label: '30-40'},
   {value: 45, label: '40-50'},
   {value: 55, label: '50-60'},

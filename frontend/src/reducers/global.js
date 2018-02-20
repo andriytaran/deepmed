@@ -9,6 +9,8 @@ export const SET_QUERY = 'Global.SET_QUERY'
 
 export const SET_CONFIG_VARS = 'Global.SET_CONFIG_VARS'
 
+export const TOGGLE_SIDEBAR_OPENED = 'Global.TOGGLE_SIDEBAR_OPENED'
+
 // ------------------------------------
 // Actions
 // ------------------------------------
@@ -30,6 +32,8 @@ export const setQuery = (query) => ({type: SET_QUERY, query})
 
 export const setCurrentRouteName = (currentRouteName) => ({type: SET_CURRENT_ROUTE_NAME, currentRouteName})
 
+export const toggleSidebarOpened = () => ({type: TOGGLE_SIDEBAR_OPENED})
+
 // ------------------------------------
 // Reducer
 // ------------------------------------
@@ -44,6 +48,7 @@ const initialState = {
   wsUrl: null,
   googleClientId: null,
   query: {},
+  sidebarOpened: false,
 }
 
 export default createReducer(initialState, {
@@ -55,6 +60,9 @@ export default createReducer(initialState, {
   }),
   [SET_QUERY]: (state, {query}) => ({
     query,
+  }),
+  [TOGGLE_SIDEBAR_OPENED]: (state, action) => ({
+    sidebarOpened: !state.sidebarOpened,
   }),
   [SET_CONFIG_VARS]: (state, {clientId, clientSecret, googleTrackingId, googleClientId, apiUrl, appUrl, apiBaseUrl, wsUrl}) => ({
     clientId,

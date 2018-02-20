@@ -1,3 +1,24 @@
-.logo {
-  height: 35px;
+@import '../../variables.css';
+
+.container {
+  padding-bottom: 30px;
+  position: relative;
+
+  @media (--md-up) {
+    padding-top: var(--header-height);
+    padding-left: var(--sidebar-width);
+  }
+}
+
+.sidebarOpened {
+  @media (--md-down) {
+    left: var(--sidebar-width);
+  }
+}
+
+.content {
+  padding-top: 30px;
+  /*TODO*/
+  z-index: 1;
+  position: relative;
 }

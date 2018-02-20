@@ -1,5 +1,12 @@
 :root {
   /*
+   * Layout
+   * ======================================================================== */
+
+  --header-height: 56px;
+  --sidebar-width: 210px;
+
+  /*
    * Media queries breakpoints
    * ======================================================================== */
   @custom-media --xs-down (width < 480px);
@@ -19,6 +26,24 @@
   --screen-lg-min: 1200px; /* Large screen / wide desktop */
   --screen-xl-min: 1600px; /* Extra Large screen / extra wide desktop */
 
+  /*
+   * Colors
+   * ======================================================================== */
+  --primary-color: #1890ff;
+  --white: #fff;
+  --black: #000;
+  --background: #EBEBEB;
+
+  /*
+   * Margins
+   * ======================================================================== */
+  --gap: 1rem;
+
+  --margin-xs: calc(var(--gap) * .25);
+  --margin-sm: calc(var(--gap) * .5);
+  --margin-md: calc(var(--gap));
+  --margin-lg: calc(var(--gap) * 1.5);
+  --margin-xl: calc(var(--gap) * 2);
   /*
    * Custom selectors
    * ======================================================================== */
