@@ -12,6 +12,7 @@ from lib.dataset import percent_women_by_type, breast_cancer_by_grade, \
     breast_cancer_by_state2, \
     breast_cancer_at_a_glance2, breast_cancer_by_age, \
     percent_women_annualy_diagnosed, chemotherapy_filter, radiation_filter
+from .ML.predictions import make_pred
 
 
 class DiagnosisConsumer(JsonWebsocketConsumer):
@@ -529,13 +530,9 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
         similar_diagnosis = []
 
         try:
-            import subprocess
-            import ast
-            import re
-            regex = r"\[\{(.*?)\}\]"
 
             # START SURGERY
-            simdx_args = ','.join([
+            simdx_args = [
                 str(dd.get('age')),
                 str(dd.get('number_of_tumors')),
                 str(dd.get('num_pos_nodes')),
@@ -545,27 +542,12 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
                 dd.get('tumor_size_in_mm'),
                 dd.get('er_status'),
                 dd.get('pr_status'),
-                dd.get('her2_status'),
+                dd.get('her2_status')
+            ]
 
-            ])
+            similar_diagnosis = make_pred(simdx_args, 'simdx')
 
-            simdx_command_str = [settings.ML_PYTHON_PATH,
-                                 settings.ML_COMMAND_FILE,
-                                 simdx_args, 'simdx']
-
-            simdx_command = subprocess.Popen(simdx_command_str,
-                                             stdout=subprocess.PIPE,
-                                             stderr=subprocess.PIPE,
-                                             cwd=settings.ML_COMMAND_DIR)
-            simdx_output, err = simdx_command.communicate()
-
-            if not simdx_output:
-                self.send_json({'error': 'Simdx command failed'})
-
-            simdx_response = ast.literal_eval(
-                re.search(regex,
-                          str(simdx_output.decode('utf8'))).group())
-            for obj in simdx_response:
+            for obj in similar_diagnosis:
                 if obj.get('Race_group') == 'White':
                     obj['Race_group'] = 'Caucasian'
                 elif obj.get('Race_group') == 'Black':
@@ -585,7 +567,6 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
                 if obj.get('COD to site recode') not in ['Breast', 'Alive']:
                     obj['COD to site recode'] = 'Other'
 
-            similar_diagnosis = simdx_response
         except:
             pass
 
