@@ -256,7 +256,7 @@ class CustomAnalytics extends React.Component {
               {getFieldDecorator('stage', {
                 initialValue: '',
               })(
-                <Select error={getFieldError('stage')} label={'Stage'}>
+                <Select className={s.field} error={getFieldError('stage')} label={'Stage'}>
                   <option value='' disabled hidden>Select...</option>
                   {STAGES.map((item, i) =>
                     <option key={i} value={item.value}>{item.label}</option>
