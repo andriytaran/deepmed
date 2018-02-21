@@ -1948,7 +1948,7 @@ if __name__ == '__main__':
     # diag = diagnosis(diag_request, limit=20)
     # print(len(diag))
     # pprint(diag)
-    pprint(helper_get_positive_nodes(age_only))
+    # pprint(helper_get_positive_nodes(age_only))
 
 # def cause_of_death_within_ages_30_40():
 #     result = json.loads(aggregate([{"$match": {

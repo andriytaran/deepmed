@@ -2,6 +2,7 @@ import json
 
 from channels.generic.websocket import JsonWebsocketConsumer
 from django.conf import settings
+from pymongo import MongoClient
 
 from base.serializers import DiagnosisDataSerializer, CustomAnalyticsSerializer
 from lib.bcancer_ca import custom_analytics
@@ -11,7 +12,8 @@ from lib.dataset import percent_women_by_type, breast_cancer_by_grade, \
     chemotherapy, radiation, percent_race_with_cancer_by_age, \
     breast_cancer_by_state2, \
     breast_cancer_at_a_glance2, breast_cancer_by_age, \
-    percent_women_annualy_diagnosed, chemotherapy_filter, radiation_filter
+    percent_women_annualy_diagnosed, chemotherapy_filter, radiation_filter, \
+    MONGODB_HOST, MONGODB_PORT, COLLECTION_NAME, DBS_NAME
 from .ML.predictions import make_pred
 
 
@@ -440,59 +442,62 @@ class IndividualStatisticsConsumer(JsonWebsocketConsumer):
 
         age = json.dumps({'age': dd.get('age')})
 
-        percent_women_annualy_diagnosed_response = percent_women_annualy_diagnosed(
-            age)
-        self.send_json(
-            {
-                'percent_women_annualy_diagnosed': percent_women_annualy_diagnosed_response})
+        mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
+        collection = mongo_client[DBS_NAME][COLLECTION_NAME]
 
-        percent_women_by_type_response = percent_women_by_type()
+        percent_women_annualy_diagnosed_response = percent_women_annualy_diagnosed(
+            age, collection)
+        self.send_json(
+            {'percent_women_annualy_diagnosed':
+                 percent_women_annualy_diagnosed_response})
+
+        percent_women_by_type_response = percent_women_by_type(collection)
         self.send_json(
             {'percent_women_by_type': percent_women_by_type_response})
 
         breast_cancer_by_grade_and_size_response = {
-            'grade': breast_cancer_by_grade(age),
-            'size': breast_cancer_by_size(age)
+            'grade': breast_cancer_by_grade(age, collection),
+            'size': breast_cancer_by_size(age, collection)
         }
         self.send_json({
             'breast_cancer_by_grade_and_size': breast_cancer_by_grade_and_size_response})
 
         distribution_of_stage_of_cancer_response = {
-            'overall': distribution_of_stage_of_cancer(age),
+            'overall': distribution_of_stage_of_cancer(age, collection),
             'by_race':
                 distribution_of_stage_of_cancer(
                     json.dumps({'age': dd.get('age'),
                                 'ethnicity': dd.get('ethnicity')},
-                               ensure_ascii=False)),
+                               ensure_ascii=False), collection),
         }
         self.send_json({
             'distribution_of_stage_of_cancer': distribution_of_stage_of_cancer_response})
 
         percent_of_women_with_cancer_by_race_response = {
-            'overall': percent_of_women_with_cancer_by_race_overall(),
+            'overall': percent_of_women_with_cancer_by_race_overall(collection),
             'by_age': percent_race_with_cancer_by_age(json.dumps({
                 'age': dd.get('age'),
                 'sex': 'Female'
-            }, ensure_ascii=False))
+            }, ensure_ascii=False), collection)
         }
         self.send_json({'percent_of_women_with_cancer_by_race': \
                             percent_of_women_with_cancer_by_race_response})
 
         surgery_decisions_response = {
-            'overall': surgery_decisions(json.dumps({})),
-            'by_age': surgery_decisions(age)
+            'overall': surgery_decisions(json.dumps({}), collection),
+            'by_age': surgery_decisions(age, collection)
         }
         self.send_json({'surgery_decisions': surgery_decisions_response})
 
         chemotherapy_response = {
-            'overall': chemotherapy(),
-            'breakout_by_stage': chemotherapy_filter(age)
+            'overall': chemotherapy(collection),
+            'breakout_by_stage': chemotherapy_filter(age, collection)
         }
         self.send_json({'chemotherapy': chemotherapy_response})
 
         radiation_response = {
-            'overall': radiation(),
-            'breakout_by_stage': radiation_filter(age)
+            'overall': radiation(collection),
+            'breakout_by_stage': radiation_filter(age, collection)
         }
         self.send_json({'radiation': radiation_response})
 
@@ -504,7 +509,7 @@ class IndividualStatisticsConsumer(JsonWebsocketConsumer):
         self.send_json(
             {'breast_cancer_at_a_glance': breast_cancer_at_a_glance_response})
 
-        breast_cancer_by_age_response = breast_cancer_by_age()
+        breast_cancer_by_age_response = breast_cancer_by_age(collection)
         self.send_json({'breast_cancer_by_age': breast_cancer_by_age_response})
 
 
