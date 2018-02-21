@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
-import s from './Diagnosis.scss'
+import s from './Diagnosis.css'
 import {RACES, REGIONS, SITES, TYPES} from '../../constants'
 import {createForm} from 'rc-form'
 import messages from '../../components/messages'
@@ -10,7 +10,8 @@ import isEmpty from 'lodash/isEmpty'
 import {getData} from '../../reducers/diagnosis'
 import cn from 'classnames'
 import isNil from 'lodash/isNil'
-import {Tab, Tabs} from 'react-bootstrap'
+import Tab from 'react-bootstrap/lib/Tab'
+import Tabs from 'react-bootstrap/lib/Tabs'
 
 const OverallPlansTable = ({items = [], visibleRowIndex}) =>
   <div className='table-responsive'>

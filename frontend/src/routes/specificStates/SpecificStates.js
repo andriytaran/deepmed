@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
-import s from './SpecificStates.scss'
+import s from './SpecificStates.css'
 import {Bar, Pie} from 'react-chartjs-2'
 import {formatChartNumber, getAgeRangeLabel} from '../../utils'
 import {Card, Col, Row} from '../../components'

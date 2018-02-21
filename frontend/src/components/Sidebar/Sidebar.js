@@ -15,14 +15,18 @@ import {
   USER_ROUTE,
 } from '../../routes'
 import cn from 'classnames'
+import FaHeaderO from 'react-icons/lib/fa/heart-o'
+import FaBarChart from 'react-icons/lib/fa/bar-chart'
+import FaFileO from 'react-icons/lib/fa/file-o'
+import FaLaptop from 'react-icons/lib/fa/laptop'
 
 const MENU = [
-  {routeName: DIAGNOSIS_ROUTE, label: 'Diagnosis', icon: 'fa fa-heart-o'},
-  {routeName: NATIONAL_STATES_ROUTE, label: 'National Statistics', icon: 'fa fa-bar-chart'},
-  {routeName: SPECIFIC_STATES_ROUTE, label: 'Individual Statistics', icon: 'fa fa-bar-chart'},
-  {routeName: CUSTOM_ANALYTICS_ROUTE, label: 'Custom Analytics', icon: 'fa fa-bar-chart'},
-  {routeName: SIMILAR_DIAGNOSES_ROUTE, label: 'Similar Diagnoses', icon: 'fa fa-files-o'},
-  {routeName: RESOURCES_ROUTE, label: 'Resources', icon: 'fa fa-laptop'},
+  {routeName: DIAGNOSIS_ROUTE, label: 'Diagnosis', iconComponent: FaHeaderO},
+  {routeName: NATIONAL_STATES_ROUTE, label: 'National Statistics', iconComponent: FaBarChart},
+  {routeName: SPECIFIC_STATES_ROUTE, label: 'Individual Statistics', iconComponent: FaBarChart},
+  {routeName: CUSTOM_ANALYTICS_ROUTE, label: 'Custom Analytics', iconComponent: FaBarChart},
+  {routeName: SIMILAR_DIAGNOSES_ROUTE, label: 'Similar Diagnoses', iconComponent: FaFileO},
+  {routeName: RESOURCES_ROUTE, label: 'Resources', iconComponent: FaLaptop},
 ]
 
 class Sidebar extends React.Component {
@@ -45,7 +49,9 @@ class Sidebar extends React.Component {
                 className={cn(s.itemWrapper, currentRouteName === item.routeName && s.active)}
               >
                 <Link to={item.routeName} className={s.item}>
-                  <i className={cn(item.icon, s.icon)}/>
+                  {React.createElement(item.iconComponent, {
+                    className: s.icon
+                  })}
                   {item.label}
                 </Link>
               </li>

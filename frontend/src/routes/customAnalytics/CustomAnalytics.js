@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {createForm} from 'rc-form'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
-import s from './CustomAnalytics.scss'
+import s from './CustomAnalytics.css'
 import {Row, Col, Select, Card} from '../../components'
 import {AGES, TYPES, TUMOR_SIZES, SITES, NUMBER_OF_NODES, GROUPED_RACES, NUMBER_OF_TUMORS} from '../../constants'
 import {getCustomAnalytics} from '../../reducers/diagnosis'
@@ -11,7 +11,8 @@ import pickBy from 'lodash/pickBy'
 import identity from 'lodash/identity'
 import isEmpty from 'lodash/isEmpty'
 import {Pie} from 'react-chartjs-2'
-import {formatChartNumber, getAverageAge} from '../../utils'
+import {formatChartNumber} from '../../utils'
+import Button from 'react-bootstrap/lib/Button'
 
 class CustomAnalytics extends React.Component {
   state = {
@@ -68,7 +69,7 @@ class CustomAnalytics extends React.Component {
     const {getFieldDecorator, getFieldError} = this.props.form
 
     return (
-      <form onSubmit={this.handleSubmit} className='container container-full'>
+      <form onSubmit={this.handleSubmit} className={s.container}>
         <Row type='flex' gutter={16}>
           <Col xs={24} md={6}>
             <div className={s.filter}>
@@ -280,7 +281,7 @@ class CustomAnalytics extends React.Component {
                   Clear filters
                 </a>
                 <div className={s.submitBtnWrapper}>
-                  <button className='btn btn-primary' type='submit'>Submit</button>
+                  <Button bsStyle='primary' type='submit'>Submit</Button>
                 </div>
               </Col>
             </Row>

@@ -9,8 +9,8 @@
   /*
    * Media queries breakpoints
    * ======================================================================== */
-  @custom-media --xs-down (width < 480px);
-  @custom-media --xs-up (width >= 480px);
+  @custom-media --xs-down (width < 576px);
+  @custom-media --xs-up (width >= 576px);
   @custom-media --sm-down (width < 768px);
   @custom-media --sm-up (width >= 768px);
   @custom-media --md-down (width < 992px);
@@ -20,7 +20,7 @@
   @custom-media --xl-down (width < 1600px);
   @custom-media --xl-up (width >= 1600px);
 
-  --screen-xs-min: 480px; /* Extra small screen / phone */
+  --screen-xs-min: 576px; /* Extra small screen / phone */
   --screen-sm-min: 768px; /* Small screen / tablet */
   --screen-md-min: 992px; /* Medium screen / desktop */
   --screen-lg-min: 1200px; /* Large screen / wide desktop */
@@ -32,6 +32,7 @@
   --primary-color: #1890ff;
   --white: #fff;
   --black: #000;
+  --muted: #aaa;
   --background: #EBEBEB;
 
   /*

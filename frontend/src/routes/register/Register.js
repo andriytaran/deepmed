@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
-import s from './Register.scss'
+import s from './Register.css'
 
 class Register extends React.Component {
   componentWillUnmount() {

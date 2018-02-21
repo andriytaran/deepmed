@@ -3,11 +3,13 @@ import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './Header.css'
 import {Link, Row, Col} from '../../components'
-import {LOGOUT_ROUTE, USER_ROUTE,} from '../../routes'
+import {LOGOUT_ROUTE, USER_ROUTE} from '../../routes'
 import cn from 'classnames'
-import {Dropdown} from 'react-bootstrap'
+import Dropdown from 'react-bootstrap/lib/Dropdown'
 import RootCloseWrapper from 'react-overlays/lib/RootCloseWrapper'
 import {toggleSidebarOpened} from '../../reducers/global'
+import FaClose from 'react-icons/lib/fa/close'
+import FaBars from 'react-icons/lib/fa/bars'
 
 //TODO change bootstrap dropdown
 class CustomToggle extends React.Component {
@@ -116,7 +118,11 @@ class Header extends React.Component {
     return (
       <Row type='flex' justify='space-between' align='middle' className={s.header}>
         <a className={s.toggler} onClick={toggleSidebarOpened}>
-          <i className={cn(s.togglerIcon, sidebarOpened ? 'fa fa-times' : 'fa fa-bars')}/>
+          {sidebarOpened ? (
+            <FaClose className={s.togglerIcon}/>
+          ) : (
+            <FaBars className={s.togglerIcon}/>
+          )}
         </a>
 
         <Col>

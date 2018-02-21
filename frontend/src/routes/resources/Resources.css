@@ -1,0 +1,39 @@
+@import '../../variables.css';
+
+.container {
+  padding-right: var(--margin-md);
+  padding-left: var(--margin-md);
+}
+
+.col {
+  margin-bottom: var(--margin-md);
+}
+
+.card {
+  /*TODO*/
+  background-color: #fafafa;
+  padding: var(--margin-md);
+  border: 1px solid #f0f0f2;
+  border-radius: 5px;
+  position: relative;
+  height: 100%;
+}
+
+.cardHeader {
+  margin-bottom: var(--margin-md);
+}
+
+.cardContent {
+  @media (--sm-up) {
+    max-height: 325px;
+    overflow-y: auto;
+  }
+}
+
+.info {
+  color: var(--muted);
+}
+
+.link {
+  margin-bottom: var(--margin-md);
+}

@@ -2,7 +2,7 @@ import React from 'react'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import cn from 'classnames'
 import RCInputNumber from 'rc-input-number'
-import s from './InputNumber.scss'
+import s from './InputNumber.css'
 
 class InputNumber extends React.Component {
   render() {

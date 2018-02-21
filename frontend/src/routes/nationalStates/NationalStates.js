@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
-import s from './NationalStates.scss'
+import s from './NationalStates.css'
 import {Col, Row, VectorMap, Spin} from '../../components'
 import {Line} from 'react-chartjs-2'
 import {humanReadableNumber} from '../../utils'

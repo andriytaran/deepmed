@@ -1,0 +1,59 @@
+@import '../../variables.css';
+
+.container {
+  padding-right: var(--margin-md);
+  padding-left: var(--margin-md);
+}
+
+.alert {
+  margin-bottom: var(--margin-md);
+}
+
+.header {
+  text-align: center;
+
+  @media (--md-up) {
+    margin-bottom: var(--margin-lg);
+  }
+
+  @media (--md-down) {
+    margin-bottom: var(--margin-md);
+  }
+}
+
+.form {
+  background-color: #fafafa;
+  border: 1px solid #f0f0f2;
+  width: 400px;
+  max-width: 100%;
+  border-radius: 5px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media (--md-up) {
+    padding: var(--margin-xl);
+  }
+
+  @media (--md-down) {
+    padding: var(--margin-md);
+  }
+}
+
+.row {
+  margin-bottom: var(--margin-md);
+}
+
+.col {
+  @media (--xs-down) {
+    &:not(:last-child) {
+      margin-bottom: var(--margin-sm);
+    }
+  }
+}
+
+.googleLoginBtn {
+  color: #48ccf5;
+  width: 100%;
+  background-color: transparent;
+}

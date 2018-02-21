@@ -1,5 +1,5 @@
 import React from 'react'
-import './VectorMap.scss'
+import './VectorMap.css'
 import PropTypes from 'prop-types'
 import maps from './maps'
 

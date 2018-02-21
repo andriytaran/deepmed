@@ -1,0 +1,35 @@
+@import '../../variables.css';
+
+.container {
+  padding-right: var(--margin-md);
+  padding-left: var(--margin-md);
+}
+
+.content {
+  /*TODO*/
+  background-color: #fff;
+  padding: var(--margin-md);
+  border: 1px solid #f0f0f2;
+  border-radius: 5px;
+  position: relative;
+}
+
+.topHeader {
+  /*TODO*/
+  h5 {
+    text-align: center;
+  }
+}
+
+.bottomHeader {
+  /*TODO*/
+  h6 {
+    margin-top: var(--margin-sm);
+    white-space: nowrap;
+  }
+}
+
+.borderRight {
+  /*TODO*/
+  border-right: 1px solid #f0f0f2;
+}
