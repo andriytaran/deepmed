@@ -1,5 +1,5 @@
 import React from 'react'
-import SpecificStates from './SpecificStates'
+import IndividualStatistics from './IndividualStatistics'
 import {AppLayout} from '../../components'
 import {setCurrentRouteName} from '../../reducers/global'
 
@@ -10,7 +10,7 @@ async function action({store, route}) {
 
   return {
     title,
-    component: <AppLayout title={title}><SpecificStates/></AppLayout>,
+    component: <AppLayout title={title}><IndividualStatistics/></AppLayout>,
   }
 }
 

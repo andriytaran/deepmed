@@ -49,12 +49,12 @@ const routes = {
         {
           path: '/national-statistics',
           name: `${NATIONAL_STATES_ROUTE}`,
-          action: require('./nationalStates').default,
+          action: require('./nationalStatistics').default,
         },
         {
           path: '/individual-statistics',
           name: `${SPECIFIC_STATES_ROUTE}`,
-          action: require('./specificStates').default,
+          action: require('./individualStatistics').default,
         },
         {
           path: '/similar-diagnoses',

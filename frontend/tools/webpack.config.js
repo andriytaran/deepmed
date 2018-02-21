@@ -5,6 +5,7 @@ import nodeExternals from 'webpack-node-externals'
 import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer'
 import overrideRules from './lib/overrideRules'
 import pkg from '../package.json'
+import CompressionPlugin from 'compression-webpack-plugin'
 
 const isDebug = !process.argv.includes('--release')
 const isVerbose = process.argv.includes('--verbose')
@@ -347,6 +348,14 @@ const clientConfig = {
           screw_ie8: true,
         },
         sourceMap: true,
+      }),
+
+      new CompressionPlugin({
+        asset: '[path].gz[query]',
+        algorithm: 'gzip',
+        test: /\.js$|\.css$|\.html$/,
+        threshold: 10240,
+        minRatio: 0.8
       }),
     ],
 

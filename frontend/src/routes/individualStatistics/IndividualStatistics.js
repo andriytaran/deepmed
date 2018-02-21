@@ -1,15 +1,16 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
-import s from './SpecificStates.css'
+import s from './IndividualStatistics.css'
 import {Bar, Pie} from 'react-chartjs-2'
 import {formatChartNumber, getAgeRangeLabel} from '../../utils'
 import {Card, Col, Row} from '../../components'
 import isNil from 'lodash/isNil'
 import isEmpty from 'lodash/isEmpty'
 
-class SpecificStates extends React.Component {
+class IndividualStatistics extends React.Component {
   render() {
+    // TODO
     const white = '#fff'
     const color_1 = '#48ccf5'
     const color_2 = '#88d0d1'
@@ -31,8 +32,8 @@ class SpecificStates extends React.Component {
     const ethnicity = diagnosisForm.ethnicity || ''
 
     return (
-      <div className='container container-full'>
-        <div className='custom-panel custom-panel-condensed light-gray-bg'>
+      <div className={s.container}>
+        <div className={s.content}>
           <Row type='flex' gutter={16}>
             <Col xs={24} sm={12} md={8} className={s.col}>
               <Card
@@ -117,7 +118,7 @@ class SpecificStates extends React.Component {
               >
                 {!isEmpty(individualStatistics.percent_of_women_with_cancer_by_race) && (
                   <React.Fragment>
-                    <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
+                    <p className={s.subHeader}>Overall</p>
                     <Pie
                       data={{
                         ...individualStatistics.percent_of_women_with_cancer_by_race.overall,
@@ -142,8 +143,7 @@ class SpecificStates extends React.Component {
                       width={400}
                       height={150}
                     />
-                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>{ageRange}</strong>
-                    </p>
+                    <p className={s.subHeader}>{ageRange}</p>
                     <Pie
                       data={{
                         ...individualStatistics.percent_of_women_with_cancer_by_race.by_age,
@@ -245,7 +245,7 @@ class SpecificStates extends React.Component {
               >
                 {!isEmpty(individualStatistics.distribution_of_stage_of_cancer) && (
                   <React.Fragment>
-                    <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
+                    <p className={s.subHeader}>Overall</p>
                     <Pie
                       data={{
                         ...individualStatistics.distribution_of_stage_of_cancer.overall,
@@ -270,7 +270,7 @@ class SpecificStates extends React.Component {
                       width={400}
                       height={150}
                     />
-                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>{ethnicity} Women Only</strong></p>
+                    <p className={s.subHeader}>{ethnicity} Women Only</p>
                     <Pie
                       data={{
                         ...individualStatistics.distribution_of_stage_of_cancer.by_race,
@@ -306,7 +306,7 @@ class SpecificStates extends React.Component {
               >
                 {!isEmpty(individualStatistics.surgery_decisions) && (
                   <React.Fragment>
-                    <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
+                    <p className={s.subHeader}>Overall</p>
                     <Pie
                       data={{
                         ...individualStatistics.surgery_decisions.overall,
@@ -331,7 +331,7 @@ class SpecificStates extends React.Component {
                       width={400}
                       height={150}
                     />
-                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>{ageRange}</strong></p>
+                    <p className={s.subHeader}>{ageRange}</p>
                     <Pie
                       data={{
                         ...individualStatistics.surgery_decisions.by_age,
@@ -367,7 +367,7 @@ class SpecificStates extends React.Component {
               >
                 {!isEmpty(individualStatistics.chemotherapy) && (
                   <React.Fragment>
-                    <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
+                    <p className={s.subHeader}>Overall</p>
                     <Pie
                       data={{
                         ...individualStatistics.chemotherapy.overall,
@@ -392,7 +392,7 @@ class SpecificStates extends React.Component {
                       width={400}
                       height={150}
                     />
-                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>{ageRange}</strong></p>
+                    <p className={s.subHeader}>{ageRange}</p>
                     <Pie
                       data={{
                         ...individualStatistics.chemotherapy.breakout_by_stage,
@@ -428,7 +428,7 @@ class SpecificStates extends React.Component {
               >
                 {!isEmpty(individualStatistics.radiation) && (
                   <React.Fragment>
-                    <p className='no-margin pad-left-1 small'><strong>Overall</strong></p>
+                    <p className={s.subHeader}>Overall</p>
                     <Pie
                       data={{
                         ...individualStatistics.radiation.overall,
@@ -453,7 +453,7 @@ class SpecificStates extends React.Component {
                       width={400}
                       height={160}
                     />
-                    <p className='push-bot-0 push-top-3 pad-left-1 small'><strong>{ageRange}</strong></p>
+                    <p className={s.subHeader}>{ageRange}</p>
                     <Pie
                       data={{
                         ...individualStatistics.radiation.breakout_by_stage,
@@ -495,4 +495,4 @@ const mapState = state => ({
 
 const mapDispatch = {}
 
-export default connect(mapState, mapDispatch)(withStyles(s)(SpecificStates))
+export default connect(mapState, mapDispatch)(withStyles(s)(IndividualStatistics))

@@ -5,32 +5,11 @@
   padding-left: var(--margin-md);
 }
 
-.alert {
-  margin-bottom: var(--margin-md);
-}
-
-.header {
-  text-align: center;
-
-  @media (--md-up) {
-    margin-bottom: var(--margin-lg);
-  }
-
-  @media (--md-down) {
-    margin-bottom: var(--margin-md);
-  }
-}
-
-.form {
-  /*TODO*/
+.content {
   background-color: #fafafa;
   border: 1px solid #f0f0f2;
-  width: 400px;
-  max-width: 100%;
   border-radius: 5px;
   position: relative;
-  margin-left: auto;
-  margin-right: auto;
 
   @media (--md-up) {
     padding: var(--margin-xl);
@@ -41,6 +20,18 @@
   }
 }
 
-.row {
+.col {
   margin-bottom: var(--margin-md);
+}
+
+.subHeader {
+  font-weight: 700;
+  color: #656566;
+  font-size: 12px;
+  padding-left: var(--margin-sm);
+
+  /*TODO*/
+  &:nth-child(even) {
+    margin-top: var(--margin-lg);
+  }
 }

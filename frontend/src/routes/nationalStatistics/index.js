@@ -1,5 +1,5 @@
 import React from 'react'
-import NationalStates from './NationalStates'
+import NationalStatistics from './NationalStatistics'
 import {AppLayout} from '../../components'
 import {setCurrentRouteName} from '../../reducers/global'
 
@@ -10,7 +10,7 @@ async function action({store, route}) {
 
   return {
     title,
-    component: <AppLayout title={title}><NationalStates/></AppLayout>,
+    component: <AppLayout title={title}><NationalStatistics/></AppLayout>,
   }
 }
 

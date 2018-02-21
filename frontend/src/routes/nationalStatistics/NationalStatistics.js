@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
-import s from './NationalStates.css'
+import s from './NationalStatistics.css'
 import {Col, Row, VectorMap, Spin} from '../../components'
 import {Line} from 'react-chartjs-2'
 import {humanReadableNumber} from '../../utils'
@@ -16,7 +16,7 @@ const colors = ['#47cfd1', '#04a9a9', '#48ccf5', '#77c2d9']
 const chartColors = ['#88d0d1', '#48ccf5']
 const chartLabels = ['Incidence', 'Deaths']
 
-class NationalStates extends React.Component {
+class NationalStatistics extends React.Component {
   render() {
     const {individualStatistics} = this.props
 
@@ -33,9 +33,7 @@ class NationalStates extends React.Component {
         <Row type='flex' gutter={16}>
           <Col xs={24} md={12} className={s.col}>
             <div className={cn(s.card, s.mapCard)}>
-
               <h2 className='text-center'>Breast Cancer Incidence per 100,000 Women</h2>
-
               <div className={s.mapWrapper}>
                 {states ? (
                   <VectorMap
@@ -79,10 +77,8 @@ class NationalStates extends React.Component {
               )}
             </div>
           </Col>
-
           <Col xs={24} md={12} className={s.col}>
             <div className={s.card}>
-
               <h2 className='no-margin text-center'>Breast Cancer Incidence over Time</h2>
               <div className='custom-panel custom-panel-condensed push-top-2'>
                 <div className='row row-condensed'>
@@ -317,4 +313,4 @@ const mapState = state => ({
 
 const mapDispatch = {}
 
-export default connect(mapState, mapDispatch)(withStyles(s)(NationalStates))
+export default connect(mapState, mapDispatch)(withStyles(s)(NationalStatistics))
