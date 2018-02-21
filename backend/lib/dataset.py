@@ -1,4 +1,4 @@
-import json
+import json, time
 from collections import OrderedDict
 from pymongo import MongoClient
 from bson.son import SON
@@ -80,25 +80,35 @@ STATES_ABRS = ["AL", "AK", "AS", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FM",
                "VA", "WA", "WV", "WI", "WY"]
 
 
-def aggregate(request):
-    mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
-    collection = mongo_client[DBS_NAME][COLLECTION_NAME]
+def aggregate(request, collection=None):
     response = []
-    data = collection.aggregate(request)
+    if collection:
+        data = collection.aggregate(request)
+    else:
+        mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
+        collection = mongo_client[DBS_NAME][COLLECTION_NAME]
+        data = collection.aggregate(request)
     for row in data:
         response.append(row)
-    mongo_client.close()
+    # mongo_client.close()
     return json.dumps(response)
 
 
-def find(request, **kwargs):
-    mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
-    collection = mongo_client[DBS_NAME][COLLECTION_NAME]
+def find(request, collection=None, **kwargs):
     response = []
-    data = collection.find(request, **kwargs)
+    if collection:
+        data = collection.find(request, **kwargs)
+    else:
+        mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
+        collection = mongo_client[DBS_NAME][COLLECTION_NAME]
+        data = collection.find(request, **kwargs)
+    # mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
+    # collection = mongo_client[DBS_NAME][COLLECTION_NAME]
+    # response = []
+    # data = collection.find(request, **kwargs)
     for row in data:
         response.append(row)
-    mongo_client.close()
+    # mongo_client.close()
     return response
 
 
@@ -220,7 +230,7 @@ def create_filter(input_data, operator='$and'):
     return {operator: filter_list}
 
 
-def diagnosis(input_json, limit=20):
+def diagnosis(input_json, limit=20, collection=None):
     """
     Returned values are grouped by these groups:
     "ethnicity": "White" -> "Caucasian", "Black" -> "African American", "Asian or Pacific Islander" -> "Asian",
@@ -285,21 +295,21 @@ def diagnosis(input_json, limit=20):
         # ts_max = round(ts_mm *1.2)
         # filters['$and'].append({"$and": [{"tumor_size_in_mm": {"$gte": ts_min}},
         #                                  {"tumor_size_in_mm": {"$lte": ts_max}}]})
-        dataset = find(filters, limit=limit)
+        dataset = find(filters, limit=limit, collection=collection)
         results = []
         for item in dataset:
             d = build_dict(item)
             results.append(d)
         if len(results) < 20:
             filters['$and'] = [d for d in filters['$and'] if 'race-recode-w-b-ai-api' not in d]
-            dataset = find(filters, limit=limit)
+            dataset = find(filters, limit=limit, collection=collection)
             results = []
             for item in dataset:
                 d = build_dict(item)
                 results.append(d)
             if len(results) < 20:
                 filters['$and'] = [d for d in filters['$and'] if 'age-recode-with-single-ages-and-85' not in d]
-                dataset = find(filters, limit=limit)
+                dataset = find(filters, limit=limit, collection=collection)
                 results = []
                 for item in dataset:
                     d = build_dict(item)
@@ -310,12 +320,12 @@ def diagnosis(input_json, limit=20):
     return results
 
 
-def breast_cancer_at_a_glance():
+def breast_cancer_at_a_glance(collection=None):
     result = json.loads(aggregate([
         {"$group": {
             "_id": "$year-of-diagnosis",
             "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}]))
+        {"$sort": SON([("_id", 1)])}], collection))
 
     return {
         'labels': list(map(lambda x: x['_id'], result)),
@@ -364,12 +374,12 @@ def breast_cancer_at_a_glance2():
     }
 
 
-def breast_cancer_by_age():
+def breast_cancer_by_age(collection=None):
     result = json.loads(aggregate([
         {"$group": {
             "_id": "$age-recode-with-1-year-olds",
             "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}]))
+        {"$sort": SON([("_id", 1)])}], collection))
 
     return {
         'labels': list(map(lambda x: x['_id'], result)),
@@ -382,12 +392,12 @@ def breast_cancer_by_age():
     }
 
 
-def breast_cancer_by_state():
+def breast_cancer_by_state(collection=None):
     result = json.loads(aggregate([
         {"$group": {
             "_id": "$state",
             "count": {"$sum": 1}}},
-        {"$sort": SON([("count", -1), ("_id", -1)])}]))
+        {"$sort": SON([("count", -1), ("_id", -1)])}], collection))
 
     values = {}
     for state in STATES_NAME_ABRS:
@@ -958,7 +968,7 @@ def breast_cancer_by_state2(option):
     return json_data
 
 
-def breast_cancer_by_grade(input_json):
+def breast_cancer_by_grade(input_json, collection=None):
     only_age = {"age": json.loads(input_json)['age']}
     filters = create_filter(json.dumps(only_age))
     stages = [1.0, 2.0, 3.0, 4.0]
@@ -979,7 +989,7 @@ def breast_cancer_by_grade(input_json):
             "count": 1,
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
-        {"$sort": SON([("percentage", -1)])}]))
+        {"$sort": SON([("percentage", -1)])}], collection))
 
     data = {'Grade 1': 0, 'Grade 2': 0, 'Grade 3': 0}
     for i, label in enumerate(list(map(lambda x: x['_id']['grade'], result))):
@@ -1001,12 +1011,12 @@ def breast_cancer_by_grade(input_json):
     }
 
 
-def percent_of_women_with_cancer_by_race_overall():
+def percent_of_women_with_cancer_by_race_overall(collection=None):
     diag_request = '{"sex": "Female"}'
-    return percent_race_with_cancer_by_age(diag_request)
+    return percent_race_with_cancer_by_age(diag_request, collection)
 
 
-def cause_of_death_overall():
+def cause_of_death_overall(collection=None):
     """
     Does not need any input parameters
     Returns percentage of Breast and Others
@@ -1028,7 +1038,7 @@ def cause_of_death_overall():
             "count": 1,
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
-        {"$sort": SON([("count", -1)])}]))
+        {"$sort": SON([("count", -1)])}], collection))
 
     data = {"Breast": 0, "Other": 0}
     for i, label in enumerate(list(map(lambda x: x['_id']['cod-to-site-recode'], result))):
@@ -1048,7 +1058,7 @@ def cause_of_death_overall():
     }
 
 
-def er_pos_pr_neg_her2_neg_annual_diagnoses():
+def er_pos_pr_neg_her2_neg_annual_diagnoses(collection=None):
     """
     Does not needs an input parameter
     :return: json
@@ -1063,7 +1073,7 @@ def er_pos_pr_neg_her2_neg_annual_diagnoses():
         {"$group": {
             "_id": "$year-of-diagnosis",
             "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}]))
+        {"$sort": SON([("_id", 1)])}], collection))
 
     return {
         'labels': list(map(lambda x: x['_id'], result)),
@@ -1076,7 +1086,7 @@ def er_pos_pr_neg_her2_neg_annual_diagnoses():
     }
 
 
-def cause_of_death(input_json):
+def cause_of_death(input_json, collection=None):
     """
     sample request input_json = '{"age": 48, ' \
                    '"sex": "Female", ' \
@@ -1106,7 +1116,7 @@ def cause_of_death(input_json):
             "count": 1,
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
-        {"$sort": SON([("count", -1)])}]))
+        {"$sort": SON([("count", -1)])}], collection=None))
 
     data = {"Alive": 0, "Breast": 0, "Other": 0}
     for i, label in enumerate(list(map(lambda x: x['_id']['cod-to-site-recode'], result))):
@@ -1128,7 +1138,7 @@ def cause_of_death(input_json):
     }
 
 
-def helper_get_positive_nodes(input_json):
+def helper_get_positive_nodes(input_json, collection=None):
     """
     sample request input_json = '{"age": 48, ' \
                    '"sex": "Female", ' \
@@ -1148,11 +1158,11 @@ def helper_get_positive_nodes(input_json):
         {"$group": {
             "_id": "$regional-nodes-positive-1988",
             "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", -1)])}]))
+        {"$sort": SON([("_id", -1)])}], collection))
     return result
 
 
-def survival_months(input_json):
+def survival_months(input_json, collection=None):
     """
     sample request input_json = '{"age": 48, ' \
                    '"sex": "Female", ' \
@@ -1172,7 +1182,7 @@ def survival_months(input_json):
         {"$group": {
             "_id": "$survival-months",
             "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", -1)])}]))
+        {"$sort": SON([("_id", -1)])}], collection))
 
     res = {'> 120 months': 0, '> 96 months': 0, '> 48 months': 0, '> 24 months': 0}
     for i in result:
@@ -1196,7 +1206,7 @@ def survival_months(input_json):
     }
 
 
-def breast_cancer_by_size(input_json):
+def breast_cancer_by_size(input_json, collection=None):
     """
     sample request input_json = '{"age": 48, ' \
                    '"sex": "Female", ' \
@@ -1230,7 +1240,7 @@ def breast_cancer_by_size(input_json):
             "count": 1,
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
-        {"$sort": SON([("percentage", -1)])}]))
+        {"$sort": SON([("percentage", -1)])}], collection))
 
     data = {'< 1cm': 0, '< 2cm': 0, '< 5cm': 0, '> 5cm': 0}
     for i, label in enumerate(list(map(lambda x: x['_id']['t-size-cm'], result))):
@@ -1258,7 +1268,7 @@ def breast_cancer_by_size(input_json):
     }
 
 
-def radiation():
+def radiation(collection=None):
     """
     :return: json
     """
@@ -1276,7 +1286,7 @@ def radiation():
             "count": 1,
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
-        {"$sort": SON([("_id", -1)])}]))
+        {"$sort": SON([("_id", -1)])}], collection))
 
     return {
         'labels': list(map(lambda x: x['_id']['radiation'], result)),
@@ -1289,7 +1299,7 @@ def radiation():
     }
 
 
-def chemotherapy():
+def chemotherapy(collection=None):
     """
     :return:
     """
@@ -1307,7 +1317,7 @@ def chemotherapy():
             "count": 1,
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
-        {"$sort": SON([("_id", -1)])}]))
+        {"$sort": SON([("_id", -1)])}], collection=None))
 
     return {
         'labels': list(map(lambda x: x['_id']['chemo'], result)),
@@ -1320,7 +1330,7 @@ def chemotherapy():
     }
 
 
-def surgery_decisions(input_json):
+def surgery_decisions(input_json, collection=None):
     """
     sample request input_json = '{"age": 48, ' \
                    '"sex": "Female", ' \
@@ -1353,7 +1363,7 @@ def surgery_decisions(input_json):
             "count": 1,
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
-        {"$sort": SON([("percentage", -1)])}]))
+        {"$sort": SON([("percentage", -1)])}], collection))
 
     data = OrderedDict()
     data['Lumpectomy'] = 0
@@ -1383,7 +1393,7 @@ def surgery_decisions(input_json):
     }
 
 
-def distribution_of_stage_of_cancer(input_json):
+def distribution_of_stage_of_cancer(input_json, collection=None):
     """
     sample request input_json = '{"age": 48, ' \
                    '"sex": "Female", ' \
@@ -1416,7 +1426,7 @@ def distribution_of_stage_of_cancer(input_json):
             "count": 1,
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
-        {"$sort": SON([("percentage", -1)])}]))
+        {"$sort": SON([("percentage", -1)])}], collection))
 
     data = {"I": 0, "II": 0, "III": 0, "IV": 0}
     for i, label in enumerate(list(map(lambda x: x['_id']['breast-adjusted-ajcc-6th-stage-1988'], result))):
@@ -1442,7 +1452,7 @@ def distribution_of_stage_of_cancer(input_json):
     }
 
 
-def percent_women_annualy_diagnosed2(input_json):
+def percent_women_annualy_diagnosed2(input_json, collection=None):
     only_age = {"age": json.loads(input_json)['age']}
     filters = create_filter(json.dumps(only_age))
     filters['$and'].append({"year-of-diagnosis": {"$gte": 1975}})
@@ -1463,7 +1473,7 @@ def percent_women_annualy_diagnosed2(input_json):
             "count": 1,
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
-        {"$sort": SON([("_id", 1)])}]))
+        {"$sort": SON([("_id", 1)])}], collection))
 
     data = {"1975-1979": 0, "1980-1984": 0, "1985-1989": 0, "1990-1994": 0, "1995-1999": 0,
             "2000-2004": 0, "2005-2009": 0, "2010-2014": 0}
@@ -1496,7 +1506,7 @@ def percent_women_annualy_diagnosed2(input_json):
     }
 
 
-def woman_annualy_diagnosed(input_json):
+def woman_annualy_diagnosed(input_json, collection=None):
     """
     sample request input_json = '{"age": 48, ' \
                    '"sex": "Female", ' \
@@ -1516,7 +1526,7 @@ def woman_annualy_diagnosed(input_json):
         {"$group": {
             "_id": "$year-of-diagnosis",
             "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}]))
+        {"$sort": SON([("_id", 1)])}], collection))
 
     return {
         'labels': list(map(lambda x: x['_id'], result)),
@@ -1529,7 +1539,7 @@ def woman_annualy_diagnosed(input_json):
     }
 
 
-def growth_by_specific_type(input_json, operator="$and"):
+def growth_by_specific_type(input_json, operator="$and", collection=None):
     """
     Sample requests:
     input_json = '{"type": "IDC"}'
@@ -1546,7 +1556,7 @@ def growth_by_specific_type(input_json, operator="$and"):
         {"$group": {
             "_id": "$year-of-diagnosis",
             "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}]))
+        {"$sort": SON([("_id", 1)])}], collection))
 
     return {
         'labels': list(map(lambda x: x['_id'], result)),
@@ -1559,7 +1569,7 @@ def growth_by_specific_type(input_json, operator="$and"):
     }
 
 
-def percent_race_with_cancer_by_age(input_json):
+def percent_race_with_cancer_by_age(input_json, collection=None):
     """
     sample request input_json = '{"age": 48, ' \
                    '"sex": "Female", ' \
@@ -1590,7 +1600,7 @@ def percent_race_with_cancer_by_age(input_json):
             "count": 1,
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
-        {"$sort": SON([("percentage", -1)])}]))
+        {"$sort": SON([("percentage", -1)])}], collection))
 
     data = OrderedDict()
     data['Other'] = 0
@@ -1619,7 +1629,7 @@ def percent_race_with_cancer_by_age(input_json):
     }
 
 
-def breakout_by_stage(input_json):
+def breakout_by_stage(input_json, collection=None):
     """
     Returns breakeout by stage discarding the nulls and "Blank" fields
     example filter:
@@ -1647,7 +1657,7 @@ def breakout_by_stage(input_json):
             "count": 1,
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
-        {"$sort": SON([("percentage", -1)])}]))
+        {"$sort": SON([("percentage", -1)])}], collection))
 
     data = {"0": 0, "I": 0, "II": 0, "III": 0, "IV": 0}
     for i, label in enumerate(list(map(lambda x: x['_id']['breast-adjusted-ajcc-6th-stage-1988'], result))):
@@ -1673,7 +1683,7 @@ def breakout_by_stage(input_json):
     }
 
 
-def percent_women_by_type():
+def percent_women_by_type(collection=None):
     result = json.loads(aggregate([
         {"$group": {
             "_id": "",
@@ -1689,7 +1699,7 @@ def percent_women_by_type():
             "count": 1,
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
-        {"$sort": SON([("percentage", -1)])}]))
+        {"$sort": SON([("percentage", -1)])}], collection))
 
     data = {"IDC": 0, "DCIS": 0, "ILC": 0, "Other": 0}
     for i, label in enumerate(list(map(lambda x: x['_id']['type'], result))):
@@ -1713,7 +1723,7 @@ def percent_women_by_type():
     }
 
 
-def radiation_filter(input_json):
+def radiation_filter(input_json, collection=None):
     """
     sample request input_json = '{"age": 48, ' \
                    '"sex": "Female", ' \
@@ -1743,7 +1753,7 @@ def radiation_filter(input_json):
             "count": 1,
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
-        {"$sort": SON([("_id", -1)])}]))
+        {"$sort": SON([("_id", -1)])}], collection))
 
     return {
         'labels': list(map(lambda x: x['_id']['radiation'], result)),
@@ -1756,7 +1766,7 @@ def radiation_filter(input_json):
     }
 
 
-def chemotherapy_filter(input_json):
+def chemotherapy_filter(input_json, collection=None):
     """
     sample request input_json = '{"age": 48, ' \
                    '"sex": "Female", ' \
@@ -1786,7 +1796,7 @@ def chemotherapy_filter(input_json):
             "count": 1,
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
-        {"$sort": SON([("_id", -1)])}]))
+        {"$sort": SON([("_id", -1)])}], collection))
 
     return {
         'labels': list(map(lambda x: x['_id']['chemo'], result)),
@@ -1799,7 +1809,7 @@ def chemotherapy_filter(input_json):
     }
 
 
-def percent_women_annualy_diagnosed(input_json):
+def percent_women_annualy_diagnosed(input_json, collection=None):
     def get_total(year):
         ff = {"$and": [{"year-of-diagnosis": {"$gte": year}},
                        {"year-of-diagnosis": {"$lt": year + 5}}]}
@@ -1808,7 +1818,7 @@ def percent_women_annualy_diagnosed(input_json):
             {"$group": {
                 "_id": "",
                 "count": {"$sum": 1}}},
-            {"$sort": SON([("_id", 1)])}]))
+            {"$sort": SON([("_id", 1)])}], collection))
         return total[0]['count']
 
     def get_by_age(only_age, year):
@@ -1820,7 +1830,7 @@ def percent_women_annualy_diagnosed(input_json):
             {"$group": {
                 "_id": "",
                 "count": {"$sum": 1}}},
-            {"$sort": SON([("_id", 1)])}]))
+            {"$sort": SON([("_id", 1)])}], collection))
         return by_age[0]['count']
 
     def get_percent(only_age, year):
@@ -1860,6 +1870,9 @@ def percent_women_annualy_diagnosed(input_json):
 
 
 if __name__ == '__main__':
+    start = time.time()
+    mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
+    collection = mongo_client[DBS_NAME][COLLECTION_NAME]
     diag_request = '{"age": 32, ' \
                    '"sex": "Female", ' \
                    '"tumor_grade": 1, ' \
@@ -1870,8 +1883,17 @@ if __name__ == '__main__':
                    '"her2_status": "+", ' \
                    '"ethnicity": "White"}'
 
-    diag_request_age_only = '{"age": 85}'
-    age_only = '{"age": 55}'
+    diag_request_age_only = '{"age": 55}'
+    # test1 = chemotherapy_filter(diag_request)
+    # test2 = surgery_decisions(diag_request, collection=collection)
+    # test3 = survival_months(diag_request, collection=collection)
+
+    test = percent_women_annualy_diagnosed(diag_request, collection)
+
+    # test_diag = diagnosis(diag_request, limit=100, collection=collection)
+    print(time.time() - start)
+
+
 
     # pprint(radiation())
     exit()
