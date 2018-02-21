@@ -33,7 +33,7 @@ class AppLayout extends React.Component {
   render() {
     const {sidebarOpened, loading, title, children} = this.props
     const spinnerTexts = [
-      'DeepMed is analyzing  over 1M patient records and treatments',
+      'DeepMed is analyzing over 1 million records and treatments',
       'DeepMed is processing the most recent data available to analyze individual diagnoses',
       'DeepMed is covering actual data from hospitals and oncology clinics',
       'DeepMed covers data spanning nearly 30% of the country'
