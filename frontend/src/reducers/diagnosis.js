@@ -142,13 +142,24 @@ export default createReducer(initialState, {
   [WS_OPEN]: (state, action) => ({
     wsConnected: true,
   }),
-  [GET_DIAGNOSIS_SUCCESS]: (state, {data}) => ({
-    loading: false,
-    diagnosis: {
-      ...state.diagnosis,
-      ...data,
-    },
-  }),
+  [GET_DIAGNOSIS_SUCCESS]: (state, {data}) => {
+    const changes = {}
+    if (data.diagnosis_form) {
+      changes.diagnosisForm = {
+        ...state.diagnosisForm,
+        ...data.diagnosis_form
+      }
+    } else {
+      changes.diagnosis = {
+        ...state.diagnosis,
+        ...data,
+      }
+    }
+    return ({
+      loading: false,
+      ...changes,
+    })
+  },
   [GET_DIAGNOSIS_FAILURE]: (state, action) => ({
     loading: false,
   }),

@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './Diagnosis.css'
-import {RACES, REGIONS, SITES, TYPES} from '../../constants'
+import {RACES, REGIONS, SITES, STAGES, TYPES} from '../../constants'
 import {createForm} from 'rc-form'
 import messages from '../../components/messages'
 import {Input, InputNumber, Select, Spin} from '../../components'
@@ -273,7 +273,18 @@ class Diagnosis extends React.Component {
                         </Select>
                       )}
                     </div>
-                    <div className={s.col}/>
+                    <div className={s.col}>
+                      {getFieldDecorator('stage', {
+                        initialValue: diagnosisForm.stage,
+                      })(
+                        <Select error={getFieldError('stage')} label={'Stage'}>
+                          <option value='' disabled hidden>Select...</option>
+                          {STAGES.map((item, i) =>
+                            <option key={i} value={item.value}>{item.label}</option>
+                          )}
+                        </Select>
+                      )}
+                    </div>
                   </div>
                   <div className={s.row}>
                     <div className="col-xs-12 text-center position-relative">

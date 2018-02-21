@@ -41,7 +41,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
 
         dd['user'] = str(self.scope['user'].id)
 
-        self.send_json({'diagnosis_form': dd})
+
 
         # Recommended Treatment Plans
 
@@ -310,6 +310,19 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 })
 
             self.send_json({'overall_plans': overall_plans})
+
+            if dd.get('ethnicity') == 'White':
+                dd['ethnicity'] = 'Caucasian'
+            elif dd.get('ethnicity') == 'Black':
+                dd['ethnicity'] = 'African American'
+            elif dd.get('ethnicity') == 'Asian or Pacific Islander':
+                dd['ethnicity'] = 'Asian'
+            elif dd.get('ethnicity') == 'Unknown':
+                dd['ethnicity'] = 'Other'
+
+            dd['tumor_size_in_mm'] = dd.get('tumor_size_in_mm_sd')
+
+            self.send_json({'diagnosis_form': dd})
 
             # Hormonal Therapy
             hormonal_therapy = []

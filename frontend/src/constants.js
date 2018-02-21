@@ -73,11 +73,10 @@ export const TYPES = [
 export const STAGES = [
   {value: '0', label: '0'},
   {value: 'I', label: 'I'},
-  {value: 'IA', label: 'IA'},
-  {value: 'IB', label: 'IB'},
   {value: 'IIA', label: 'IIA'},
   {value: 'IIB', label: 'IIB'},
   {value: 'III', label: 'III'},
+  {value: 'IV', label: 'IV'},
 ]
 export const REGIONS = [
   {value: 'Distant', label: 'Distant'},
