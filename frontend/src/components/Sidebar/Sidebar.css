@@ -4,13 +4,12 @@
   position: fixed;
   height: 100%;
   width: var(--sidebar-width);
-  background-color: #f0f0f2;
   /*TODO*/
+  background-color: #f0f0f2;
   z-index: 1037;
   top: 0;
   left: 0;
   padding: 0;
-  transition: none;
 
   @media (--md-down) {
     left: -100%;
@@ -24,15 +23,12 @@
 }
 
 .logoWrapper {
-  /*TODO*/
-  padding: 0 30px;
   display: flex;
   align-items: center;
   height: var(--header-height);
-  /*TODO*/
-  background: #47cfd1;
-  background: linear-gradient(to right, #47cfd1 0%, #48ccf5 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#47cfd1', endColorstr='#48ccf5',GradientType=1 )
+  padding-right: var(--margin-xl);
+  padding-left: var(--margin-xl);
+  @mixin brand-background;
 }
 
 .itemWrapper {
@@ -44,15 +40,16 @@
 }
 
 .item {
-  display: block;
-  height: auto;
+  display: flex;
+  align-items: center;
+  height: 70px;
+  padding-right: var(--margin-xl);
+  padding-left: var(--margin-xl);
   /*TODO*/
-  padding: 25px 30px;
   background-color: #979799;
   color: #f0f0f2;
 
-  &:hover,
-  &:focus {
+  &:--hover {
     text-decoration: none;
     color: #fff;
   }
@@ -69,7 +66,7 @@
 }
 
 .icon {
-  margin-right: 1rem;
+  margin-right: var(--margin-sm);
 }
 
 .active:after {
@@ -77,11 +74,8 @@
   right: 0;
   top: 0;
   height: 100%;
-  width: 6px;
-  /*TODO*/
-  background: #47cfd1;
-  background: linear-gradient(to right, #47cfd1 0%, #48ccf5 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#47cfd1', endColorstr='#48ccf5',GradientType=1 );
+  width: 5px;
   position: absolute;
   display: block;
+  @mixin brand-background;
 }

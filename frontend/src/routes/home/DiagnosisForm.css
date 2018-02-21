@@ -1,0 +1,36 @@
+@import '../../variables.css';
+
+.form {
+  /*TODO*/
+  background-color: #fafafa;
+  border: 1px solid #f0f0f2;
+  width: 700px;
+  max-width: 100%;
+  border-radius: 5px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media (--md-up) {
+    padding: var(--margin-xl);
+  }
+
+  @media (--md-down) {
+    padding: var(--margin-md);
+  }
+}
+
+.header {
+  margin-bottom: var(--margin-md);
+  /*TODO*/
+  color: #aaa;
+}
+
+.col {
+  margin-top: var(--margin-md);
+}
+
+.actions {
+  text-align: center;
+  margin-top: var(--margin-md);
+}

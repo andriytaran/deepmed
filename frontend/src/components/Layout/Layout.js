@@ -3,13 +3,9 @@ import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './Layout.css'
 import globalStyles from '../../styles/style.scss'
-import gridStyles from '../../styles/grid.scss'
+import gridStyles from '../Grid/grid.css'
 import {Header, Sidebar} from '../../components'
 import cn from 'classnames'
-
-/*
-* TODO All html comes from another developer - refactor all html and css in project - do it in React way
-* */
 
 class AppLayout extends React.Component {
   state = {
@@ -37,30 +33,31 @@ class AppLayout extends React.Component {
   render() {
     const {sidebarOpened, loading, title, children} = this.props
     const spinnerTexts = [
-      'DeepMed is analyzing over 1 million records and treatments',
+      'DeepMed is analyzing  over 1M patient records and treatments',
       'DeepMed is processing the most recent data available to analyze individual diagnoses',
       'DeepMed is covering actual data from hospitals and oncology clinics',
       'DeepMed covers data spanning nearly 30% of the country'
     ]
     // TODO spinner
-    return loading ? (
-      <div className='page-loader'>
-        <div className='page-loader-sub-wrapper'>
-          <div className='loader-spinner'>
-            <div className='main'>
-              <div className='inside'/>
-            </div>
-          </div>
-          <p className='push-top-3 text-lg'>{spinnerTexts[this.state.spinnerCounter]}</p>
-        </div>
-      </div>
-    ) : (
+    return (
       <div className={cn(s.container, sidebarOpened && s.sidebarOpened)}>
         <Header title={title}/>
         <Sidebar/>
         <div className={s.content}>
           {children}
         </div>
+        {loading && (
+          <div className='page-loader'>
+            <div className='page-loader-sub-wrapper'>
+              <div className='loader-spinner'>
+                <div className='main'>
+                  <div className='inside'/>
+                </div>
+              </div>
+              <p className='push-top-3 text-lg'>{spinnerTexts[this.state.spinnerCounter]}</p>
+            </div>
+          </div>
+        )}
       </div>
     )
   }

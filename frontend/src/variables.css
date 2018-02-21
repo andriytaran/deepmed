@@ -37,7 +37,8 @@
   /*
    * Margins
    * ======================================================================== */
-  --gap: 1rem;
+  /*TODO change to rem when overridden bootstrap will be fixed*/
+  --gap: 16px;
 
   --margin-xs: calc(var(--gap) * .25);
   --margin-sm: calc(var(--gap) * .5);
@@ -48,4 +49,13 @@
    * Custom selectors
    * ======================================================================== */
   @custom-selector :--hover :hover, :focus;
+
+  /*
+   * Mixins
+   * ======================================================================== */
+  @define-mixin brand-background {
+    background: #47cfd1;
+    background: linear-gradient(to right, #47cfd1 0%, #48ccf5 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#47cfd1', endColorstr='#48ccf5', GradientType=1);
+  }
 }

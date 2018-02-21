@@ -17,7 +17,7 @@
 
 .header {
   background: #f0f0f2;
-  padding-right: 30px;
+  padding-right: var(--margin-xl);
 
   /*TODO*/
   z-index: 1036;
@@ -47,14 +47,9 @@
   width: 100px;
   height: 100%;
   /*TODO*/
-  background: #47cfd1;
-  background: linear-gradient(to right, #47cfd1 0%, #48ccf5 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#47cfd1', endColorstr='#48ccf5', GradientType=1);
-  text-align: center;
-  /*TODO*/
   z-index: 2;
   cursor: pointer;
-
+  @mixin brand-background;
   @media (--md-up) {
     display: none;
   }
@@ -63,7 +58,9 @@
 .togglerIcon {
   position: relative;
   top: 50%;
-  transform: translateY(-50%);
+  left: 50%;
+  right: 0;
+  transform: translate(-50%, -50%);
   font-size: 30px;
   color: var(--white);
 }

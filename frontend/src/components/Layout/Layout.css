@@ -1,7 +1,6 @@
 @import '../../variables.css';
 
 .container {
-  padding-bottom: 30px;
   position: relative;
 
   @media (--md-up) {
@@ -17,8 +16,18 @@
 }
 
 .content {
-  padding-top: 30px;
+  position: relative;
+  padding-top: var(--margin-xl);
   /*TODO*/
   z-index: 1;
-  position: relative;
+
+  @media (--md-up) {
+    padding-top: var(--margin-xl);
+    padding-bottom: var(--margin-xl);
+  }
+
+  @media (--md-down) {
+    padding-top: var(--margin-md);
+    padding-bottom: var(--margin-md);
+  }
 }
