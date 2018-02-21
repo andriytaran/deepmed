@@ -5,9 +5,9 @@ force_upgrade: yes
 project_repo_branch: 'vagrant'
 
 ### Project ###
-ml_command_file: '/home/deepmed/ML_Testing/command_line.py'
-ml_command_dir: '/home/deepmed/ML_Testing/'
-ml_python_path: '/home/deepmed/anaconda3/bin/python'
+ml_command_file: '{{ django_dir }}/base/ML/predictions_cmd.py'
+ml_command_dir: '{{ django_dir }}/base/ML/'
+ml_python_path: '{{ virtualenv_dir }}/bin/python'
 skip_checkout: no
 run_mongo: no
 site_domain: 'portal.deepmed.com'

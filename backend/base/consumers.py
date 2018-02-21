@@ -28,6 +28,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
             self.close()
 
     def receive_json(self, content, **kwargs):
+        content['user'] = self.scope['user'].id
         serializer = self.serializer_class(data=content)
 
         if not serializer.is_valid():
@@ -35,6 +36,12 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                             'extra': serializer.errors})
 
         dd = serializer.validated_data
+
+        serializer.save()
+
+        dd['user'] = str(self.scope['user'].id)
+
+        self.send_json({'diagnosis_form': dd})
 
         # Recommended Treatment Plans
 
