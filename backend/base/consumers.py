@@ -57,7 +57,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
             none_radiation_response = (None, None)
             # START SURGERY
             if dd.get('tumor_size_in_mm_sd') > 0:
-                surgery_args = ','.join([dd.get('sex'),
+                surgery_args = ','.join([dd.get('sex', 'Female'),
                                          str(dd.get('age')),
                                          dd.get('ethnicity'),
                                          str(float(
