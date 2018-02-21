@@ -17,6 +17,7 @@ class CustomAnalyticsSerializer(serializers.Serializer):
     her2_status = serializers.CharField(required=False)
     type = serializers.CharField(required=False)
     tumor_number = serializers.CharField(required=False)
+    stage = serializers.CharField(required=False)
 
 
 class DiagnosisSerializer(serializers.Serializer):
