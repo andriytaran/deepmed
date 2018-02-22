@@ -30,7 +30,7 @@ class DiagnosisForm extends React.Component {
             {getFieldDecorator('tumor_size_in_mm', {
               initialValue: '',
               rules: [
-                {required: true, message: messages.required},
+                {required: false, message: messages.required},
               ]
             })(
               <Input error={getFieldError('tumor_size_in_mm')} label={'Tumor Size in mm'}/>
@@ -57,7 +57,7 @@ class DiagnosisForm extends React.Component {
             {getFieldDecorator('num_pos_nodes', {
               initialValue: '',
               rules: [
-                {required: true, message: messages.required},
+                {required: false, message: messages.required},
               ]
             })(
               <Select error={getFieldError('num_pos_nodes')} label={'Number of Positive Nodes'}>
@@ -135,7 +135,7 @@ class DiagnosisForm extends React.Component {
             {getFieldDecorator('region', {
               initialValue: '',
               rules: [
-                {required: true, message: messages.required},
+                {required: false, message: messages.required},
               ]
             })(
               <Select error={getFieldError('region')} label={'Region'}>
@@ -166,7 +166,7 @@ class DiagnosisForm extends React.Component {
             {getFieldDecorator('site', {
               initialValue: '',
               rules: [
-                {required: true, message: messages.required},
+                {required: false, message: messages.required},
               ]
             })(
               <Select error={getFieldError('site')} label={'Site'}>

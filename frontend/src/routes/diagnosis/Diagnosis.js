@@ -106,7 +106,7 @@ class Diagnosis extends React.Component {
                       {getFieldDecorator('tumor_size_in_mm', {
                         initialValue: diagnosisForm.tumor_size_in_mm,
                         rules: [
-                          {required: true, message: messages.required},
+                          {required: false, message: messages.required},
                         ]
                       })(
                         <Input error={getFieldError('tumor_size_in_mm')} label={'Tumor Size in mm'}/>
@@ -131,7 +131,7 @@ class Diagnosis extends React.Component {
                       {getFieldDecorator('num_pos_nodes', {
                         initialValue: diagnosisForm.num_pos_nodes,
                         rules: [
-                          {required: true, message: messages.required},
+                          {required: false, message: messages.required},
                         ]
                       })(
                         <Select error={getFieldError('num_pos_nodes')} label={'Number of Positive Nodes'}>
@@ -203,7 +203,7 @@ class Diagnosis extends React.Component {
                       {getFieldDecorator('region', {
                         initialValue: diagnosisForm.region,
                         rules: [
-                          {required: true, message: messages.required},
+                          {required: false, message: messages.required},
                         ]
                       })(
                         <Select error={getFieldError('region')} label={'Region'}>
@@ -232,7 +232,7 @@ class Diagnosis extends React.Component {
                       {getFieldDecorator('site', {
                         initialValue: diagnosisForm.site,
                         rules: [
-                          {required: true, message: messages.required},
+                          {required: false, message: messages.required},
                         ]
                       })(
                         <Select error={getFieldError('site')} label={'Site'}>

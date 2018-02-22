@@ -41,8 +41,6 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
 
         dd['user'] = str(self.scope['user'].id)
 
-
-
         # Recommended Treatment Plans
 
         try:

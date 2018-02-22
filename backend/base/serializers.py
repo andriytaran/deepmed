@@ -42,8 +42,12 @@ class DiagnosisSerializer(serializers.Serializer):
 
 
 class DiagnosisDataSerializer(serializers.ModelSerializer):
+    region = serializers.CharField(required=False, default='unk')
+    site = serializers.CharField(required=False, default='Upper-Outer')
+    num_pos_nodes = serializers.IntegerField(required=False, default=0)
+    tumor_size_in_mm = serializers.IntegerField(required=False, default=0)
     tumor_size_in_mm_sd = serializers.CharField(
-        required=False)  # For similar diagnoses fuction
+        required=False)  # For similar diagnoses function
 
     class Meta:
         model = BreastDiagnosisData
@@ -61,7 +65,7 @@ class DiagnosisDataSerializer(serializers.ModelSerializer):
         elif data.get('ethnicity') == 'Other':
             data['ethnicity'] = 'Unknown'
 
-        data['tumor_size_in_mm_sd'] = data.get('tumor_size_in_mm')
+        data['tumor_size_in_mm_sd'] = data.get('tumor_size_in_mm', 0)
         if data.get('tumor_size_in_mm') >= 50:
             data['tumor_size_in_mm'] = ">5cm"
         elif data.get('tumor_size_in_mm') >= 30:
@@ -72,6 +76,8 @@ class DiagnosisDataSerializer(serializers.ModelSerializer):
             data['tumor_size_in_mm'] = "<2cm"
         elif data.get('tumor_size_in_mm') < 10:
             data['tumor_size_in_mm'] = "<1cm"
+
+        data['tumor_size'] = data['tumor_size_in_mm']
 
         if data.get('stage') is None:
             # 0.    1. Any tumor size, dcis or in situ, and No positive lymph nodes
