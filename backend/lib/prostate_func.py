@@ -70,7 +70,7 @@ def get_age_group(age):
     elif age >= 10:
         age_group = ["10-14 years", "15-19 years"]
     elif age >= 0:
-        age_group = ["00-04 years", "05-09 years"]
+        age_group = ["00 years", "00-04 years", "05-09 years"]
 
     return age_group
 
@@ -97,12 +97,13 @@ def create_filter(input_data, operator='$and'):
     filter_list = []
     if 'age' in input_data.keys():
         age = get_age_group(input_data['age'])
-        filter_list.append({"age-recode-with-1-year-olds": {"$in": age}})
+        filter_list.append({"age-range": {"$in": age}})
+    if 'sex' in input_data.keys():
+        filter_list.append({"sex": input_data["sex"]})
     if 'tumor_size_in_mm' in input_data.keys():
         t_size_cm = get_t_size_cm(input_data['tumor_size_in_mm'])
         filter_list.append({"t-size-cm": t_size_cm})
-    if 'sex' in input_data.keys():
-        filter_list.append({"sex": input_data["sex"]})
+
     if 'tumor_grade' in input_data.keys():
         filter_list.append({"grade": input_data["tumor_grade"]})
     if 'er_status' in input_data.keys():
@@ -215,5 +216,5 @@ if __name__ == '__main__':
                    '"her2_status": "+", ' \
                    '"ethnicity": "White"}'
 
-    pprint(display_group("nodes-1988"))
-    pprint(display_group("status"))
+    pprint(display_group("age-range"))
+    # pprint(display_group("status"))
