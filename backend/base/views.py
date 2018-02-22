@@ -472,7 +472,8 @@ class ResourcesView(GenericAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        serializer = self.get_serializer(data=request.query_params)
+        qp_data = dict((k, v) for k, v in request.query_params if v)
+        serializer = self.get_serializer(data=qp_data)
 
         serializer.is_valid(raise_exception=True)
         dd = dict(serializer.validated_data)
