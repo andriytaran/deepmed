@@ -84,8 +84,11 @@ class DiagnosisDataSerializer(serializers.ModelSerializer):
 
         data['tumor_size'] = data['tumor_size_in_mm']
 
-        if data.get('stage') is None:
-            # 0.    1. Any tumor size, dcis or in situ, and No positive lymph nodes
+        if data.get('stage'):
+            if data.get('stage') in ['IIIA', 'IIIB', 'IIIC', 'IIINOS']:
+                data['stage'] = 'III'
+        else:
+            # 0.    1. Any tumor size, dcis or in situ, and No positive nodes
             if data.get('tumor_size_in_mm') in ['<1cm', '<2cm', '<3cm',
                                                 '>3cm', '>5cm'] \
                     and data.get('num_pos_nodes') == '0' \

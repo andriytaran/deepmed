@@ -70,15 +70,7 @@ export const TYPES = [
   {value: 'IBC', label: 'IBC'},
   {value: 'Other', label: 'Other'},
 ]
-export const STAGES = [
-  {value: '0', label: '0'},
-  {value: 'I', label: 'I'},
-  {value: 'IIA', label: 'IIA'},
-  {value: 'IIB', label: 'IIB'},
-  {value: 'III', label: 'III'},
-  {value: 'IV', label: 'IV'},
-]
-export const CA_STAGES = [ //I, 'IIA', 'IIB', 'IIIA', 'IIIB', 'IIIC', 'IIINOS', IV, or 0
+export const STAGES = [ //I, 'IIA', 'IIB', 'IIIA', 'IIIB', 'IIIC', 'IIINOS', IV, or 0
   {value: '0', label: '0'},
   {value: 'I', label: 'I'},
   {value: 'IIA', label: 'IIA'},

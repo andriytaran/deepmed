@@ -188,7 +188,7 @@ class Diagnosis extends React.Component {
                       {getFieldDecorator('ethnicity', {
                         initialValue: diagnosisForm.ethnicity,
                         rules: [
-                          {required: true, message: messages.required},
+                          {required: false, message: messages.required},
                         ]
                       })(
                         <Select error={getFieldError('ethnicity')} label={'Ethnicity'}>
@@ -218,7 +218,7 @@ class Diagnosis extends React.Component {
                       {getFieldDecorator('laterality', {
                         initialValue: diagnosisForm.laterality,
                         rules: [
-                          {required: true, message: messages.required},
+                          {required: false, message: messages.required},
                         ]
                       })(
                         <Select error={getFieldError('laterality')} label={'Laterality'}>
@@ -247,7 +247,7 @@ class Diagnosis extends React.Component {
                       {getFieldDecorator('type', {
                         initialValue: diagnosisForm.type,
                         rules: [
-                          {required: true, message: messages.required},
+                          {required: false, message: messages.required},
                         ]
                       })(
                         <Select error={getFieldError('type')} label={'Type'}>
@@ -262,7 +262,7 @@ class Diagnosis extends React.Component {
                       {getFieldDecorator('number_of_tumors', {
                         initialValue: diagnosisForm.number_of_tumors,
                         rules: [
-                          {required: true, message: messages.required},
+                          {required: false, message: messages.required},
                         ]
                       })(
                         <Select error={getFieldError('number_of_tumors')} label={'Number of tumors'}>

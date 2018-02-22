@@ -6,7 +6,7 @@ import s from './CustomAnalytics.css'
 import {Row, Col, Select, Card} from '../../components'
 import {
   AGES, TYPES, TUMOR_SIZES, SITES, NUMBER_OF_NODES, GROUPED_RACES, NUMBER_OF_TUMORS,
-  STAGES, CA_STAGES
+  STAGES
 } from '../../constants'
 import {getCustomAnalytics} from '../../reducers/diagnosis'
 import messages from '../../components/messages'
@@ -258,7 +258,7 @@ class CustomAnalytics extends React.Component {
               })(
                 <Select className={s.field} error={getFieldError('stage')} label={'Stage'}>
                   <option value='' disabled hidden>Select...</option>
-                  {CA_STAGES.map((item, i) =>
+                  {STAGES.map((item, i) =>
                     <option key={i} value={item.value}>{item.label}</option>
                   )}
                 </Select>
