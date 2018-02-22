@@ -31,13 +31,13 @@ class DiagnosisSerializer(serializers.Serializer):
     pr_status = serializers.CharField(required=True)
     her2_status = serializers.CharField(required=True)
     num_pos_nodes = serializers.IntegerField(required=False, default=0)
-    ethnicity = serializers.CharField(required=True)
+    ethnicity = serializers.CharField(required=False, default='Caucasian')
     sex = serializers.CharField(required=False, default='Female')
-    type = serializers.CharField(required=False)
+    type = serializers.CharField(required=False, default='IDC')
     site = serializers.CharField(required=False, default='Upper-Outer')
-    laterality = serializers.CharField(required=False)
+    laterality = serializers.CharField(required=False, default='left')
     stage = serializers.CharField(required=False)
-    number_of_tumors = serializers.IntegerField(required=True)
+    number_of_tumors = serializers.IntegerField(required=False, default=1)
     region = serializers.CharField(required=False, default='unk')
 
 
