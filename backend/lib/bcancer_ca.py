@@ -192,9 +192,9 @@ def ca_create_filter(input_data, operator='$and'):
             filter_list.append({"race-ethnicity": {"$in": race}})
     if 'type' in input_data.keys():
         filter_list.append({"type": input_data["type"]})
-    if 'breast-adjusted-ajcc-6th-stage-1988' in input_data.keys():
+    if 'stage' in input_data.keys():
         filter_list.append(
-            {"breast-adjusted-ajcc-6th-stage-1988": input_data["breast-adjusted-ajcc-6th-stage-1988"]})
+            {"breast-adjusted-ajcc-6th-stage-1988": input_data["stage"]})
     if 'chemo' in input_data.keys():
         filter_list.append({"chemo": input_data["chemo"]})
     if 'radiation' in input_data.keys():
@@ -848,8 +848,9 @@ if __name__ == '__main__':
                       '"1tumor_size": "2-5cm", ' \
                       '"1num_pos_nodes": "4-8", ' \
                       '"1her2_status": "+", ' \
-                      '"1tumor_number": "0", ' \
-                      '"ethnicity": "Japanese"}'
+                      '"1tumor_number": "1", ' \
+                      '"stage": "I", ' \
+                      '"1ethnicity": "Japanese"}'
 
     pprint(custom_analytics(ca_diag_request, 'race'))
 
