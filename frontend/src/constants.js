@@ -78,6 +78,17 @@ export const STAGES = [
   {value: 'III', label: 'III'},
   {value: 'IV', label: 'IV'},
 ]
+export const CA_STAGES = [ //I, 'IIA', 'IIB', 'IIIA', 'IIIB', 'IIIC', 'IIINOS', IV, or 0
+  {value: '0', label: '0'},
+  {value: 'I', label: 'I'},
+  {value: 'IIA', label: 'IIA'},
+  {value: 'IIB', label: 'IIB'},
+  {value: 'IIIA', label: 'IIIA'},
+  {value: 'IIIB', label: 'IIIB'},
+  {value: 'IIIC', label: 'IIIC'},
+  {value: 'IIINOS', label: 'IIINOS'},
+  {value: 'IV', label: 'IV'},
+]
 export const REGIONS = [
   {value: 'Distant', label: 'Distant'},
   {value: 'In-Situ', label: 'In Situ'},
