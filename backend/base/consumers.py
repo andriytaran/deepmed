@@ -450,6 +450,7 @@ class IndividualStatisticsConsumer(JsonWebsocketConsumer):
             self.close()
 
     def receive_json(self, content, **kwargs):
+        content = dict((k, v) for k, v in content.items() if v)
         serializer = self.serializer_class(data=content)
 
         if not serializer.is_valid():
@@ -543,6 +544,7 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
             self.close()
 
     def receive_json(self, content, **kwargs):
+        content = dict((k, v) for k, v in content.items() if v)
         serializer = self.serializer_class(data=content)
 
         if not serializer.is_valid():
