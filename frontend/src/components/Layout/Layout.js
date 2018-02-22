@@ -67,7 +67,7 @@ class AppLayout extends React.Component {
 const mapState = state => ({
   loggedIn: state.user.loggedIn,
   sidebarOpened: state.global.sidebarOpened,
-  loading: state.diagnosis.loading,
+  loading: state.breastCancer.loading,
 })
 
 const mapDispatch = {}

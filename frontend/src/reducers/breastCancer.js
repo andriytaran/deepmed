@@ -37,7 +37,7 @@ const CUSTOM_ANALYTICS = '/custom-analytics/'
 // Actions
 // ------------------------------------
 export const wsConnect = () => (dispatch, getState) => {
-  const {wsConnected} = getState().diagnosis
+  const {wsConnected} = getState().breastCancer
   if (process.env.BROWSER && !wsConnected) {
     const {token} = dispatch(getToken())
     dispatch({
@@ -77,7 +77,8 @@ export const getData = (values) => (dispatch, getState, {history}) => {
     dispatch(getSimilarDiagnoses(values))
     dispatch(getIndividualStatistics(values))
     dispatch(getResources(values))
-    history.push('/diagnosis')
+    // TODO use route name instead
+    history.push('/breast-cancer/diagnosis')
   }
 }
 

@@ -1,16 +1,16 @@
 import React from 'react'
-import CustomAnalytics from './CustomAnalytics'
+import BcIndividualStatistics from './BcIndividualStatistics'
 import {AppLayout} from '../../components'
 import {setCurrentRouteName} from '../../reducers/global'
+
+const title = 'Personalized Diagnosis and Treatment Statistics'
 
 async function action({store, route}) {
   store.dispatch(setCurrentRouteName(route.name))
 
-  const title = 'Custom Analytics'
-
   return {
     title,
-    component: <AppLayout title={title}><CustomAnalytics/></AppLayout>,
+    component: <AppLayout title={title}><BcIndividualStatistics/></AppLayout>,
   }
 }
 

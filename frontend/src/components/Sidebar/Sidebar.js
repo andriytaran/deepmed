@@ -4,15 +4,16 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './Sidebar.css'
 import {Link} from '../../components'
 import {
-  CUSTOM_ANALYTICS_ROUTE,
-  DIAGNOSIS_ROUTE,
+  BC_CUSTOM_ANALYTICS_ROUTE,
+  BC_DIAGNOSIS_ROUTE,
   HOME_ROUTE,
   LOGIN_ROUTE,
-  NATIONAL_STATES_ROUTE,
-  RESOURCES_ROUTE,
-  SIMILAR_DIAGNOSES_ROUTE,
-  SPECIFIC_STATES_ROUTE,
+  BC_NATIONAL_STATISTICS_ROUTE,
+  BC_RESOURCES_ROUTE,
+  BC_SIMILAR_DIAGNOSES_ROUTE,
+  BC_INDIVIDUAL_STATISTICS_ROUTE,
   USER_ROUTE,
+  BC_FORM_ROUTE,
 } from '../../routes'
 import cn from 'classnames'
 import FaHeaderO from 'react-icons/lib/fa/heart-o'
@@ -21,12 +22,12 @@ import FaFileO from 'react-icons/lib/fa/file-o'
 import FaLaptop from 'react-icons/lib/fa/laptop'
 
 const MENU = [
-  {routeName: DIAGNOSIS_ROUTE, label: 'Diagnosis', iconComponent: FaHeaderO},
-  {routeName: NATIONAL_STATES_ROUTE, label: 'National Statistics', iconComponent: FaBarChart},
-  {routeName: SPECIFIC_STATES_ROUTE, label: 'Individual Statistics', iconComponent: FaBarChart},
-  {routeName: CUSTOM_ANALYTICS_ROUTE, label: 'Custom Analytics', iconComponent: FaBarChart},
-  {routeName: SIMILAR_DIAGNOSES_ROUTE, label: 'Similar Diagnoses', iconComponent: FaFileO},
-  {routeName: RESOURCES_ROUTE, label: 'Resources', iconComponent: FaLaptop},
+  {routeName: BC_DIAGNOSIS_ROUTE, label: 'Diagnosis', iconComponent: FaHeaderO},
+  {routeName: BC_NATIONAL_STATISTICS_ROUTE, label: 'National Statistics', iconComponent: FaBarChart},
+  {routeName: BC_INDIVIDUAL_STATISTICS_ROUTE, label: 'Individual Statistics', iconComponent: FaBarChart},
+  {routeName: BC_CUSTOM_ANALYTICS_ROUTE, label: 'Custom Analytics', iconComponent: FaBarChart},
+  {routeName: BC_SIMILAR_DIAGNOSES_ROUTE, label: 'Similar Diagnoses', iconComponent: FaFileO},
+  {routeName: BC_RESOURCES_ROUTE, label: 'Resources', iconComponent: FaLaptop},
 ]
 
 class Sidebar extends React.Component {
@@ -41,7 +42,7 @@ class Sidebar extends React.Component {
             alt='logo'
           />
         </Link>
-        {![HOME_ROUTE, LOGIN_ROUTE, USER_ROUTE].includes(currentRouteName) && (
+        {![HOME_ROUTE, BC_FORM_ROUTE, LOGIN_ROUTE, USER_ROUTE].includes(currentRouteName) && (
           <ul className={s.menu}>
             {MENU.map(item =>
               <li

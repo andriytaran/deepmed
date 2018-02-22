@@ -1,16 +1,16 @@
 import React from 'react'
-import Diagnosis from './Diagnosis'
+import BcResources from './BcResources'
 import {AppLayout} from '../../components'
 import {setCurrentRouteName} from '../../reducers/global'
 
-const title = 'Diagnosis Summary and Treatment Recommendations'
+const title = 'Most Relevant Resources DeepMed has Reviewed that May Interest You'
 
 async function action({store, route}) {
   store.dispatch(setCurrentRouteName(route.name))
 
   return {
     title,
-    component: <AppLayout title={title}><Diagnosis/></AppLayout>,
+    component: <AppLayout title={title}><BcResources/></AppLayout>,
   }
 }
 

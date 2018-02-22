@@ -1,11 +1,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
-import s from './SimilarDiagnoses.css'
+import s from './BcSimilarDiagnoses.css'
 import {Spin} from '../../components'
 import isNil from 'lodash/isNil'
 
-class SimilarDiagnoses extends React.Component {
+class BcSimilarDiagnoses extends React.Component {
   render() {
     const {similarDiagnoses} = this.props
     return (
@@ -80,9 +80,9 @@ class SimilarDiagnoses extends React.Component {
 }
 
 const mapState = state => ({
-  ...state.diagnosis,
+  ...state.breastCancer,
 })
 
 const mapDispatch = {}
 
-export default connect(mapState, mapDispatch)(withStyles(s)(SimilarDiagnoses))
+export default connect(mapState, mapDispatch)(withStyles(s)(BcSimilarDiagnoses))

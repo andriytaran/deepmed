@@ -1,13 +1,13 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
-import s from './Diagnosis.css'
+import s from './BcDiagnosis.css'
 import {RACES, REGIONS, SITES, STAGES, TYPES} from '../../constants'
 import {createForm} from 'rc-form'
 import messages from '../../components/messages'
 import {Input, InputNumber, Select, Spin} from '../../components'
 import isEmpty from 'lodash/isEmpty'
-import {getData} from '../../reducers/diagnosis'
+import {getData} from '../../reducers/breastCancer'
 import cn from 'classnames'
 import isNil from 'lodash/isNil'
 import Tab from 'react-bootstrap/lib/Tab'
@@ -53,7 +53,7 @@ const OverallPlansTable = ({items = [], visibleRowIndex}) =>
     </table>
   </div>
 
-class Diagnosis extends React.Component {
+class BcDiagnosis extends React.Component {
   state = {
     tab: 0,
   }
@@ -467,11 +467,11 @@ class Diagnosis extends React.Component {
 }
 
 const mapState = state => ({
-  ...state.diagnosis,
+  ...state.breastCancer,
 })
 
 const mapDispatch = {
   getData,
 }
 
-export default connect(mapState, mapDispatch)(createForm()(withStyles(s)(Diagnosis)))
+export default connect(mapState, mapDispatch)(createForm()(withStyles(s)(BcDiagnosis)))

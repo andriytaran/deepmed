@@ -2,56 +2,32 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './Home.css'
-import DiagnosisForm from './DiagnosisForm'
-import {getData} from '../../reducers/diagnosis'
+import {Row, Col, Link} from '../../components'
+import {BC_FORM_ROUTE} from '../../routes'
 
 class Home extends React.Component {
-  componentDidMount() {
-    if (this.props.diagnosisForm) {
-      const values = this.props.diagnosisForm
-      const fields = Object.keys(values)
-      const fieldsValues = {}
-      fields.forEach(field => {
-        fieldsValues[field] = {
-          value: values[field],
-        }
-      })
-      this.form.setFields(fieldsValues)
-    }
-  }
-
-  handleSubmit = (e) => {
-    e.preventDefault()
-    this.form.validateFields((err, values) => {
-      if (!err) {
-        this.props.getData(values)
-      }
-    })
-  }
-
   render() {
     return (
       <div className={s.container}>
-        <h2 className={s.header}>
-          Please input your diagnosis in detail below
-        </h2>
-        <DiagnosisForm
-          ref={ref => {
-            this.form = ref
-          }}
-          onSubmit={this.handleSubmit}
-        />
+        <h1 className={s.header}>Please choose module</h1>
+        <Row type='flex' justify='center' align='middle' gutter={16} className={s.modules}>
+          <Col>
+            <Link to={BC_FORM_ROUTE}>
+              <div className={s.module}>
+                Breast Cancer
+              </div>
+            </Link>
+          </Col>
+        </Row>
       </div>
     )
   }
 }
 
 const mapState = state => ({
-  ...state.diagnosis,
 })
 
 const mapDispatch = {
-  getData,
 }
 
 export default connect(mapState, mapDispatch)(withStyles(s)(Home))

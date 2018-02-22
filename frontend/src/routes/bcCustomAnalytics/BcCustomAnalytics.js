@@ -2,13 +2,13 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {createForm} from 'rc-form'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
-import s from './CustomAnalytics.css'
+import s from './BcCustomAnalytics.css'
 import {Row, Col, Select, Card} from '../../components'
 import {
   AGES, TYPES, TUMOR_SIZES, SITES, NUMBER_OF_NODES, GROUPED_RACES, NUMBER_OF_TUMORS,
   STAGES
 } from '../../constants'
-import {getCustomAnalytics} from '../../reducers/diagnosis'
+import {getCustomAnalytics} from '../../reducers/breastCancer'
 import messages from '../../components/messages'
 import pickBy from 'lodash/pickBy'
 import identity from 'lodash/identity'
@@ -17,7 +17,7 @@ import {Pie} from 'react-chartjs-2'
 import {formatChartNumber} from '../../utils'
 import Button from 'react-bootstrap/lib/Button'
 
-class CustomAnalytics extends React.Component {
+class BcCustomAnalytics extends React.Component {
   state = {
     fields: {}
   }
@@ -341,11 +341,11 @@ class CustomAnalytics extends React.Component {
 }
 
 const mapState = state => ({
-  ...state.diagnosis,
+  ...state.breastCancer,
 })
 
 const mapDispatch = {
   getCustomAnalytics,
 }
 
-export default connect(mapState, mapDispatch)(createForm()(withStyles(s)(CustomAnalytics)))
+export default connect(mapState, mapDispatch)(createForm()(withStyles(s)(BcCustomAnalytics)))

@@ -1,14 +1,14 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
-import s from './IndividualStatistics.css'
+import s from './BcIndividualStatistics.css'
 import {Bar, Pie} from 'react-chartjs-2'
 import {formatChartNumber, getAgeRangeLabel} from '../../utils'
 import {Card, Col, Row} from '../../components'
 import isNil from 'lodash/isNil'
 import isEmpty from 'lodash/isEmpty'
 
-class IndividualStatistics extends React.Component {
+class BcIndividualStatistics extends React.Component {
   render() {
     // TODO
     const white = '#fff'
@@ -490,9 +490,9 @@ class IndividualStatistics extends React.Component {
 }
 
 const mapState = state => ({
-  ...state.diagnosis,
+  ...state.breastCancer,
 })
 
 const mapDispatch = {}
 
-export default connect(mapState, mapDispatch)(withStyles(s)(IndividualStatistics))
+export default connect(mapState, mapDispatch)(withStyles(s)(BcIndividualStatistics))

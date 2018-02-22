@@ -4,7 +4,7 @@ import global from './global'
 import login from './login'
 import register from './register'
 import home from './home'
-import diagnosis from './diagnosis'
+import breastCancer from './breastCancer'
 
 export default combineReducers({
   user,
@@ -12,5 +12,5 @@ export default combineReducers({
   login,
   register,
   home,
-  diagnosis,
+  breastCancer,
 })

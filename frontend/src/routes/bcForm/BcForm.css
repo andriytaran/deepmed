@@ -1,5 +1,22 @@
 @import '../../variables.css';
 
+.container {
+  padding-right: var(--margin-md);
+  padding-left: var(--margin-md);
+}
+
+.header {
+  text-align: center;
+
+  @media (--md-up) {
+    margin-bottom: var(--margin-lg);
+  }
+
+  @media (--md-down) {
+    margin-bottom: var(--margin-md);
+  }
+}
+
 .form {
   /*TODO*/
   background-color: #fafafa;
@@ -20,7 +37,7 @@
   }
 }
 
-.header {
+.formHeader {
   margin-bottom: var(--margin-md);
   color: var(--muted);
 }
@@ -32,4 +49,13 @@
 .actions {
   text-align: center;
   margin-top: var(--margin-md);
+}
+
+.advancedDetailsBtnWrapper {
+  text-align: right;
+  margin-top: var(--margin-md);
+}
+
+.advancedDetailsBtn {
+  cursor: pointer;
 }

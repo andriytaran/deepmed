@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
-import s from './NationalStatistics.css'
+import s from './BcNationalStatistics.css'
 import {Col, Row, VectorMap, Spin} from '../../components'
 import {Line} from 'react-chartjs-2'
 import {humanReadableNumber} from '../../utils'
@@ -16,7 +16,7 @@ const colors = ['#47cfd1', '#04a9a9', '#48ccf5', '#77c2d9']
 const chartColors = ['#88d0d1', '#48ccf5']
 const chartLabels = ['Incidence', 'Deaths']
 
-class NationalStatistics extends React.Component {
+class BcNationalStatistics extends React.Component {
   render() {
     const {individualStatistics} = this.props
 
@@ -308,9 +308,9 @@ class NationalStatistics extends React.Component {
 }
 
 const mapState = state => ({
-  ...state.diagnosis,
+  ...state.breastCancer,
 })
 
 const mapDispatch = {}
 
-export default connect(mapState, mapDispatch)(withStyles(s)(NationalStatistics))
+export default connect(mapState, mapDispatch)(withStyles(s)(BcNationalStatistics))
