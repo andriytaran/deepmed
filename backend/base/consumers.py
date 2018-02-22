@@ -29,6 +29,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
 
     def receive_json(self, content, **kwargs):
         content['user'] = self.scope['user'].id
+        # Remove empty strings
         content = dict((k, v) for k, v in content.items() if v)
         serializer = self.serializer_class(data=content)
 
@@ -450,6 +451,7 @@ class IndividualStatisticsConsumer(JsonWebsocketConsumer):
             self.close()
 
     def receive_json(self, content, **kwargs):
+        # Remove empty strings
         content = dict((k, v) for k, v in content.items() if v)
         serializer = self.serializer_class(data=content)
 
@@ -544,6 +546,7 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
             self.close()
 
     def receive_json(self, content, **kwargs):
+        # Remove empty strings
         content = dict((k, v) for k, v in content.items() if v)
         serializer = self.serializer_class(data=content)
 

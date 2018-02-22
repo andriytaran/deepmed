@@ -472,6 +472,7 @@ class ResourcesView(GenericAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
+        # Remove empty strings
         qp_data = request.query_params.dict()
         qp_data = dict((k, v) for k, v in qp_data.items() if v)
         serializer = self.get_serializer(data=qp_data)

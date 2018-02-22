@@ -42,8 +42,13 @@ class DiagnosisSerializer(serializers.Serializer):
 
 
 class DiagnosisDataSerializer(serializers.ModelSerializer):
+    sex = serializers.CharField(required=False, default='Female')
     region = serializers.CharField(required=False, default='unk')
     site = serializers.CharField(required=False, default='Upper-Outer')
+    ethnicity = serializers.CharField(required=False, default='Caucasian')
+    laterality = serializers.CharField(required=False, default='left')
+    type = serializers.CharField(required=False, default='IDC')
+    number_of_tumors = serializers.IntegerField(required=False, default=1)
     num_pos_nodes = serializers.IntegerField(required=False, default=0)
     tumor_size_in_mm = serializers.IntegerField(required=False, default=0)
     tumor_size_in_mm_sd = serializers.CharField(
