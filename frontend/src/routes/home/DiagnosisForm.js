@@ -2,7 +2,7 @@ import React from 'react'
 import {createForm} from 'rc-form'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './DiagnosisForm.css'
-import {RACES, REGIONS, SITES, TYPES} from '../../constants'
+import {RACES, REGIONS, SITES, STAGES, TYPES} from '../../constants'
 import messages from '../../components/messages'
 import {Col, Input, InputNumber, Row, Select} from '../../components'
 import Button from 'react-bootstrap/lib/Button'
@@ -205,6 +205,21 @@ class DiagnosisForm extends React.Component {
                 <option value='' disabled hidden>Select...</option>
                 {Array.from(new Array(8), (val, i) =>
                   <option key={i} value={i}>{i}</option>
+                )}
+              </Select>
+            )}
+          </Col>
+          <Col xs={24} sm={12} className={s.col}>
+            {getFieldDecorator('stage', {
+              initialValue: '',
+              rules: [
+                {required: false, message: messages.required},
+              ]
+            })(
+              <Select error={getFieldError('stage')} label={'Stage'}>
+                <option value='' disabled hidden>Select...</option>
+                {STAGES.map((item, i) =>
+                  <option key={i} value={item.value}>{item.label}</option>
                 )}
               </Select>
             )}
