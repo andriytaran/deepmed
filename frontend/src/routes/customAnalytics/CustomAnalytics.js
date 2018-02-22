@@ -6,7 +6,7 @@ import s from './CustomAnalytics.css'
 import {Row, Col, Select, Card} from '../../components'
 import {
   AGES, TYPES, TUMOR_SIZES, SITES, NUMBER_OF_NODES, GROUPED_RACES, NUMBER_OF_TUMORS,
-  STAGES
+  STAGES, CA_STAGES
 } from '../../constants'
 import {getCustomAnalytics} from '../../reducers/diagnosis'
 import messages from '../../components/messages'
