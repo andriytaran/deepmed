@@ -29,6 +29,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
 
     def receive_json(self, content, **kwargs):
         content['user'] = self.scope['user'].id
+        content = dict((k, v) for k, v in content.items() if v)
         serializer = self.serializer_class(data=content)
 
         if not serializer.is_valid():
