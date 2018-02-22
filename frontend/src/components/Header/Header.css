@@ -64,3 +64,11 @@
   font-size: 30px;
   color: var(--white);
 }
+
+.dropdown {
+  margin-right: var(--margin-md);
+}
+
+.dropdownLabel {
+  margin-right: var(--margin-sm);
+}

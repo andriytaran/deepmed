@@ -167,105 +167,105 @@ class BcForm extends React.Component {
               )}
             </Col>
           </Row>
-          {expanded ? (
-            <React.Fragment>
-              <Row gutter={16}>
-                <Col xs={24} sm={12} className={s.col}>
-                  {getFieldDecorator('region', {
-                    initialValue: '',
-                    rules: [
-                      {required: false, message: messages.required},
-                    ]
-                  })(
-                    <Select error={getFieldError('region')} label={'Region'}>
-                      <option value='' disabled hidden>Select...</option>
-                      {REGIONS.map((item, i) =>
-                        <option key={i} value={item.value}>{item.label}</option>
-                      )}
-                    </Select>
-                  )}
-                </Col>
-                <Col xs={24} sm={12} className={s.col}>
-                  {getFieldDecorator('laterality', {
-                    initialValue: '',
-                    rules: [
-                      {required: false, message: messages.required},
-                    ]
-                  })(
-                    <Select error={getFieldError('laterality')} label={'Laterality'}>
-                      <option value='' disabled hidden>Select...</option>
-                      <option value='left'>Left</option>
-                      <option value='right'>Right</option>
-                    </Select>
-                  )}
-                </Col>
-              </Row>
-              <Row gutter={16}>
-                <Col xs={24} sm={12} className={s.col}>
-                  {getFieldDecorator('site', {
-                    initialValue: '',
-                    rules: [
-                      {required: false, message: messages.required},
-                    ]
-                  })(
-                    <Select error={getFieldError('site')} label={'Site'}>
-                      <option value='' disabled hidden>Select...</option>
-                      {SITES.map((item, i) =>
-                        <option key={i} value={item.value}>{item.label}</option>
-                      )}
-                    </Select>
-                  )}
-                </Col>
-                <Col xs={24} sm={12} className={s.col}>
-                  {getFieldDecorator('type', {
-                    initialValue: '',
-                    rules: [
-                      {required: false, message: messages.required},
-                    ]
-                  })(
-                    <Select error={getFieldError('type')} label={'Type'}>
-                      <option value='' disabled hidden>Select...</option>
-                      {TYPES.map((item, i) =>
-                        <option key={i} value={item.value}>{item.label}</option>
-                      )}
-                    </Select>
-                  )}
-                </Col>
-              </Row>
-              <Row gutter={16}>
-                <Col xs={24} sm={12} className={s.col}>
-                  {getFieldDecorator('number_of_tumors', {
-                    initialValue: '',
-                    rules: [
-                      {required: false, message: messages.required},
-                    ]
-                  })(
-                    <Select error={getFieldError('number_of_tumors')} label={'Number of tumors'}>
-                      <option value='' disabled hidden>Select...</option>
-                      {Array.from(new Array(8), (val, i) =>
-                        <option key={i} value={i}>{i}</option>
-                      )}
-                    </Select>
-                  )}
-                </Col>
-                <Col xs={24} sm={12} className={s.col}>
-                  {getFieldDecorator('stage', {
-                    initialValue: '',
-                    rules: [
-                      {required: false, message: messages.required},
-                    ]
-                  })(
-                    <Select error={getFieldError('stage')} label={'Stage'}>
-                      <option value='' disabled hidden>Select...</option>
-                      {STAGES.map((item, i) =>
-                        <option key={i} value={item.value}>{item.label}</option>
-                      )}
-                    </Select>
-                  )}
-                </Col>
-              </Row>
-            </React.Fragment>
-          ) : (
+          {/*hidden fields should be sent*/}
+          <div style={{display: expanded ? 'block' : 'none'}}>
+            <Row gutter={16}>
+              <Col xs={24} sm={12} className={s.col}>
+                {getFieldDecorator('region', {
+                  initialValue: '',
+                  rules: [
+                    {required: false, message: messages.required},
+                  ]
+                })(
+                  <Select error={getFieldError('region')} label={'Region'}>
+                    <option value='' disabled hidden>Select...</option>
+                    {REGIONS.map((item, i) =>
+                      <option key={i} value={item.value}>{item.label}</option>
+                    )}
+                  </Select>
+                )}
+              </Col>
+              <Col xs={24} sm={12} className={s.col}>
+                {getFieldDecorator('laterality', {
+                  initialValue: '',
+                  rules: [
+                    {required: false, message: messages.required},
+                  ]
+                })(
+                  <Select error={getFieldError('laterality')} label={'Laterality'}>
+                    <option value='' disabled hidden>Select...</option>
+                    <option value='left'>Left</option>
+                    <option value='right'>Right</option>
+                  </Select>
+                )}
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col xs={24} sm={12} className={s.col}>
+                {getFieldDecorator('site', {
+                  initialValue: '',
+                  rules: [
+                    {required: false, message: messages.required},
+                  ]
+                })(
+                  <Select error={getFieldError('site')} label={'Site'}>
+                    <option value='' disabled hidden>Select...</option>
+                    {SITES.map((item, i) =>
+                      <option key={i} value={item.value}>{item.label}</option>
+                    )}
+                  </Select>
+                )}
+              </Col>
+              <Col xs={24} sm={12} className={s.col}>
+                {getFieldDecorator('type', {
+                  initialValue: '',
+                  rules: [
+                    {required: false, message: messages.required},
+                  ]
+                })(
+                  <Select error={getFieldError('type')} label={'Type'}>
+                    <option value='' disabled hidden>Select...</option>
+                    {TYPES.map((item, i) =>
+                      <option key={i} value={item.value}>{item.label}</option>
+                    )}
+                  </Select>
+                )}
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col xs={24} sm={12} className={s.col}>
+                {getFieldDecorator('number_of_tumors', {
+                  initialValue: '',
+                  rules: [
+                    {required: false, message: messages.required},
+                  ]
+                })(
+                  <Select error={getFieldError('number_of_tumors')} label={'Number of tumors'}>
+                    <option value='' disabled hidden>Select...</option>
+                    {Array.from(new Array(8), (val, i) =>
+                      <option key={i} value={i}>{i}</option>
+                    )}
+                  </Select>
+                )}
+              </Col>
+              <Col xs={24} sm={12} className={s.col}>
+                {getFieldDecorator('stage', {
+                  initialValue: '',
+                  rules: [
+                    {required: false, message: messages.required},
+                  ]
+                })(
+                  <Select error={getFieldError('stage')} label={'Stage'}>
+                    <option value='' disabled hidden>Select...</option>
+                    {STAGES.map((item, i) =>
+                      <option key={i} value={item.value}>{item.label}</option>
+                    )}
+                  </Select>
+                )}
+              </Col>
+            </Row>
+          </div>
+          {!expanded && (
             <div className={s.advancedDetailsBtnWrapper}>
               <a onClick={this.expand} className={s.advancedDetailsBtn}>Advanced Details</a>
             </div>

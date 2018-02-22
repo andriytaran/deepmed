@@ -2,116 +2,13 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './Header.css'
-import {Link, Row, Col} from '../../components'
-import {LOGOUT_ROUTE, USER_ROUTE} from '../../routes'
-import cn from 'classnames'
-import Dropdown from 'react-bootstrap/lib/Dropdown'
-import RootCloseWrapper from 'react-overlays/lib/RootCloseWrapper'
+import {Col, Dropdown, Row} from '../../components'
+import {LOGOUT_ROUTE, USER_ROUTE, BC_FORM_ROUTE} from '../../routes'
 import {toggleSidebarOpened} from '../../reducers/global'
 import FaClose from 'react-icons/lib/fa/close'
 import FaBars from 'react-icons/lib/fa/bars'
 
-//TODO change bootstrap dropdown
-class CustomToggle extends React.Component {
-  handleClick = (e) => {
-    e.preventDefault()
-
-    this.props.onClick(e)
-  }
-
-  render() {
-    return (
-      <a
-        className='dropdown-toggle user-dropdown inline-block'
-        id='userDropdownMenu'
-        onClick={this.handleClick}
-      >
-        {this.props.children}
-      </a>
-    )
-  }
-}
-
-class CustomMenu extends React.Component {
-  handleRootClose = (event) => {
-    this.props.onClose(event, {source: 'rootClose'})
-  }
-
-  render() {
-    const {children, open, onSelect} = this.props
-    return (
-      <RootCloseWrapper
-        disabled={!open}
-        onRootClose={this.handleRootClose}
-        event={'click'}
-      >
-        <ul className='dropdown-menu dropdown-menu-right dropdown-menu-keep-open'>
-          {React.Children.map(children, child => (
-            React.cloneElement(child, {
-              onSelect,
-            })
-          ))}
-        </ul>
-      </RootCloseWrapper>
-    )
-  }
-}
-
-class MenuItem extends React.Component {
-  static defaultProps = {
-    divider: false,
-    disabled: false,
-    header: false,
-  }
-
-  handleClick = (event) => {
-    const {disabled, onSelect, eventKey} = this.props
-
-    if (disabled) {
-      event.preventDefault()
-    }
-
-    if (disabled) {
-      return
-    }
-
-    if (onSelect) {
-      onSelect(eventKey, event)
-    }
-  }
-
-  render() {
-    const {
-      active,
-      disabled,
-      divider,
-      header,
-      onClick,
-      className,
-      style,
-      children,
-      to,
-      ...props
-    } = this.props
-    return (
-      <li
-        role='presentation'
-        className={cn(className, {active, disabled})}
-        style={style}
-      >
-        <Link
-          to={to}
-          role='menuitem'
-          tabIndex='-1'
-          onClick={this.handleClick}
-        >
-          {children}
-        </Link>
-      </li>
-    )
-  }
-}
-
+// TODO dropdowns
 class Header extends React.Component {
   render() {
     const {sidebarOpened, toggleSidebarOpened, title, loggedIn} = this.props
@@ -131,23 +28,61 @@ class Header extends React.Component {
         </Col>
 
         <Col>
+          {/*<Dropdown*/}
+            {/*className={s.dropdown}*/}
+            {/*bsStyle='default'*/}
+            {/*id='oncology'*/}
+          {/*>*/}
+            {/*<Dropdown.Toggle bsRole='toggle'>*/}
+              {/*<span className={s.dropdownLabel}>DeepMed Oncology</span>*/}
+              {/*<img*/}
+                {/*className='arrow'*/}
+                {/*src={require('../../static/caret-down.png')}*/}
+                {/*width='10'*/}
+                {/*height='auto'*/}
+              {/*/>*/}
+            {/*</Dropdown.Toggle>*/}
+            {/*<Dropdown.Menu bsRole='menu'>*/}
+              {/*<Dropdown.Item to={BC_FORM_ROUTE}>Breast Cancer</Dropdown.Item>*/}
+              {/*<Dropdown.Item>Prostate Cancer</Dropdown.Item>*/}
+            {/*</Dropdown.Menu>*/}
+          {/*</Dropdown>*/}
+          {/*<Dropdown*/}
+            {/*className={s.dropdown}*/}
+            {/*bsStyle='default'*/}
+            {/*id='oncology'*/}
+          {/*>*/}
+            {/*<Dropdown.Toggle bsRole='toggle'>*/}
+              {/*<span className={s.dropdownLabel}>DeepMed Pediatrics</span>*/}
+              {/*<img*/}
+                {/*className='arrow'*/}
+                {/*src={require('../../static/caret-down.png')}*/}
+                {/*width='10'*/}
+                {/*height='auto'*/}
+              {/*/>*/}
+            {/*</Dropdown.Toggle>*/}
+            {/*<Dropdown.Menu bsRole='menu'>*/}
+              {/*<Dropdown.Item>...</Dropdown.Item>*/}
+              {/*<Dropdown.Item>...</Dropdown.Item>*/}
+            {/*</Dropdown.Menu>*/}
+          {/*</Dropdown>*/}
           {loggedIn && (
             <Dropdown
               bsStyle='default'
               id='user'
             >
-              <CustomToggle bsRole='toggle'>
+              <Dropdown.Toggle bsRole='toggle'>
                 <img
                   className='arrow'
                   src={require('../../static/caret-down.png')}
                   width='10'
                   height='auto'
                 />
-              </CustomToggle>
-              <CustomMenu bsRole='menu' rootCloseEvent={'click'}>
-                <MenuItem to={USER_ROUTE}>Account</MenuItem>
-                <MenuItem to={LOGOUT_ROUTE}>Log Out</MenuItem>
-              </CustomMenu>
+              </Dropdown.Toggle>
+              <Dropdown.Menu bsRole='menu'>
+                <Dropdown.Item to={USER_ROUTE}>Account</Dropdown.Item>
+                <Dropdown.Item to={LOGOUT_ROUTE}>Log Out</Dropdown.Item>
+              </Dropdown.Menu>
             </Dropdown>
           )}
         </Col>
