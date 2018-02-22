@@ -25,20 +25,20 @@ class DiagnosisSerializer(serializers.Serializer):
     Serializer for diagnosis request input details.
     """
     age = serializers.IntegerField(required=True)
-    tumor_size_in_mm = serializers.IntegerField(required=True)
+    tumor_size_in_mm = serializers.IntegerField(required=False, default=0)
     tumor_grade = serializers.IntegerField(required=True)
     er_status = serializers.CharField(required=True)
     pr_status = serializers.CharField(required=True)
     her2_status = serializers.CharField(required=True)
-    num_pos_nodes = serializers.IntegerField(required=True)
+    num_pos_nodes = serializers.IntegerField(required=False, default=0)
     ethnicity = serializers.CharField(required=True)
     sex = serializers.CharField(required=False, default='Female')
     type = serializers.CharField(required=False)
-    site = serializers.CharField(required=False)
+    site = serializers.CharField(required=False, default='Upper-Outer')
     laterality = serializers.CharField(required=False)
     stage = serializers.CharField(required=False)
     number_of_tumors = serializers.IntegerField(required=True)
-    region = serializers.CharField(required=True)
+    region = serializers.CharField(required=False, default='unk')
 
 
 class DiagnosisDataSerializer(serializers.ModelSerializer):
