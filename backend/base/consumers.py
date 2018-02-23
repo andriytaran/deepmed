@@ -635,4 +635,13 @@ class CustomAnalyticsConsumer(JsonWebsocketConsumer):
         custom_analytics_response = custom_analytics(
             json.dumps(dd, ensure_ascii=False), group)
 
+        try:
+            data_list = custom_analytics_response.get('datasets')[0].get('data')
+            if all(v == 0 for v in data_list):
+                custom_analytics_response['is_data'] = False
+            else:
+                custom_analytics_response['is_data'] = True
+        except:
+            custom_analytics_response['is_data'] = False
+
         self.send_json({'custom_analytics': custom_analytics_response})

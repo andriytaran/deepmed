@@ -23,6 +23,13 @@
   flex: 1;
 }
 
+.emptyChart {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .chartCard {
 }
 

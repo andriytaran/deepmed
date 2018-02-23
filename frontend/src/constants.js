@@ -42,6 +42,7 @@ export const TUMOR_GRADES = [
   {value: 1.0, label: '1 (Low)'},
   {value: 2.0, label: '2 (Medium)'},
   {value: 3.0, label: '3 (High)'},
+  {value: 4.0, label: '4 (Very High)'},
 ]
 
 export const NUMBER_OF_TUMORS = [

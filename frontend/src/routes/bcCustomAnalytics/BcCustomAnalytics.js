@@ -149,7 +149,8 @@ class BcCustomAnalytics extends React.Component {
               {getFieldDecorator('filters[num_pos_nodes]', {
                 initialValue: '',
               })(
-                <Select className={s.field} error={getFieldError('filters[num_pos_nodes]')} label={'Number of Positive Nodes'}>
+                <Select className={s.field} error={getFieldError('filters[num_pos_nodes]')}
+                        label={'Number of Positive Nodes'}>
                   <option value='' disabled hidden>Select...</option>
                   {NUMBER_OF_NODES.map((item, i) =>
                     <option key={i} value={item.value}>{item.label}</option>
@@ -305,7 +306,7 @@ class BcCustomAnalytics extends React.Component {
                 className={s.chartCard}
                 loading={customAnalyticsLoading}
               >
-                {!isEmpty(customAnalytics.custom_analytics) && (
+                {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === true) && (
                   <Pie
                     data={{
                       ...customAnalytics.custom_analytics,
@@ -330,6 +331,10 @@ class BcCustomAnalytics extends React.Component {
                     width={400}
                     height={200}
                   />
+                )}
+                {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === false) && (
+
+                  <div className={s.emptyChart}>There is no available output for this set of filters</div>
                 )}
               </Card>
             </div>
