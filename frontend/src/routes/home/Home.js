@@ -71,6 +71,24 @@ class Home extends React.Component {
                   </div>
                 </span>
               </Col>
+              <Col>
+                <span>
+                  <div className={cn(s.module, s.disabled)}>
+                    Acute Appendicitis
+                    <br/>
+                    <span className={s.muted}>(Coming soon)</span>
+                  </div>
+                </span>
+              </Col>
+              <Col>
+                <span>
+                  <div className={cn(s.module, s.disabled)}>
+                    Acute Respiratory Illness
+                    <br/>
+                    <span className={s.muted}>(Coming soon)</span>
+                  </div>
+                </span>
+              </Col>
             </Row>
           </Col>
         </Row>
