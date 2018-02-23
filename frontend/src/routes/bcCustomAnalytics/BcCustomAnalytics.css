@@ -30,6 +30,14 @@
   align-items: center;
 }
 
+.her2Title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #646464;
+  font-size: 12px;
+}
+
 .chartCard {
 }
 
