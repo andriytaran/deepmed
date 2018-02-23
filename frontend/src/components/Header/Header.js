@@ -52,13 +52,11 @@ class Header extends React.Component {
                   <Dropdown.Item disabled={true}>
                     Colon cancer
                     <br/>
-                    <span className={s.muted}>(Coming soon)</span>
-                  </Dropdown.Item>
+                    <span className={s.muted}>(Coming soon)</span></Dropdown.Item>
                   <Dropdown.Item disabled={true}>
                     Lung cancer
                     <br/>
-                    <span className={s.muted}>(Coming soon)</span>
-                  </Dropdown.Item>
+                    <span className={s.muted}>(Coming soon)</span></Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
 

@@ -7,6 +7,10 @@
   @media (--md-up) {
     display: none;
   }
+
+  @media (--md-down) {
+    display: none;
+  }
 }
 
 .title {
