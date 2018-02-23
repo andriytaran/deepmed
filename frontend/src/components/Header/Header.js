@@ -11,7 +11,7 @@ import FaBars from 'react-icons/lib/fa/bars'
 // TODO dropdowns
 class Header extends React.Component {
   render() {
-    const {sidebarOpened, toggleSidebarOpened, title, loggedIn} = this.props
+    const {sidebarOpened, toggleSidebarOpened, title, loggedIn, currentRouteName} = this.props
     return (
       <Row type='flex' justify='space-between' align='middle' className={s.header}>
         <a className={s.toggler} onClick={toggleSidebarOpened}>
@@ -25,47 +25,53 @@ class Header extends React.Component {
         <Col>
           <img src={require('../../static/icon-logo.png')} className={s.smallLogo}/>
           <h1 className={s.title}>{title}</h1>
-        </Col>
+          {[BC_FORM_ROUTE].includes(currentRouteName) && (
+            <div>
+              <Dropdown
+                className={s.dropdown}
+                bsStyle='default'
+                id='oncology'
+              >
+                <Dropdown.Toggle bsRole='toggle'>
+                  <span className={s.dropdownLabel}>DeepMed Oncology</span>
+                  <img
+                    className='arrow'
+                    src={require('../../static/caret-down.png')}
+                    width='10'
+                    height='auto'
+                  />
+                </Dropdown.Toggle>
+                <Dropdown.Menu bsRole='menu'>
+                  <Dropdown.Item to={BC_FORM_ROUTE}>Breast Cancer</Dropdown.Item>
+                  <Dropdown.Item>Prostate Cancer</Dropdown.Item>
+                  <Dropdown.Item>Colon cancer</Dropdown.Item>
+                  <Dropdown.Item>Lung cancer</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
 
+              <Dropdown
+                className={s.dropdown}
+                bsStyle='default'
+                id='oncology'
+              >
+                <Dropdown.Toggle bsRole='toggle'>
+                  <span className={s.dropdownLabel}>DeepMed Pediatrics</span>
+                  <img
+                    className='arrow'
+                    src={require('../../static/caret-down.png')}
+                    width='10'
+                    height='auto'
+                  />
+                </Dropdown.Toggle>
+                <Dropdown.Menu bsRole='menu'>
+                  <Dropdown.Item>Head Trauma</Dropdown.Item>
+                  <Dropdown.Item>Sepsis</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+          )}
+        </Col>
         <Col>
-          {/*<Dropdown*/}
-            {/*className={s.dropdown}*/}
-            {/*bsStyle='default'*/}
-            {/*id='oncology'*/}
-          {/*>*/}
-            {/*<Dropdown.Toggle bsRole='toggle'>*/}
-              {/*<span className={s.dropdownLabel}>DeepMed Oncology</span>*/}
-              {/*<img*/}
-                {/*className='arrow'*/}
-                {/*src={require('../../static/caret-down.png')}*/}
-                {/*width='10'*/}
-                {/*height='auto'*/}
-              {/*/>*/}
-            {/*</Dropdown.Toggle>*/}
-            {/*<Dropdown.Menu bsRole='menu'>*/}
-              {/*<Dropdown.Item to={BC_FORM_ROUTE}>Breast Cancer</Dropdown.Item>*/}
-              {/*<Dropdown.Item>Prostate Cancer</Dropdown.Item>*/}
-            {/*</Dropdown.Menu>*/}
-          {/*</Dropdown>*/}
-          {/*<Dropdown*/}
-            {/*className={s.dropdown}*/}
-            {/*bsStyle='default'*/}
-            {/*id='oncology'*/}
-          {/*>*/}
-            {/*<Dropdown.Toggle bsRole='toggle'>*/}
-              {/*<span className={s.dropdownLabel}>DeepMed Pediatrics</span>*/}
-              {/*<img*/}
-                {/*className='arrow'*/}
-                {/*src={require('../../static/caret-down.png')}*/}
-                {/*width='10'*/}
-                {/*height='auto'*/}
-              {/*/>*/}
-            {/*</Dropdown.Toggle>*/}
-            {/*<Dropdown.Menu bsRole='menu'>*/}
-              {/*<Dropdown.Item>...</Dropdown.Item>*/}
-              {/*<Dropdown.Item>...</Dropdown.Item>*/}
-            {/*</Dropdown.Menu>*/}
-          {/*</Dropdown>*/}
           {loggedIn && (
             <Dropdown
               bsStyle='default'
@@ -94,6 +100,7 @@ class Header extends React.Component {
 const mapState = state => ({
   sidebarOpened: state.global.sidebarOpened,
   loggedIn: state.user.loggedIn,
+  currentRouteName: state.global.currentRouteName,
 })
 
 const mapDispatch = {

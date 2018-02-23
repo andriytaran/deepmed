@@ -33,7 +33,7 @@ class Home extends React.Component {
               <Col>
                 <span>
                   <div className={cn(s.module, s.disabled)}>
-                    ...
+                    Colon cancer
                     <br/>
                     <span className={s.muted}>(Coming soon)</span>
                   </div>
@@ -42,7 +42,7 @@ class Home extends React.Component {
               <Col>
                 <span>
                   <div className={cn(s.module, s.disabled)}>
-                    ...
+                    Lung cancer
                     <br/>
                     <span className={s.muted}>(Coming soon)</span>
                   </div>
@@ -56,7 +56,7 @@ class Home extends React.Component {
               <Col>
                 <span>
                   <div className={cn(s.module, s.disabled)}>
-                    ...
+                    Head Trauma
                     <br/>
                     <span className={s.muted}>(Coming soon)</span>
                   </div>
@@ -65,7 +65,7 @@ class Home extends React.Component {
               <Col>
                 <span>
                   <div className={cn(s.module, s.disabled)}>
-                    ...
+                    Sepsis
                     <br/>
                     <span className={s.muted}>(Coming soon)</span>
                   </div>
