@@ -43,6 +43,8 @@ class DiagnosisSerializer(serializers.Serializer):
 
 class DiagnosisDataSerializer(serializers.ModelSerializer):
     sex = serializers.CharField(required=False, default='Female')
+    stage_sd = serializers.CharField(
+        required=False)  # Replace grouped III stage on original [IIIA, IIIB, IIIC, IIINOS]
     region = serializers.CharField(required=False, default='unk')
     site = serializers.CharField(required=False, default='Upper-Outer')
     ethnicity = serializers.CharField(required=False, default='Caucasian')
@@ -86,6 +88,7 @@ class DiagnosisDataSerializer(serializers.ModelSerializer):
 
         if data.get('stage'):
             if data.get('stage') in ['IIIA', 'IIIB', 'IIIC', 'IIINOS']:
+                data['stage_sd'] = data.get('stage')
                 data['stage'] = 'III'
         else:
             # 0.    1. Any tumor size, dcis or in situ, and No positive nodes
@@ -141,5 +144,6 @@ class DiagnosisDataSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['tumor_size_in_mm'] = validated_data.pop(
             'tumor_size_in_mm_sd', None)
+        validated_data['stage'] = validated_data.pop('stage_sd', None)
         obj = BreastDiagnosisData.objects.create(**validated_data)
         return obj

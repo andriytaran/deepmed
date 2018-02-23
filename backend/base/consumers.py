@@ -321,6 +321,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 dd['ethnicity'] = 'Other'
 
             dd['tumor_size_in_mm'] = dd.get('tumor_size_in_mm_sd')
+            dd['stage'] = dd.get('stage_sd')
 
             self.send_json({'diagnosis_form': dd})
 
