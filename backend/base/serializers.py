@@ -139,6 +139,9 @@ class DiagnosisDataSerializer(serializers.ModelSerializer):
             elif data.get('region') == 'Distant':
                 data['stage'] = 'IV'
 
+        if not data.get('stage_sd'):
+            data['stage_sd'] = data.get('stage')
+
         return data
 
     def create(self, validated_data):
