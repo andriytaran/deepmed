@@ -72,3 +72,8 @@
 .dropdownLabel {
   margin-right: var(--margin-sm);
 }
+
+.muted {
+  color: #aaa;
+  font-size: 12px;
+}

@@ -4,7 +4,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import {getData} from '../../reducers/breastCancer'
 import {createForm} from 'rc-form'
 import s from './BcForm.css'
-import {RACES, REGIONS, SITES, STAGES, TYPES} from '../../constants'
+import {RACES, REGIONS, SITES, STAGES, TUMOR_GRADES, TYPES} from '../../constants'
 import messages from '../../components/messages'
 import {Col, Input, InputNumber, Row, Select} from '../../components/index'
 import Button from 'react-bootstrap/lib/Button'
@@ -84,9 +84,9 @@ class BcForm extends React.Component {
               })(
                 <Select error={getFieldError('tumor_grade')} label={'Tumor Grade'}>
                   <option value='' disabled hidden>Select...</option>
-                  <option value={1}>1 (Low)</option>
-                  <option value={2}>2 (Medium)</option>
-                  <option value={3}>3 (High)</option>
+                  {TUMOR_GRADES.map((item, i) =>
+                    <option key={i} value={item.value}>{item.label}</option>
+                  )}
                 </Select>
               )}
             </Col>

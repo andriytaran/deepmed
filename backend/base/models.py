@@ -9,7 +9,7 @@ class BreastDiagnosisData(models.Model):
     tumor_size_in_mm = models.IntegerField(blank=True, null=True, default=0)
     tumor_size = models.CharField(max_length=64, blank=True,
                                   null=True, default='<1cm')
-    tumor_grade = models.IntegerField(blank=False, null=False)
+    tumor_grade = models.FloatField(blank=False, null=False)
     er_status = models.CharField(max_length=64, blank=False, null=False)
     pr_status = models.CharField(max_length=64, blank=False, null=False)
     her2_status = models.CharField(max_length=64, blank=False, null=False)

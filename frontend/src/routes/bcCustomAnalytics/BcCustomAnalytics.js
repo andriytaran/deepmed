@@ -6,7 +6,7 @@ import s from './BcCustomAnalytics.css'
 import {Row, Col, Select, Card} from '../../components'
 import {
   AGES, TYPES, TUMOR_SIZES, SITES, NUMBER_OF_NODES, GROUPED_RACES, NUMBER_OF_TUMORS,
-  STAGES
+  STAGES, TUMOR_GRADES
 } from '../../constants'
 import {getCustomAnalytics} from '../../reducers/breastCancer'
 import messages from '../../components/messages'
@@ -139,9 +139,9 @@ class BcCustomAnalytics extends React.Component {
                   label={'Tumor Grade'}
                 >
                   <option value='' disabled hidden>Select...</option>
-                  <option value={1}>1 (Low)</option>
-                  <option value={2}>2 (Medium)</option>
-                  <option value={3}>3 (High)</option>
+                  {TUMOR_GRADES.map((item, i) =>
+                    <option key={i} value={item.value}>{item.label}</option>
+                  )}
                 </Select>
               )}
             </div>

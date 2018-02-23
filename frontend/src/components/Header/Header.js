@@ -7,6 +7,7 @@ import {LOGOUT_ROUTE, USER_ROUTE, BC_FORM_ROUTE} from '../../routes'
 import {toggleSidebarOpened} from '../../reducers/global'
 import FaClose from 'react-icons/lib/fa/close'
 import FaBars from 'react-icons/lib/fa/bars'
+import cn from 'classnames'
 
 // TODO dropdowns
 class Header extends React.Component {
@@ -43,9 +44,21 @@ class Header extends React.Component {
                 </Dropdown.Toggle>
                 <Dropdown.Menu bsRole='menu'>
                   <Dropdown.Item to={BC_FORM_ROUTE}>Breast Cancer</Dropdown.Item>
-                  <Dropdown.Item>Prostate Cancer</Dropdown.Item>
-                  <Dropdown.Item>Colon cancer</Dropdown.Item>
-                  <Dropdown.Item>Lung cancer</Dropdown.Item>
+                  <Dropdown.Item disabled={true}>
+                    Prostate Cancer
+                    <br/>
+                    <span className={s.muted}>(Coming soon)</span>
+                  </Dropdown.Item>
+                  <Dropdown.Item disabled={true}>
+                    Colon cancer
+                    <br/>
+                    <span className={s.muted}>(Coming soon)</span>
+                  </Dropdown.Item>
+                  <Dropdown.Item disabled={true}>
+                    Lung cancer
+                    <br/>
+                    <span className={s.muted}>(Coming soon)</span>
+                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
 
@@ -64,8 +77,16 @@ class Header extends React.Component {
                   />
                 </Dropdown.Toggle>
                 <Dropdown.Menu bsRole='menu'>
-                  <Dropdown.Item>Head Trauma</Dropdown.Item>
-                  <Dropdown.Item>Sepsis</Dropdown.Item>
+                  <Dropdown.Item disabled={true}>
+                    Head Trauma
+                    <br/>
+                    <span className={s.muted}>(Coming soon)</span>
+                  </Dropdown.Item>
+                  <Dropdown.Item disabled={true}>
+                    Sepsis
+                    <br/>
+                    <span className={s.muted}>(Coming soon)</span>
+                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>

@@ -38,6 +38,11 @@ export const TUMOR_SIZES = [
   {value: '2-5cm', label: '2-5cm'},
   {value: '5cm+', label: '5cm+'},
 ]
+export const TUMOR_GRADES = [
+  {value: 1.0, label: '1 (Low)'},
+  {value: 2.0, label: '2 (Medium)'},
+  {value: 3.0, label: '3 (High)'},
+]
 
 export const NUMBER_OF_TUMORS = [
   {value: '1', label: '1'},
