@@ -6,7 +6,7 @@ import s from './BcCustomAnalytics.css'
 import {Row, Col, Select, Card} from '../../components'
 import {
   AGES, TYPES, TUMOR_SIZES, SITES, NUMBER_OF_NODES, GROUPED_RACES, NUMBER_OF_TUMORS,
-  STAGES
+  STAGES, TUMOR_GRADES
 } from '../../constants'
 import {getCustomAnalytics} from '../../reducers/breastCancer'
 import messages from '../../components/messages'
@@ -19,16 +19,27 @@ import Button from 'react-bootstrap/lib/Button'
 
 class BcCustomAnalytics extends React.Component {
   state = {
-    fields: {}
+    fields: {},
+    her2Title: false
   }
 
   changeField = (value, key) => {
+    let show = this.state.her2Title
+    if (key === 'her2_status'){
+      if (value === '+'){
+        show = true
+      } else {
+        show = false
+      }
+    }
     this.setState({
       fields: {
         ...this.state.fields,
         [key]: value,
-      }
+      },
+      her2Title: show
     })
+
   }
 
   handleSubmit = (e) => {
@@ -46,7 +57,7 @@ class BcCustomAnalytics extends React.Component {
 
   clearFilters = () => {
     this.props.form.resetFields()
-    this.setState({fields: {}})
+    this.setState({fields: {}, her2Title: false})
   }
 
   render() {
@@ -67,7 +78,7 @@ class BcCustomAnalytics extends React.Component {
       fontSize: 10,
       padding: 8
     }
-    const {fields} = this.state
+    const {fields, her2Title} = this.state
     const {customAnalytics, customAnalyticsLoading} = this.props
     const {getFieldDecorator, getFieldError} = this.props.form
 
@@ -139,9 +150,9 @@ class BcCustomAnalytics extends React.Component {
                   label={'Tumor Grade'}
                 >
                   <option value='' disabled hidden>Select...</option>
-                  <option value={1}>1 (Low)</option>
-                  <option value={2}>2 (Medium)</option>
-                  <option value={3}>3 (High)</option>
+                  {TUMOR_GRADES.map((item, i) =>
+                    <option key={i} value={item.value}>{item.label}</option>
+                  )}
                 </Select>
               )}
             </div>
@@ -149,7 +160,8 @@ class BcCustomAnalytics extends React.Component {
               {getFieldDecorator('filters[num_pos_nodes]', {
                 initialValue: '',
               })(
-                <Select className={s.field} error={getFieldError('filters[num_pos_nodes]')} label={'Number of Positive Nodes'}>
+                <Select className={s.field} error={getFieldError('filters[num_pos_nodes]')}
+                        label={'Number of Positive Nodes'}>
                   <option value='' disabled hidden>Select...</option>
                   {NUMBER_OF_NODES.map((item, i) =>
                     <option key={i} value={item.value}>{item.label}</option>
@@ -183,7 +195,11 @@ class BcCustomAnalytics extends React.Component {
               {getFieldDecorator('filters[her2_status]', {
                 initialValue: '',
               })(
-                <Select className={s.field} error={getFieldError('filters[her2_status]')} label={'HER2 Status'}>
+                <Select
+                  onChange={(e) => this.changeField(e.target.value, 'her2_status')}
+                  className={s.field}
+                  error={getFieldError('filters[her2_status]')}
+                  label={'HER2 Status'}>
                   <option value='' disabled hidden>Select...</option>
                   <option value='+'>Positive</option>
                   <option value='-'>Negative</option>
@@ -305,7 +321,7 @@ class BcCustomAnalytics extends React.Component {
                 className={s.chartCard}
                 loading={customAnalyticsLoading}
               >
-                {!isEmpty(customAnalytics.custom_analytics) && (
+                {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === true) && (
                   <Pie
                     data={{
                       ...customAnalytics.custom_analytics,
@@ -330,6 +346,12 @@ class BcCustomAnalytics extends React.Component {
                     width={400}
                     height={200}
                   />
+                )}
+                {(!isEmpty(customAnalytics.custom_analytics) && her2Title === true) && (
+                  <div className={s.her2Title}>Last 5 years data only</div>
+                )}
+                {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === false) && (
+                  <div className={s.emptyChart}>There is no available output for this set of filters</div>
                 )}
               </Card>
             </div>

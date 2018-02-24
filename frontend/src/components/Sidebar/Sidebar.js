@@ -6,14 +6,12 @@ import {Link} from '../../components'
 import {
   BC_CUSTOM_ANALYTICS_ROUTE,
   BC_DIAGNOSIS_ROUTE,
-  HOME_ROUTE,
-  LOGIN_ROUTE,
+  BC_FORM_ROUTE,
+  BC_INDIVIDUAL_STATISTICS_ROUTE,
   BC_NATIONAL_STATISTICS_ROUTE,
   BC_RESOURCES_ROUTE,
   BC_SIMILAR_DIAGNOSES_ROUTE,
-  BC_INDIVIDUAL_STATISTICS_ROUTE,
-  USER_ROUTE,
-  BC_FORM_ROUTE,
+  HOME_ROUTE,
 } from '../../routes'
 import cn from 'classnames'
 import FaHeaderO from 'react-icons/lib/fa/heart-o'
@@ -21,30 +19,36 @@ import FaBarChart from 'react-icons/lib/fa/bar-chart'
 import FaFileO from 'react-icons/lib/fa/file-o'
 import FaLaptop from 'react-icons/lib/fa/laptop'
 
-const MENU = [
-  {routeName: BC_DIAGNOSIS_ROUTE, label: 'Diagnosis', iconComponent: FaHeaderO},
-  {routeName: BC_NATIONAL_STATISTICS_ROUTE, label: 'National Statistics', iconComponent: FaBarChart},
-  {routeName: BC_INDIVIDUAL_STATISTICS_ROUTE, label: 'Individual Statistics', iconComponent: FaBarChart},
-  {routeName: BC_CUSTOM_ANALYTICS_ROUTE, label: 'Custom Analytics', iconComponent: FaBarChart},
-  {routeName: BC_SIMILAR_DIAGNOSES_ROUTE, label: 'Similar Diagnoses', iconComponent: FaFileO},
-  {routeName: BC_RESOURCES_ROUTE, label: 'Resources', iconComponent: FaLaptop},
-]
+const menuByModule = {
+  bc: {
+    baseRouteName: BC_FORM_ROUTE,
+    items: [
+      {routeName: BC_DIAGNOSIS_ROUTE, label: 'Diagnosis', iconComponent: FaHeaderO},
+      {routeName: BC_NATIONAL_STATISTICS_ROUTE, label: 'National Statistics', iconComponent: FaBarChart},
+      {routeName: BC_INDIVIDUAL_STATISTICS_ROUTE, label: 'Individual Statistics', iconComponent: FaBarChart},
+      {routeName: BC_CUSTOM_ANALYTICS_ROUTE, label: 'Custom Analytics', iconComponent: FaBarChart},
+      {routeName: BC_SIMILAR_DIAGNOSES_ROUTE, label: 'Similar Diagnoses', iconComponent: FaFileO},
+      {routeName: BC_RESOURCES_ROUTE, label: 'Resources', iconComponent: FaLaptop},
+    ]
+  },
+}
 
 class Sidebar extends React.Component {
   render() {
-    const {sidebarOpened, currentRouteName} = this.props
+    const {sidebarOpened, currentRouteName, currentModule} = this.props
+    const menu = menuByModule[currentModule]
     return (
       <nav className={cn(s.sidebar, sidebarOpened && s.opened)}>
-        <Link to={HOME_ROUTE} className={s.logoWrapper}>
+        <Link to={menu ? menu.baseRouteName : HOME_ROUTE} className={s.logoWrapper}>
           <img
             className={s.logo}
             src={require('../../static/deep-med-logo-new.png')}
             alt='logo'
           />
         </Link>
-        {![HOME_ROUTE, BC_FORM_ROUTE, LOGIN_ROUTE, USER_ROUTE].includes(currentRouteName) && (
+        {menu && ![BC_FORM_ROUTE].includes(currentRouteName) && (
           <ul className={s.menu}>
-            {MENU.map(item =>
+            {menu.items.map(item =>
               <li
                 key={item.label}
                 className={cn(s.itemWrapper, currentRouteName === item.routeName && s.active)}
@@ -67,6 +71,7 @@ class Sidebar extends React.Component {
 const mapState = state => ({
   sidebarOpened: state.global.sidebarOpened,
   currentRouteName: state.global.currentRouteName,
+  currentModule: state.global.currentModule,
 })
 
 const mapDispatch = {}

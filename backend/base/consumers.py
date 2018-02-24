@@ -320,7 +320,9 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
             elif dd.get('ethnicity') == 'Unknown':
                 dd['ethnicity'] = 'Other'
 
+            tumor_size = dd.get('tumor_size_in_mm')
             dd['tumor_size_in_mm'] = dd.get('tumor_size_in_mm_sd')
+            dd['stage'] = dd.get('stage_sd')
 
             self.send_json({'diagnosis_form': dd})
 
@@ -349,7 +351,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
 
             chemo_therapy = []
             if chemo_response[0] == 'Yes' and \
-                    dd.get('tumor_size_in_mm') in ['>5cm', '>3cm',
+                    tumor_size in ['>5cm', '>3cm',
                                                    '<3cm'] and \
                     dd.get('her2_status') != '+':
                 chemo_therapy.append({
@@ -369,8 +371,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                     ]
                 })
             elif chemo_response[0] == 'Yes' and \
-                    dd.get('tumor_size_in_mm') not in ['>5cm', '>3cm',
-                                                       '<3cm'] and \
+                    tumor_size not in ['>5cm', '>3cm', '<3cm'] and \
                     dd.get('her2_status') != '+':
                 chemo_therapy.append({
                     'plan': 'C+T',
@@ -389,8 +390,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                     ]
                 })
             elif chemo_response[0] == 'Yes' and \
-                    dd.get('tumor_size_in_mm') in ['>5cm', '>3cm',
-                                                   '<3cm'] and \
+                    tumor_size in ['>5cm', '>3cm', '<3cm'] and \
                     dd.get('her2_status') == '+':
                 chemo_therapy.append({
                     'plan': 'AC+T+HCP',
@@ -411,11 +411,10 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                     ]
                 })
             elif chemo_response[0] == 'Yes' and \
-                    dd.get('tumor_size_in_mm') not in ['>5cm', '>3cm',
-                                                       '<3cm'] and \
+                    tumor_size not in ['>5cm', '>3cm', '<3cm'] and \
                     dd.get('her2_status') == '+':
                 chemo_therapy.append({
-                    'plan': 'A+T+HCP',
+                    'plan': 'C+T+HCP',
                     'number_of_treatments': [
                         {'name': 'A)', 'value': '4C, 4T, 52HCP'},
                         {'name': 'B)', 'value': '4C, 12T, 52HCP'}],
@@ -635,5 +634,14 @@ class CustomAnalyticsConsumer(JsonWebsocketConsumer):
 
         custom_analytics_response = custom_analytics(
             json.dumps(dd, ensure_ascii=False), group)
+
+        try:
+            data_list = custom_analytics_response.get('datasets')[0].get('data')
+            if all(v == 0 for v in data_list):
+                custom_analytics_response['is_data'] = False
+            else:
+                custom_analytics_response['is_data'] = True
+        except:
+            custom_analytics_response['is_data'] = False
 
         self.send_json({'custom_analytics': custom_analytics_response})

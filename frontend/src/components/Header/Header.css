@@ -7,6 +7,10 @@
   @media (--md-up) {
     display: none;
   }
+
+  @media (--md-down) {
+    display: none;
+  }
 }
 
 .title {
@@ -63,4 +67,17 @@
   transform: translate(-50%, -50%);
   font-size: 30px;
   color: var(--white);
+}
+
+.dropdown {
+  margin-right: var(--margin-md);
+}
+
+.dropdownLabel {
+  margin-right: var(--margin-sm);
+}
+
+.muted {
+  color: #aaa;
+  font-size: 12px;
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './BcDiagnosis.css'
-import {RACES, REGIONS, SITES, STAGES, TYPES} from '../../constants'
+import {RACES, REGIONS, SITES, STAGES, TUMOR_GRADES, TYPES} from '../../constants'
 import {createForm} from 'rc-form'
 import messages from '../../components/messages'
 import {Input, InputNumber, Select, Spin} from '../../components'
@@ -121,9 +121,9 @@ class BcDiagnosis extends React.Component {
                       })(
                         <Select error={getFieldError('tumor_grade')} label={'Tumor Grade'}>
                           <option value='' disabled hidden>Select...</option>
-                          <option value={1}>1 (Low)</option>
-                          <option value={2}>2 (Medium)</option>
-                          <option value={3}>3 (High)</option>
+                          {TUMOR_GRADES.map((item, i) =>
+                            <option key={i} value={item.value}>{item.label}</option>
+                          )}
                         </Select>
                       )}
                     </div>
@@ -135,7 +135,7 @@ class BcDiagnosis extends React.Component {
                         ]
                       })(
                         <Select error={getFieldError('num_pos_nodes')} label={'Number of Positive Nodes'}>
-                          <option value='' disabled hidden>Select...</option>
+                          <option value=''>Select...</option>
                           {Array.from(new Array(24), (val, i) =>
                             <option key={i} value={i}>{i === 23 ? i + '+' : i}</option>
                           )}
@@ -192,7 +192,7 @@ class BcDiagnosis extends React.Component {
                         ]
                       })(
                         <Select error={getFieldError('ethnicity')} label={'Ethnicity'}>
-                          <option value='' disabled hidden>Select...</option>
+                          <option value=''>Select...</option>
                           {RACES.map((item, i) =>
                             <option key={i}>{item}</option>
                           )}
@@ -207,7 +207,7 @@ class BcDiagnosis extends React.Component {
                         ]
                       })(
                         <Select error={getFieldError('region')} label={'Region'}>
-                          <option value='' disabled hidden>Select...</option>
+                          <option value=''>Select...</option>
                           {REGIONS.map((item, i) =>
                             <option key={i} value={item.value}>{item.label}</option>
                           )}
@@ -222,7 +222,7 @@ class BcDiagnosis extends React.Component {
                         ]
                       })(
                         <Select error={getFieldError('laterality')} label={'Laterality'}>
-                          <option value='' disabled hidden>Select...</option>
+                          <option value=''>Select...</option>
                           <option value='left'>Left</option>
                           <option value='right'>Right</option>
                         </Select>
@@ -236,7 +236,7 @@ class BcDiagnosis extends React.Component {
                         ]
                       })(
                         <Select error={getFieldError('site')} label={'Site'}>
-                          <option value='' disabled hidden>Select...</option>
+                          <option value=''>Select...</option>
                           {SITES.map((site, i) =>
                             <option key={i} value={site.value}>{site.label}</option>
                           )}
@@ -251,7 +251,7 @@ class BcDiagnosis extends React.Component {
                         ]
                       })(
                         <Select error={getFieldError('type')} label={'Type'}>
-                          <option value='' disabled hidden>Select...</option>
+                          <option value=''>Select...</option>
                           {TYPES.map((item, i) =>
                             <option key={i} value={item.value}>{item.label}</option>
                           )}
@@ -266,7 +266,7 @@ class BcDiagnosis extends React.Component {
                         ]
                       })(
                         <Select error={getFieldError('number_of_tumors')} label={'Number of tumors'}>
-                          <option value='' disabled hidden>Select...</option>
+                          <option value=''>Select...</option>
                           {Array.from(new Array(8), (val, i) =>
                             <option key={i} value={i}>{i}</option>
                           )}
@@ -278,7 +278,7 @@ class BcDiagnosis extends React.Component {
                         initialValue: diagnosisForm.stage,
                       })(
                         <Select error={getFieldError('stage')} label={'Stage'}>
-                          <option value='' disabled hidden>Select...</option>
+                          <option value=''>Select...</option>
                           {STAGES.map((item, i) =>
                             <option key={i} value={item.value}>{item.label}</option>
                           )}

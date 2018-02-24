@@ -17,6 +17,26 @@
   }
 }
 
+.back {
+  margin-left: 16px;
+  background-color: #fff;
+  border: 1px solid #f0f0f2;
+  border-radius: 5px;
+  padding: var(--margin-md);
+  height: 50px;
+  width: 100px;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: var(--margin-md);
+
+  &:not(.disabled):--hover {
+    background-color: #f9f9fb;
+  }
+}
+
 .form {
   /*TODO*/
   background-color: #fafafa;
