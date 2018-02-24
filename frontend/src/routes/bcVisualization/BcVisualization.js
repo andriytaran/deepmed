@@ -9,6 +9,7 @@ import Tab from 'react-bootstrap/lib/Tab'
 import Tabs from 'react-bootstrap/lib/Tabs'
 import isEmpty from 'lodash/isEmpty'
 import {TUMOR_GRADES} from '../../constants'
+import overview from '../../static/visualization/overview.png'
 import mastectomy1 from '../../static/visualization/mastectomy_1.png'
 import mastectomy2 from '../../static/visualization/mastectomy_2.png'
 import mastectomy3 from '../../static/visualization/mastectomy_3.png'
@@ -49,11 +50,13 @@ const SurgeryTypesTable = ({items = [], visibleRowIndex}) =>
 
 const surgery_images = {
   'mastectomy': [
+    overview,
     mastectomy1,
     mastectomy2,
     mastectomy3,
   ],
   'lumpectomy': [
+    overview,
     lumpectomy1,
     lumpectomy2,
     lumpectomy3,
