@@ -11,6 +11,7 @@ import {
   BC_NATIONAL_STATISTICS_ROUTE,
   BC_RESOURCES_ROUTE,
   BC_SIMILAR_DIAGNOSES_ROUTE,
+  BC_VISUALIZATION_ROUTE,
   HOME_ROUTE,
 } from '../../routes'
 import cn from 'classnames'
@@ -24,6 +25,7 @@ const menuByModule = {
     baseRouteName: BC_FORM_ROUTE,
     items: [
       {routeName: BC_DIAGNOSIS_ROUTE, label: 'Diagnosis', iconComponent: FaHeaderO},
+      {routeName: BC_VISUALIZATION_ROUTE, label: 'Visualization', iconComponent: FaHeaderO},
       {routeName: BC_NATIONAL_STATISTICS_ROUTE, label: 'National Statistics', iconComponent: FaBarChart},
       {routeName: BC_INDIVIDUAL_STATISTICS_ROUTE, label: 'Individual Statistics', iconComponent: FaBarChart},
       {routeName: BC_CUSTOM_ANALYTICS_ROUTE, label: 'Custom Analytics', iconComponent: FaBarChart},
