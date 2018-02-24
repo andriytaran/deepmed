@@ -71,8 +71,20 @@ def get_age_group(age):
         age_group = ["10-14 years", "15-19 years"]
     elif age >= 0:
         age_group = ["00 years", "00-04 years", "05-09 years"]
-
     return age_group
+
+
+def get_tumor_number(group):
+    t_number = None
+    if group == "3+":
+        t_number = {"$gte": 3}
+    elif group == "2":
+        t_number = {"$eq": 2}
+    elif group == "1":
+        t_number = {"$eq": 1}
+    elif group == "0":
+        t_number = {"$eq": 0}
+    return t_number
 
 
 def create_filter(input_data, operator='$and'):
@@ -100,10 +112,10 @@ def create_filter(input_data, operator='$and'):
         filter_list.append({"age-range": {"$in": age}})
     if 'sex' in input_data.keys():
         filter_list.append({"sex": input_data["sex"]})
-    if 'tumor_size_in_mm' in input_data.keys():
-        t_size_cm = get_t_size_cm(input_data['tumor_size_in_mm'])
-        filter_list.append({"t-size-cm": t_size_cm})
-
+    if 'tumor_number' in input_data.keys():
+        t_number = get_tumor_number(input_data['tumor_number'])
+        if t_number:
+            filter_list.append({"of-malignant-tumors": t_number})
     if 'tumor_grade' in input_data.keys():
         filter_list.append({"grade": input_data["tumor_grade"]})
     if 'er_status' in input_data.keys():
@@ -191,6 +203,131 @@ def percent_men_annualy_diagnosed(input_json, collection=None):
     }
 
 
+def percent_race_by_age(input_json, collection=None):
+    filters = create_filter(input_json)
+    result = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "race_set": {"$push": "$race"}
+        }},
+        {"$unwind": "$race_set"},
+        {"$group": {
+            "_id": {"race": "$race_set", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}], collection))
+
+    data = OrderedDict()
+    data['Other'] = 0
+    data['Caucasian'] = 0
+    data['African American'] = 0
+    data['Asian'] = 0
+    for i, label in enumerate(list(map(lambda x: x['_id']['race'], result))):
+        if label == 'White':
+            data['Caucasian'] += result[i]['percentage']
+        elif label == 'Black':
+            data['African American'] += result[i]['percentage']
+        elif label == 'Asian or Pacific Islander':
+            data['Asian'] += result[i]['percentage']
+        elif label in ['Unknown', 'American Indian/Alaska Native'] or label is None:
+            data['Other'] += result[i]['percentage']
+    data.move_to_end("Other")
+
+    return {
+        'labels': list(map(lambda x: x, data.keys())),
+        'datasets': [{
+            'data': list(map(lambda x: x, data.values())),
+            'label': "Diagnosed",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
+def distribution_by_stage(input_json, collection=None):
+    filters = create_filter(input_json)
+    stages = ['I', 'II', 'II', 'III', 'IV']
+    filters['$and'].append({"stage-2004": {"$in": stages}})
+    result = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "subset": {"$push": "$stage-2004"}
+        }},
+        {"$unwind": "$subset"},
+        {"$group": {
+            "_id": {"stage-2004": "$subset", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}], collection))
+
+    data = {"I": 0, "II": 0, "III": 0, "IV": 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['stage-2004'], result))):
+        if label == 'I':
+            data['I'] = result[i]['percentage']
+        elif label in ['II']:
+            data['II'] += result[i]['percentage']
+        elif label in ['III']:
+            data['III'] += result[i]['percentage']
+        elif label == 'IV':
+            data['IV'] = result[i]['percentage']
+        elif label in [0] or label is None:
+            data['0'] += result[i]['percentage']
+
+    return {
+        'labels': list(map(lambda x: x, data.keys())),
+        'datasets': [{
+            'data': list(map(lambda x: x, data.values())),
+            'label': "Stage",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
+def surgery_decisions(input_json, collection=None):
+    filters = create_filter(input_json)
+    excluded = ['None']
+    filters['$and'].append({"other-surgery-2003": {"$nin": excluded}})
+    result = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "surgery_set": {"$push": "$other-surgery-2003"}
+        }},
+        {"$unwind": "$surgery_set"},
+        {"$group": {
+            "_id": {"surgery": "$surgery_set", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}], collection))
+
+    return {
+        'labels': list(map(lambda x: x['_id']['surgery'], result)),
+        'datasets': [{
+            'data': list(map(lambda x: x['percentage'], result)),
+            'label': "Surgeries",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
 if __name__ == '__main__':
     """
     Database groups:
@@ -202,19 +339,20 @@ if __name__ == '__main__':
     "year-of-diagnosis": 1973 - 2014
     "summ-stage": {'Blank(s)': 320533, 'Distant': 41310, 'In situ': 181, 'Localized': 703385, 'Regional': 104445, 'Unknown/unstaged': 43020}
     "of-malignant-tumors": 1-56
+    "tumor-size-2004": 0 - 999
     """
     mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
     collection = mongo_client[DBS_NAME][COLLECTION_NAME]
 
-    diag_request = '{"age": 32, ' \
+    diag_request = '{"age": 52, ' \
                    '"sex": "Male", ' \
-                   '"tumor_grade": 1, ' \
-                   '"er_status": "+", ' \
-                   '"pr_status": "+", ' \
-                   '"tumor_size_in_mm": 22, ' \
-                   '"num_pos_nodes": 1, ' \
-                   '"her2_status": "+", ' \
-                   '"ethnicity": "White"}'
+                   '"1tumor_grade": 1, ' \
+                   '"1er_status": "+", ' \
+                   '"1pr_status": "+", ' \
+                   '"1tumor_size_in_mm": 22, ' \
+                   '"1num_pos_nodes": 1, ' \
+                   '"1her2_status": "+", ' \
+                   '"1ethnicity": "White"}'
 
-    pprint(display_group("age-range"))
-    # pprint(display_group("status"))
+    pprint(display_group("other-surgery-2003"))
+    pprint(surgery_decisions(diag_request, collection))

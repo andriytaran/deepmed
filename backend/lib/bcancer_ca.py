@@ -992,17 +992,17 @@ def survival_months(input_json, grouping):
         for months in ['>120', '>60', '>36']:
             if months == '>120':
                 if totals[months] > 0:
-                    data['> 120 months'] = surgeries[months] / totals[months]
+                    data['> 120 months'] = surgeries[months] / totals[months] * 100
                 else:
                     data['> 120 months'] = 0
             if months == '>60':
                 if totals[months] > 0:
-                    data['> 60 months'] = surgeries[months] / totals[months]
+                    data['> 60 months'] = surgeries[months] / totals[months] * 100
                 else:
                     data['> 60 months'] = 0
             if months == '>36':
                 if totals[months] > 0:
-                    data['> 36 months'] = surgeries[months] / totals[months]
+                    data['> 36 months'] = surgeries[months] / totals[months] * 100
                 else:
                     data['> 36 months'] = 0
 
