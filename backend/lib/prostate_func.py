@@ -71,8 +71,20 @@ def get_age_group(age):
         age_group = ["10-14 years", "15-19 years"]
     elif age >= 0:
         age_group = ["00 years", "00-04 years", "05-09 years"]
-
     return age_group
+
+
+def get_tumor_number(group):
+    t_number = None
+    if group == "3+":
+        t_number = {"$gte": 3}
+    elif group == "2":
+        t_number = {"$eq": 2}
+    elif group == "1":
+        t_number = {"$eq": 1}
+    elif group == "0":
+        t_number = {"$eq": 0}
+    return t_number
 
 
 def create_filter(input_data, operator='$and'):
@@ -100,10 +112,10 @@ def create_filter(input_data, operator='$and'):
         filter_list.append({"age-range": {"$in": age}})
     if 'sex' in input_data.keys():
         filter_list.append({"sex": input_data["sex"]})
-    if 'tumor_size_in_mm' in input_data.keys():
-        t_size_cm = get_t_size_cm(input_data['tumor_size_in_mm'])
-        filter_list.append({"t-size-cm": t_size_cm})
-
+    if 'tumor_number' in input_data.keys():
+        t_number = get_tumor_number(input_data['tumor_number'])
+        if t_number:
+            filter_list.append({"of-malignant-tumors": t_number})
     if 'tumor_grade' in input_data.keys():
         filter_list.append({"grade": input_data["tumor_grade"]})
     if 'er_status' in input_data.keys():
@@ -202,6 +214,7 @@ if __name__ == '__main__':
     "year-of-diagnosis": 1973 - 2014
     "summ-stage": {'Blank(s)': 320533, 'Distant': 41310, 'In situ': 181, 'Localized': 703385, 'Regional': 104445, 'Unknown/unstaged': 43020}
     "of-malignant-tumors": 1-56
+    "tumor-size-2004": 0 - 999
     """
     mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
     collection = mongo_client[DBS_NAME][COLLECTION_NAME]
@@ -216,5 +229,5 @@ if __name__ == '__main__':
                    '"her2_status": "+", ' \
                    '"ethnicity": "White"}'
 
-    pprint(display_group("age-range"))
-    # pprint(display_group("status"))
+    # pprint(display_group("tumor-size-2004"))
+    pprint(percent_men_annualy_diagnosed(diag_request))
