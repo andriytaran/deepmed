@@ -16,6 +16,7 @@ export const BC_INDIVIDUAL_STATISTICS_ROUTE = 'bc-individual-statistics'
 export const BC_SIMILAR_DIAGNOSES_ROUTE = 'bc-similar-diagnoses'
 export const BC_CUSTOM_ANALYTICS_ROUTE = 'bc-custom-analytics'
 export const BC_RESOURCES_ROUTE = 'bc-resources'
+export const BC_VISUALIZATION_ROUTE = 'bc-visualization'
 
 // The top-level (parent) route
 const routes = {
@@ -69,6 +70,11 @@ const routes = {
           path: '/breast-cancer/national-statistics',
           name: BC_NATIONAL_STATISTICS_ROUTE,
           action: require('./bcNationalStatistics').default,
+        },
+        {
+          path: '/breast-cancer/visualization',
+          name: BC_VISUALIZATION_ROUTE,
+          action: require('./bcVisualization').default,
         },
         {
           path: '/breast-cancer/individual-statistics',
