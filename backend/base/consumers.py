@@ -453,7 +453,6 @@ class IndividualStatisticsConsumer(JsonWebsocketConsumer):
         # Remove empty strings
         content = dict((k, v) for k, v in content.items() if v)
         serializer = self.serializer_class(data=content)
-
         if not serializer.is_valid():
             self.send_json({'error': 'Data not valid.',
                             'extra': serializer.errors})
@@ -616,9 +615,13 @@ class CustomAnalyticsConsumer(JsonWebsocketConsumer):
         group = content.get('group', None)
         ca_type = content.get('ca_type', None)
 
-        if group not in ['grade', 'stage', 'type', 'ethnicity', 'cod',
-                         'radiation', 'chemo', 'surgery', 'size',
-                         'tumor_number']:
+        if (ca_type == 'general' and
+            group not in ['grade', 'stage', 'type', 'ethnicity', 'cod',
+                          'radiation', 'chemo', 'surgery', 'size',
+                          'tumor_number']) \
+                or (ca_type == 'survival_months' and group not in
+                    ['radiation', 'chemo', 'Bi-Lateral Mastectomy',
+                     'Lumpectomy', 'Mastectomy']):
             self.send_json({'error': 'Invalid group parameter'})
             self.close()
 
@@ -645,19 +648,42 @@ class CustomAnalyticsConsumer(JsonWebsocketConsumer):
                     custom_analytics_response = None
 
                 if custom_analytics_response:
-                    try:
-                        data_list = custom_analytics_response.get('datasets')[
-                            0].get(
-                            'data')
-                        if all(v == 0 for v in data_list):
+                    if ca_type == 'general':
+                        try:
+                            data_list = \
+                                custom_analytics_response.get('datasets')[
+                                    0].get(
+                                    'data')
+                            if all(v == 0 for v in data_list):
+                                custom_analytics_response['is_data'] = False
+                            else:
+                                custom_analytics_response['is_data'] = True
+                        except Exception as e:
                             custom_analytics_response['is_data'] = False
-                        else:
-                            custom_analytics_response['is_data'] = True
-                    except Exception as e:
-                        custom_analytics_response['is_data'] = False
-                    self.send_json(
-                        {'custom_analytics': custom_analytics_response,
-                         'ca_type': ca_type})
+                        self.send_json(
+                            {'custom_analytics': custom_analytics_response,
+                             'ca_type': ca_type})
+                    else:
+                        try:
+                            for dl in custom_analytics_response:
+                                data_list = dl.get('datasets')[0].get('data')
+                                if all(v == 0 for v in data_list):
+                                    dl['is_data'] = False
+                                else:
+                                    dl['is_data'] = True
+
+                            custom_analytics_response = {
+                                'top': custom_analytics_response[0],
+                                'bottom': custom_analytics_response[1],
+                                'is_data': True,
+                                'ca_type': ca_type
+                            }
+
+                        except Exception as e:
+                            custom_analytics_response['is_data'] = False
+                        self.send_json(
+                            {'custom_analytics': custom_analytics_response,
+                             'ca_type': ca_type})
                 else:
                     self.send_json({'error': 'Data not valid',
                                     'ca_type': ca_type})

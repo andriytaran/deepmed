@@ -300,14 +300,58 @@ class BcSurvivalMonths extends React.Component {
             </Row>
 
             <div className={s.chartWrapper}>
-                  {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === true && customAnalytics.ca_type === 'survival_months') && (
-                <Row type='flex' gutter={16} className={s.content}>
-                      <Col xs={24} sm={24} md={18} lg={12} xl={12} xxl={8}  className={s.chartColumn}>
-                        <Card>
+              <Card
+                loading={customAnalyticsLoading}
+              >
+                {((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === true) && customAnalytics.ca_type === 'survival_months') && (
+                  <div className={s.content}>
+                    <Col xs={24} sm={24} md={18} lg={18} xl={14} xxl={12}>
+                      {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.top.is_data === true) && (
+                        <div className={s.chart}>
+                          <Bar
+                            data={{
+                              ...customAnalytics.custom_analytics.top,
+                              datasets: customAnalytics.custom_analytics.top.datasets.map(item => ({
+                                ...item,
+                                backgroundColor: color_1,
+                                hoverBackgroundColor: color_3,
+                                borderColor: white,
+                              }))
+                            }}
+                            options={{
+                              legend: {
+                                display: false,
+                                position: 'bottom',
+                                labels: chartsLabelsOptions
+                              },
+                              scales: {
+                                yAxes: [{
+                                  ticks: {
+                                    beginAtZero: true,
+                                    callback: (value) => `${value}%`
+                                  }
+                                }]
+                              },
+                              tooltips: {
+                                callbacks: {
+                                  label: formatChartNumber
+                                }
+                              },
+                            }}
+                            width={200}
+                            height={100}
+                            ref='chart'
+                          />
+                        </div>
+                      )}
+                      {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.top.is_data === false) && (
+                        <div className={s.emptyChart}>There is no available output for this set of filters</div>)}
+                      {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.bottom.is_data === true) && (
+                        <div className={s.chart}>
                         <Bar
                           data={{
-                            ...customAnalytics.custom_analytics,
-                            datasets: customAnalytics.custom_analytics.datasets.map(item => ({
+                            ...customAnalytics.custom_analytics.bottom,
+                            datasets: customAnalytics.custom_analytics.bottom.datasets.map(item => ({
                               ...item,
                               backgroundColor: color_1,
                               hoverBackgroundColor: color_3,
@@ -334,17 +378,21 @@ class BcSurvivalMonths extends React.Component {
                               }
                             },
                           }}
-                          width={400}
-                          height={400}
+                          width={200}
+                          height={100}
                           ref='chart'
                         />
-                        </Card>
-                      </Col>
-                </Row>
-                  )}
-                  {(((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === false) || customAnalytics.error) && customAnalytics.ca_type === 'survival_months') && (
-                    <div className={s.emptyChart}>There is no available output for this set of filters</div>
-                  )}
+                        </div>
+                      )}
+                      {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.bottom.is_data === false) && (
+                        <div className={s.emptyChart}>There is no available output for this set of filters</div>)}
+
+                      {(((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === false) || customAnalytics.error) && customAnalytics.ca_type === 'survival_months') && (
+                        <div className={s.emptyChart}>There is no available output for this set of filters</div>)}
+                    </Col>
+                  </div>
+                )}
+              </Card>
             </div>
           </Col>
         </Row>

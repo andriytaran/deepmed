@@ -19,20 +19,15 @@
   }
 }
 
+.chart {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
 .content {
+  display: flex;
   justify-content: center;
-  background-color: #fafafa;
-  border: 1px solid #f0f0f2;
-  border-radius: 5px;
-  position: relative;
-
-  @media (--md-up) {
-    padding: var(--margin-xl);
-  }
-
-  @media (--md-down) {
-    padding: var(--margin-md);
-  }
+  padding: 32px;
 }
 
 .chartWrapper {
