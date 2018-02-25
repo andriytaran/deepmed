@@ -634,11 +634,11 @@ class CustomAnalyticsConsumer(JsonWebsocketConsumer):
         dd = dict(serializer.validated_data)
 
         try:
-            if type in ['general', 'survival_months']:
-                if type == 'general':
+            if ca_type in ['general', 'survival_months']:
+                if ca_type == 'general':
                     custom_analytics_response = custom_analytics(
                         json.dumps(dd, ensure_ascii=False), group)
-                elif type == 'survival_months':
+                elif ca_type == 'survival_months':
                     custom_analytics_response = survival_months(
                         json.dumps(dd, ensure_ascii=False), group)
                 else:

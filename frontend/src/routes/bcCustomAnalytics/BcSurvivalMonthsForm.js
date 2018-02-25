@@ -318,9 +318,6 @@ class BcSurvivalMonthsForm extends React.Component {
                     height={200}
                   />
                 )}
-                {(!isEmpty(customAnalytics.custom_analytics) && her2Title === true && customAnalytics.ca_type === 'survival_months') && (
-                  <div className={s.her2Title}>Last 5 years data only</div>
-                )}
                 {(((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === false) || customAnalytics.error) && customAnalytics.ca_type === 'survival_months') && (
                   <div className={s.emptyChart}>There is no available output for this set of filters</div>
                 )}
