@@ -1418,16 +1418,50 @@ def survival_months(input_json, grouping):
             }]
         }
 
+    def display_totals(tfilter):
+        totals = get_totals(tfilter, None)
+        # print(totals)
+        filtered = get_data(tfilter, None)
+        # print(radiations)
+
+        data = {'> 120 months': 0, '> 60 months': 0, '> 36 months': 0}
+        for months in ['>120', '>60', '>36']:
+            if months == '>120':
+                if totals[months] > 0:
+                    data['> 120 months'] = filtered[months] / totals[months] * 100
+                else:
+                    data['> 120 months'] = 0
+            if months == '>60':
+                if totals[months] > 0:
+                    data['> 60 months'] = filtered[months] / totals[months] * 100
+                else:
+                    data['> 60 months'] = 0
+            if months == '>36':
+                if totals[months] > 0:
+                    data['> 36 months'] = filtered[months] / totals[months] * 100
+                else:
+                    data['> 36 months'] = 0
+
+        return {
+            "labels": list(map(lambda x: x, data.keys())),
+            "datasets": [{
+                "data": list(map(lambda x: x, data.values())),
+                "label": "Diagnosed",
+                "borderColor": "#48ccf5",
+                "fill": False
+            }]
+        }
+
     filters = ca_create_filter(input_json)
     if grouping == 'radiation':
         filters['$and'] = [d for d in filters['$and'] if 'radiation' not in d]
-        return radiation_survival(filters)
+        return radiation_survival(filters), display_totals(filters)
     elif grouping == 'chemo':
         filters['$and'] = [d for d in filters['$and'] if 'chemo' not in d]
-        return chemotherapy_survival(filters)
+        return chemotherapy_survival(filters), display_totals(filters)
     elif grouping in ['Bi-Lateral Mastectomy', 'Lumpectomy', 'Mastectomy']:
         filters['$and'] = [d for d in filters['$and'] if 'surgery' not in d]
-        return surgery_survival(filters, grouping)
+        return surgery_survival(filters, grouping), display_totals(filters)
 
 
 if __name__ == '__main__':
@@ -1445,7 +1479,7 @@ if __name__ == '__main__':
 
     # pprint(display_group('surgery'))
 
-    # pprint(survival_months(ca_diag_request, 'radiation'))
+    # pprint(survival_months(ca_diag_request, 'chemo'))
     pprint(survival_months(ca_diag_request, 'Mastectomy'))
     # pprint(survival_months(ca_diag_request, 'chemo'))
 
