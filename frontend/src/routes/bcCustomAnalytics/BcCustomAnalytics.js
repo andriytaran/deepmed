@@ -3,28 +3,358 @@ import {connect} from 'react-redux'
 import {createForm} from 'rc-form'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './BcCustomAnalytics.css'
+import {Row, Col, Select, Card} from '../../components'
+import {
+  AGES, TYPES, TUMOR_SIZES, SITES, NUMBER_OF_NODES, GROUPED_RACES, NUMBER_OF_TUMORS,
+  STAGES, TUMOR_GRADES
+} from '../../constants'
 import {getCustomAnalytics} from '../../reducers/breastCancer'
-import Tab from 'react-bootstrap/lib/Tab'
-import Tabs from 'react-bootstrap/lib/Tabs'
-import BcGeneralForm from './BcGeneralForm'
-import BcSurvivalMonthsForm from './BcSurvivalMonthsForm'
+import messages from '../../components/messages'
+import pickBy from 'lodash/pickBy'
+import identity from 'lodash/identity'
+import isEmpty from 'lodash/isEmpty'
+import {Pie} from 'react-chartjs-2'
+import {formatChartNumber} from '../../utils'
+import Button from 'react-bootstrap/lib/Button'
+
 
 class BcCustomAnalytics extends React.Component {
+  state = {
+    fields: {},
+    her2Title: false
+  }
+
+  changeField = (value, key) => {
+    let show = this.state.her2Title
+    show = (key === 'her2_status' && value === '+')
+    this.setState({
+      fields: {
+        ...this.state.fields,
+        [key]: value,
+      },
+      her2Title: show
+    })
+
+  }
+
+  handleSubmit = (title) => event => {
+    event.preventDefault()
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        values.ca_type = title
+        this.props.getCustomAnalytics({
+          ...values,
+          // remove empty filters because of native select field default options
+          filters: pickBy(values.filters, identity)
+        })
+      }
+    })
+  }
+
+  clearFilters = () => {
+    this.props.form.resetFields()
+    this.setState({fields: {}, her2Title: false})
+  }
+
   render() {
+    // TODO move it to constants
+    const white = '#fff'
+    const color_1 = '#48ccf5'
+    const color_2 = '#88d0d1'
+    const color_3 = '#47cfd1'
+    const color_4 = '#b8e8f5'
+    const color_5 = '#1ac6ff'
+    const color_6 = '#8f61ec'
+    const color_7 = '#9df51d'
+    const color_8 = '#ff9400'
+    const color_9 = '#f51431'
+
+    const chartsLabelsOptions = {
+      boxWidth: 10,
+      fontSize: 10,
+      padding: 8
+    }
+    const {fields, her2Title} = this.state
+    const {customAnalytics, customAnalyticsLoading} = this.props
+    const {getFieldDecorator, getFieldError} = this.props.form
+
     return (
-      <Tabs
-        id='contentTabs'
-        justified
-        animation={false}
-        className={s.contentTabSection}
-      >
-        <Tab eventKey={0} title='General' className={s.tabContent}>
-          <BcGeneralForm/>
-        </Tab>
-        <Tab eventKey={1} title='Survival months' className={s.tabContent}>
-          <BcSurvivalMonthsForm/>
-        </Tab>
-      </Tabs>
+      <form onSubmit={this.handleSubmit('general')} className={s.container}>
+        <Row type='flex' gutter={16}>
+          <Col xs={24} md={6}>
+            <div className={s.filter}>
+              {getFieldDecorator('filters[age]', {
+                initialValue: '',
+              })(
+                <Select className={s.field} error={getFieldError('filters[age]')} label={'Age'}>
+                  <option value='' disabled hidden>Select...</option>
+                  {AGES.map((item, i) =>
+                    <option key={i} value={item.value}>{item.label}</option>
+                  )}
+                </Select>
+              )}
+            </div>
+            <div className={s.filter}>
+              {getFieldDecorator('filters[ethnicity]', {
+                initialValue: '',
+              })(
+                <Select
+                  onChange={(e) => this.changeField(e.target.value, 'ethnicity')}
+                  className={s.field}
+                  error={getFieldError('filters[ethnicity]')}
+                  label={'Ethnicity'}
+                >
+                  <option value='' disabled hidden>Select...</option>
+                  {GROUPED_RACES.map((race, i) =>
+                    race.label ? (
+                      <optgroup key={i} label={race.label}>
+                        {race.values.map((item, j) =>
+                          <option key={j}>{item}</option>
+                        )}
+                      </optgroup>
+                    ) : (
+                      <option key={i}>{race}</option>
+                    )
+                  )}
+                </Select>
+              )}
+            </div>
+            <div className={s.filter}>
+              {getFieldDecorator('filters[tumor_size]', {
+                initialValue: '',
+              })(
+                <Select
+                  onChange={(e) => this.changeField(e.target.value, 'tumor_size')}
+                  className={s.field}
+                  error={getFieldError('filters[tumor_size]')}
+                  label={'Tumor Size'}>
+                  <option value='' disabled hidden>Select...</option>
+                  {TUMOR_SIZES.map((item, i) =>
+                    <option key={i} value={item.value}>{item.label}</option>
+                  )}
+                </Select>
+              )}
+            </div>
+            <div className={s.filter}>
+              {getFieldDecorator('filters[tumor_grade]', {
+                initialValue: '',
+              })(
+                <Select
+                  onChange={(e) => this.changeField(e.target.value, 'grade')}
+                  className={s.field}
+                  error={getFieldError('filters[tumor_grade]')}
+                  label={'Tumor Grade'}
+                >
+                  <option value='' disabled hidden>Select...</option>
+                  {TUMOR_GRADES.map((item, i) =>
+                    <option key={i} value={item.value}>{item.label}</option>
+                  )}
+                </Select>
+              )}
+            </div>
+            <div className={s.filter}>
+              {getFieldDecorator('filters[num_pos_nodes]', {
+                initialValue: '',
+              })(
+                <Select className={s.field} error={getFieldError('filters[num_pos_nodes]')}
+                        label={'Number of Positive Nodes'}>
+                  <option value='' disabled hidden>Select...</option>
+                  {NUMBER_OF_NODES.map((item, i) =>
+                    <option key={i} value={item.value}>{item.label}</option>
+                  )}
+                </Select>
+              )}
+            </div>
+            <div className={s.filter}>
+              {getFieldDecorator('filters[er_status]', {
+                initialValue: '',
+              })(
+                <Select className={s.field} error={getFieldError('filters[er_status]')} label={'ER Status'}>
+                  <option value='' disabled hidden>Select...</option>
+                  <option value='+'>Positive</option>
+                  <option value='-'>Negative</option>
+                </Select>
+              )}
+            </div>
+            <div className={s.filter}>
+              {getFieldDecorator('filters[pr_status]', {
+                initialValue: '',
+              })(
+                <Select className={s.field} error={getFieldError('filters[pr_status]')} label={'PR Status'}>
+                  <option value='' disabled hidden>Select...</option>
+                  <option value='+'>Positive</option>
+                  <option value='-'>Negative</option>
+                </Select>
+              )}
+            </div>
+            <div className={s.filter}>
+              {getFieldDecorator('filters[her2_status]', {
+                initialValue: '',
+              })(
+                <Select
+                  onChange={(e) => this.changeField(e.target.value, 'her2_status')}
+                  className={s.field}
+                  error={getFieldError('filters[her2_status]')}
+                  label={'HER2 Status'}>
+                  <option value='' disabled hidden>Select...</option>
+                  <option value='+'>Positive</option>
+                  <option value='-'>Negative</option>
+                </Select>
+              )}
+            </div>
+            <div className={s.filter}>
+              {getFieldDecorator('filters[laterality]', {
+                initialValue: '',
+              })(
+                <Select
+                  onChange={(e) => this.changeField(e.target.value, 'laterality')}
+                  className={s.field}
+                  error={getFieldError('filters[laterality]')}
+                  label={'Laterality'}
+                >
+                  <option value='' disabled hidden>Select...</option>
+                  <option value='left'>Left</option>
+                  <option value='right'>Right</option>
+                </Select>
+              )}
+            </div>
+            <div className={s.filter}>
+              {getFieldDecorator('filters[site]', {
+                initialValue: '',
+              })(
+                <Select
+                  onChange={(e) => this.changeField(e.target.value, 'site')}
+                  className={s.field}
+                  error={getFieldError('filters[site]')}
+                  label={'Site'}
+                >
+                  <option value='' disabled hidden>Select...</option>
+                  {SITES.map((site, i) =>
+                    <option key={i} value={site.value}>{site.label}</option>
+                  )}
+                </Select>
+              )}
+            </div>
+            <div className={s.filter}>
+              {getFieldDecorator('filters[type]', {
+                initialValue: '',
+              })(
+                <Select
+                  onChange={(e) => this.changeField(e.target.value, 'type')}
+                  className={s.field}
+                  error={getFieldError('filters[type]')}
+                  label={'Type'}
+                >
+                  <option value='' disabled hidden>Select...</option>
+                  {TYPES.map((item, i) =>
+                    <option key={i} value={item.value}>{item.label}</option>
+                  )}
+                </Select>
+              )}
+            </div>
+            <div className={s.filter}>
+              {getFieldDecorator('filters[tumor_number]', {
+                initialValue: '',
+              })(
+                <Select className={s.field} error={getFieldError('filters[tumor_number]')}
+                        label={'Number of tumors'}>
+                  <option value='' disabled hidden>Select...</option>
+                  {NUMBER_OF_TUMORS.map((item, i) =>
+                    <option key={i} value={item.value}>{item.label}</option>
+                  )}
+                </Select>
+              )}
+            </div>
+            <div className={s.filter}>
+              {getFieldDecorator('filters[stage]', {
+                initialValue: '',
+              })(
+                <Select className={s.field} error={getFieldError('stage')} label={'Stage'}>
+                  <option value='' disabled hidden>Select...</option>
+                  {STAGES.map((item, i) =>
+                    <option key={i} value={item.value}>{item.label}</option>
+                  )}
+                </Select>
+              )}
+            </div>
+          </Col>
+          <Col xs={24} md={16} className={s.chartColumn}>
+            <Row type='flex' align='middle'>
+              <Col xs={{span: 24, offset: 0}} md={{span: 8, offset: 8}} className={s.groupWrapper}>
+                {getFieldDecorator('group', {
+                  initialValue: '',
+                  rules: [
+                    {required: true, message: messages.required},
+                  ]
+                })(
+                  <Select className={s.field} error={getFieldError('group')} label={'Group by'}>
+                    <option value='' disabled hidden>Select...</option>
+                    <option value={'grade'} disabled={fields.grade}>Tumor Grade</option>
+                    <option value={'size'} disabled={fields.size}>Tumor Size</option>
+                    <option value={'stage'}>Stage</option>
+                    <option value={'type'} disabled={fields.type}>Type</option>
+                    <option value={'ethnicity'}>Ethnicity</option>
+                    <option value={'cod'}>Status</option>
+                    <option value={'radiation'}>Radiation</option>
+                    <option value={'chemo'}>Chemotherapy</option>
+                    <option value={'surgery'}>Surgery</option>
+                  </Select>
+                )}
+              </Col>
+              <Col xs={24} md={8} className={s.actions}>
+                <a
+                  className={s.clearFiltersBtn}
+                  onClick={this.clearFilters}
+                >
+                  Clear filters
+                </a>
+                <div className={s.submitBtnWrapper}>
+                  <Button bsStyle='primary' type='submit'>Submit</Button>
+                </div>
+              </Col>
+            </Row>
+            <div className={s.chartWrapper}>
+              <Card
+                className={s.chartCard}
+                loading={customAnalyticsLoading}
+              >
+                {((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === true) && customAnalytics.ca_type === 'general') && (
+                  <Pie
+                    data={{
+                      ...customAnalytics.custom_analytics,
+                      datasets: customAnalytics.custom_analytics.datasets.map(item => ({
+                        ...item,
+                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
+                        borderColor: white,
+                      }))
+                    }}
+                    options={{
+                      legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: chartsLabelsOptions
+                      },
+                      tooltips: {
+                        callbacks: {
+                          label: formatChartNumber
+                        }
+                      },
+                    }}
+                    width={400}
+                    height={200}
+                  />
+                )}
+                {((!isEmpty(customAnalytics.custom_analytics) && her2Title === true) && customAnalytics.ca_type === 'general') && (
+                  <div className={s.her2Title}>Last 5 years data only</div>
+                )}
+                {(((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === false) || customAnalytics.error) && customAnalytics.ca_type === 'general') && (
+                  <div className={s.emptyChart}>There is no available output for this set of filters</div>
+                )}
+              </Card>
+            </div>
+          </Col>
+        </Row>
+      </form>
     )
   }
 }

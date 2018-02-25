@@ -12,9 +12,26 @@
 .chartColumn {
   display: flex;
   flex-direction: column;
+  margin-top: 15px;
 
   @media (--sm-down) {
     margin-top: 1rem;
+  }
+}
+
+.content {
+  justify-content: center;
+  background-color: #fafafa;
+  border: 1px solid #f0f0f2;
+  border-radius: 5px;
+  position: relative;
+
+  @media (--md-up) {
+    padding: var(--margin-xl);
+  }
+
+  @media (--md-down) {
+    padding: var(--margin-md);
   }
 }
 
@@ -28,14 +45,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.her2Title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #646464;
-  font-size: 12px;
 }
 
 .chartCard {

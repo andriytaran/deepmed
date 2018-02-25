@@ -9,6 +9,10 @@ import isNil from 'lodash/isNil'
 import isEmpty from 'lodash/isEmpty'
 
 class BcIndividualStatistics extends React.Component {
+  getPercent = (value) => {
+
+    return value
+  }
   render() {
     // TODO
     const white = '#fff'

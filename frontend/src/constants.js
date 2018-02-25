@@ -22,6 +22,18 @@ export const GROUPED_RACES = [
   'Caucasian',
   'Other',
 ]
+export const GROUPED_SURVIVAL_MONTHS = [
+  {value: 'chemo', label: 'Chemotherapy'},
+  {value: 'radiation', label: 'Radiation'},
+  {
+    label: 'Surgery',
+    values: [
+      'Bi-Lateral Mastectomy',
+      'Lumpectomy',
+      'Mastectomy',
+    ]
+  }
+]
 
 export const AGES = [
   {value: 25, label: '20-30'},

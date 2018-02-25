@@ -2,42 +2,34 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {createForm} from 'rc-form'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
-import s from './BcCustomAnalytics.css'
+import s from './BcSurvivalMonths.css'
 import {Row, Col, Select, Card} from '../../components'
 import {
   AGES, TYPES, TUMOR_SIZES, SITES, NUMBER_OF_NODES, GROUPED_RACES, NUMBER_OF_TUMORS,
-  STAGES, TUMOR_GRADES
+  STAGES, TUMOR_GRADES, GROUPED_SURVIVAL_MONTHS
 } from '../../constants'
 import {getCustomAnalytics} from '../../reducers/breastCancer'
 import messages from '../../components/messages'
 import pickBy from 'lodash/pickBy'
 import identity from 'lodash/identity'
 import isEmpty from 'lodash/isEmpty'
-import {Pie} from 'react-chartjs-2'
+import {Bar} from 'react-chartjs-2'
 import {formatChartNumber} from '../../utils'
 import Button from 'react-bootstrap/lib/Button'
+import isNil from 'lodash/isNil'
 
-class BcGeneralForm extends React.Component {
+
+class BcSurvivalMonths extends React.Component {
   state = {
     fields: {},
-    her2Title: false
   }
 
   changeField = (value, key) => {
-    let show = this.state.her2Title
-    if (key === 'her2_status') {
-      if (value === '+') {
-        show = true
-      } else {
-        show = false
-      }
-    }
     this.setState({
       fields: {
         ...this.state.fields,
         [key]: value,
-      },
-      her2Title: show
+      }
     })
 
   }
@@ -58,7 +50,7 @@ class BcGeneralForm extends React.Component {
 
   clearFilters = () => {
     this.props.form.resetFields()
-    this.setState({fields: {}, her2Title: false})
+    this.setState({fields: {}})
   }
 
   render() {
@@ -79,12 +71,12 @@ class BcGeneralForm extends React.Component {
       fontSize: 10,
       padding: 8
     }
-    const {fields, her2Title} = this.state
+    const {fields} = this.state
     const {customAnalytics, customAnalyticsLoading} = this.props
     const {getFieldDecorator, getFieldError} = this.props.form
 
     return (
-      <form onSubmit={this.handleSubmit('general')} className={s.container}>
+      <form onSubmit={this.handleSubmit('survival_months')} className={s.container}>
         <Row type='flex' gutter={16}>
           <Col xs={24} md={6}>
             <div className={s.filter}>
@@ -193,21 +185,6 @@ class BcGeneralForm extends React.Component {
               )}
             </div>
             <div className={s.filter}>
-              {getFieldDecorator('filters[her2_status]', {
-                initialValue: '',
-              })(
-                <Select
-                  onChange={(e) => this.changeField(e.target.value, 'her2_status')}
-                  className={s.field}
-                  error={getFieldError('filters[her2_status]')}
-                  label={'HER2 Status'}>
-                  <option value='' disabled hidden>Select...</option>
-                  <option value='+'>Positive</option>
-                  <option value='-'>Negative</option>
-                </Select>
-              )}
-            </div>
-            <div className={s.filter}>
               {getFieldDecorator('filters[laterality]', {
                 initialValue: '',
               })(
@@ -271,7 +248,7 @@ class BcGeneralForm extends React.Component {
               )}
             </div>
             <div className={s.filter}>
-              {getFieldDecorator('filters[stage]', {
+              {getFieldDecorator('filters[tumor_number]', {
                 initialValue: '',
               })(
                 <Select className={s.field} error={getFieldError('stage')} label={'Stage'}>
@@ -294,15 +271,18 @@ class BcGeneralForm extends React.Component {
                 })(
                   <Select className={s.field} error={getFieldError('group')} label={'Group by'}>
                     <option value='' disabled hidden>Select...</option>
-                    <option value={'grade'} disabled={fields.grade}>Tumor Grade</option>
-                    <option value={'size'} disabled={fields.size}>Tumor Size</option>
-                    <option value={'stage'}>Stage</option>
-                    <option value={'type'} disabled={fields.type}>Type</option>
-                    <option value={'ethnicity'}>Ethnicity</option>
-                    <option value={'cod'}>Status</option>
-                    <option value={'radiation'}>Radiation</option>
-                    <option value={'chemo'}>Chemotherapy</option>
-                    <option value={'surgery'}>Surgery</option>
+
+                    {GROUPED_SURVIVAL_MONTHS.map((group_by, i) =>
+                      group_by.values ? (
+                        <optgroup key={i} label={group_by.label}>
+                          {group_by.values.map((item, j) =>
+                            <option key={j}>{item}</option>
+                          )}
+                        </optgroup>
+                      ) : (
+                        <option key={i} value={group_by.value}>{group_by.label}</option>
+                      )
+                    )}
                   </Select>
                 )}
               </Col>
@@ -318,44 +298,53 @@ class BcGeneralForm extends React.Component {
                 </div>
               </Col>
             </Row>
+
             <div className={s.chartWrapper}>
-              <Card
-                className={s.chartCard}
-                loading={customAnalyticsLoading}
-              >
-                {((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === true) && customAnalytics.ca_type === 'general') && (
-                  <Pie
-                    data={{
-                      ...customAnalytics.custom_analytics,
-                      datasets: customAnalytics.custom_analytics.datasets.map(item => ({
-                        ...item,
-                        backgroundColor: [color_1, color_3, color_4, color_2, color_5, color_6, color_7, color_8, color_9],
-                        borderColor: white,
-                      }))
-                    }}
-                    options={{
-                      legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: chartsLabelsOptions
-                      },
-                      tooltips: {
-                        callbacks: {
-                          label: formatChartNumber
-                        }
-                      },
-                    }}
-                    width={400}
-                    height={200}
-                  />
-                )}
-                {((!isEmpty(customAnalytics.custom_analytics) && her2Title === true) && customAnalytics.ca_type === 'general') && (
-                  <div className={s.her2Title}>Last 5 years data only</div>
-                )}
-                {(((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === false) || customAnalytics.error) && customAnalytics.ca_type === 'general') && (
-                  <div className={s.emptyChart}>There is no available output for this set of filters</div>
-                )}
-              </Card>
+                  {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === true && customAnalytics.ca_type === 'survival_months') && (
+                <Row type='flex' gutter={16} className={s.content}>
+                      <Col xs={24} sm={24} md={18} lg={12} xl={12} xxl={8}  className={s.chartColumn}>
+                        <Card>
+                        <Bar
+                          data={{
+                            ...customAnalytics.custom_analytics,
+                            datasets: customAnalytics.custom_analytics.datasets.map(item => ({
+                              ...item,
+                              backgroundColor: color_1,
+                              hoverBackgroundColor: color_3,
+                              borderColor: white,
+                            }))
+                          }}
+                          options={{
+                            legend: {
+                              display: false,
+                              position: 'bottom',
+                              labels: chartsLabelsOptions
+                            },
+                            scales: {
+                              yAxes: [{
+                                ticks: {
+                                  beginAtZero: true,
+                                  callback: (value) => `${value}%`
+                                }
+                              }]
+                            },
+                            tooltips: {
+                              callbacks: {
+                                label: formatChartNumber
+                              }
+                            },
+                          }}
+                          width={400}
+                          height={400}
+                          ref='chart'
+                        />
+                        </Card>
+                      </Col>
+                </Row>
+                  )}
+                  {(((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === false) || customAnalytics.error) && customAnalytics.ca_type === 'survival_months') && (
+                    <div className={s.emptyChart}>There is no available output for this set of filters</div>
+                  )}
             </div>
           </Col>
         </Row>
@@ -372,4 +361,4 @@ const mapDispatch = {
   getCustomAnalytics,
 }
 
-export default connect(mapState, mapDispatch)(createForm()(withStyles(s)(BcGeneralForm)))
+export default connect(mapState, mapDispatch)(createForm()(withStyles(s)(BcSurvivalMonths)))

@@ -17,6 +17,7 @@ export const BC_SIMILAR_DIAGNOSES_ROUTE = 'bc-similar-diagnoses'
 export const BC_CUSTOM_ANALYTICS_ROUTE = 'bc-custom-analytics'
 export const BC_RESOURCES_ROUTE = 'bc-resources'
 export const BC_VISUALIZATION_ROUTE = 'bc-visualization'
+export const BC_SURVIVAL_MONTHS = 'bc-survival-months'
 
 // The top-level (parent) route
 const routes = {
@@ -95,6 +96,11 @@ const routes = {
           path: '/breast-cancer/custom-analytics',
           name: BC_CUSTOM_ANALYTICS_ROUTE,
           action: require('./bcCustomAnalytics').default,
+        },
+        {
+          path: '/breast-cancer/survival-months',
+          name: BC_SURVIVAL_MONTHS,
+          action: require('./bcSurvivalMonths').default,
         },
       ],
       async action({store, next, pathname}) {
