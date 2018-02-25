@@ -38,6 +38,21 @@
   font-size: 12px;
 }
 
+.contentTabSection {
+  & :global(.nav-justified) a {
+    /*override bootstrap styles*/
+    border: none !important;
+  }
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.tabContent {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 32px;
+}
+
 .chartCard {
 }
 

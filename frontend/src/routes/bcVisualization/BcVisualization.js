@@ -114,7 +114,6 @@ class BcVisualization extends React.Component {
       <div className='container container-full'>
         <div className='row'>
           <div className='col-md-12'>
-
             <div className={s.card}>
               <h2 className={s.cardHeader}>Recommended Treatment Plans</h2>
               <section className={s.section}>

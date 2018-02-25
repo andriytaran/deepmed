@@ -5,7 +5,7 @@ from django.conf import settings
 from pymongo import MongoClient
 
 from base.serializers import DiagnosisDataSerializer, CustomAnalyticsSerializer
-from lib.bcancer_ca import custom_analytics
+from lib.bcancer_ca import custom_analytics, survival_months
 from lib.dataset import percent_women_by_type, breast_cancer_by_grade, \
     breast_cancer_by_size, distribution_of_stage_of_cancer, \
     percent_of_women_with_cancer_by_race_overall, surgery_decisions, \
@@ -352,7 +352,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
             chemo_therapy = []
             if chemo_response[0] == 'Yes' and \
                     tumor_size in ['>5cm', '>3cm',
-                                                   '<3cm'] and \
+                                   '<3cm'] and \
                     dd.get('her2_status') != '+':
                 chemo_therapy.append({
                     'plan': 'AC+T',
@@ -495,7 +495,8 @@ class IndividualStatisticsConsumer(JsonWebsocketConsumer):
             'distribution_of_stage_of_cancer': distribution_of_stage_of_cancer_response})
 
         percent_of_women_with_cancer_by_race_response = {
-            'overall': percent_of_women_with_cancer_by_race_overall(collection),
+            'overall': percent_of_women_with_cancer_by_race_overall(
+                collection),
             'by_age': percent_race_with_cancer_by_age(json.dumps({
                 'age': dd.get('age'),
                 'sex': 'Female'
@@ -613,6 +614,7 @@ class CustomAnalyticsConsumer(JsonWebsocketConsumer):
 
     def receive_json(self, content, **kwargs):
         group = content.get('group', None)
+        ca_type = content.get('ca_type', None)
 
         if group not in ['grade', 'stage', 'type', 'ethnicity', 'cod',
                          'radiation', 'chemo', 'surgery', 'size',
@@ -628,20 +630,40 @@ class CustomAnalyticsConsumer(JsonWebsocketConsumer):
         if not serializer.is_valid():
             self.send_json({'error': 'Data not valid.',
                             'extra': serializer.errors})
-            self.close()
 
         dd = dict(serializer.validated_data)
 
-        custom_analytics_response = custom_analytics(
-            json.dumps(dd, ensure_ascii=False), group)
-
         try:
-            data_list = custom_analytics_response.get('datasets')[0].get('data')
-            if all(v == 0 for v in data_list):
-                custom_analytics_response['is_data'] = False
-            else:
-                custom_analytics_response['is_data'] = True
-        except:
-            custom_analytics_response['is_data'] = False
+            if type in ['general', 'survival_months']:
+                if type == 'general':
+                    custom_analytics_response = custom_analytics(
+                        json.dumps(dd, ensure_ascii=False), group)
+                elif type == 'survival_months':
+                    custom_analytics_response = survival_months(
+                        json.dumps(dd, ensure_ascii=False), group)
+                else:
+                    custom_analytics_response = None
 
-        self.send_json({'custom_analytics': custom_analytics_response})
+                if custom_analytics_response:
+                    try:
+                        data_list = custom_analytics_response.get('datasets')[
+                            0].get(
+                            'data')
+                        if all(v == 0 for v in data_list):
+                            custom_analytics_response['is_data'] = False
+                        else:
+                            custom_analytics_response['is_data'] = True
+                    except Exception as e:
+                        custom_analytics_response['is_data'] = False
+                    self.send_json(
+                        {'custom_analytics': custom_analytics_response,
+                         'ca_type': ca_type})
+                else:
+                    self.send_json({'error': 'Data not valid',
+                                    'ca_type': ca_type})
+            else:
+                self.send_json({'error': 'Not existing module',
+                                'ca_type': ca_type})
+        except Exception as e:
+            self.send_json({'error': 'Data not valid',
+                            'ca_type': ca_type})
