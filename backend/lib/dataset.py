@@ -1888,7 +1888,7 @@ if __name__ == '__main__':
     # test2 = surgery_decisions(diag_request, collection=collection)
     # test3 = survival_months(diag_request, collection=collection)
 
-    test = distribution_of_stage_of_cancer(diag_request, collection)
+    test = percent_women_annualy_diagnosed(diag_request, collection)
     pprint(test)
 
     # test_diag = diagnosis(diag_request, limit=100, collection=collection)
