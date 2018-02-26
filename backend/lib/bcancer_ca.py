@@ -1500,15 +1500,15 @@ if __name__ == '__main__':
                       '"stage": "IIA", ' \
                       '"1ethnicity": "Japanese"}'
 
-    # pprint(display_group('surgery'))
+    # pprint(display_group('breast-adjusted-ajcc-6th-stage-1988'))
 
-    pprint(survival_months(ca_diag_request, 'chemo'))
-    pprint(survival_months(ca_diag_request, 'radiation'))
-    pprint(survival_months(ca_diag_request, 'Mastectomy'))
+    # pprint(survival_months(ca_diag_request, 'chemo'))
+    # pprint(survival_months(ca_diag_request, 'radiation'))
+    # pprint(survival_months(ca_diag_request, 'Mastectomy'))
 
-    exit()
+    # exit()
     find_request = '{"1age": 35, ' \
-                   '"sex": "Female", ' \
+                   '"1sex": "Female", ' \
                    '"1tumor_grade": 1, ' \
                    '"1er_status": "+", ' \
                    '"1pr_status": "+", ' \
@@ -1516,14 +1516,15 @@ if __name__ == '__main__':
                    '"1num_pos_nodes": "4-8", ' \
                    '"1her2_status": "+", ' \
                    '"1tumor_number": "1", ' \
-                   '"1stage": "IIA", ' \
+                   '"stage": "IIA", ' \
                    '"1ethnicity": "Japanese"}'
     filter = ca_create_filter(find_request)
-    # filter['$and'].append({"cod-to-site-recode": {"$nin": ['', "Alive"]}})
-    filter['$and'].append({"cod-to-site-recode": "Alive"})
-    filter['$and'].append({"radiation": "Yes"})
+    filter['$and'].append({"cod-to-site-recode": {"$nin": ['']}})
+    # filter['$and'].append({"cod-to-site-recode": "Alive"})
+    filter['$and'].append({"chemo": "Yes"})
     filter['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2004}},
                                     {"year-of-diagnosis": {"$lte": 2005}}]})
+    pprint(filter)
     count = json.loads(aggregate([
         {"$match": filter},
         {"$group": {
