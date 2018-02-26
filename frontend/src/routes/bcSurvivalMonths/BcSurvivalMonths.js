@@ -305,11 +305,9 @@ class BcSurvivalMonths extends React.Component {
               >
                 {((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === true) && customAnalytics.ca_type === 'survival_months') && (
                   <Row type='flex' gutter={16} className={s.content}>
-
                     <Col xs={24}>
                       {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.top.is_data === true) && (
                         <div className={s.topChart}>
-                          <p className={s.chartTitle}>With Treatment</p>
                           <Bar
                             data={{
                               ...customAnalytics.custom_analytics.top,
@@ -328,7 +326,7 @@ class BcSurvivalMonths extends React.Component {
                               },
                               scales: {
                                 xAxes: [{
-                                  barThickness : 75
+                                  barThickness: 75
                                 }],
                                 yAxes: [{
                                   ticks: {
@@ -348,6 +346,7 @@ class BcSurvivalMonths extends React.Component {
                             height={100}
                             ref='chart'
                           />
+                          <p className={s.chartTitle}>With Treatment</p>
                         </div>
                       )}
                       {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.top.is_data === false) && (
@@ -356,7 +355,6 @@ class BcSurvivalMonths extends React.Component {
                     <Col xs={24}>
                       {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.bottom.is_data === true) && (
                         <div className={s.bottomChart}>
-                          <p className={s.chartTitle}>Without Treatment</p>
                           <Bar
                             data={{
                               ...customAnalytics.custom_analytics.bottom,
@@ -375,7 +373,7 @@ class BcSurvivalMonths extends React.Component {
                               },
                               scales: {
                                 xAxes: [{
-                                  barThickness : 75
+                                  barThickness: 75
                                 }],
                                 yAxes: [{
                                   ticks: {
@@ -395,6 +393,7 @@ class BcSurvivalMonths extends React.Component {
                             height={100}
                             ref='chart'
                           />
+                          <p className={s.chartTitle}>Without Treatment</p>
                         </div>
                       )}
                       {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.bottom.is_data === false) && (
