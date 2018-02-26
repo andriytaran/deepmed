@@ -1220,21 +1220,23 @@ def survival_months(input_json, grouping):
     def get_totals(subfilters, group):
         tot_filter = copy.deepcopy(subfilters)
         tot_filter['$and'].append({"cod-to-site-recode": {"$nin": ['']}})
-        if group in ['chemo', 'radiation']:
-            tot_filter['$and'].append({group: "Yes"})
-        elif group in ['Bi-Lateral Mastectomy', 'Lumpectomy', 'Mastectomy']:
-            if group == 'Lumpectomy':
-                tot_filter['$and'].append({'surgery': {"$in": ['Lumpectomy', 'Partial Mastectomy']}})
-            elif group == 'Mastectomy':
-                tot_filter['$and'].append({"$or": [{'surgery': 'Single Mastectomy'},
-                                                   {'surgery': 'Mastectomy '},
-                                                   {'surgery': 'Simple Mastectomy'}, ]})
-            elif group == 'Bi-Lateral Mastectomy':
-                tot_filter['$and'].append({'surgery': {"$in": ['Bi-Lateral Mastectomy']}})
+        # pprint(tot_filter)
+        # if group in ['chemo', 'radiation']:
+        #     tot_filter['$and'].append({group: "Yes"})
+        # elif group in ['Bi-Lateral Mastectomy', 'Lumpectomy', 'Mastectomy']:
+        #     if group == 'Lumpectomy':
+        #         tot_filter['$and'].append({'surgery': {"$in": ['Lumpectomy', 'Partial Mastectomy']}})
+        #     elif group == 'Mastectomy':
+        #         tot_filter['$and'].append({"$or": [{'surgery': 'Single Mastectomy'},
+        #                                            {'surgery': 'Mastectomy '},
+        #                                            {'surgery': 'Simple Mastectomy'}, ]})
+        #     elif group == 'Bi-Lateral Mastectomy':
+        #         tot_filter['$and'].append({'surgery': {"$in": ['Bi-Lateral Mastectomy']}})
             # tot_filter['$and'].append({'surgery': {"$nin": ['None']}})
         tf120 = copy.deepcopy(tot_filter)
         tf120['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2004}},
                                        {"year-of-diagnosis": {"$lte": 2005}}]})
+        # pprint(tf120)
         res120 = json.loads(aggregate([
             {"$match": tf120},
             {"$group": {
@@ -1269,22 +1271,24 @@ def survival_months(input_json, grouping):
     def get_data(subfilters, group):
         dat_filter = copy.deepcopy(subfilters)
         dat_filter['$and'].append({"cod-to-site-recode": "Alive"})
-        if group in ['chemo', 'radiation']:
-            dat_filter['$and'].append({group: "Yes"})
-        elif group in ['Bi-Lateral Mastectomy', 'Lumpectomy', 'Mastectomy']:
-            if group == 'Lumpectomy':
-                dat_filter['$and'].append({'surgery': {"$in": ['Lumpectomy', 'Partial Mastectomy']}})
-            elif group == 'Mastectomy':
-                dat_filter['$and'].append({"$or": [{'surgery': 'Single Mastectomy'},
-                                                   {'surgery': 'Mastectomy '},
-                                                   {'surgery': 'Simple Mastectomy'}, ]})
-                # dat_filter['$and'].append({group: {"$in": ['Single Mastectomy', 'Mastectomy ', 'Simple Mastectomy']}})
-            elif group == 'Bi-Lateral Mastectomy':
-                dat_filter['$and'].append({'surgery': {"$in": ['Bi-Lateral Mastectomy']}})
+        # pprint(dat_filter)
+        # if group in ['chemo', 'radiation']:
+        #     dat_filter['$and'].append({group: "Yes"})
+        # elif group in ['Bi-Lateral Mastectomy', 'Lumpectomy', 'Mastectomy']:
+        #     if group == 'Lumpectomy':
+        #         dat_filter['$and'].append({'surgery': {"$in": ['Lumpectomy', 'Partial Mastectomy']}})
+        #     elif group == 'Mastectomy':
+        #         dat_filter['$and'].append({"$or": [{'surgery': 'Single Mastectomy'},
+        #                                            {'surgery': 'Mastectomy '},
+        #                                            {'surgery': 'Simple Mastectomy'}, ]})
+        #         # dat_filter['$and'].append({group: {"$in": ['Single Mastectomy', 'Mastectomy ', 'Simple Mastectomy']}})
+        #     elif group == 'Bi-Lateral Mastectomy':
+        #         dat_filter['$and'].append({'surgery': {"$in": ['Bi-Lateral Mastectomy']}})
         # pprint(dat_filter)
         df120 = copy.deepcopy(dat_filter)
         df120['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2004}},
                                        {"year-of-diagnosis": {"$lte": 2005}}]})
+        # pprint(df120)
         res120 = json.loads(aggregate([
             {"$match": df120},
             {"$group": {
@@ -1454,34 +1458,53 @@ def survival_months(input_json, grouping):
 
     filters = ca_create_filter(input_json)
     if grouping == 'radiation':
-        filters['$and'] = [d for d in filters['$and'] if 'radiation' not in d]
-        return radiation_survival(filters), display_totals(filters)
+        # filters['$and'] = [d for d in filters['$and'] if 'radiation' not in d]
+        rad_yes_filter = {"$and": [d for d in filters['$and'] if 'radiation' not in d]}
+        rad_yes_filter["$and"].append({"radiation": "Yes"})
+        rad_no_filter = {"$and": [d for d in filters['$and'] if 'radiation' not in d]}
+        rad_no_filter["$and"].append({"radiation": "No"})
+        return radiation_survival(rad_yes_filter), radiation_survival(rad_no_filter)
     elif grouping == 'chemo':
-        filters['$and'] = [d for d in filters['$and'] if 'chemo' not in d]
-        return chemotherapy_survival(filters), display_totals(filters)
+        # filters['$and'] = [d for d in filters['$and'] if 'chemo' not in d]
+        chemo_yes_filter = {"$and": [d for d in filters['$and'] if 'chemo' not in d]}
+        chemo_yes_filter["$and"].append({"chemo": "Yes"})
+        chemo_no_filter = {"$and": [d for d in filters['$and'] if 'chemo' not in d]}
+        chemo_no_filter["$and"].append({"chemo": "No"})
+        return chemotherapy_survival(chemo_yes_filter), chemotherapy_survival(chemo_no_filter)
     elif grouping in ['Bi-Lateral Mastectomy', 'Lumpectomy', 'Mastectomy']:
-        filters['$and'] = [d for d in filters['$and'] if 'surgery' not in d]
-        return surgery_survival(filters, grouping), display_totals(filters)
+        # filters['$and'] = [d for d in filters['$and'] if 'surgery' not in d]
+        surgery_yes_filter = {"$and": [d for d in filters['$and'] if 'chemo' not in d]}
+        if grouping == 'Lumpectomy':
+            surgery_yes_filter['$and'].append({'surgery': {"$in": ['Lumpectomy', 'Partial Mastectomy']}})
+        elif grouping == 'Mastectomy':
+            surgery_yes_filter['$and'].append({"$or": [{'surgery': 'Single Mastectomy'},
+                                                       {'surgery': 'Mastectomy '},
+                                                       {'surgery': 'Simple Mastectomy'}, ]})
+        elif grouping == 'Bi-Lateral Mastectomy':
+            surgery_yes_filter['$and'].append({'surgery': {"$in": ['Bi-Lateral Mastectomy']}})
+        surgery_no_filter = {"$and": [d for d in filters['$and'] if 'chemo' not in d]}
+        surgery_no_filter['$and'].append({'surgery': {"$in": ['None']}})
+        return surgery_survival(surgery_yes_filter, grouping), surgery_survival(surgery_no_filter, 'None')
 
 
 if __name__ == '__main__':
     ca_diag_request = '{"1age": 35, ' \
-                      '"sex": "Female", ' \
+                      '"1sex": "Female", ' \
                       '"1tumor_grade": 1, ' \
                       '"1er_status": "+", ' \
                       '"1pr_status": "+", ' \
                       '"1tumor_size": "2-5cm", ' \
                       '"1num_pos_nodes": "4-8", ' \
                       '"1her2_status": "+", ' \
-                      '"1tumor_number": "1", ' \
-                      '"1stage": "I", ' \
+                      '"1tumor_number": 1, ' \
+                      '"stage": "IIA", ' \
                       '"1ethnicity": "Japanese"}'
 
     # pprint(display_group('surgery'))
 
-    # pprint(survival_months(ca_diag_request, 'chemo'))
+    pprint(survival_months(ca_diag_request, 'chemo'))
+    pprint(survival_months(ca_diag_request, 'radiation'))
     pprint(survival_months(ca_diag_request, 'Mastectomy'))
-    # pprint(survival_months(ca_diag_request, 'chemo'))
 
     exit()
     find_request = '{"1age": 35, ' \
@@ -1493,7 +1516,7 @@ if __name__ == '__main__':
                    '"1num_pos_nodes": "4-8", ' \
                    '"1her2_status": "+", ' \
                    '"1tumor_number": "1", ' \
-                   '"1stage": "I", ' \
+                   '"1stage": "IIA", ' \
                    '"1ethnicity": "Japanese"}'
     filter = ca_create_filter(find_request)
     # filter['$and'].append({"cod-to-site-recode": {"$nin": ['', "Alive"]}})
