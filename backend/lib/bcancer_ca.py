@@ -1388,7 +1388,7 @@ def survival_months(input_json, grouping):
             }]
         }
 
-    def surgery_survival(sfilter, grouping):
+    def survival(sfilter, label):
         totals = get_totals(sfilter, grouping)
         # pprint(totals)
         surgeries = get_data(sfilter, grouping)
@@ -1416,7 +1416,7 @@ def survival_months(input_json, grouping):
             "labels": list(map(lambda x: x, data.keys())),
             "datasets": [{
                 "data": list(map(lambda x: x, data.values())),
-                "label": grouping,
+                "label": label,
                 "borderColor": "#48ccf5",
                 "fill": False
             }]
@@ -1463,14 +1463,14 @@ def survival_months(input_json, grouping):
         rad_yes_filter["$and"].append({"radiation": "Yes"})
         rad_no_filter = {"$and": [d for d in filters['$and'] if 'radiation' not in d]}
         rad_no_filter["$and"].append({"radiation": "No"})
-        return radiation_survival(rad_yes_filter), radiation_survival(rad_no_filter)
+        return survival(rad_yes_filter, 'Radiation YES'), survival(rad_no_filter, 'Radiation No')
     elif grouping == 'chemo':
         # filters['$and'] = [d for d in filters['$and'] if 'chemo' not in d]
         chemo_yes_filter = {"$and": [d for d in filters['$and'] if 'chemo' not in d]}
         chemo_yes_filter["$and"].append({"chemo": "Yes"})
         chemo_no_filter = {"$and": [d for d in filters['$and'] if 'chemo' not in d]}
         chemo_no_filter["$and"].append({"chemo": "No"})
-        return chemotherapy_survival(chemo_yes_filter), chemotherapy_survival(chemo_no_filter)
+        return survival(chemo_yes_filter, 'Chemotherapy YES'), survival(chemo_no_filter, 'Chemotherapy No')
     elif grouping in ['Bi-Lateral Mastectomy', 'Lumpectomy', 'Mastectomy']:
         # filters['$and'] = [d for d in filters['$and'] if 'surgery' not in d]
         surgery_yes_filter = {"$and": [d for d in filters['$and'] if 'chemo' not in d]}
@@ -1484,7 +1484,7 @@ def survival_months(input_json, grouping):
             surgery_yes_filter['$and'].append({'surgery': {"$in": ['Bi-Lateral Mastectomy']}})
         surgery_no_filter = {"$and": [d for d in filters['$and'] if 'chemo' not in d]}
         surgery_no_filter['$and'].append({'surgery': {"$in": ['None']}})
-        return surgery_survival(surgery_yes_filter, grouping), surgery_survival(surgery_no_filter, 'None')
+        return survival(surgery_yes_filter, grouping), survival(surgery_no_filter, 'None')
 
 
 if __name__ == '__main__':
