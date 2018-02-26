@@ -248,10 +248,10 @@ class BcSurvivalMonths extends React.Component {
               )}
             </div>
             <div className={s.filter}>
-              {getFieldDecorator('filters[tumor_number]', {
+              {getFieldDecorator('filters[stage]', {
                 initialValue: '',
               })(
-                <Select className={s.field} error={getFieldError('stage')} label={'Stage'}>
+                <Select className={s.field} error={getFieldError('filters[stage]')} label={'Stage'}>
                   <option value='' disabled hidden>Select...</option>
                   {STAGES.map((item, i) =>
                     <option key={i} value={item.value}>{item.label}</option>
@@ -306,7 +306,7 @@ class BcSurvivalMonths extends React.Component {
                 {((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === true) && customAnalytics.ca_type === 'survival_months') && (
                   <Row type='flex' gutter={16} className={s.content}>
 
-                    <Col xs={24} sm={24} md={18} lg={16} xl={14} xxl={12}>
+                    <Col xs={24}>
                       {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.top.is_data === true) && (
                         <div className={s.topChart}>
                           <p className={s.chartTitle}>With Treatment</p>
@@ -327,6 +327,9 @@ class BcSurvivalMonths extends React.Component {
                                 labels: chartsLabelsOptions
                               },
                               scales: {
+                                xAxes: [{
+                                  barThickness : 75
+                                }],
                                 yAxes: [{
                                   ticks: {
                                     max: 100,
@@ -341,8 +344,8 @@ class BcSurvivalMonths extends React.Component {
                                 }
                               },
                             }}
-                            width={300}
-                            height={300}
+                            width={400}
+                            height={100}
                             ref='chart'
                           />
                         </div>
@@ -350,50 +353,52 @@ class BcSurvivalMonths extends React.Component {
                       {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.top.is_data === false) && (
                         <div className={s.emptyChart}>There is no available output for this set of filters</div>)}
                     </Col>
-                    <Col xs={24} sm={24} md={18} lg={16} xl={14} xxl={12}>
+                    <Col xs={24}>
                       {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.bottom.is_data === true) && (
                         <div className={s.bottomChart}>
                           <p className={s.chartTitle}>Without Treatment</p>
-                        <Bar
-                          data={{
-                            ...customAnalytics.custom_analytics.bottom,
-                            datasets: customAnalytics.custom_analytics.bottom.datasets.map(item => ({
-                              ...item,
-                              backgroundColor: color_1,
-                              hoverBackgroundColor: color_3,
-                              borderColor: white,
-                            }))
-                          }}
-                          options={{
-                            legend: {
-                              display: false,
-                              position: 'bottom',
-                              labels: chartsLabelsOptions
-                            },
-                            scales: {
-                              yAxes: [{
-                                ticks: {
-                                  max: 100,
-                                  beginAtZero: true,
-                                  callback: (value) => `${value}%`
+                          <Bar
+                            data={{
+                              ...customAnalytics.custom_analytics.bottom,
+                              datasets: customAnalytics.custom_analytics.bottom.datasets.map(item => ({
+                                ...item,
+                                backgroundColor: color_1,
+                                hoverBackgroundColor: color_3,
+                                borderColor: white,
+                              }))
+                            }}
+                            options={{
+                              legend: {
+                                display: false,
+                                position: 'bottom',
+                                labels: chartsLabelsOptions
+                              },
+                              scales: {
+                                xAxes: [{
+                                  barThickness : 75
+                                }],
+                                yAxes: [{
+                                  ticks: {
+                                    max: 100,
+                                    beginAtZero: true,
+                                    callback: (value) => `${value}%`
+                                  }
+                                }]
+                              },
+                              tooltips: {
+                                callbacks: {
+                                  label: formatChartNumber
                                 }
-                              }]
-                            },
-                            tooltips: {
-                              callbacks: {
-                                label: formatChartNumber
-                              }
-                            },
-                          }}
-                          width={300}
-                          height={300}
-                          ref='chart'
-                        />
+                              },
+                            }}
+                            width={400}
+                            height={100}
+                            ref='chart'
+                          />
                         </div>
                       )}
                       {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.bottom.is_data === false) && (
                         <div className={s.emptyChart}>There is no available output for this set of filters</div>)}
-
                     </Col>
                   </Row>
                 )}

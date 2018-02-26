@@ -20,15 +20,11 @@
 }
 
 .topChart {
-  @media (--xl-down) {
-    margin-bottom: 2rem;
-  }
+  margin-bottom: 3rem;
 }
 
 .bottomChart {
-  @media (--xl-down) {
-    margin-top: 2rem;
-  }
+  margin-top: 3rem;
 }
 
 .chartTitle {
@@ -38,7 +34,6 @@
   text-align: center;
   padding-bottom: 16px;
 }
-
 
 .content {
   display: flex;

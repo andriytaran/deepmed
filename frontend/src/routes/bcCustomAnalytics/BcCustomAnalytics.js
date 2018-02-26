@@ -269,7 +269,7 @@ class BcCustomAnalytics extends React.Component {
               {getFieldDecorator('filters[stage]', {
                 initialValue: '',
               })(
-                <Select className={s.field} error={getFieldError('stage')} label={'Stage'}>
+                <Select className={s.field} error={getFieldError('filters[stage]')} label={'Stage'}>
                   <option value='' disabled hidden>Select...</option>
                   {STAGES.map((item, i) =>
                     <option key={i} value={item.value}>{item.label}</option>
