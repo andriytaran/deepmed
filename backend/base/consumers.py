@@ -692,12 +692,13 @@ class CustomAnalyticsConsumer(JsonWebsocketConsumer):
 
                             custom_analytics_response_data['is_data'] = True
                             custom_analytics_response_data['ca_type'] = ca_type
+                            self.send_json({
+                                'custom_analytics': \
+                                    custom_analytics_response_data,
+                                'ca_type': ca_type})
 
                         except Exception as e:
                             custom_analytics_response['is_data'] = False
-                        self.send_json(
-                            {'custom_analytics': custom_analytics_response,
-                             'ca_type': ca_type})
                 else:
                     self.send_json({'error': 'Data not valid',
                                     'ca_type': ca_type})
