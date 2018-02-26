@@ -1500,13 +1500,13 @@ if __name__ == '__main__':
                       '"stage": "IIA", ' \
                       '"1ethnicity": "Japanese"}'
 
-    # pprint(display_group('breast-adjusted-ajcc-6th-stage-1988'))
+    pprint(display_group('breast-adjusted-ajcc-6th-stage-1988'))
 
     # pprint(survival_months(ca_diag_request, 'chemo'))
     # pprint(survival_months(ca_diag_request, 'radiation'))
     # pprint(survival_months(ca_diag_request, 'Mastectomy'))
 
-    # exit()
+    exit()
     find_request = '{"1age": 35, ' \
                    '"1sex": "Female", ' \
                    '"1tumor_grade": 1, ' \
