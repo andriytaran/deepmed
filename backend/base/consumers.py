@@ -673,8 +673,8 @@ class CustomAnalyticsConsumer(JsonWebsocketConsumer):
                                     dl['is_data'] = True
 
                             custom_analytics_response = {
-                                'top': custom_analytics_response[0],
-                                'bottom': custom_analytics_response[1],
+                                'top': custom_analytics_response[1],
+                                'bottom': custom_analytics_response[0],
                                 'is_data': True,
                                 'ca_type': ca_type
                             }
