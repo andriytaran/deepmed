@@ -1463,14 +1463,14 @@ def survival_months(input_json, grouping):
         rad_yes_filter["$and"].append({"radiation": "Yes"})
         rad_no_filter = {"$and": [d for d in filters['$and'] if 'radiation' not in d]}
         rad_no_filter["$and"].append({"radiation": "No"})
-        return survival(rad_yes_filter, 'Radiation YES'), survival(rad_no_filter, 'Radiation No')
+        return survival(rad_yes_filter, 'yes'), survival(rad_no_filter, 'no')
     elif grouping == 'chemo':
         # filters['$and'] = [d for d in filters['$and'] if 'chemo' not in d]
         chemo_yes_filter = {"$and": [d for d in filters['$and'] if 'chemo' not in d]}
         chemo_yes_filter["$and"].append({"chemo": "Yes"})
         chemo_no_filter = {"$and": [d for d in filters['$and'] if 'chemo' not in d]}
         chemo_no_filter["$and"].append({"chemo": "No"})
-        return survival(chemo_yes_filter, 'Chemotherapy YES'), survival(chemo_no_filter, 'Chemotherapy No')
+        return survival(chemo_yes_filter, 'yes'), survival(chemo_no_filter, 'no')
     elif grouping in ['Bi-Lateral Mastectomy', 'Lumpectomy', 'Mastectomy']:
         # filters['$and'] = [d for d in filters['$and'] if 'surgery' not in d]
         surgery_yes_filter = {"$and": [d for d in filters['$and'] if 'chemo' not in d]}
@@ -1484,7 +1484,7 @@ def survival_months(input_json, grouping):
             surgery_yes_filter['$and'].append({'surgery': {"$in": ['Bi-Lateral Mastectomy']}})
         surgery_no_filter = {"$and": [d for d in filters['$and'] if 'chemo' not in d]}
         surgery_no_filter['$and'].append({'surgery': {"$in": ['None']}})
-        return survival(surgery_yes_filter, grouping), survival(surgery_no_filter, 'None')
+        return survival(surgery_yes_filter, 'yes'), survival(surgery_no_filter, 'no')
 
 
 if __name__ == '__main__':
