@@ -19,10 +19,26 @@
   }
 }
 
-.chart {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+.topChart {
+  @media (--xl-down) {
+    margin-bottom: 2rem;
+  }
 }
+
+.bottomChart {
+  @media (--xl-down) {
+    margin-top: 2rem;
+  }
+}
+
+.chartTitle {
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding-bottom: 16px;
+}
+
 
 .content {
   display: flex;

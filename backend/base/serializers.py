@@ -139,6 +139,14 @@ class DiagnosisDataSerializer(serializers.ModelSerializer):
             elif data.get('region') == 'Distant':
                 data['stage'] = 'IV'
 
+        if data.get('region', 'unk') == 'unk':
+            if data.get('num_pos_nodes', 0) == 0:
+                data['region'] = 'Localized'
+            elif 0 < data.get('num_pos_nodes', 0) < 9:
+                data['region'] = 'Regional'
+            elif data.get('num_pos_nodes', 0) >= 9:
+                data['region'] = 'Distant'
+
         if not data.get('stage_sd'):
             data['stage_sd'] = data.get('stage')
 

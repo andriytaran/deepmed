@@ -304,10 +304,12 @@ class BcSurvivalMonths extends React.Component {
                 loading={customAnalyticsLoading}
               >
                 {((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === true) && customAnalytics.ca_type === 'survival_months') && (
-                  <div className={s.content}>
-                    <Col xs={24} sm={24} md={18} lg={18} xl={14} xxl={12}>
+                  <Row type='flex' gutter={16} className={s.content}>
+
+                    <Col xs={24} sm={24} md={18} lg={16} xl={14} xxl={12}>
                       {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.top.is_data === true) && (
-                        <div className={s.chart}>
+                        <div className={s.topChart}>
+                          <p className={s.chartTitle}>With Treatment</p>
                           <Bar
                             data={{
                               ...customAnalytics.custom_analytics.top,
@@ -327,6 +329,7 @@ class BcSurvivalMonths extends React.Component {
                               scales: {
                                 yAxes: [{
                                   ticks: {
+                                    max: 100,
                                     beginAtZero: true,
                                     callback: (value) => `${value}%`
                                   }
@@ -338,16 +341,19 @@ class BcSurvivalMonths extends React.Component {
                                 }
                               },
                             }}
-                            width={200}
-                            height={100}
+                            width={300}
+                            height={300}
                             ref='chart'
                           />
                         </div>
                       )}
                       {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.top.is_data === false) && (
                         <div className={s.emptyChart}>There is no available output for this set of filters</div>)}
+                    </Col>
+                    <Col xs={24} sm={24} md={18} lg={16} xl={14} xxl={12}>
                       {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.bottom.is_data === true) && (
-                        <div className={s.chart}>
+                        <div className={s.bottomChart}>
+                          <p className={s.chartTitle}>Without Treatment</p>
                         <Bar
                           data={{
                             ...customAnalytics.custom_analytics.bottom,
@@ -367,6 +373,7 @@ class BcSurvivalMonths extends React.Component {
                             scales: {
                               yAxes: [{
                                 ticks: {
+                                  max: 100,
                                   beginAtZero: true,
                                   callback: (value) => `${value}%`
                                 }
@@ -378,8 +385,8 @@ class BcSurvivalMonths extends React.Component {
                               }
                             },
                           }}
-                          width={200}
-                          height={100}
+                          width={300}
+                          height={300}
                           ref='chart'
                         />
                         </div>
@@ -387,10 +394,8 @@ class BcSurvivalMonths extends React.Component {
                       {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.bottom.is_data === false) && (
                         <div className={s.emptyChart}>There is no available output for this set of filters</div>)}
 
-                      {(((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === false) || customAnalytics.error) && customAnalytics.ca_type === 'survival_months') && (
-                        <div className={s.emptyChart}>There is no available output for this set of filters</div>)}
                     </Col>
-                  </div>
+                  </Row>
                 )}
               </Card>
             </div>
