@@ -671,13 +671,27 @@ class CustomAnalyticsConsumer(JsonWebsocketConsumer):
                                     dl['is_data'] = False
                                 else:
                                     dl['is_data'] = True
+                            custom_analytics_response_data = {}
+                            if custom_analytics_response[0] \
+                                    .get('datasets')[0].get('label') == 'yes':
+                                custom_analytics_response_data['top'] = \
+                                    custom_analytics_response[0]
+                                custom_analytics_response_data['bottom'] = \
+                                    custom_analytics_response[1]
+                            elif custom_analytics_response[1] \
+                                    .get('datasets')[0].get('label') == 'yes':
+                                custom_analytics_response_data['top'] = \
+                                    custom_analytics_response[1]
+                                custom_analytics_response_data['bottom'] = \
+                                    custom_analytics_response[0]
+                            else:
+                                custom_analytics_response_data['top'] = \
+                                    custom_analytics_response[1]
+                                custom_analytics_response_data['bottom'] = \
+                                    custom_analytics_response[0]
 
-                            custom_analytics_response = {
-                                'top': custom_analytics_response[1],
-                                'bottom': custom_analytics_response[0],
-                                'is_data': True,
-                                'ca_type': ca_type
-                            }
+                            custom_analytics_response_data['is_data'] = True
+                            custom_analytics_response_data['ca_type'] = ca_type
 
                         except Exception as e:
                             custom_analytics_response['is_data'] = False
