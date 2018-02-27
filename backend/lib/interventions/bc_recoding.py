@@ -371,7 +371,7 @@ def recode_nodes(document):
 
 if __name__ == '__main__':
     display_group('surgery-pre-1997')
-    display_group('surgery')
+    # display_group('surgery')
     exit()
 
     # i = 0
