@@ -555,7 +555,7 @@ def recode_survmnts(document):
 
 if __name__ == '__main__':
     # pprint(display_group('aya-site-recode-who-2008'))
-    # exit()
+    exit()
     # for k, v in display_group('type').items():
     #     document = {'type': k}
     #     new_type = recode_type(document)
@@ -600,6 +600,6 @@ if __name__ == '__main__':
         document['survival-months'] = recode_survmnts(document)
         # print(document['survival-months-1'], recode_survmnts(document))
         i += 1
-        collection.update_one({'_id': document['_id']}, {"$set": document}, upsert=False)
+        # collection.update_one({'_id': document['_id']}, {"$set": document}, upsert=False)
         print(i, '/ 1546698 ')
     print('ALL DONE.')
