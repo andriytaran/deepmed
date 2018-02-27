@@ -26,7 +26,8 @@ class BcCustomAnalytics extends React.Component {
 
   changeField = (value, key) => {
     let show = this.state.her2Title
-    show = (key === 'her2_status' && value === '+')
+    console.log(value)
+    show = (key === 'her2_status' && ['-', '+'].includes(value))
     this.setState({
       fields: {
         ...this.state.fields,
