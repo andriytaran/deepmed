@@ -11,6 +11,8 @@ MONGODB_PORT = 27017
 DBS_NAME = 'bcancer'
 COLLECTION_NAME = 'dataset3'
 
+mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
+collection = mongo_client[DBS_NAME][COLLECTION_NAME]
 
 def aggregate(request):
     mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
@@ -50,17 +52,17 @@ def display_group(group):
 
 
 t_size_2004 = {
-    "888": "N/A",
-    "990": "Micro",
-    "991": "<1cm",
-    "992": "<2cm",
-    "993": "<3cm",
-    "994": ">3cm",
-    "995": ">5cm",
-    "996": "N/A",
-    "997": "N/A",
-    "998": "N/A",
-    "999": "N/A",
+    888: "N/A",
+    990: "< 1cm",
+    991: "< 1cm",
+    992: "< 2cm",
+    993: "< 3cm",
+    994: "< 5cm",
+    995: "> 5cm",
+    996: "N/A",
+    997: "N/A",
+    998: "N/A",
+    999: "N/A",
 }
 
 t_size_1988 = {
@@ -75,5 +77,43 @@ t_size_1988 = {
     "[OTHER]": "N/A"
 }
 
+
+def mm_to_cm(mm):
+    if 1 <= mm < 10:
+        return '< 1cm'
+    elif 11 <= mm < 20:
+        return '< 2cm'
+    elif 21 <= mm < 30:
+        return '< 3cm'
+    elif 31 <= mm < 50:
+        return '< 5cm'
+    elif 51 <= mm < 888:
+        return '> 5cm'
+    else:
+        return None
+
+
+def recode_t_size(document):
+    if isinstance(document['t-size-mm-2004'], int):
+        if document['t-size-mm-2004'] not in [888, 990, 991, 992, 993, 994, 995, 996, 997, 998, 999]:
+            t_size_mm = document['t-size-mm-2004']
+            return mm_to_cm(t_size_mm)
+        elif document['t-size-mm-2004'] in [990, 991, 992, 993, 994, 995]:
+            return t_size_2004[document['t-size-mm-2004']]
+    tlist = document['t-size-mm-1988'].split()
+    try:
+        t_size_mm = int(tlist[0])
+        return mm_to_cm(t_size_mm)
+    except:
+        pass
+    if tlist[0] in t_size_1988 and t_size_1988[tlist[0]] == "Micro":
+        return "< 1cm"
+
+
 if __name__ == '__main__':
+    display_group('t-size-mm-2004')
     display_group('t-size-mm-1988')
+    exit()
+
+    for document in collection.find():
+        print(document['t-size-mm-1988'], document['t-size-mm-2004'], recode_t_size(document))
