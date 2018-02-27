@@ -48,7 +48,7 @@ def display_group(group):
         d = {}
         for i in result:
             d[i['_id']] = i['count']
-        pprint(d)
+        return d
     return None
 
 
@@ -182,7 +182,8 @@ def recode_type(document):
         "8530/3: Inflammatory carcinoma",
         "8540/3: Paget disease, mammary",
         "8541/3: Paget disease and infiltrating ductal carcinoma of breast",
-        "8543/3: Paget disease and intraductal carcinoma"
+        "8543/3: Paget disease and intraductal carcinoma",
+        "8542/3: Paget disease, extramammary (except Paget disease of bone)"
     ]:
         return "IBC"
     if document['type'] in [
@@ -261,7 +262,8 @@ def recode_type(document):
         "8550/3: Acinar cell carcinoma",
         "8560/3: Adenosquamous carcinoma",
         "8562/3: Epithelial-myoepithelial carcinoma",
-        "8575/3: Metaplastic carcinoma, NOS"
+        "8575/3: Metaplastic carcinoma, NOS",
+        "8345/3: Medullary carcinoma with amyloid stroma"
     ]:
         return "IDC"
     if document['type'] in [
@@ -297,7 +299,21 @@ def recode_type(document):
         "8550/2: Acinar cell carcinoma in situ",
         "8560/2: Mixed squamous cell and glandular papilloma, in situ",
         "8743/2: Superficial spreading melanoma in situ",
-        "8983/2: Adenomyoepithelioma, in situ"
+        "8983/2: Adenomyoepithelioma, in situ",
+        "8052/2: Papillary squamous cell carcinoma, non-invasive",
+        "8071/2: Squamous cell carcinoma in situ, keratinizing, NOS",
+        "8210/2: Adenocarcinoma in situ in adenomatous polyp",
+        "8240/2: Carcinoid tumor, in situ",
+        "8246/2: Neuroendocrine carcinoma in situ",
+        "8481/2: Mucin-producing adenocarcinoma in situ",
+        "8490/2: Signet ring cell carcinoma in situ",
+        "8510/2: Medullary carcinoma in situ, NOS",
+        "8524/2: Infiltrating lobular mixed with other types of carcinoma, in situ",
+        "8541/2: Paget disease in situ and intraductal carcinoma",
+        "8542/2: Paget disease (in situ), extramammary (except Paget disease of bone)",
+        "8571/2: Adenocarcinoma with cartilaginous and osseous metaplasia, in situ",
+        "8573/2: Adenocarcinoma in situ with apocrine metaplasia",
+        "8720/2: Melanoma in situ"
     ]:
         return "In-Situ"
     if document['type'] in [
@@ -309,10 +325,118 @@ def recode_type(document):
         "8572/3: Adenocarcinoma with spindle cell metaplasia",
         "8573/3: Adenocarcinoma with apocrine metaplasia",
         "8574/2: Adenocarcinoma in situ with neuroendocrine differentiation",
-        "8574/3: Adenocarcinoma with neuroendocrine differentiation"
+        "8574/3: Adenocarcinoma with neuroendocrine differentiation",
+        "8522/3: Infiltrating duct and lobular carcinoma"
     ]:
         return "Mixed"
-    return "Other"
+    if document['type'] in [
+        "8000/3: Neoplasm, malignant",
+        "8001/3: Tumor cells, malignant",
+        "8002/3: Malignant tumor, small cell type",
+        "8003/3: Malignant tumor, giant cell type",
+        "8004/3: Malignant tumor, spindle cell type",
+        "8005/3: Malignant tumor, clear cell type",
+        "8010/3: Carcinoma, NOS",
+        "8011/3: Epithelioma, malignant",
+        "8012/2: Large cell carcinoma in situ",
+        "8013/3: Large cell neuroendocrine carcinoma",
+        "8030/3: Giant cell and spindle cell carcinoma",
+        "8035/3: Carcinoma with osteoclast-like giant cells",
+        "8051/2: Verrucous carcinoma in situ",
+        "8051/3: Verrucous carcinoma, NOS",
+        "8075/3: Squamous cell carcinoma, adenoid",
+        "8081/2: Bowen disease",
+        "8110/3: Pilomatrix carcinoma",
+        "8130/3: Papillary transitional cell carcinoma",
+        "8142/3: Linitis plastica",
+        "8143/3: Superficial spreading adenocarcinoma",
+        "8145/3: Carcinoma, diffuse type",
+        "8147/3: Basal cell adenocarcinoma",
+        "8154/3: Mixed pancreatic endocrine and exocrine tumor, malignant",
+        "8190/3: Trabecular adenocarcinoma",
+        "8210/3: Adenocarcinoma in adenomatous polyp",
+        "8231/3: Carcinoma simplex",
+        "8241/3: Enterochromaffin cell carcinoid",
+        "8249/3: Atypical carcinoid tumor",
+        "8250/3: Bronchiolo-alveolar adenocarcinoma, NOS",
+        "8251/3: Alveolar adenocarcinoma",
+        "8255/3: Adenocarcinoma with mixed subtypes",
+        "8320/3: Granular cell carcinoma",
+        "8382/3: Endometrioid adenocarcinoma, secretory variant",
+        "8400/3: Sweat gland adenocarcinoma",
+        "8403/3: Malignant eccrine spiradenoma",
+        "8508/3: Cystic hypersecretory carcinoma",
+        "8525/3: Polymorphous low grade adenocarcinoma",
+        "8720/3: Malignant melanoma, NOS",
+        "8743/3: Superficial spreading melanoma",
+        "8800/3: Sarcoma, NOS",
+        "8801/3: Spindle cell sarcoma",
+        "8802/3: Giant cell sarcoma",
+        "8803/3: Small cell sarcoma",
+        "8804/3: Epithelioid sarcoma",
+        "8805/3: Undifferentiated sarcoma",
+        "8810/3: Fibrosarcoma, NOS",
+        "8811/3: Fibromyxosarcoma",
+        "8814/3: Infantile fibrosarcoma",
+        "8815/3: Solitary fibrous tumor, malignant",
+        "8830/3: Malignant fibrous histiocytoma",
+        "8832/3: Dermatofibrosarcoma, NOS",
+        "8836/3: Malignant angiomatoid fibrous histiocytoma",
+        "8840/3: Myxosarcoma",
+        "8850/3: Liposarcoma, NOS",
+        "8851/3: Liposarcoma, well differentiated",
+        "8852/3: Myxoid liposarcoma",
+        "8854/3: Pleomorphic liposarcoma",
+        "8855/3: Mixed liposarcoma",
+        "8858/3: Dedifferentiated liposarcoma",
+        "8890/3: Leiomyosarcoma, NOS",
+        "8900/3: Rhabdomyosarcoma, NOS",
+        "8912/3: Spindle cell rhabdomyosarcoma",
+        "8935/3: Stromal sarcoma, NOS",
+        "8940/3: Mixed tumor, malignant, NOS",
+        "8950/3: Mullerian mixed tumor",
+        "8980/3: Carcinosarcoma, NOS",
+        "8982/3: Malignant myoepithelioma",
+        "8983/3: Adenomyoepithelioma, malignant",
+        "9020/3: Phyllodes tumor, malignant",
+        "9040/3: Synovial sarcoma, NOS",
+        "9041/3: Synovial sarcoma, spindle cell",
+        "9120/3: Hemangiosarcoma",
+        "9180/3: Osteosarcoma, NOS",
+        "9181/3: Chondroblastic osteosarcoma",
+        "9186/3: Central osteosarcoma",
+        "9260/3: Ewing sarcoma",
+        "9473/3: Primitive neuroectodermal tumor",
+        "9540/3: Malignant peripheral nerve sheath tumor",
+        "9580/3: Granular cell tumor, malignant",
+        "8891/3: Epithelioid leiomyosarcoma",
+        "8894/3: Angiomyosarcoma",
+        "8895/3: Myosarcoma",
+        "8896/3: Myxoid leiomyosarcoma",
+        "8901/3: Pleomorphic rhabdomyosarcoma, adult type",
+        "8910/3: Embryonal rhabdomyosarcoma, NOS",
+        "8920/3: Alveolar rhabdomyosarcoma",
+        "8930/3: Endometrial stromal sarcoma, NOS",
+        "8933/3: Adenosarcoma",
+        "8963/3: Malignant rhabdoid tumor",
+        "8990/3: Mesenchymoma, malignant",
+        "9044/3: Clear cell sarcoma, NOS (except of kidney M-8964/3)",
+        "9071/3: Yolk sac tumor",
+        "9100/3: Choriocarcinoma, NOS",
+        "9130/3: Hemangioendothelioma, malignant",
+        "9133/3: Epithelioid hemangioendothelioma, malignant",
+        "9150/3: Hemangiopericytoma, malignant",
+        "9170/3: Lymphangiosarcoma",
+        "9183/3: Telangiectatic osteosarcoma",
+        "9220/3: Chondrosarcoma, NOS",
+        "9231/3: Myxoid chondrosarcoma",
+        "9364/3: Peripheral neuroectodermal tumor",
+        "9400/3: Astrocytoma, NOS",
+        "9500/3: Neuroblastoma, NOS",
+        "9581/3: Alveolar soft part sarcoma"
+    ]:
+        return "Other"
+    return None
 
 
 def recode_grade(document):
@@ -365,12 +489,28 @@ def recode_her2_status(document):
     return None
 
 
-def recode_nodes(document):
-    pass
+def recode_icc_site_icd(document):
+    if document['iccc-site-recode-icd-o-3-who-2008'] == 'Not classified by ICCC or in situ':
+        return "Non-Malignant"
+    return "Malignant"
+
+
+def recode_aya_site(document):
+    if document['aya-site-recode-who-2008'] == 'Unclassified and Non-Malignant':
+        return "Non-Malignant"
+    return "Malignant"
 
 
 if __name__ == '__main__':
-    display_group('surgery-pre-1997')
+    # pprint(display_group('aya-site-recode-who-2008'))
+    # exit()
+    for k, v in display_group('type').items():
+        document = {'type': k}
+        new_type = recode_type(document)
+        if new_type is None:
+            print(k)
+        # print(k)
+
     # display_group('surgery')
     exit()
 
