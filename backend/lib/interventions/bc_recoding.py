@@ -156,29 +156,31 @@ def recode_surgery(document):
 
 
 def recode_site(document):
-    if document['primary-site-labeled'] == 'C50.4-Upper-outer quadrant of breast':
+    # new document['primary-site-labeled']
+    if document['primary-site-labeled-1'] == 'C50.4-Upper-outer quadrant of breast':
         return "Upper-Outer"
-    if document['primary-site-labeled'] == 'C50.2-Upper-inner quadrant of breast':
+    if document['primary-site-labeled-1'] == 'C50.2-Upper-inner quadrant of breast':
         return "Lower-Outer"
-    if document['primary-site-labeled'] == 'C50.8-Overlapping lesion of breast':
+    if document['primary-site-labeled-1'] == 'C50.8-Overlapping lesion of breast':
         return "Overlapping"
-    if document['primary-site-labeled'] == 'C50.9-Breast, NOS':
+    if document['primary-site-labeled-1'] == 'C50.9-Breast, NOS':
         return "NoS"
-    if document['primary-site-labeled'] == 'C50.1-Central portion of breast':
+    if document['primary-site-labeled-1'] == 'C50.1-Central portion of breast':
         return "Center"
-    if document['primary-site-labeled'] == 'C50.3-Lower-inner quadrant of breast':
+    if document['primary-site-labeled-1'] == 'C50.3-Lower-inner quadrant of breast':
         return "Lower-Inner"
-    if document['primary-site-labeled'] == 'C50.5-Lower-outer quadrant of breast':
+    if document['primary-site-labeled-1'] == 'C50.5-Lower-outer quadrant of breast':
         return "Lower-Outer"
-    if document['primary-site-labeled'] == 'C50.0-Nipple':
+    if document['primary-site-labeled-1'] == 'C50.0-Nipple':
         return "Nipple"
-    if document['primary-site-labeled'] == 'C50.6-Axillary tail of breast':
+    if document['primary-site-labeled-1'] == 'C50.6-Axillary tail of breast':
         return "Axillary"
     return None
 
 
 def recode_type(document):
-    if document['type'] in [
+    # new document['type']
+    if document['type-1'] in [
         "8530/3: Inflammatory carcinoma",
         "8540/3: Paget disease, mammary",
         "8541/3: Paget disease and infiltrating ductal carcinoma of breast",
@@ -186,7 +188,7 @@ def recode_type(document):
         "8542/3: Paget disease, extramammary (except Paget disease of bone)"
     ]:
         return "IBC"
-    if document['type'] in [
+    if document['type-1'] in [
         "8012/3: Large cell carcinoma, NOS",
         "8015/3: Glassy cell carcinoma",
         "8020/3: Carcinoma, undifferentiated, NOS",
@@ -266,12 +268,12 @@ def recode_type(document):
         "8345/3: Medullary carcinoma with amyloid stroma"
     ]:
         return "IDC"
-    if document['type'] in [
+    if document['type-1'] in [
         "8520/3: Lobular carcinoma, NOS",
         "8521/3: Infiltrating ductular carcinoma"
     ]:
         return "ILC"
-    if document['type'] in [
+    if document['type-1'] in [
         "8010/2: Carcinoma in situ, NOS",
         "8022/2: Pleomorphic carcinoma in situ",
         "8050/2: Papillary carcinoma in situ",
@@ -316,7 +318,7 @@ def recode_type(document):
         "8720/2: Melanoma in situ"
     ]:
         return "In-Situ"
-    if document['type'] in [
+    if document['type-1'] in [
         "8523/3: Infiltrating duct mixed with other types of carcinoma",
         "8524/3: Infiltrating lobular mixed with other types of carcinoma",
         "8543/2: Paget disease in situ and intraductal carcinoma",
@@ -329,7 +331,7 @@ def recode_type(document):
         "8522/3: Infiltrating duct and lobular carcinoma"
     ]:
         return "Mixed"
-    if document['type'] in [
+    if document['type-1'] in [
         "8000/3: Neoplasm, malignant",
         "8001/3: Tumor cells, malignant",
         "8002/3: Malignant tumor, small cell type",
@@ -440,65 +442,80 @@ def recode_type(document):
 
 
 def recode_grade(document):
-    if document['grade'] == 'Moderately differentiated; Grade II':
+    # new document['grade']
+    if document['grade-1'] == 'Moderately differentiated; Grade II':
         return 2
-    if document['grade'] == 'Poorly differentiated; Grade III':
+    if document['grade-1'] == 'Poorly differentiated; Grade III':
         return 3
-    if document['grade'] == 'Well differentiated; Grade I':
+    if document['grade-1'] == 'Well differentiated; Grade I':
         return 1
-    if document['grade'] == 'Unknown':
+    if document['grade-1'] == 'Unknown':
         return None
-    if document['grade'] == 'Undifferentiated; anaplastic; Grade IV':
+    if document['grade-1'] == 'Undifferentiated; anaplastic; Grade IV':
         return 4
     return None
 
 
 def recode_laterality(document):
-    if document['laterality'] == 'Right - origin of primary':
+    # new document['laterality']
+    if document['laterality-1'] == 'Right - origin of primary':
         return "Right"
-    if document['laterality'] == 'Left - origin of primary':
+    if document['laterality-1'] == 'Left - origin of primary':
         return "Left"
-    if document['laterality'] == 'Paired site, but no information concerning laterality':
+    if document['laterality-1'] == 'Paired site, but no information concerning laterality':
         return None
-    if document['laterality'] == 'Bilateral, single primary':
+    if document['laterality-1'] == 'Bilateral, single primary':
         return "Bilateral"
     return None
 
 
 def recode_er_status(document):
-    if document['er-status-recode-breast-cancer-1990'] in ['Positive', 'Borderline']:
+    # new document['er-status-recode-breast-cancer-1990']
+    if document['er-status-recode-breast-cancer-1990-1'] in ['Positive', 'Borderline']:
         return "+"
-    if document['er-status-recode-breast-cancer-1990'] == 'Negative':
+    if document['er-status-recode-breast-cancer-1990-1'] == 'Negative':
         return "-"
     return None
 
 
 def recode_pr_status(document):
-    if document['pr-status-recode-breast-cancer-1990'] in ['Positive', 'Borderline']:
+    # new document['pr-status-recode-breast-cancer-1990']
+    if document['pr-status-recode-breast-cancer-1990-1'] in ['Positive', 'Borderline']:
         return "+"
-    if document['pr-status-recode-breast-cancer-1990'] == 'Negative':
+    if document['pr-status-recode-breast-cancer-1990-1'] == 'Negative':
         return "-"
     return None
 
 
 def recode_her2_status(document):
-    if document['derived-her2-recode-2010'] in ['Positive', 'Borderline']:
+    # new document['derived-her2-recode-2010']
+    if document['derived-her2-recode-2010-1'] in ['Positive', 'Borderline']:
         return "+"
-    if document['derived-her2-recode-2010'] == 'Negative':
+    if document['derived-her2-recode-2010-1'] == 'Negative':
         return "-"
     return None
 
 
 def recode_icc_site_icd(document):
-    if document['iccc-site-recode-icd-o-3-who-2008'] == 'Not classified by ICCC or in situ':
+    # new document['iccc-site-recode-icd-o-3-who-2008']
+    if document['iccc-site-recode-icd-o-3-who-2008-1'] == 'Not classified by ICCC or in situ':
         return "Non-Malignant"
     return "Malignant"
 
 
 def recode_aya_site(document):
-    if document['aya-site-recode-who-2008'] == 'Unclassified and Non-Malignant':
+    # new document['aya-site-recode-who-2008']
+    if document['aya-site-recode-who-2008-1'] == 'Unclassified and Non-Malignant':
         return "Non-Malignant"
     return "Malignant"
+
+
+def recode_survmnts(document):
+    # new document['survival-months']
+    try:
+        return int(document['survival-months-1'].lstrip('0'))
+    except:
+        return None
 
 
 if __name__ == '__main__':
