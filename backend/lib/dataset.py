@@ -7,7 +7,7 @@ from pprint import pprint
 MONGODB_HOST = 'localhost'
 MONGODB_PORT = 27017
 DBS_NAME = 'bcancer'
-COLLECTION_NAME = 'dataset2'
+COLLECTION_NAME = 'dataset3'
 
 STATES_NAME_ABRS = {
     "Alabama": "AL",
