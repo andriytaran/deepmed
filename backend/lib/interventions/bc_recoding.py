@@ -129,10 +129,45 @@ def recode_radiation(document):
 def recode_age(document):
     alist = document['age-recode-with-single-ages-and-85'].split()
     try:
+        age = int(alist[0])
+        if age < 5:
+            return "00-04 years"
+        if age < 10:
+            return "05-09 years"
+        if age < 15:
+            return "10-14 years"
+        if age < 20:
+            return "15-19 years"
+        if age < 25:
+            return "20-24 years"
+        if age < 30:
+            return "25-29 years"
+        if age < 35:
+            return "30-34 years"
+        if age < 40:
+            return "35-39 years"
+        if age < 45:
+            return "40-44 years"
+        if age < 50:
+            return "45-49 years"
+        if age < 55:
+            return "50-54 years"
+        if age < 60:
+            return "55-59 years"
+        if age < 65:
+            return "60-64 years"
+        if age < 70:
+            return "65-69 years"
+        if age < 75:
+            return "70-74 years"
+        if age < 80:
+            return "75-79 years"
+        if age < 85:
+            return "80-84 years"
         return int(alist[0])
     except:
         if alist[0] == '85+':
-            return 85
+            return '85+ years'
     return None
 
 
@@ -142,15 +177,15 @@ def recode_surgery(document):
             return "Lumpectomy"
         elif document['surgery-pre-1997'] in (30, 40, 50, 60, 70, 80, 90):
             return "Single Mastectomy"
-    if document['surgery'] != 'Blank(s)':
-        if document['surgery'] in (
+    if document['surgery-1'] != 'Blank(s)':
+        if document['surgery-1'] in (
                 30, 40, 41, 43, 44, 45, 46, 50, 51, 53, 54, 55, 56, 60, 61, 64, 65, 66, 67, 70, 71, 80):
             return "Single Mastectomy"
-        elif document['surgery'] in (42, 47, 48, 49, 52, 57, 58, 59, 62, 63, 68, 69, 72, 73, 74, 75, 76):
+        elif document['surgery-1'] in (42, 47, 48, 49, 52, 57, 58, 59, 62, 63, 68, 69, 72, 73, 74, 75, 76):
             return "Bi-Lateral Mastectomy"
-        elif document['surgery'] in (20, 21, 23, 24):
+        elif document['surgery-1'] in (20, 21, 23, 24):
             return "Partial Mastectomy"
-        elif document['surgery'] in (19, 90, 99):
+        elif document['surgery-1'] in (19, 90, 99):
             return "Partial Mastectomy"
     return None
 
@@ -521,21 +556,50 @@ def recode_survmnts(document):
 if __name__ == '__main__':
     # pprint(display_group('aya-site-recode-who-2008'))
     # exit()
-    for k, v in display_group('type').items():
-        document = {'type': k}
-        new_type = recode_type(document)
-        if new_type is None:
-            print(k)
+    # for k, v in display_group('type').items():
+    #     document = {'type': k}
+    #     new_type = recode_type(document)
+    #     if new_type is None:
+    #         print(k)
         # print(k)
 
     # display_group('surgery')
-    exit()
+    # exit()
 
     # i = 0
-    collection.updateMany({}, {"$rename": {"radiation": "radiation-1"}})
+    i = 0
     for document in collection.find():
-        print(document['_id'])
-        document['t-size-mm'] = recode_t_size(document)[0]
-        document['t-size-cm'] = recode_t_size(document)[1]
+        # print(document['_id'])
+        document['chemo'] = recode_chemotherapy(document)
+        # print(document['chemotherapy-recode-yes-no-unk'], recode_chemotherapy(document))
+        document['radiation'] = recode_radiation(document)
+        # print(document['radiation-1'], document['radiation-sequence-with-surgery'],
+        #       recode_radiation(document))
+        document['age-recode-with-1-year-olds'] = recode_age(document)
+        # print(document['age-recode-with-single-ages-and-85'], recode_age(document))
+        document['surgery'] = recode_surgery(document)
+        # print(document['surgery-pre-1997'], document['surgery-1'], recode_surgery(document))
+        document['primary-site-labeled'] = recode_site(document)
+        # print(document['primary-site-labeled-1'], recode_site(document))
+        document['type'] = recode_type(document)
+        # print(document['type-1'], recode_type(document))
+        document['grade'] = recode_grade(document)
+        # print(document['grade-1'], recode_grade(document))
+        document['laterality'] = recode_laterality(document)
+        # print(document['laterality-1'], recode_laterality(document))
+        document['er-status-recode-breast-cancer-1990'] = recode_er_status(document)
+        # print(document['er-status-recode-breast-cancer-1990-1'], recode_er_status(document))
+        document['pr-status-recode-breast-cancer-1990'] = recode_pr_status(document)
+        # print(document['pr-status-recode-breast-cancer-1990-1'], recode_pr_status(document))
+        document['derived-her2-recode-2010'] = recode_her2_status(document)
+        # print(document['derived-her2-recode-2010-1'], recode_her2_status(document))
+        document['iccc-site-recode-icd-o-3-who-2008'] = recode_icc_site_icd(document)
+        # print(document['iccc-site-recode-icd-o-3-who-2008-1'], recode_icc_site_icd(document))
+        document['aya-site-recode-who-2008'] = recode_aya_site(document)
+        # print(document['aya-site-recode-who-2008-1'], recode_aya_site(document))
+        document['survival-months'] = recode_survmnts(document)
+        # print(document['survival-months-1'], recode_survmnts(document))
+        i += 1
         collection.update_one({'_id': document['_id']}, {"$set": document}, upsert=False)
-    # print(i)
+        print(i, '/ 1546698 ')
+    print('ALL DONE.')
