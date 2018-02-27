@@ -599,7 +599,15 @@ if __name__ == '__main__':
         # print(document['aya-site-recode-who-2008-1'], recode_aya_site(document))
         document['survival-months'] = recode_survmnts(document)
         # print(document['survival-months-1'], recode_survmnts(document))
+        document['t-size-mm'] = recode_t_size(document)[0]
+        document['t-size-cm'] = recode_t_size(document)[1]
         i += 1
         # collection.update_one({'_id': document['_id']}, {"$set": document}, upsert=False)
         print(i, '/ 1546698 ')
     print('ALL DONE.')
+
+    for document in collection.find():
+        print(document['_id'])
+        document['t-size-mm'] = recode_t_size(document)[0]
+        document['t-size-cm'] = recode_t_size(document)[1]
+        collection.update_one({'_id': document['_id']}, {"$set": document}, upsert=False)
