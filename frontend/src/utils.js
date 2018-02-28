@@ -1,12 +1,12 @@
 export const formatChartNumber = (tooltipItem, data) => {
-  const value = data.datasets[0].data[tooltipItem.index]
+  const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]
   const label = data.labels[tooltipItem.index]
   const percentage = Math.round(value * 100) / 100
   return `${label} ${percentage}%`
 }
 
-export const formatLabel = (tooltipItem, data, z) => {
-  const value = data.datasets[0].data[tooltipItem.index]
+export const formatLabel = (tooltipItem, data) => {
+  const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]
   const label = data.datasets[tooltipItem.datasetIndex].label
   const percentage = Math.round(value * 100) / 100
   return `${label}: ${percentage}%`
