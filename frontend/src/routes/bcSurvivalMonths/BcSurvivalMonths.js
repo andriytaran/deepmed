@@ -9,7 +9,7 @@ import Tab from 'react-bootstrap/lib/Tab'
 import Tabs from 'react-bootstrap/lib/Tabs'
 import isEmpty from 'lodash/isEmpty'
 import {Bar} from 'react-chartjs-2'
-import {formatChartNumber} from '../../utils'
+import {formatLabel} from '../../utils'
 
 const SurgeryTypesTable = ({items = [], visibleRowIndex}) =>
   <div className='table-responsive'>
@@ -51,7 +51,7 @@ const white = '#fff'
 const color_1 = 'rgba(72, 204, 245, 0.5)'
 const color_2 = '#88d0d1'
 const color_3 = '#47cfd1'
-const color_4 = 'rgba(53, 109, 124, 0.5)'
+const color_4 = 'rgba(184, 232, 245, 0.5)'
 const color_5 = '#1ac6ff'
 const color_6 = '#8f61ec'
 const color_7 = '#9df51d'
@@ -61,24 +61,25 @@ const color_9 = '#f51431'
 const SurvivalMonthsChart = ({data}) =>
   <Bar
     data={{
-      ...data.wo_treatment,
+      labels: data.wo_treatment.labels,
       datasets: [
         ...data.wo_treatment.datasets.map(item => ({
           ...item,
           backgroundColor: color_1,
           hoverBackgroundColor: color_1,
           borderColor: white,
-          label: 'without treatment'
+          label: 'without treatment',
         })),
         ...data.treatment.datasets.map(item => ({
           ...item,
-          backgroundColor: color_4,
-          hoverBackgroundColor: color_4,
+          backgroundColor: color_6,
+          hoverBackgroundColor: color_6,
           borderColor: white,
           label: 'treatment',
         })),
       ]
     }}
+    redraw
     options={{
       legend: {
         position: 'bottom',
@@ -89,27 +90,21 @@ const SurvivalMonthsChart = ({data}) =>
           stacked: true,
           id: 'bar-x-axis1',
           barThickness: 50,
-        }, {
-          display: false,
-          stacked: true,
-          id: 'bar-x-axis2',
         }],
         yAxes: [{
           ticks: {
             max: 100,
             beginAtZero: true,
             callback: (value) => `${value}%`
-          }
-        }]
+          },
+        }],
       },
       tooltips: {
         callbacks: {
-          label: formatChartNumber
+          label: formatLabel,
         }
       },
     }}
-    width={400}
-    height={100}
   />
 
 class BcSurvivalMonths extends React.Component {
@@ -124,7 +119,6 @@ class BcSurvivalMonths extends React.Component {
   render() {
     const {tab} = this.state
     const {diagnosis} = this.props
-
     return (
       <div className={s.container}>
         <div className={s.card}>
@@ -134,7 +128,7 @@ class BcSurvivalMonths extends React.Component {
               <Tabs
                 activeKey={tab}
                 onSelect={this.changeTab}
-                id='SurgeryTypesTabs'
+                id='surgeryTypesTabs'
                 justified
                 animation={false}
                 className={s.surgeryTypesTabs}
@@ -150,12 +144,15 @@ class BcSurvivalMonths extends React.Component {
           </section>
           {(!isEmpty(diagnosis.overall_plans)) && (
             <div className={s.chartWrapper}>
+              <h3 className={s.chartHeader}>Estimated Survival Rate for your Diagnosis</h3>
               {!isEmpty(diagnosis.survival_months) && (
                 <Row type='flex' gutter={16} className={s.content}>
                   <Col xs={24}>
-                    <SurvivalMonthsChart
-                      data={tab === 0 ? diagnosis.survival_months.preferred_plan : diagnosis.survival_months.alternative_plan}
-                    />
+                    {tab === 0 ? (
+                      <SurvivalMonthsChart data={diagnosis.survival_months.preferred_plan}/>
+                    ) : (
+                      <SurvivalMonthsChart data={diagnosis.survival_months.alternative_plan}/>
+                    )}
                   </Col>
                 </Row>
               )}

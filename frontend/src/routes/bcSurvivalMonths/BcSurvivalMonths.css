@@ -16,6 +16,10 @@
   flex: 1;
 }
 
+.chartHeader {
+  text-align: center;
+}
+
 .card {
   background-color: #fafafa;
   padding: 1rem;
