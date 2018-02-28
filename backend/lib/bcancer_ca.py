@@ -116,11 +116,11 @@ def get_race_group(race):
 
 def ca_get_t_size_cm(group):
     if group == '0-2cm':
-        t_size_cm = {"$in": ["<1cm", "<2cm", "Micro"]}
+        t_size_cm = {"$in": ["<1 cm", "<2 cm", "Micro"]}
     elif group == '2-5cm':
-        t_size_cm = {"$in": ["<3cm", ">3cm"]}
+        t_size_cm = {"$in": ["<3 cm", "< 5cm"]}
     elif group == '5cm+':
-        t_size_cm = ">5cm"
+        t_size_cm = "> 5cm"
     else:
         t_size_cm = None
     return t_size_cm
@@ -215,7 +215,15 @@ def ca_create_filter(input_data, operator='$and'):
     if 'radiation' in input_data.keys():
         filter_list.append({"radiation": input_data["radiation"]})
     if 'surgery' in input_data.keys():
-        filter_list.append({"surgery": input_data["surgery"]})
+        if input_data["surgery"] == 'Lumpectomy':
+            filter_list.append({'surgery': {"$in": ['Lumpectomy', 'Partial Mastectomy']}})
+        elif input_data["surgery"] == 'Mastectomy':
+            filter_list.append({"$or": [{'surgery': 'Single Mastectomy'},
+                                        {'surgery': 'Mastectomy '},
+                                        {'surgery': 'Simple Mastectomy'}, ]})
+        elif input_data["surgery"] == 'Bi-Lateral Mastectomy':
+            filter_list.append({'surgery': {"$in": ['Bi-Lateral Mastectomy']}})
+        # filter_list.append({"surgery": input_data["surgery"]})
 
     return {operator: filter_list}
 
@@ -1438,9 +1446,9 @@ def survival_months2(input_json):
 
     def survival(sfilter, label):
         totals = get_totals(sfilter)
-        pprint(totals)
+        # pprint(totals)
         treatment = get_data(sfilter)
-        pprint(treatment)
+        # pprint(treatment)
 
         data = {'> 120 months': 0, '> 60 months': 0, '> 36 months': 0}
         for months in ['>120', '>60', '>36']:
@@ -1484,8 +1492,8 @@ def survival_months2(input_json):
 
 
 if __name__ == '__main__':
-    ca_diag_request = '{"1age": 35, ' \
-                      '"1sex": "Female", ' \
+    ca_diag_request = '{"age": 55, ' \
+                      '"sex": "Female", ' \
                       '"1tumor_grade": 1, ' \
                       '"1er_status": "+", ' \
                       '"1pr_status": "+", ' \
@@ -1493,10 +1501,10 @@ if __name__ == '__main__':
                       '"1num_pos_nodes": "4-8", ' \
                       '"1her2_status": "+", ' \
                       '"1tumor_number": 1, ' \
-                      '"stage": "IIA", ' \
-                      '"chemo": "Yes", ' \
-                      '"radiation": "Yes", ' \
-                      '"surgery": "Lumpectomy", ' \
+                      '"1stage": "IIA", ' \
+                      '"1chemo": "Yes", ' \
+                      '"1radiation": "Yes", ' \
+                      '"surgery": "Mastectomy", ' \
                       '"1ethnicity": "Japanese"}'
 
     # pprint(display_group('surgery'))

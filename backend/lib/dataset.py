@@ -139,13 +139,13 @@ def get_age_group(age):
 def get_t_size_cm(size_mm):
     t_size_cm = None
     if size_mm >= 50:
-        t_size_cm = ">5cm"
+        t_size_cm = "> 5cm"
     elif size_mm >= 20:
-        t_size_cm = {"$in": ["<3cm", ">3cm"]}
+        t_size_cm = {"$in": ["< 3cm", "< 5cm"]}
     elif size_mm >= 10:
-        t_size_cm = "<2cm"
+        t_size_cm = "< 2cm"
     elif size_mm < 10:
-        t_size_cm = "<1cm"
+        t_size_cm = "< 1cm"
 
     return t_size_cm
 
@@ -1873,23 +1873,26 @@ if __name__ == '__main__':
     start = time.time()
     mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
     collection = mongo_client[DBS_NAME][COLLECTION_NAME]
-    diag_request = '{"age": 32, ' \
+    diag_request = '{"1age": 38, ' \
                    '"sex": "Female", ' \
-                   '"tumor_grade": 1, ' \
-                   '"er_status": "+", ' \
-                   '"pr_status": "+", ' \
-                   '"tumor_size_in_mm": 22, ' \
-                   '"num_pos_nodes": 1, ' \
-                   '"her2_status": "+", ' \
+                   '"1tumor_grade": 1, ' \
+                   '"1er_status": "+", ' \
+                   '"1pr_status": "+", ' \
+                   '"1tumor_size_in_mm": 22, ' \
+                   '"1num_pos_nodes": 1, ' \
+                   '"1her2_status": "+", ' \
                    '"ethnicity": "White"}'
 
     diag_request_age_only = '{"age": 55}'
     # test1 = chemotherapy_filter(diag_request)
+    # pprint(test1)
     # test2 = surgery_decisions(diag_request, collection=collection)
-    # test3 = survival_months(diag_request, collection=collection)
+    # pprint(test2)
+    test3 = survival_months(diag_request, collection=collection)
+    pprint(test3)
 
-    test = percent_women_annualy_diagnosed(diag_request, collection)
-    pprint(test)
+    # test = percent_women_annualy_diagnosed(diag_request, collection)
+    # pprint(test)
 
     # test_diag = diagnosis(diag_request, limit=100, collection=collection)
     print(time.time() - start)
