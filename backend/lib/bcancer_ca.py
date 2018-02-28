@@ -1487,11 +1487,11 @@ def survival_months2(input_json):
     wot = {"$and": []}
     for f in filters['$and']:
         for k, v in f.items():
-            if k not in ['surgery', "chemo", "radiation"]:
+            if k not in ["chemo", "radiation"]:
                 wot['$and'].append(f)
     wot['$and'].append({"chemo": "No"})
     wot['$and'].append({"radiation": "No"})
-    wot['$and'].append({"surgery": None})
+    # wot['$and'].append({"surgery": None})
 
     return survival(filters, 'treatment'), survival(wot, 'w/o treatment')
 
