@@ -267,8 +267,8 @@ class BcDiagnosis extends React.Component {
                       })(
                         <Select error={getFieldError('number_of_tumors')} label={'Number of tumors'}>
                           <option value=''>Select...</option>
-                          {Array.from(new Array(8), (val, i) =>
-                            <option key={i} value={i}>{i}</option>
+                          {Array.from(new Array(7), (val, i) =>
+                            <option key={i} value={i+1}>{i+1}</option>
                           )}
                         </Select>
                       )}
