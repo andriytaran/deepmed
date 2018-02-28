@@ -442,6 +442,10 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
             if survival_months_dd.get('tumor_size_in_mm') > 0:
                 surm_response = {}
 
+                survival_months_dd.pop('her2_status', None)
+                survival_months_dd['tumor_number'] = survival_months_dd.pop(
+                    'number_of_tumors', None)
+
                 # Preferred treatment
                 survival_months_dd['surgery'] = overall_plans[0]['type']
                 survival_months_dd['chemo'] = overall_plans[0]['chemo']
