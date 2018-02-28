@@ -1479,6 +1479,7 @@ def survival_months2(input_json):
         }
 
     filters = ca_create_filter(input_json)
+    filters = {"$and": [d for d in filters['$and'] if 'derived-her2-recode-2010' not in d]}
     wot = {"$and": []}
     for f in filters['$and']:
         for k, v in f.items():
@@ -1507,7 +1508,7 @@ if __name__ == '__main__':
                       '"surgery": "Mastectomy", ' \
                       '"1ethnicity": "Japanese"}'
 
-    # pprint(display_group('surgery'))
+    pprint(display_group('total-number-of-in-situ-malignant-tumors-for-patient'))
 
     # pprint(survival_months(ca_diag_request, 'chemo'))
     # pprint(survival_months(ca_diag_request, 'radiation'))
