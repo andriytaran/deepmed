@@ -1556,23 +1556,23 @@ if __name__ == '__main__':
                    '"1tumor_number": "1", ' \
                    '"stage": "IIA", ' \
                    '}'
-filter = ca_create_filter(find_request)
-filter['$and'].append({"cod-to-site-recode": {"$nin": ['']}})
-# filter['$and'].append({"cod-to-site-recode": "Alive"})
-filter['$and'].append({"chemo": "Yes"})
-filter['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2004}},
-                                {"year-of-diagnosis": {"$lte": 2005}}]})
-pprint(filter)
-count = json.loads(aggregate([
-    {"$match": filter},
-    {"$group": {
-        "_id": "",
-        "count": {"$sum": 1}}},
-    {"$sort": SON([("_id", 1)])}]))
-pprint(count)
+    filter = ca_create_filter(find_request)
+    filter['$and'].append({"cod-to-site-recode": {"$nin": ['']}})
+    # filter['$and'].append({"cod-to-site-recode": "Alive"})
+    filter['$and'].append({"chemo": "Yes"})
+    filter['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2004}},
+                                    {"year-of-diagnosis": {"$lte": 2005}}]})
+    pprint(filter)
+    count = json.loads(aggregate([
+        {"$match": filter},
+        {"$group": {
+            "_id": "",
+            "count": {"$sum": 1}}},
+        {"$sort": SON([("_id", 1)])}]))
+    pprint(count)
 
-# ca_find_request = '{"ethnicity": "Chinese"}'
-# filters = ca_create_filter(ca_diag_request)
-# print(len(find(filters, limit=100)))
-# pprint(custom_analytics(ca_diag_request, 'size'))
-# pprint(custom_analytics(ca_diag_request, 'grade'))
+    # ca_find_request = '{"ethnicity": "Chinese"}'
+    # filters = ca_create_filter(ca_diag_request)
+    # print(len(find(filters, limit=100)))
+    # pprint(custom_analytics(ca_diag_request, 'size'))
+    # pprint(custom_analytics(ca_diag_request, 'grade'))
