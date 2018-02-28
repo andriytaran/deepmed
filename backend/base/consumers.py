@@ -310,8 +310,6 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
 
             self.send_json({'overall_plans': overall_plans})
 
-            survival_months_dd = copy.deepcopy(dd)
-
             if dd.get('ethnicity') == 'White':
                 dd['ethnicity'] = 'Caucasian'
             elif dd.get('ethnicity') == 'Black':
@@ -320,6 +318,8 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 dd['ethnicity'] = 'Asian'
             elif dd.get('ethnicity') == 'Unknown':
                 dd['ethnicity'] = 'Other'
+
+            survival_months_dd = copy.deepcopy(dd)
 
             tumor_size = dd.get('tumor_size_in_mm')
             dd['tumor_size_in_mm'] = dd.get('tumor_size_in_mm_sd')
