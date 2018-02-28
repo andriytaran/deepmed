@@ -1373,7 +1373,7 @@ def survival_months2(input_json):
     def get_totals(subfilters):
         tot_filter = copy.deepcopy(subfilters)
         # tot_filter['$and'].append({"cod-to-site-recode": {"$nin": ['']}})
-        pprint(tot_filter)
+        # pprint(tot_filter)
         tf120 = copy.deepcopy(tot_filter)
         tf120['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2004}},
                                        {"year-of-diagnosis": {"$lte": 2005}}]})
@@ -1412,7 +1412,7 @@ def survival_months2(input_json):
     def get_data(subfilters):
         dat_filter = copy.deepcopy(subfilters)
         dat_filter['$and'].append({"cod-to-site-recode": "Alive"})
-        pprint(dat_filter)
+        # pprint(dat_filter)
         df120 = copy.deepcopy(dat_filter)
         df120['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2004}},
                                        {"year-of-diagnosis": {"$lte": 2005}}]})
@@ -1450,9 +1450,9 @@ def survival_months2(input_json):
 
     def survival(sfilter, label):
         totals = get_totals(sfilter)
-        pprint(totals)
+        # pprint(totals)
         treatment = get_data(sfilter)
-        pprint(treatment)
+        # pprint(treatment)
 
         data = {'> 120 months': 0, '> 60 months': 0, '> 36 months': 0}
         for months in ['>120', '>60', '>36']:
@@ -1487,10 +1487,10 @@ def survival_months2(input_json):
     wot = {"$and": []}
     for f in filters['$and']:
         for k, v in f.items():
-            if k not in ['surgery']:
+            if k not in ['surgery', "chemo", "radiation"]:
                 wot['$and'].append(f)
-    # wot['$and'].append({"chemo": "No"})
-    # wot['$and'].append({"radiation": "No"})
+    wot['$and'].append({"chemo": "No"})
+    wot['$and'].append({"radiation": "No"})
     wot['$and'].append({"surgery": None})
 
     return survival(filters, 'treatment'), survival(wot, 'w/o treatment')
@@ -1535,8 +1535,8 @@ if __name__ == '__main__':
                 '"chemo": "Yes", ' \
                 '"radiation": "Yes"}'
 
-    pprint(display_group('breast-adjusted-ajcc-6th-stage-1988'))
-    exit()
+    # pprint(display_group('breast-adjusted-ajcc-6th-stage-1988'))
+    # exit()
     # pprint(survival_months(ca_diag_request, 'chemo'))
     # pprint(survival_months(ca_diag_request, 'radiation'))
     # pprint(survival_months(ca_diag_request, 'Mastectomy'))
