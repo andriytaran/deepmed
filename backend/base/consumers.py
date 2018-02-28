@@ -5,12 +5,12 @@ from django.conf import settings
 from pymongo import MongoClient
 
 from base.serializers import DiagnosisDataSerializer, CustomAnalyticsSerializer
-from lib.bcancer_ca import custom_analytics, survival_months
+from lib.bcancer_ca import custom_analytics, survival_months2
 from lib.dataset import percent_women_by_type, breast_cancer_by_grade, \
     breast_cancer_by_size, distribution_of_stage_of_cancer, \
     percent_of_women_with_cancer_by_race_overall, surgery_decisions, \
     chemotherapy, radiation, percent_race_with_cancer_by_age, \
-    breast_cancer_by_state2, \
+    breast_cancer_by_state2, survival_months, \
     breast_cancer_at_a_glance2, breast_cancer_by_age, \
     percent_women_annualy_diagnosed, chemotherapy_filter, radiation_filter, \
     MONGODB_HOST, MONGODB_PORT, COLLECTION_NAME, DBS_NAME
@@ -232,7 +232,6 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
             overall_plans = []
 
             chemo_level = round(chemo_response[1] * 100)
-
             if dd.get('tumor_size_in_mm_sd') > 0:
                 surgery_level = round(surgery_response[1] * 100)
                 sm_radiation_level = round(sm_radiation_response[1] * 100)
@@ -310,6 +309,8 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 })
 
             self.send_json({'overall_plans': overall_plans})
+
+            survival_months_dd = copy.deepcopy(dd)
 
             if dd.get('ethnicity') == 'White':
                 dd['ethnicity'] = 'Caucasian'
@@ -433,6 +434,52 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 })
 
             self.send_json({'chemo_therapy': chemo_therapy})
+
+            survival_months_dd['tumor_size_in_mm'] = survival_months_dd.get(
+                'tumor_size_in_mm_sd')
+
+            # Survival months
+            if survival_months_dd.get('tumor_size_in_mm') > 0:
+                surm_response = {}
+
+                # Preferred treatment
+                survival_months_dd['surgery'] = overall_plans[0]['type']
+                survival_months_dd['chemo'] = overall_plans[0]['chemo']
+                survival_months_dd['radiation'] = overall_plans[0]['radiation']
+
+                surm_preferred_treatment_response = survival_months2(
+                    json.dumps(survival_months_dd, ensure_ascii=False))
+
+                if surm_preferred_treatment_response:
+                    for i in surm_preferred_treatment_response:
+                        i.get('labels', []).reverse()
+                        i.get('datasets', [])[0].get('data', []).reverse()
+
+                surm_response['preferred_plan'] = {
+                    'treatment': surm_preferred_treatment_response[0],
+                    'wo_treatment': surm_preferred_treatment_response[1]
+                }
+
+                # Alternative treatment
+                survival_months_dd['surgery'] = overall_plans[1]['type']
+                survival_months_dd['chemo'] = overall_plans[1]['chemo']
+                survival_months_dd['radiation'] = overall_plans[1]['radiation']
+
+                surm_alternative_treatment_response = survival_months2(
+                    json.dumps(survival_months_dd, ensure_ascii=False))
+
+                if surm_alternative_treatment_response:
+                    for i in surm_alternative_treatment_response:
+                        i.get('labels', []).reverse()
+                        i.get('datasets', [])[0].get('data', []).reverse()
+
+                surm_response[
+                    'alternative_plan'] = {
+                    'treatment': surm_alternative_treatment_response[0],
+                    'wo_treatment': surm_alternative_treatment_response[1]
+                }
+
+                self.send_json({'survival_months': surm_response})
 
         except Exception as e:
             self.send_json({'error': 'Failed to run command.',
@@ -613,15 +660,10 @@ class CustomAnalyticsConsumer(JsonWebsocketConsumer):
 
     def receive_json(self, content, **kwargs):
         group = content.get('group', None)
-        ca_type = content.get('ca_type', None)
 
-        if (ca_type == 'general' and
-            group not in ['grade', 'stage', 'type', 'ethnicity', 'cod',
-                          'radiation', 'chemo', 'surgery', 'size',
-                          'tumor_number']) \
-                or (ca_type == 'survival_months' and group not in
-                    ['radiation', 'chemo', 'Bi-Lateral Mastectomy',
-                     'Lumpectomy', 'Mastectomy']):
+        if group not in ['grade', 'stage', 'type', 'ethnicity', 'cod',
+                         'radiation', 'chemo', 'surgery', 'size',
+                         'tumor_number']:
             self.send_json({'error': 'Invalid group parameter'})
             self.close()
 
@@ -633,78 +675,11 @@ class CustomAnalyticsConsumer(JsonWebsocketConsumer):
         if not serializer.is_valid():
             self.send_json({'error': 'Data not valid.',
                             'extra': serializer.errors})
+            self.close()
 
         dd = dict(serializer.validated_data)
 
-        try:
-            if ca_type in ['general', 'survival_months']:
-                if ca_type == 'general':
-                    custom_analytics_response = custom_analytics(
-                        json.dumps(dd, ensure_ascii=False), group)
-                elif ca_type == 'survival_months':
-                    custom_analytics_response = survival_months(
-                        json.dumps(dd, ensure_ascii=False), group)
-                else:
-                    custom_analytics_response = None
+        custom_analytics_response = custom_analytics(
+            json.dumps(dd, ensure_ascii=False), group)
 
-                if custom_analytics_response:
-                    if ca_type == 'general':
-                        try:
-                            data_list = \
-                                custom_analytics_response.get('datasets')[
-                                    0].get(
-                                    'data')
-                            if all(v == 0 for v in data_list):
-                                custom_analytics_response['is_data'] = False
-                            else:
-                                custom_analytics_response['is_data'] = True
-                        except Exception as e:
-                            custom_analytics_response['is_data'] = False
-                        self.send_json(
-                            {'custom_analytics': custom_analytics_response,
-                             'ca_type': ca_type})
-                    else:
-                        try:
-                            for dl in custom_analytics_response:
-                                data_list = dl.get('datasets')[0].get('data')
-                                if all(v == 0 for v in data_list):
-                                    dl['is_data'] = False
-                                else:
-                                    dl['is_data'] = True
-                            custom_analytics_response_data = {}
-                            if custom_analytics_response[0] \
-                                    .get('datasets')[0].get('label') == 'yes':
-                                custom_analytics_response_data['top'] = \
-                                    custom_analytics_response[0]
-                                custom_analytics_response_data['bottom'] = \
-                                    custom_analytics_response[1]
-                            elif custom_analytics_response[1] \
-                                    .get('datasets')[0].get('label') == 'yes':
-                                custom_analytics_response_data['top'] = \
-                                    custom_analytics_response[1]
-                                custom_analytics_response_data['bottom'] = \
-                                    custom_analytics_response[0]
-                            else:
-                                custom_analytics_response_data['top'] = \
-                                    custom_analytics_response[1]
-                                custom_analytics_response_data['bottom'] = \
-                                    custom_analytics_response[0]
-
-                            custom_analytics_response_data['is_data'] = True
-                            custom_analytics_response_data['ca_type'] = ca_type
-                            self.send_json({
-                                'custom_analytics': \
-                                    custom_analytics_response_data,
-                                'ca_type': ca_type})
-
-                        except Exception as e:
-                            custom_analytics_response['is_data'] = False
-                else:
-                    self.send_json({'error': 'Data not valid',
-                                    'ca_type': ca_type})
-            else:
-                self.send_json({'error': 'Not existing module',
-                                'ca_type': ca_type})
-        except Exception as e:
-            self.send_json({'error': 'Data not valid',
-                            'ca_type': ca_type})
+        self.send_json({'custom_analytics': custom_analytics_response})
