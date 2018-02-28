@@ -116,9 +116,9 @@ def get_race_group(race):
 
 def ca_get_t_size_cm(group):
     if group == '0-2cm':
-        t_size_cm = {"$in": ["<1 cm", "<2 cm", "Micro"]}
+        t_size_cm = {"$in": ["< 1cm", "< 2cm", "Micro"]}
     elif group == '2-5cm':
-        t_size_cm = {"$in": ["<3 cm", "< 5cm"]}
+        t_size_cm = {"$in": ["< 3cm", "< 5cm"]}
     elif group == '5cm+':
         t_size_cm = "> 5cm"
     else:
@@ -1516,13 +1516,31 @@ if __name__ == '__main__':
                       '"1radiation": "Yes", ' \
                       '"1surgery": "Lumpectomy" ' \
                       '}'
+    test_diag = '{"sex": "Female", ' \
+                '"1region": "Localized", ' \
+                '"1site": "Upper-Outer", ' \
+                '"1ethnicity": "Asian", ' \
+                '"1laterality": "left", ' \
+                '"1type": "IDC", ' \
+                '"1num_pos_nodes": 0, ' \
+                '"1tumor_size_in_mm": 5, ' \
+                '"age": 45, ' \
+                '"tumor_grade": 1.0, ' \
+                '"er_status": "+", ' \
+                '"pr_status": "+", ' \
+                '"1tumor_size": "<1cm", ' \
+                '"stage": "IIA", ' \
+                '"1tumor_number": 1, ' \
+                '"surgery": "Lumpectomy", ' \
+                '"chemo": "Yes", ' \
+                '"radiation": "Yes"}'
 
-    # pprint(display_group('surgery'))
-    # exit()
+    pprint(display_group('t-size-cm'))
+    exit()
     # pprint(survival_months(ca_diag_request, 'chemo'))
     # pprint(survival_months(ca_diag_request, 'radiation'))
     # pprint(survival_months(ca_diag_request, 'Mastectomy'))
-    pprint(survival_months2(ca_diag_request))
+    pprint(survival_months2(test_diag))
 
     exit()
     find_request = '{"age": 45, ' \

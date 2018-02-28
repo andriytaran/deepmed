@@ -553,8 +553,19 @@ def recode_survmnts(document):
         return None
 
 
+def recode_nodes(document):
+    if document['regional-nodes-positive-1988-1'] != 'Blank(s)':
+        if document['regional-nodes-positive-1988-1'] < 90:
+            return document['regional-nodes-positive-1988-1']
+        elif document['regional-nodes-positive-1988-1'] == 90:
+            return ">9"
+        elif document['regional-nodes-positive-1988-1'] in (95, 97):
+            return ">1"
+    return None
+
+
 if __name__ == '__main__':
-    # pprint(display_group('surgery-pre-1997'))
+    pprint(display_group('regional-nodes-positive-1988-1'))
     exit()
     for k, v in display_group('surgery-1').items():
         document = {'surgery-pre-1997': k, 'surgery-1': k}
@@ -570,6 +581,7 @@ if __name__ == '__main__':
     i = 0
     for document in collection.find():
         # print(document['_id'])
+        document['regional-nodes-positive-1988'] = recode_nodes(document)
         document['chemo'] = recode_chemotherapy(document)
         # print(document['chemotherapy-recode-yes-no-unk'], recode_chemotherapy(document))
         document['radiation'] = recode_radiation(document)

@@ -145,7 +145,7 @@ def get_t_size_cm(size_mm):
     elif size_mm >= 10:
         t_size_cm = "< 2cm"
     elif size_mm < 10:
-        t_size_cm = "< 1cm"
+        t_size_cm = {"$in": ["< 1cm", "Micro"]}
 
     return t_size_cm
 
