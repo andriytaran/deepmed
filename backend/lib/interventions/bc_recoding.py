@@ -173,9 +173,9 @@ def recode_age(document):
 
 def recode_surgery(document):
     if document['surgery-pre-1997'] != 'Blank(s)':
-        if document['surgery-pre-1997'] in (10, 20):
+        if document['surgery-pre-1997'] in (10, 18, 20, 28):
             return "Lumpectomy"
-        elif document['surgery-pre-1997'] in (30, 40, 50, 60, 70, 80, 90):
+        elif document['surgery-pre-1997'] in (30, 38, 40, 48, 50, 58, 60, 68, 70, 78, 80, 88, 90, 98):
             return "Single Mastectomy"
     if document['surgery-1'] != 'Blank(s)':
         if document['surgery-1'] in (
@@ -183,10 +183,10 @@ def recode_surgery(document):
             return "Single Mastectomy"
         elif document['surgery-1'] in (42, 47, 48, 49, 52, 57, 58, 59, 62, 63, 68, 69, 72, 73, 74, 75, 76):
             return "Bi-Lateral Mastectomy"
-        elif document['surgery-1'] in (20, 21, 23, 24):
-            return "Partial Mastectomy"
+        elif document['surgery-1'] in (20, 21, 22, 23, 24):
+            return "Lumpectomy"
         elif document['surgery-1'] in (19, 90, 99):
-            return "Partial Mastectomy"
+            return "Other"
     return None
 
 
@@ -554,17 +554,17 @@ def recode_survmnts(document):
 
 
 if __name__ == '__main__':
-    # pprint(display_group('aya-site-recode-who-2008'))
+    # pprint(display_group('surgery-pre-1997'))
     exit()
-    # for k, v in display_group('type').items():
-    #     document = {'type': k}
-    #     new_type = recode_type(document)
-    #     if new_type is None:
-    #         print(k)
+    for k, v in display_group('surgery-1').items():
+        document = {'surgery-pre-1997': k, 'surgery-1': k}
+        new_type = recode_surgery(document)
+        if new_type is None:
+            print(k)
         # print(k)
 
     # display_group('surgery')
-    # exit()
+    exit()
 
     # i = 0
     i = 0
