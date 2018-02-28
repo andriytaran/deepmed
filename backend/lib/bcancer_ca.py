@@ -101,7 +101,7 @@ def get_race_group(race):
         race_group = ['Pacific Islander, NOS (1991+)', 'Samoan (1991+)', 'Tongan (1991+)', 'Fiji Islander (1991+)',
                       'Guamanian, NOS (1991+)', 'Micronesian, NOS (1991+)', 'Melanesian, NOS (1991+)',
                       'Polynesian, NOS (1991+)', 'New Guinean (1991+)', 'Chamorran (1991+)', 'Tahitian (1991+)']
-    elif race == 'All Asians':
+    elif race == 'Asian':
         race_group = ['Pacific Islander, NOS (1991+)', 'Samoan (1991+)', 'Tongan (1991+)', 'Fiji Islander (1991+)',
                       'Guamanian, NOS (1991+)', 'Micronesian, NOS (1991+)', 'Melanesian, NOS (1991+)',
                       'Polynesian, NOS (1991+)', 'New Guinean (1991+)', 'Chamorran (1991+)', 'Tahitian (1991+)',
@@ -137,7 +137,7 @@ def ca_get_node_range(group):
         n_size = {"$in": [4, 5, 6, 7, 8, 9]}
     elif group == "1-3":
         n_size = {"$in": [1, 2, 3, '>1']}
-    elif group == "0":
+    elif group in ("0", 0):
         n_size = {"$eq": 0}
     return n_size
 
@@ -179,41 +179,35 @@ def ca_create_filter(input_data, operator='$and'):
         age = get_age_group(input_data['age'])
         if age:
             filter_list.append({"age-recode-with-1-year-olds": {"$in": age}})
-    if 'tumor_size' in input_data.keys():
-        t_size_cm = ca_get_t_size_cm(input_data['tumor_size'])
-        if t_size_cm:
-            filter_list.append({"t-size-cm": t_size_cm})
-    if 'tumor_number' in input_data.keys():
-        t_number = get_tumor_number(input_data['tumor_number'])
-        if t_number:
-            filter_list.append({"total-number-of-in-situ-malignant-tumors-for-patient": t_number})
-    if 'sex' in input_data.keys():
-        filter_list.append({"sex": input_data["sex"]})
-    if 'tumor_grade' in input_data.keys():
-        filter_list.append({"grade": input_data["tumor_grade"]})
-    if 'er_status' in input_data.keys():
-        filter_list.append({"er-status-recode-breast-cancer-1990": input_data["er_status"]})
-    if 'pr_status' in input_data.keys():
-        filter_list.append({"pr-status-recode-breast-cancer-1990": input_data["pr_status"]})
-    if 'her2_status' in input_data.keys():
-        filter_list.append({"derived-her2-recode-2010": input_data['her2_status']})
-    if 'num_pos_nodes' in input_data.keys():
-        n_size = ca_get_node_range(input_data['num_pos_nodes'])
-        if n_size:
-            filter_list.append({"regional-nodes-positive-1988": n_size})
+    if 'chemo' in input_data.keys():
+        filter_list.append({"chemo": input_data["chemo"]})
     if 'ethnicity' in input_data.keys():
         race = get_race_group(input_data['ethnicity'])
         if race:
             filter_list.append({"race-ethnicity": {"$in": race}})
-    if 'type' in input_data.keys():
-        filter_list.append({"type": input_data["type"]})
+    if 'er_status' in input_data.keys():
+        filter_list.append({"er-status-recode-breast-cancer-1990": input_data["er_status"]})
+    if 'her2_status' in input_data.keys():
+        filter_list.append({"derived-her2-recode-2010": input_data['her2_status']})
+    if 'laterality' in input_data.keys():
+        filter_list.append({"laterality": input_data['laterality']})
+    if 'num_pos_nodes' in input_data.keys():
+        n_size = ca_get_node_range(input_data['num_pos_nodes'])
+        if n_size:
+            filter_list.append({"regional-nodes-positive-1988": n_size})
+    if 'pr_status' in input_data.keys():
+        filter_list.append({"pr-status-recode-breast-cancer-1990": input_data["pr_status"]})
+    if 'radiation' in input_data.keys():
+        filter_list.append({"radiation": input_data["radiation"]})
+    if 'region' in input_data.keys():
+        filter_list.append({"sum-stage": input_data["region"]})
+    if 'sex' in input_data.keys():
+        filter_list.append({"sex": input_data["sex"]})
+    if 'site' in input_data.keys():
+        filter_list.append({"primary-site-labeled": input_data["site"]})
     if 'stage' in input_data.keys():
         filter_list.append(
             {"breast-adjusted-ajcc-6th-stage-1988": input_data["stage"]})
-    if 'chemo' in input_data.keys():
-        filter_list.append({"chemo": input_data["chemo"]})
-    if 'radiation' in input_data.keys():
-        filter_list.append({"radiation": input_data["radiation"]})
     if 'surgery' in input_data.keys():
         if input_data["surgery"] == 'Lumpectomy':
             filter_list.append({'surgery': {"$in": ['Lumpectomy', 'Partial Mastectomy']}})
@@ -223,8 +217,18 @@ def ca_create_filter(input_data, operator='$and'):
                                         {'surgery': 'Simple Mastectomy'}, ]})
         elif input_data["surgery"] == 'Bi-Lateral Mastectomy':
             filter_list.append({'surgery': {"$in": ['Bi-Lateral Mastectomy']}})
-        # filter_list.append({"surgery": input_data["surgery"]})
-
+    if 'tumor_grade' in input_data.keys():
+        filter_list.append({"grade": input_data["tumor_grade"]})
+    if 'tumor_number' in input_data.keys():
+        t_number = get_tumor_number(input_data['tumor_number'])
+        if t_number:
+            filter_list.append({"total-number-of-in-situ-malignant-tumors-for-patient": t_number})
+    if 'tumor_size' in input_data.keys():
+        t_size_cm = ca_get_t_size_cm(input_data['tumor_size'])
+        if t_size_cm:
+            filter_list.append({"t-size-cm": t_size_cm})
+    if 'type' in input_data.keys():
+        filter_list.append({"type": input_data["type"]})
     return {operator: filter_list}
 
 
@@ -1368,8 +1372,8 @@ def survival_months(input_json, grouping):
 def survival_months2(input_json):
     def get_totals(subfilters):
         tot_filter = copy.deepcopy(subfilters)
-        tot_filter['$and'].append({"cod-to-site-recode": {"$nin": ['']}})
-        # pprint(tot_filter)
+        # tot_filter['$and'].append({"cod-to-site-recode": {"$nin": ['']}})
+        pprint(tot_filter)
         tf120 = copy.deepcopy(tot_filter)
         tf120['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2004}},
                                        {"year-of-diagnosis": {"$lte": 2005}}]})
@@ -1408,7 +1412,7 @@ def survival_months2(input_json):
     def get_data(subfilters):
         dat_filter = copy.deepcopy(subfilters)
         dat_filter['$and'].append({"cod-to-site-recode": "Alive"})
-        # pprint(dat_filter)
+        pprint(dat_filter)
         df120 = copy.deepcopy(dat_filter)
         df120['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2004}},
                                        {"year-of-diagnosis": {"$lte": 2005}}]})
@@ -1446,9 +1450,9 @@ def survival_months2(input_json):
 
     def survival(sfilter, label):
         totals = get_totals(sfilter)
-        # pprint(totals)
+        pprint(totals)
         treatment = get_data(sfilter)
-        # pprint(treatment)
+        pprint(treatment)
 
         data = {'> 120 months': 0, '> 60 months': 0, '> 36 months': 0}
         for months in ['>120', '>60', '>36']:
@@ -1479,7 +1483,7 @@ def survival_months2(input_json):
         }
 
     filters = ca_create_filter(input_json)
-    filters = {"$and": [d for d in filters['$and'] if 'derived-her2-recode-2010' not in d]}
+    filters = {"$and": [d for d in filters['$and'] if 'her2_status' not in d]}
     wot = {"$and": []}
     for f in filters['$and']:
         for k, v in f.items():
@@ -1487,63 +1491,70 @@ def survival_months2(input_json):
                 wot['$and'].append(f)
     # wot['$and'].append({"chemo": "No"})
     # wot['$and'].append({"radiation": "No"})
-    # wot['$and'].append({"surgery": "None"})
+    wot['$and'].append({"surgery": None})
 
     return survival(filters, 'treatment'), survival(wot, 'w/o treatment')
 
 
 if __name__ == '__main__':
-    ca_diag_request = '{"age": 55, ' \
-                      '"sex": "Female", ' \
-                      '"1tumor_grade": 1, ' \
+    ca_diag_request = '{"age": 45, ' \
+                      '"ethnicity": "Asian", ' \
                       '"1er_status": "+", ' \
-                      '"1pr_status": "+", ' \
-                      '"1tumor_size": "2-5cm", ' \
-                      '"1num_pos_nodes": "4-8", ' \
                       '"1her2_status": "+", ' \
+                      '"1laterality": "left", ' \
+                      '"1num_pos_nodes": 0, ' \
+                      '"1pr_status": "+", ' \
+                      '"1region": "Localized", ' \
+                      '"sex": "Female", ' \
+                      '"1site": "Upper-Outer", ' \
+                      '"1stage": "III", ' \
+                      '"1tumor_grade": 1, ' \
                       '"1tumor_number": 1, ' \
-                      '"1stage": "IIA", ' \
+                      '"1tumor_size": "<1cm", ' \
+                      '"1type": "IDC", ' \
                       '"1chemo": "Yes", ' \
                       '"1radiation": "Yes", ' \
-                      '"surgery": "Mastectomy", ' \
-                      '"1ethnicity": "Japanese"}'
+                      '"1surgery": "Lumpectomy" ' \
+                      '}'
 
-    pprint(display_group('total-number-of-in-situ-malignant-tumors-for-patient'))
-
+    # pprint(display_group('surgery'))
+    # exit()
     # pprint(survival_months(ca_diag_request, 'chemo'))
     # pprint(survival_months(ca_diag_request, 'radiation'))
     # pprint(survival_months(ca_diag_request, 'Mastectomy'))
     pprint(survival_months2(ca_diag_request))
 
     exit()
-    find_request = '{"1age": 35, ' \
-                   '"1sex": "Female", ' \
+    find_request = '{"age": 45, ' \
+                   '"er_status": "+", ' \
+                   '"her2_status": "+", ' \
+                   '"laterality": "left", ' \
+                   '"num_pos_nodes": 0, ' \
+                   '"sex": "Female", ' \
                    '"1tumor_grade": 1, ' \
-                   '"1er_status": "+", ' \
+                   '"1ethnicity": "Japanese" ' \
                    '"1pr_status": "+", ' \
                    '"1tumor_size": "2-5cm", ' \
-                   '"1num_pos_nodes": "4-8", ' \
-                   '"1her2_status": "+", ' \
                    '"1tumor_number": "1", ' \
                    '"stage": "IIA", ' \
-                   '"1ethnicity": "Japanese"}'
-    filter = ca_create_filter(find_request)
-    filter['$and'].append({"cod-to-site-recode": {"$nin": ['']}})
-    # filter['$and'].append({"cod-to-site-recode": "Alive"})
-    filter['$and'].append({"chemo": "Yes"})
-    filter['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2004}},
-                                    {"year-of-diagnosis": {"$lte": 2005}}]})
-    pprint(filter)
-    count = json.loads(aggregate([
-        {"$match": filter},
-        {"$group": {
-            "_id": "",
-            "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}]))
-    pprint(count)
+                   '}'
+filter = ca_create_filter(find_request)
+filter['$and'].append({"cod-to-site-recode": {"$nin": ['']}})
+# filter['$and'].append({"cod-to-site-recode": "Alive"})
+filter['$and'].append({"chemo": "Yes"})
+filter['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2004}},
+                                {"year-of-diagnosis": {"$lte": 2005}}]})
+pprint(filter)
+count = json.loads(aggregate([
+    {"$match": filter},
+    {"$group": {
+        "_id": "",
+        "count": {"$sum": 1}}},
+    {"$sort": SON([("_id", 1)])}]))
+pprint(count)
 
-    # ca_find_request = '{"ethnicity": "Chinese"}'
-    # filters = ca_create_filter(ca_diag_request)
-    # print(len(find(filters, limit=100)))
-    # pprint(custom_analytics(ca_diag_request, 'size'))
-    # pprint(custom_analytics(ca_diag_request, 'grade'))
+# ca_find_request = '{"ethnicity": "Chinese"}'
+# filters = ca_create_filter(ca_diag_request)
+# print(len(find(filters, limit=100)))
+# pprint(custom_analytics(ca_diag_request, 'size'))
+# pprint(custom_analytics(ca_diag_request, 'grade'))
