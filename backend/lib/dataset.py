@@ -170,9 +170,22 @@ def get_node_range(number):
         n_size = {"$in": [4, 5, 6, 7, 8, 9]}
     elif number >= 1:
         n_size = {"$in": [1, 2, 3, '>1']}
-    elif number == 0:
+    elif number in [0, '0']:
         n_size = {"$eq": 0}
     return n_size
+
+
+def get_tumor_number(group):
+    t_number = None
+    if group == "3+":
+        t_number = {"$gte": 3}
+    elif group == "2":
+        t_number = {"$eq": 2}
+    elif group == "1":
+        t_number = {"$eq": 1}
+    elif group == "0":
+        t_number = {"$eq": 0}
+    return t_number
 
 
 def create_filter(input_data, operator='$and'):
@@ -198,35 +211,59 @@ def create_filter(input_data, operator='$and'):
     if 'age' in input_data.keys():
         age = get_age_group(input_data['age'])
         filter_list.append({"age-recode-with-1-year-olds": {"$in": age}})
-    if 'tumor_size_in_mm' in input_data.keys():
-        t_size_cm = get_t_size_cm(input_data['tumor_size_in_mm'])
-        filter_list.append({"t-size-cm": t_size_cm})
-    if 'sex' in input_data.keys():
-        filter_list.append({"sex": input_data["sex"]})
-    if 'tumor_grade' in input_data.keys():
-        filter_list.append({"grade": input_data["tumor_grade"]})
+    if 'chemo' in input_data.keys():
+        filter_list.append({"chemo": input_data["chemo"]})
+    if 'ethnicity' in input_data.keys():
+        filter_list.append({"race-recode-w-b-ai-api": input_data["ethnicity"]})
     if 'er_status' in input_data.keys():
         filter_list.append({"er-status-recode-breast-cancer-1990": input_data["er_status"]})
-    if 'pr_status' in input_data.keys():
-        filter_list.append({"pr-status-recode-breast-cancer-1990": input_data["pr_status"]})
     if 'her2_status' in input_data.keys():
         filter_list.append({"derived-her2-recode-2010": input_data['her2_status']})
+    if 'laterality' in input_data.keys():
+        filter_list.append({"laterality": input_data['laterality']})
     if 'num_pos_nodes' in input_data.keys():
         n_size = get_node_range(input_data['num_pos_nodes'])
         filter_list.append({"regional-nodes-positive-1988": n_size})
-    if 'ethnicity' in input_data.keys():
-        filter_list.append({"race-recode-w-b-ai-api": input_data["ethnicity"]})
-    if 'type' in input_data.keys():
-        filter_list.append({"type": input_data["type"]})
-    if 'breast-adjusted-ajcc-6th-stage-1988' in input_data.keys():
-        filter_list.append({"breast-adjusted-ajcc-6th-stage-1988": input_data["breast-adjusted-ajcc-6th-stage-1988"]})
-    if 'chemo' in input_data.keys():
-        filter_list.append({"chemo": input_data["chemo"]})
+    if 'pr_status' in input_data.keys():
+        filter_list.append({"pr-status-recode-breast-cancer-1990": input_data["pr_status"]})
     if 'radiation' in input_data.keys():
         filter_list.append({"radiation": input_data["radiation"]})
+    if 'region' in input_data.keys():
+        filter_list.append({"sum-stage": input_data["region"]})
+    if 'sex' in input_data.keys():
+        filter_list.append({"sex": input_data["sex"]})
+    if 'site' in input_data.keys():
+        filter_list.append({"primary-site-labeled": input_data["site"]})
+    if 'stage' in input_data.keys():
+        filter_list.append(
+            {"breast-adjusted-ajcc-6th-stage-1988": input_data["stage"]})
+    if 'breast-adjusted-ajcc-6th-stage-1988' in input_data.keys():
+        filter_list.append(
+            {"breast-adjusted-ajcc-6th-stage-1988": input_data["breast-adjusted-ajcc-6th-stage-1988"]})
     if 'surgery' in input_data.keys():
-        filter_list.append({"surgery": input_data["surgery"]})
-
+        if input_data["surgery"] == 'Lumpectomy':
+            filter_list.append({'surgery': {"$in": ['Lumpectomy', 'Partial Mastectomy']}})
+        elif input_data["surgery"] == 'Mastectomy':
+            filter_list.append({"$or": [{'surgery': 'Single Mastectomy'},
+                                        {'surgery': 'Mastectomy '},
+                                        {'surgery': 'Simple Mastectomy'}, ]})
+        elif input_data["surgery"] == 'Bi-Lateral Mastectomy':
+            filter_list.append({'surgery': {"$in": ['Bi-Lateral Mastectomy']}})
+    if 'tumor_grade' in input_data.keys():
+        filter_list.append({"grade": input_data["tumor_grade"]})
+    if 'tumor_number' in input_data.keys():
+        t_number = get_tumor_number(input_data['tumor_number'])
+        if t_number:
+            filter_list.append({"total-number-of-in-situ-malignant-tumors-for-patient": t_number})
+    if 'tumor_size' in input_data.keys():
+        t_size_cm = get_t_size_cm(input_data['tumor_size'])
+        if t_size_cm:
+            filter_list.append({"t-size-cm": t_size_cm})
+    if 'tumor_size_in_mm' in input_data.keys():
+        t_size_cm = get_t_size_cm(input_data['tumor_size_in_mm'])
+        filter_list.append({"t-size-cm": t_size_cm})
+    if 'type' in input_data.keys():
+        filter_list.append({"type": input_data["type"]})
     return {operator: filter_list}
 
 
@@ -1896,8 +1933,6 @@ if __name__ == '__main__':
 
     # test_diag = diagnosis(diag_request, limit=100, collection=collection)
     print(time.time() - start)
-
-
 
     # pprint(radiation())
     exit()
