@@ -1535,7 +1535,7 @@ if __name__ == '__main__':
                 '"chemo": "Yes", ' \
                 '"radiation": "Yes"}'
 
-    pprint(display_group('t-size-cm'))
+    pprint(display_group('breast-adjusted-ajcc-6th-stage-1988'))
     exit()
     # pprint(survival_months(ca_diag_request, 'chemo'))
     # pprint(survival_months(ca_diag_request, 'radiation'))
