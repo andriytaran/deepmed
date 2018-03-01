@@ -46,7 +46,7 @@ const BcEstimatedSurvivalChart = ({data}) =>
         })),
         ...data.decision.datasets.map(item => ({
           ...item,
-          backgroundColor: color_5,
+          backgroundColor: color_5 ,
           hoverBackgroundColor: color_5,
           borderColor: white,
           label: data.decision.chart_label,
