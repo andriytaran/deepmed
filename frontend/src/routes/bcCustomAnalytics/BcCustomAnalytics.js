@@ -348,7 +348,7 @@ class BcCustomAnalytics extends React.Component {
                 {(!isEmpty(customAnalytics.custom_analytics) && her2Title === true) && (
                   <div className={s.her2Title}>Last 5 years data only</div>
                 )}
-                {(((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === false) || customAnalytics.error) && customAnalytics.ca_type === 'general') && (
+                {((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === false) || customAnalytics.error) && (
                   <div className={s.emptyChart}>There is no available output for this set of filters</div>
                 )}
               </Card>
