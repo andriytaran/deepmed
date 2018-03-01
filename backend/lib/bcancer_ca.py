@@ -1638,7 +1638,7 @@ def chemo_decisions(input_json):
     nc_totals = get_totals(no_chemo)
     nc_treatment = get_data(no_chemo)
 
-    return survival(treatment, totals, 'treatment'), survival(nc_treatment, nc_totals, 'w/o treatment')
+    return survival(treatment, totals, 'Chemo'), survival(nc_treatment, nc_totals, 'no Chemo')
 
 
 def surgery_decisions(input_json):
@@ -1806,7 +1806,7 @@ if __name__ == '__main__':
     # pprint(survival_months(ca_diag_request, 'radiation'))
     # pprint(survival_months(ca_diag_request, 'Mastectomy'))
     # pprint(survival_months2(test_diag))
-    pprint(chemo_decisions(test_diag))
+    pprint(surgery_decisions(test_diag))
     exit()
 
     filter = ca_create_filter(test_diag)
