@@ -9,7 +9,7 @@ import Tab from 'react-bootstrap/lib/Tab'
 import Tabs from 'react-bootstrap/lib/Tabs'
 import isEmpty from 'lodash/isEmpty'
 import {Bar} from 'react-chartjs-2'
-import {formatLabel} from '../../utils'
+import {formatChartNumber, formatLabel} from '../../utils'
 
 const SurgeryTypesTable = ({items = [], visibleRowIndex}) =>
   <div className='table-responsive'>
@@ -46,7 +46,7 @@ const BcEstimatedSurvivalChart = ({data}) =>
         })),
         ...data.decision.datasets.map(item => ({
           ...item,
-          backgroundColor: color_5 ,
+          backgroundColor: color_5,
           hoverBackgroundColor: color_5,
           borderColor: white,
           label: data.decision.chart_label,
@@ -76,6 +76,46 @@ const BcEstimatedSurvivalChart = ({data}) =>
       tooltips: {
         callbacks: {
           label: formatLabel,
+        }
+      },
+    }}
+  />
+
+const SingleBcEstimatedSurvivalChart = ({data}) =>
+  <Bar
+    data={{
+      ...data,
+      datasets: data.datasets.map(item => ({
+        ...item,
+        backgroundColor: color_1,
+        hoverBackgroundColor: color_3,
+        borderColor: white,
+      }))
+    }}
+    redraw
+    options={{
+      legend: {
+        display: false,
+        position: 'bottom',
+        labels: chartsLabelsOptions
+      },
+      scales: {
+        xAxes: [{
+          id: 'bar-x-axis1',
+          barPercentage: 1.0,
+          categoryPercentage: 0.3
+        }],
+        yAxes: [{
+          ticks: {
+            max: 100,
+            beginAtZero: true,
+            callback: (value) => `${value}%`
+          },
+        }],
+      },
+      tooltips: {
+        callbacks: {
+          label: formatChartNumber
         }
       },
     }}
@@ -125,7 +165,7 @@ class BcBcEstimatedSurvival extends React.Component {
                     {tab === 0 ? (
                       <BcEstimatedSurvivalChart data={diagnosis.estimated_survival.chemo_decision}/>
                     ) : (
-                      <BcEstimatedSurvivalChart data={diagnosis.estimated_survival.surgery_decision}/>
+                      <SingleBcEstimatedSurvivalChart data={diagnosis.estimated_survival.surgery_decision}/>
                     )}
                   </Col>
                 </Row>

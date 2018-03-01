@@ -454,12 +454,12 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
 
                 if es_chemo_decision_response:
                     for i in es_chemo_decision_response:
+                        if i['datasets'][0]['label'] == 'Chemo':
+                            i['chart_label'] = 'Chemotherapy'
+                        elif i['datasets'][0]['label'] == 'no Chemo':
+                            i['chart_label'] = 'No Chemotherapy'
                         i.get('labels', []).reverse()
                         i.get('datasets', [])[0].get('data', []).reverse()
-
-                es_chemo_decision_response[0]['chart_label'] = 'Chemotherapy'
-                es_chemo_decision_response[1][
-                    'chart_label'] = 'No Chemotherapy'
 
                 es_response['chemo_decision'] = {
                     'decision': es_chemo_decision_response[0],
@@ -469,23 +469,30 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 # Alternative treatment
                 estimated_survival_data['chemo'] = chemo_response[0]
 
-                es_surgery_decision_response = survival_months2(
+                es_surgery_decision_response = surgery_decisions(
                     json.dumps(estimated_survival_data, ensure_ascii=False))
+                #
+                # if es_surgery_decision_response:
+                #     for i in es_surgery_decision_response:
+                #         if i['datasets'][0]['label'] == 'Chemo':
+                #             i['chart_label'] = 'Chemotherapy'
+                #         elif i['datasets'][0]['label'] == 'no Chemo':
+                #             i['chart_label'] = 'No Chemotherapy'
+                #         i.get('labels', []).reverse()
+                #         i.get('datasets', [])[0].get('data', []).reverse()
+                #
+                # es_surgery_decision_response[0]['chart_label'] = 'Mastectomy'
+                # es_surgery_decision_response[1][
+                #     'chart_label'] = 'Lumpectomy'
 
-                if es_surgery_decision_response:
-                    for i in es_surgery_decision_response:
-                        i.get('labels', []).reverse()
-                        i.get('datasets', [])[0].get('data', []).reverse()
-
-                es_surgery_decision_response[0]['chart_label'] = 'Mastectomy'
-                es_surgery_decision_response[1][
-                    'chart_label'] = 'Lumpectomy'
+                # es_response[
+                #     'surgery_decision'] = {
+                #     'decision': es_surgery_decision_response[0],
+                #     'wo_decision': es_surgery_decision_response[1]
+                # }
 
                 es_response[
-                    'surgery_decision'] = {
-                    'decision': es_surgery_decision_response[0],
-                    'wo_decision': es_surgery_decision_response[1]
-                }
+                    'surgery_decision'] = es_surgery_decision_response
 
                 self.send_json({'estimated_survival': es_response})
 
