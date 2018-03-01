@@ -456,6 +456,8 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                     for i in surm_preferred_treatment_response:
                         i.get('labels', []).reverse()
                         i.get('datasets', [])[0].get('data', []).reverse()
+                        del i['datasets'][0]['data'][0]
+                        del i['labels'][0]
 
                 surm_response['preferred_plan'] = {
                     'treatment': surm_preferred_treatment_response[0],
@@ -472,6 +474,8 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                     for i in surm_alternative_treatment_response:
                         i.get('labels', []).reverse()
                         i.get('datasets', [])[0].get('data', []).reverse()
+                        del i['datasets'][0]['data'][0]
+                        del i['labels'][0]
 
                 surm_response[
                     'alternative_plan'] = {
