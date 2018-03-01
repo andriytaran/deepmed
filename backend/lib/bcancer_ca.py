@@ -1373,7 +1373,7 @@ def survival_months2(input_json):
     def get_totals(subfilters):
         tot_filter = copy.deepcopy(subfilters)
         # tot_filter['$and'].append({"cod-to-site-recode": {"$nin": ['']}})
-        pprint(tot_filter)
+        # pprint(tot_filter)
         tf120 = copy.deepcopy(tot_filter)
         tf120['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2004}},
                                        {"year-of-diagnosis": {"$lte": 2005}}]})
@@ -1412,7 +1412,7 @@ def survival_months2(input_json):
     def get_data(subfilters):
         dat_filter = copy.deepcopy(subfilters)
         dat_filter['$and'].append({"cod-to-site-recode": "Alive"})
-        pprint(dat_filter)
+        # pprint(dat_filter)
         df120 = copy.deepcopy(dat_filter)
         df120['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2004}},
                                        {"year-of-diagnosis": {"$lte": 2005}}]})
@@ -1450,9 +1450,9 @@ def survival_months2(input_json):
 
     def survival(sfilter, label):
         totals = get_totals(sfilter)
-        pprint(totals)
+        # pprint(totals)
         treatment = get_data(sfilter)
-        pprint(treatment)
+        # pprint(treatment)
 
         data = {'> 120 months': 0, '> 60 months': 0, '> 36 months': 0}
         for months in ['>120', '>60', '>36']:
@@ -1487,16 +1487,39 @@ def survival_months2(input_json):
     wot = {"$and": []}
     for f in filters['$and']:
         for k, v in f.items():
-            if k not in ['surgery']:
+            if k not in ["chemo", "radiation"]:
                 wot['$and'].append(f)
-    # wot['$and'].append({"chemo": "No"})
+    wot['$and'].append({"chemo": "No"})
     # wot['$and'].append({"radiation": "No"})
-    wot['$and'].append({"surgery": None})
+    # wot['$and'].append({"surgery": None})
 
     return survival(filters, 'treatment'), survival(wot, 'w/o treatment')
 
 
+def outcomes():
+    ages = [75, 65, 55, 45, 35, 25]
+    stages = ['I', 'IIA', 'IIB', 'IIIA', 'IIIB', 'IIIC', 'IV']
+    grades = [1, 2, 3, 4]
+    ers = ['+', '-']
+    prs = ['+', '-']
+    surgeries = ['Lumpectomy', 'Mastectomy', 'Bi-Lateral Mastectomy']
+    chemos = ["Yes"]
+    rads = ["Yes"]
+    for age in ages:
+        for stage in stages:
+            input_f = {"age": age,
+                       "stage": stage,
+                       "chemo": "Yes"}
+            filter = ca_create_filter(json.dumps(input_f))
+            print(filter)
+            print(survival_months2(json.dumps(input_f)))
+
+    pass
+
+
 if __name__ == '__main__':
+    outcomes()
+    exit()
     ca_diag_request = '{"age": 45, ' \
                       '"ethnicity": "Asian", ' \
                       '"1er_status": "+", ' \
@@ -1517,52 +1540,31 @@ if __name__ == '__main__':
                       '"1surgery": "Lumpectomy" ' \
                       '}'
     test_diag = '{"sex": "Female", ' \
-                '"1region": "Localized", ' \
-                '"1site": "Upper-Outer", ' \
-                '"1ethnicity": "Asian", ' \
-                '"1laterality": "left", ' \
-                '"1type": "IDC", ' \
-                '"1num_pos_nodes": 0, ' \
-                '"1tumor_size_in_mm": 5, ' \
                 '"age": 45, ' \
-                '"tumor_grade": 1.0, ' \
-                '"er_status": "+", ' \
-                '"pr_status": "+", ' \
-                '"1tumor_size": "<1cm", ' \
+                '"1tumor_grade": 1, ' \
+                '"1er_status": "+", ' \
+                '"1pr_status": "+", ' \
                 '"stage": "IIA", ' \
-                '"1tumor_number": 1, ' \
-                '"surgery": "Lumpectomy", ' \
+                '"1surgery": "Mastectomy", ' \
                 '"chemo": "Yes", ' \
-                '"radiation": "Yes"}'
+                '"1radiation": "Yes"}'
 
-    pprint(display_group('t-size-cm'))
-    exit()
+    # pprint(display_group('grade'))
+    # exit()
     # pprint(survival_months(ca_diag_request, 'chemo'))
     # pprint(survival_months(ca_diag_request, 'radiation'))
     # pprint(survival_months(ca_diag_request, 'Mastectomy'))
     pprint(survival_months2(test_diag))
 
-    exit()
-    find_request = '{"age": 45, ' \
-                   '"er_status": "+", ' \
-                   '"her2_status": "+", ' \
-                   '"laterality": "left", ' \
-                   '"num_pos_nodes": 0, ' \
-                   '"sex": "Female", ' \
-                   '"1tumor_grade": 1, ' \
-                   '"1ethnicity": "Japanese" ' \
-                   '"1pr_status": "+", ' \
-                   '"1tumor_size": "2-5cm", ' \
-                   '"1tumor_number": "1", ' \
-                   '"stage": "IIA", ' \
-                   '}'
-    filter = ca_create_filter(find_request)
-    filter['$and'].append({"cod-to-site-recode": {"$nin": ['']}})
+    # exit()
+
+    filter = ca_create_filter(test_diag)
+    # filter['$and'].append({"cod-to-site-recode": {"$nin": ['']}})
     # filter['$and'].append({"cod-to-site-recode": "Alive"})
-    filter['$and'].append({"chemo": "Yes"})
+    # filter['$and'].append({"chemo": "Yes"})
     filter['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2004}},
                                     {"year-of-diagnosis": {"$lte": 2005}}]})
-    pprint(filter)
+    # pprint(filter)
     count = json.loads(aggregate([
         {"$match": filter},
         {"$group": {

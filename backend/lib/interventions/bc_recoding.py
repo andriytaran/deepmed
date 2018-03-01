@@ -565,14 +565,14 @@ def recode_nodes(document):
 
 
 if __name__ == '__main__':
-    pprint(display_group('regional-nodes-positive-1988-1'))
+    # pprint(display_group('regional-nodes-positive-1988-1'))
     exit()
-    for k, v in display_group('surgery-1').items():
-        document = {'surgery-pre-1997': k, 'surgery-1': k}
-        new_type = recode_surgery(document)
-        if new_type is None:
-            print(k)
-        # print(k)
+    # for k, v in display_group('regional-nodes-positive-1988-1').items():
+    #     document = {'regional-nodes-positive-1988-1': k}
+    #     new_type = recode_nodes(document)
+    # if new_type is None:
+    #     print(k)
+    # print(k, new_type)
 
     # display_group('surgery')
     exit()
@@ -581,7 +581,10 @@ if __name__ == '__main__':
     i = 0
     for document in collection.find():
         # print(document['_id'])
+        print(document['regional-nodes-positive-1988-1'])
         document['regional-nodes-positive-1988'] = recode_nodes(document)
+        print(document['regional-nodes-positive-1988'])
+
         document['chemo'] = recode_chemotherapy(document)
         # print(document['chemotherapy-recode-yes-no-unk'], recode_chemotherapy(document))
         document['radiation'] = recode_radiation(document)
@@ -617,9 +620,10 @@ if __name__ == '__main__':
         # collection.update_one({'_id': document['_id']}, {"$set": document}, upsert=False)
         print(i, '/ 1546698 ')
     print('ALL DONE.')
+    exit()
 
     for document in collection.find():
         print(document['_id'])
         document['t-size-mm'] = recode_t_size(document)[0]
         document['t-size-cm'] = recode_t_size(document)[1]
-        collection.update_one({'_id': document['_id']}, {"$set": document}, upsert=False)
+        # collection.update_one({'_id': document['_id']}, {"$set": document}, upsert=False)
