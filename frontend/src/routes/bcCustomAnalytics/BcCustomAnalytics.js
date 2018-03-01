@@ -319,7 +319,7 @@ class BcCustomAnalytics extends React.Component {
                 className={s.chartCard}
                 loading={customAnalyticsLoading}
               >
-                {!isEmpty(customAnalytics.custom_analytics) && (
+                {(!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === true) && (
                   <Pie
                     data={{
                       ...customAnalytics.custom_analytics,
@@ -348,7 +348,7 @@ class BcCustomAnalytics extends React.Component {
                 {(!isEmpty(customAnalytics.custom_analytics) && her2Title === true) && (
                   <div className={s.her2Title}>Last 5 years data only</div>
                 )}
-                {((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === false) || customAnalytics.error) && (
+                {((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === false)) && (
                   <div className={s.emptyChart}>There is no available output for this set of filters</div>
                 )}
               </Card>
