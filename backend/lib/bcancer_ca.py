@@ -49,15 +49,24 @@ def display_group(group):
 
 def get_age_group(age):
     age_group = None
-    if age >= 60:
-        age_group = ["60-64 years", "65-69 years", "70-74 years",
-                     "75-79 years", "80-84 years", "85+ years"]
-    elif age >= 45:
-        age_group = ["45-49 years", "50-54 years", "55-59 years"]
+    if age >= 80:
+        age_group = ["80-84 years", "85+ years"]
+    elif age >= 70:
+        age_group = ["70-74 years", "75-79 years"]
+    elif age >= 60:
+        age_group = ["60-64 years", "65-69 years"]
+    elif age >= 50:
+        age_group = ["50-54 years", "55-59 years"]
+    elif age >= 40:
+        age_group = ["40-44 years", "45-49 years"]
+    elif age >= 30:
+        age_group = ["30-34 years", "35-39 years"]
+    elif age >= 20:
+        age_group = ["20-24 years", "25-29 years"]
+    elif age >= 10:
+        age_group = ["10-14 years", "15-19 years"]
     elif age >= 0:
-        age_group = ["00-04 years", "05-09 years", "10-14 years", "15-19 years",
-                     "20-24 years", "25-29 years", "30-34 years", "35-39 years",
-                     "40-44 years"]
+        age_group = ["00-04 years", "05-09 years"]
     return age_group
 
 
@@ -1511,6 +1520,43 @@ def outcomes():
     pass
 
 
+def decision_filters(input_data, operator='$and'):
+    def get_age_group_decision(age):
+        age_group = None
+        if age >= 60:
+            age_group = ["60-64 years", "65-69 years", "70-74 years",
+                         "75-79 years", "80-84 years", "85+ years"]
+        elif age >= 45:
+            age_group = ["45-49 years", "50-54 years", "55-59 years"]
+        elif age >= 0:
+            age_group = ["00-04 years", "05-09 years", "10-14 years", "15-19 years",
+                         "20-24 years", "25-29 years", "30-34 years", "35-39 years",
+                         "40-44 years"]
+        return age_group
+
+    input_data = json.loads(input_data)
+    filter_list = []
+    if 'age' in input_data.keys():
+        age = get_age_group_decision(input_data['age'])
+        if age:
+            filter_list.append({"age-recode-with-1-year-olds": {"$in": age}})
+    if 'chemo' in input_data.keys():
+        filter_list.append({"chemo": input_data["chemo"]})
+    if 'stage' in input_data.keys():
+        filter_list.append(
+            {"breast-adjusted-ajcc-6th-stage-1988": input_data["stage"]})
+    if 'surgery' in input_data.keys():
+        if input_data["surgery"] == 'Lumpectomy':
+            filter_list.append({'surgery': {"$in": ['Lumpectomy']}})
+        elif input_data["surgery"] == 'Mastectomy':
+            filter_list.append({'surgery': {"$in": ['Single Mastectomy']}})
+        elif input_data["surgery"] == 'Bi-Lateral Mastectomy':
+            filter_list.append({'surgery': {"$in": ['Bi-Lateral Mastectomy']}})
+    if 'tumor_grade' in input_data.keys():
+        filter_list.append({"grade": input_data["tumor_grade"]})
+    return {operator: filter_list}
+
+
 def chemo_decisions(input_json):
     def get_totals(subfilters):
         tot_filter = copy.deepcopy(subfilters)
@@ -1616,7 +1662,7 @@ def chemo_decisions(input_json):
             }]
         }
 
-    in_filters = ca_create_filter(input_json)
+    in_filters = decision_filters(input_json)
     filters = {"$and": []}
     for f in in_filters['$and']:
         for k, v in f.items():
@@ -1640,11 +1686,7 @@ def chemo_decisions(input_json):
         no_chemo['$and'].append({'chemo': "No"})
         nc_totals = get_totals(no_chemo)
     treatment = get_data(filters)
-    pprint(treatment)
-    pprint(totals)
     nc_treatment = get_data(no_chemo)
-    pprint(nc_treatment)
-    pprint(nc_totals)
     return survival(treatment, totals, 'Chemo'), survival(nc_treatment, nc_totals, 'no Chemo')
 
 
@@ -1753,7 +1795,7 @@ def surgery_decisions(input_json):
             }]
         }
 
-    in_filters = ca_create_filter(input_json)
+    in_filters = decision_filters(input_json)
     mast_filter = {"$and": []}
     for f in in_filters['$and']:
         for k, v in f.items():
@@ -1818,8 +1860,8 @@ if __name__ == '__main__':
     # pprint(survival_months(ca_diag_request, 'radiation'))
     # pprint(survival_months(ca_diag_request, 'Mastectomy'))
     # pprint(survival_months2(test_diag))
-    pprint(surgery_decisions(test_diag))
-    # pprint(chemo_decisions(test_diag))
+    # pprint(surgery_decisions(test_diag))
+    pprint(chemo_decisions(test_diag))
     exit()
 
     filter = ca_create_filter(test_diag)
