@@ -5,7 +5,7 @@ from django.conf import settings
 from pymongo import MongoClient
 
 from base.serializers import DiagnosisDataSerializer, CustomAnalyticsSerializer
-from lib.bcancer_ca import custom_analytics, survival_months2
+from lib.bcancer_ca import custom_analytics, survival_months2, chemo_decisions
 from lib.dataset import percent_women_by_type, breast_cancer_by_grade, \
     breast_cancer_by_size, distribution_of_stage_of_cancer, \
     percent_of_women_with_cancer_by_race_overall, surgery_decisions, \
@@ -449,10 +449,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 es_response = {}
 
                 # Preferred treatment
-                estimated_survival_data['surgery'] = overall_plans[0]['type']
-                estimated_survival_data['chemo'] = overall_plans[0]['chemo']
-
-                es_chemo_decision_response = survival_months2(
+                es_chemo_decision_response = chemo_decisions(
                     json.dumps(estimated_survival_data, ensure_ascii=False))
 
                 if es_chemo_decision_response:
@@ -470,8 +467,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 }
 
                 # Alternative treatment
-                estimated_survival_data['surgery'] = overall_plans[1]['type']
-                estimated_survival_data['chemo'] = overall_plans[1]['chemo']
+                estimated_survival_data['chemo'] = chemo_response[0]
 
                 es_surgery_decision_response = survival_months2(
                     json.dumps(estimated_survival_data, ensure_ascii=False))
