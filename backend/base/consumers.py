@@ -319,7 +319,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
             elif dd.get('ethnicity') == 'Unknown':
                 dd['ethnicity'] = 'Other'
 
-            survival_months_dd = copy.deepcopy(dd)
+            estimated_survival_dd = copy.deepcopy(dd)
 
             tumor_size = dd.get('tumor_size_in_mm')
             dd['tumor_size_in_mm'] = dd.get('tumor_size_in_mm_sd')
@@ -435,55 +435,63 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
 
             self.send_json({'chemo_therapy': chemo_therapy})
 
-            survival_months_dd['tumor_size_in_mm'] = survival_months_dd.get(
+            estimated_survival_dd[
+                'tumor_size_in_mm'] = estimated_survival_dd.get(
                 'tumor_size_in_mm_sd')
 
-            # Survival months
-            if survival_months_dd.get('tumor_size_in_mm') > 0:
-                survival_months_data = {
-                    'age': survival_months_dd.get('age'),
-                    'stage': survival_months_dd.get('stage_sd'),
+            # Estimated survival
+            if estimated_survival_dd.get('tumor_size_in_mm') > 0:
+                estimated_survival_data = {
+                    'age': estimated_survival_dd.get('age'),
+                    'stage': estimated_survival_dd.get('stage_sd'),
+                    'tumor_grade': estimated_survival_dd.get('tumor_grade'),
                 }
-                surm_response = {}
+                es_response = {}
 
                 # Preferred treatment
-                survival_months_data['chemo'] = overall_plans[0]['chemo']
+                estimated_survival_data['surgery'] = overall_plans[0]['type']
+                estimated_survival_data['chemo'] = overall_plans[0]['chemo']
 
-                surm_preferred_treatment_response = survival_months2(
-                    json.dumps(survival_months_data, ensure_ascii=False))
+                es_chemo_decision_response = survival_months2(
+                    json.dumps(estimated_survival_data, ensure_ascii=False))
 
-                if surm_preferred_treatment_response:
-                    for i in surm_preferred_treatment_response:
+                if es_chemo_decision_response:
+                    for i in es_chemo_decision_response:
                         i.get('labels', []).reverse()
                         i.get('datasets', [])[0].get('data', []).reverse()
-                        del i['datasets'][0]['data'][0]
-                        del i['labels'][0]
 
-                surm_response['preferred_plan'] = {
-                    'treatment': surm_preferred_treatment_response[0],
-                    'wo_treatment': surm_preferred_treatment_response[1]
+                es_chemo_decision_response[0]['chart_label'] = 'Chemotherapy'
+                es_chemo_decision_response[1][
+                    'chart_label'] = 'No Chemotherapy'
+
+                es_response['chemo_decision'] = {
+                    'decision': es_chemo_decision_response[0],
+                    'wo_decision': es_chemo_decision_response[1]
                 }
 
                 # Alternative treatment
-                survival_months_data['chemo'] = overall_plans[1]['chemo']
+                estimated_survival_data['surgery'] = overall_plans[1]['type']
+                estimated_survival_data['chemo'] = overall_plans[1]['chemo']
 
-                surm_alternative_treatment_response = survival_months2(
-                    json.dumps(survival_months_data, ensure_ascii=False))
+                es_surgery_decision_response = survival_months2(
+                    json.dumps(estimated_survival_data, ensure_ascii=False))
 
-                if surm_alternative_treatment_response:
-                    for i in surm_alternative_treatment_response:
+                if es_surgery_decision_response:
+                    for i in es_surgery_decision_response:
                         i.get('labels', []).reverse()
                         i.get('datasets', [])[0].get('data', []).reverse()
-                        del i['datasets'][0]['data'][0]
-                        del i['labels'][0]
 
-                surm_response[
-                    'alternative_plan'] = {
-                    'treatment': surm_alternative_treatment_response[0],
-                    'wo_treatment': surm_alternative_treatment_response[1]
+                es_surgery_decision_response[0]['chart_label'] = 'Mastectomy'
+                es_surgery_decision_response[1][
+                    'chart_label'] = 'Lumpectomy'
+
+                es_response[
+                    'surgery_decision'] = {
+                    'decision': es_surgery_decision_response[0],
+                    'wo_decision': es_surgery_decision_response[1]
                 }
 
-                self.send_json({'survival_months': surm_response})
+                self.send_json({'estimated_survival': es_response})
 
         except Exception as e:
             self.send_json({'error': 'Failed to run command.',
@@ -685,5 +693,14 @@ class CustomAnalyticsConsumer(JsonWebsocketConsumer):
 
         custom_analytics_response = custom_analytics(
             json.dumps(dd, ensure_ascii=False), group)
+
+        try:
+            data_list = custom_analytics_response.get('dataset')[0].get('data')
+            if all(v == 0 for v in data_list):
+                custom_analytics_response['is_data'] = False
+            else:
+                custom_analytics_response['is_data'] = True
+        except:
+            custom_analytics_response['is_data'] = False
 
         self.send_json({'custom_analytics': custom_analytics_response})

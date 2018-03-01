@@ -319,7 +319,7 @@ class BcCustomAnalytics extends React.Component {
                 className={s.chartCard}
                 loading={customAnalyticsLoading}
               >
-                {((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === true) && customAnalytics.ca_type === 'general') && (
+                {!isEmpty(customAnalytics.custom_analytics) && (
                   <Pie
                     data={{
                       ...customAnalytics.custom_analytics,
@@ -345,7 +345,7 @@ class BcCustomAnalytics extends React.Component {
                     height={200}
                   />
                 )}
-                {((!isEmpty(customAnalytics.custom_analytics) && her2Title === true) && customAnalytics.ca_type === 'general') && (
+                {(!isEmpty(customAnalytics.custom_analytics) && her2Title === true) && (
                   <div className={s.her2Title}>Last 5 years data only</div>
                 )}
                 {(((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === false) || customAnalytics.error) && customAnalytics.ca_type === 'general') && (
