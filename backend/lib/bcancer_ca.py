@@ -210,11 +210,9 @@ def ca_create_filter(input_data, operator='$and'):
             {"breast-adjusted-ajcc-6th-stage-1988": input_data["stage"]})
     if 'surgery' in input_data.keys():
         if input_data["surgery"] == 'Lumpectomy':
-            filter_list.append({'surgery': {"$in": ['Lumpectomy', 'Partial Mastectomy']}})
+            filter_list.append({'surgery': {"$in": ['Lumpectomy']}})
         elif input_data["surgery"] == 'Mastectomy':
-            filter_list.append({"$or": [{'surgery': 'Single Mastectomy'},
-                                        {'surgery': 'Mastectomy '},
-                                        {'surgery': 'Simple Mastectomy'}, ]})
+            filter_list.append({'surgery': {"$in": ['Single Mastectomy']}})
         elif input_data["surgery"] == 'Bi-Lateral Mastectomy':
             filter_list.append({'surgery': {"$in": ['Bi-Lateral Mastectomy']}})
     if 'tumor_grade' in input_data.keys():
@@ -1375,8 +1373,8 @@ def survival_months2(input_json):
         # tot_filter['$and'].append({"cod-to-site-recode": {"$nin": ['']}})
         # pprint(tot_filter)
         tf120 = copy.deepcopy(tot_filter)
-        tf120['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2004}},
-                                       {"year-of-diagnosis": {"$lte": 2005}}]})
+        tf120['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2000}},
+                                       {"year-of-diagnosis": {"$lte": 2004}}]})
         # pprint(tf120)
         res120 = json.loads(aggregate([
             {"$match": tf120},
@@ -1387,8 +1385,8 @@ def survival_months2(input_json):
         total120 = res120[0]['count'] if len(res120) > 0 else 0
 
         tf60 = copy.deepcopy(tot_filter)
-        tf60['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2009}},
-                                      {"year-of-diagnosis": {"$lte": 2010}}]})
+        tf60['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2000}},
+                                      {"year-of-diagnosis": {"$lte": 2009}}]})
         res60 = json.loads(aggregate([
             {"$match": tf60},
             {"$group": {
@@ -1398,8 +1396,8 @@ def survival_months2(input_json):
         total60 = res60[0]['count'] if len(res60) > 0 else 0
 
         tf36 = copy.deepcopy(tot_filter)
-        tf36['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2011}},
-                                      {"year-of-diagnosis": {"$lte": 2012}}]})
+        tf36['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2000}},
+                                      {"year-of-diagnosis": {"$lte": 2011}}]})
         res36 = json.loads(aggregate([
             {"$match": tf36},
             {"$group": {
@@ -1411,11 +1409,12 @@ def survival_months2(input_json):
 
     def get_data(subfilters):
         dat_filter = copy.deepcopy(subfilters)
-        dat_filter['$and'].append({"cod-to-site-recode": "Alive"})
+        # dat_filter['$and'].append({"cod-to-site-recode": "Alive"})
         # pprint(dat_filter)
         df120 = copy.deepcopy(dat_filter)
-        df120['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2004}},
-                                       {"year-of-diagnosis": {"$lte": 2005}}]})
+        df120['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2000}},
+                                       {"year-of-diagnosis": {"$lte": 2004}}]})
+        df120['$and'].append({"survival-months": {"$gte": 120}})
         # pprint(df120)
         res120 = json.loads(aggregate([
             {"$match": df120},
@@ -1426,8 +1425,9 @@ def survival_months2(input_json):
         total120 = res120[0]['count'] if len(res120) > 0 else 0
 
         df60 = copy.deepcopy(dat_filter)
-        df60['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2009}},
-                                      {"year-of-diagnosis": {"$lte": 2010}}]})
+        df60['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2000}},
+                                      {"year-of-diagnosis": {"$lte": 2009}}]})
+        df60['$and'].append({"survival-months": {"$gte": 60}})
         res60 = json.loads(aggregate([
             {"$match": df60},
             {"$group": {
@@ -1437,8 +1437,9 @@ def survival_months2(input_json):
         total60 = res60[0]['count'] if len(res60) > 0 else 0
 
         df36 = copy.deepcopy(dat_filter)
-        df36['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2011}},
-                                      {"year-of-diagnosis": {"$lte": 2012}}]})
+        df36['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2000}},
+                                      {"year-of-diagnosis": {"$lte": 2011}}]})
+        df36['$and'].append({"survival-months": {"$gte": 36}})
         res36 = json.loads(aggregate([
             {"$match": df36},
             {"$group": {
@@ -1450,9 +1451,9 @@ def survival_months2(input_json):
 
     def survival(sfilter, label):
         totals = get_totals(sfilter)
-        # pprint(totals)
+        pprint(totals)
         treatment = get_data(sfilter)
-        # pprint(treatment)
+        pprint(treatment)
 
         data = {'> 120 months': 0, '> 60 months': 0, '> 36 months': 0}
         for months in ['>120', '>60', '>36']:
@@ -1484,14 +1485,17 @@ def survival_months2(input_json):
 
     filters = ca_create_filter(input_json)
     filters = {"$and": [d for d in filters['$and'] if 'her2_status' not in d]}
+    pprint(filters)
     wot = {"$and": []}
     for f in filters['$and']:
         for k, v in f.items():
-            if k not in ["chemo", "radiation"]:
+            if k not in ["chemo", "radiation", 'surgery']:
                 wot['$and'].append(f)
     wot['$and'].append({"chemo": "No"})
     # wot['$and'].append({"radiation": "No"})
-    # wot['$and'].append({"surgery": None})
+    wot['$and'].append({"surgery": None})
+    pprint(wot)
+    exit()
 
     return survival(filters, 'treatment'), survival(wot, 'w/o treatment')
 
@@ -1518,9 +1522,9 @@ def outcomes():
 
 
 if __name__ == '__main__':
-    outcomes()
-    exit()
-    ca_diag_request = '{"age": 45, ' \
+    # outcomes()
+    # exit()
+    ca_diag_request = '{"age": 25, ' \
                       '"ethnicity": "Asian", ' \
                       '"1er_status": "+", ' \
                       '"1her2_status": "+", ' \
@@ -1541,15 +1545,15 @@ if __name__ == '__main__':
                       '}'
     test_diag = '{"sex": "Female", ' \
                 '"age": 45, ' \
-                '"1tumor_grade": 1, ' \
+                '"tumor_grade": 1, ' \
                 '"1er_status": "+", ' \
                 '"1pr_status": "+", ' \
                 '"stage": "IIA", ' \
-                '"1surgery": "Mastectomy", ' \
+                '"surgery": "Lumpectomy", ' \
                 '"chemo": "Yes", ' \
                 '"1radiation": "Yes"}'
 
-    # pprint(display_group('grade'))
+    # pprint(display_group('surgery'))
     # exit()
     # pprint(survival_months(ca_diag_request, 'chemo'))
     # pprint(survival_months(ca_diag_request, 'radiation'))
