@@ -9,7 +9,7 @@ import Tab from 'react-bootstrap/lib/Tab'
 import Tabs from 'react-bootstrap/lib/Tabs'
 import isEmpty from 'lodash/isEmpty'
 import {Bar} from 'react-chartjs-2'
-import {formatLabel} from '../../utils'
+import {formatChartNumber, formatLabel} from '../../utils'
 
 const SurgeryTypesTable = ({items = [], visibleRowIndex}) =>
   <div className='table-responsive'>
@@ -46,7 +46,7 @@ const BcEstimatedSurvivalChart = ({data}) =>
         })),
         ...data.decision.datasets.map(item => ({
           ...item,
-          backgroundColor: color_5 ,
+          backgroundColor: color_5,
           hoverBackgroundColor: color_5,
           borderColor: white,
           label: data.decision.chart_label,
@@ -80,6 +80,7 @@ const BcEstimatedSurvivalChart = ({data}) =>
       },
     }}
   />
+
 
 class BcBcEstimatedSurvival extends React.Component {
   state = {
