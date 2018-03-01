@@ -81,45 +81,6 @@ const BcEstimatedSurvivalChart = ({data}) =>
     }}
   />
 
-const SingleBcEstimatedSurvivalChart = ({data}) =>
-  <Bar
-    data={{
-      ...data,
-      datasets: data.datasets.map(item => ({
-        ...item,
-        backgroundColor: color_1,
-        hoverBackgroundColor: color_3,
-        borderColor: white,
-      }))
-    }}
-    redraw
-    options={{
-      legend: {
-        display: false,
-        position: 'bottom',
-        labels: chartsLabelsOptions
-      },
-      scales: {
-        xAxes: [{
-          id: 'bar-x-axis1',
-          barPercentage: 1.0,
-          categoryPercentage: 0.3
-        }],
-        yAxes: [{
-          ticks: {
-            max: 100,
-            beginAtZero: true,
-            callback: (value) => `${value}%`
-          },
-        }],
-      },
-      tooltips: {
-        callbacks: {
-          label: formatChartNumber
-        }
-      },
-    }}
-  />
 
 class BcBcEstimatedSurvival extends React.Component {
   state = {
@@ -165,7 +126,7 @@ class BcBcEstimatedSurvival extends React.Component {
                     {tab === 0 ? (
                       <BcEstimatedSurvivalChart data={diagnosis.estimated_survival.chemo_decision}/>
                     ) : (
-                      <SingleBcEstimatedSurvivalChart data={diagnosis.estimated_survival.surgery_decision}/>
+                      <BcEstimatedSurvivalChart data={diagnosis.estimated_survival.surgery_decision}/>
                     )}
                   </Col>
                 </Row>

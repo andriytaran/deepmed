@@ -5,12 +5,13 @@ from django.conf import settings
 from pymongo import MongoClient
 
 from base.serializers import DiagnosisDataSerializer, CustomAnalyticsSerializer
-from lib.bcancer_ca import custom_analytics, survival_months2, chemo_decisions
+from lib.bcancer_ca import custom_analytics, chemo_decisions, surgery_decisions
+from lib.dataset import surgery_decisions as ind_surgery_decisions
 from lib.dataset import percent_women_by_type, breast_cancer_by_grade, \
     breast_cancer_by_size, distribution_of_stage_of_cancer, \
-    percent_of_women_with_cancer_by_race_overall, surgery_decisions, \
+    percent_of_women_with_cancer_by_race_overall, \
     chemotherapy, radiation, percent_race_with_cancer_by_age, \
-    breast_cancer_by_state2, survival_months, \
+    breast_cancer_by_state2, \
     breast_cancer_at_a_glance2, breast_cancer_by_age, \
     percent_women_annualy_diagnosed, chemotherapy_filter, radiation_filter, \
     MONGODB_HOST, MONGODB_PORT, COLLECTION_NAME, DBS_NAME
@@ -471,28 +472,21 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
 
                 es_surgery_decision_response = surgery_decisions(
                     json.dumps(estimated_survival_data, ensure_ascii=False))
-                #
-                # if es_surgery_decision_response:
-                #     for i in es_surgery_decision_response:
-                #         if i['datasets'][0]['label'] == 'Chemo':
-                #             i['chart_label'] = 'Chemotherapy'
-                #         elif i['datasets'][0]['label'] == 'no Chemo':
-                #             i['chart_label'] = 'No Chemotherapy'
-                #         i.get('labels', []).reverse()
-                #         i.get('datasets', [])[0].get('data', []).reverse()
-                #
-                # es_surgery_decision_response[0]['chart_label'] = 'Mastectomy'
-                # es_surgery_decision_response[1][
-                #     'chart_label'] = 'Lumpectomy'
 
-                # es_response[
-                #     'surgery_decision'] = {
-                #     'decision': es_surgery_decision_response[0],
-                #     'wo_decision': es_surgery_decision_response[1]
-                # }
+                if es_surgery_decision_response:
+                    for i in es_surgery_decision_response:
+                        if i['datasets'][0]['label'] == 'Mastectomy':
+                            i['chart_label'] = 'Mastectomy'
+                        elif i['datasets'][0]['label'] == 'Lumpectomy':
+                            i['chart_label'] = 'Lumpectomy'
+                        i.get('labels', []).reverse()
+                        i.get('datasets', [])[0].get('data', []).reverse()
 
                 es_response[
-                    'surgery_decision'] = es_surgery_decision_response
+                    'surgery_decision'] = {
+                    'decision': es_surgery_decision_response[0],
+                    'wo_decision': es_surgery_decision_response[1]
+                }
 
                 self.send_json({'estimated_survival': es_response})
 
@@ -567,8 +561,8 @@ class IndividualStatisticsConsumer(JsonWebsocketConsumer):
                             percent_of_women_with_cancer_by_race_response})
 
         surgery_decisions_response = {
-            'overall': surgery_decisions(json.dumps({}), collection),
-            'by_age': surgery_decisions(age, collection)
+            'overall': ind_surgery_decisions(json.dumps({}), collection),
+            'by_age': ind_surgery_decisions(age, collection)
         }
         self.send_json({'surgery_decisions': surgery_decisions_response})
 
