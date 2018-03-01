@@ -442,14 +442,12 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
             if survival_months_dd.get('tumor_size_in_mm') > 0:
                 survival_months_data = {
                     'age': survival_months_dd.get('age'),
-                    'stage': survival_months_dd.get('stage'),
+                    'stage': survival_months_dd.get('stage_sd'),
                 }
                 surm_response = {}
 
                 # Preferred treatment
-                survival_months_data['surgery'] = overall_plans[0]['type']
                 survival_months_data['chemo'] = overall_plans[0]['chemo']
-                survival_months_data['radiation'] = overall_plans[0]['radiation']
 
                 surm_preferred_treatment_response = survival_months2(
                     json.dumps(survival_months_data, ensure_ascii=False))
@@ -465,9 +463,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 }
 
                 # Alternative treatment
-                survival_months_data['surgery'] = overall_plans[1]['type']
                 survival_months_data['chemo'] = overall_plans[1]['chemo']
-                survival_months_data['radiation'] = overall_plans[1]['radiation']
 
                 surm_alternative_treatment_response = survival_months2(
                     json.dumps(survival_months_data, ensure_ascii=False))
