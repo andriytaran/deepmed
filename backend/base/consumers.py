@@ -440,19 +440,19 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
 
             # Survival months
             if survival_months_dd.get('tumor_size_in_mm') > 0:
+                survival_months_data = {
+                    'age': survival_months_dd.get('age'),
+                    'stage': survival_months_dd.get('stage'),
+                }
                 surm_response = {}
 
-                survival_months_dd.pop('her2_status', None)
-                survival_months_dd['tumor_number'] = survival_months_dd.pop(
-                    'number_of_tumors', None)
-
                 # Preferred treatment
-                survival_months_dd['surgery'] = overall_plans[0]['type']
-                survival_months_dd['chemo'] = overall_plans[0]['chemo']
-                survival_months_dd['radiation'] = overall_plans[0]['radiation']
+                survival_months_data['surgery'] = overall_plans[0]['type']
+                survival_months_data['chemo'] = overall_plans[0]['chemo']
+                survival_months_data['radiation'] = overall_plans[0]['radiation']
 
                 surm_preferred_treatment_response = survival_months2(
-                    json.dumps(survival_months_dd, ensure_ascii=False))
+                    json.dumps(survival_months_data, ensure_ascii=False))
 
                 if surm_preferred_treatment_response:
                     for i in surm_preferred_treatment_response:
@@ -465,12 +465,12 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                 }
 
                 # Alternative treatment
-                survival_months_dd['surgery'] = overall_plans[1]['type']
-                survival_months_dd['chemo'] = overall_plans[1]['chemo']
-                survival_months_dd['radiation'] = overall_plans[1]['radiation']
+                survival_months_data['surgery'] = overall_plans[1]['type']
+                survival_months_data['chemo'] = overall_plans[1]['chemo']
+                survival_months_data['radiation'] = overall_plans[1]['radiation']
 
                 surm_alternative_treatment_response = survival_months2(
-                    json.dumps(survival_months_dd, ensure_ascii=False))
+                    json.dumps(survival_months_data, ensure_ascii=False))
 
                 if surm_alternative_treatment_response:
                     for i in surm_alternative_treatment_response:
