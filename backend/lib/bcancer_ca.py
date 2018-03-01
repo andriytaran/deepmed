@@ -1628,21 +1628,144 @@ def chemo_decisions(input_json):
                 filters['$and'].append(f)
     filters['$and'].append({'surgery': {"$ne": None}})
     filters['$and'].append({'chemo': "Yes"})
-    # pprint(filters)
     totals = get_totals(filters)
     if totals['>120'] < 500:
         filters = {"$and": [d for d in filters['$and'] if 'grade' not in d]}
         totals = get_totals(filters)
-    pprint(totals)
     treatment = get_data(filters)
-    # pprint(treatment)
     no_chemo = {"$and": [d for d in filters['$and'] if 'chemo' not in d]}
     no_chemo['$and'].append({'chemo': "No"})
-    # pprint(no_chemo)
     nc_totals = get_totals(no_chemo)
     nc_treatment = get_data(no_chemo)
 
     return survival(treatment, totals, 'treatment'), survival(nc_treatment, nc_totals, 'w/o treatment')
+
+
+def surgery_decisions(input_json):
+    def get_totals(subfilters):
+        tot_filter = copy.deepcopy(subfilters)
+        tf120 = copy.deepcopy(tot_filter)
+        tf120['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2000}},
+                                       {"year-of-diagnosis": {"$lte": 2004}}]})
+        res120 = json.loads(aggregate([
+            {"$match": tf120},
+            {"$group": {
+                "_id": "",
+                "count": {"$sum": 1}}},
+            {"$sort": SON([("_id", 1)])}]))
+        total120 = res120[0]['count'] if len(res120) > 0 else 0
+
+        tf60 = copy.deepcopy(tot_filter)
+        tf60['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2000}},
+                                      {"year-of-diagnosis": {"$lte": 2009}}]})
+        res60 = json.loads(aggregate([
+            {"$match": tf60},
+            {"$group": {
+                "_id": "",
+                "count": {"$sum": 1}}},
+            {"$sort": SON([("_id", 1)])}]))
+        total60 = res60[0]['count'] if len(res60) > 0 else 0
+
+        tf36 = copy.deepcopy(tot_filter)
+        tf36['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2000}},
+                                      {"year-of-diagnosis": {"$lte": 2011}}]})
+        res36 = json.loads(aggregate([
+            {"$match": tf36},
+            {"$group": {
+                "_id": "",
+                "count": {"$sum": 1}}},
+            {"$sort": SON([("_id", 1)])}]))
+        total36 = res36[0]['count'] if len(res36) > 0 else 0
+        return {'>120': total120, '>60': total60, '>36': total36}
+
+    def get_data(subfilters):
+        dat_filter = copy.deepcopy(subfilters)
+        df120 = copy.deepcopy(dat_filter)
+        df120['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2000}},
+                                       {"year-of-diagnosis": {"$lte": 2004}}]})
+        df120['$and'].append({"survival-months": {"$gte": 120}})
+        res120 = json.loads(aggregate([
+            {"$match": df120},
+            {"$group": {
+                "_id": "",
+                "count": {"$sum": 1}}},
+            {"$sort": SON([("_id", 1)])}]))
+        total120 = res120[0]['count'] if len(res120) > 0 else 0
+
+        df60 = copy.deepcopy(dat_filter)
+        df60['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2000}},
+                                      {"year-of-diagnosis": {"$lte": 2009}}]})
+        df60['$and'].append({"survival-months": {"$gte": 60}})
+        res60 = json.loads(aggregate([
+            {"$match": df60},
+            {"$group": {
+                "_id": "",
+                "count": {"$sum": 1}}},
+            {"$sort": SON([("_id", 1)])}]))
+        total60 = res60[0]['count'] if len(res60) > 0 else 0
+
+        df36 = copy.deepcopy(dat_filter)
+        df36['$and'].append({"$and": [{"year-of-diagnosis": {"$gte": 2000}},
+                                      {"year-of-diagnosis": {"$lte": 2011}}]})
+        df36['$and'].append({"survival-months": {"$gte": 36}})
+        res36 = json.loads(aggregate([
+            {"$match": df36},
+            {"$group": {
+                "_id": "",
+                "count": {"$sum": 1}}},
+            {"$sort": SON([("_id", 1)])}]))
+        total36 = res36[0]['count'] if len(res36) > 0 else 0
+        return {'>120': total120, '>60': total60, '>36': total36}
+
+    def survival(treatment, totals, label):
+        data = {'> 120 months': 0, '> 60 months': 0, '> 36 months': 0}
+        for months in ['>120', '>60', '>36']:
+            if months == '>120':
+                if totals[months] > 0:
+                    data['> 120 months'] = treatment[months] / totals[months] * 100
+                else:
+                    data['> 120 months'] = 0
+            if months == '>60':
+                if totals[months] > 0:
+                    data['> 60 months'] = treatment[months] / totals[months] * 100
+                else:
+                    data['> 60 months'] = 0
+            if months == '>36':
+                if totals[months] > 0:
+                    data['> 36 months'] = treatment[months] / totals[months] * 100
+                else:
+                    data['> 36 months'] = 0
+
+        return {
+            "labels": list(map(lambda x: x, data.keys())),
+            "datasets": [{
+                "data": list(map(lambda x: x, data.values())),
+                "label": label,
+                "borderColor": "#48ccf5",
+                "fill": False
+            }]
+        }
+
+    in_filters = ca_create_filter(input_json)
+    mast_filter = {"$and": []}
+    for f in in_filters['$and']:
+        for k, v in f.items():
+            if k in ["age-recode-with-1-year-olds", "sex",
+                     "breast-adjusted-ajcc-6th-stage-1988",
+                     'grade', 'chemo']:
+                mast_filter['$and'].append(f)
+    mast_filter['$and'].append({'surgery': 'Single Mastectomy'})
+    mast_totals = get_totals(mast_filter)
+    if mast_totals['>120'] < 500:
+        mast_filter = {"$and": [d for d in mast_filter['$and'] if 'grade' not in d]}
+        mast_totals = get_totals(mast_filter)
+    mast_treatment = get_data(mast_filter)
+    lump_filter = {"$and": [d for d in mast_filter['$and'] if 'surgery' not in d]}
+    lump_filter['$and'].append({'surgery': 'Lumpectomy'})
+    lump_totals = get_totals(lump_filter)
+    lump_treatment = get_data(lump_filter)
+
+    return survival(mast_treatment, mast_totals, 'Mastectomy'), survival(lump_treatment, lump_totals, 'Lumpectomy')
 
 
 if __name__ == '__main__':
