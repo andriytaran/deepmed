@@ -5,7 +5,7 @@ import s from './Sidebar.css'
 import {Link} from '../../components'
 import {
   BC_CUSTOM_ANALYTICS_ROUTE,
-  BC_DIAGNOSIS_ROUTE,
+  BC_DIAGNOSIS_ROUTE, BC_ESTIMATED_SURVIVAL,
   BC_FORM_ROUTE,
   BC_INDIVIDUAL_STATISTICS_ROUTE,
   BC_NATIONAL_STATISTICS_ROUTE,
@@ -29,7 +29,7 @@ const menuByModule = {
       {routeName: BC_NATIONAL_STATISTICS_ROUTE, label: 'National Statistics', iconComponent: FaBarChart},
       {routeName: BC_INDIVIDUAL_STATISTICS_ROUTE, label: 'Individual Statistics', iconComponent: FaBarChart},
       {routeName: BC_CUSTOM_ANALYTICS_ROUTE, label: 'Custom Analytics', iconComponent: FaBarChart},
-      {routeName: BC_SURVIVAL_MONTHS, label: 'Survival Months', iconComponent: FaBarChart},
+      {routeName: BC_ESTIMATED_SURVIVAL, label: 'Estimated survival', iconComponent: FaBarChart},
       {routeName: BC_SIMILAR_DIAGNOSES_ROUTE, label: 'Similar Diagnoses', iconComponent: FaFileO},
       {routeName: BC_RESOURCES_ROUTE, label: 'Resources', iconComponent: FaLaptop},
     ]

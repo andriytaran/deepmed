@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import s from './BcSurvivalMonths.css'
+import s from './BcEstimatedSurvival.css'
 import {Col, Row, Spin} from '../../components'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import cn from 'classnames'
@@ -13,32 +13,6 @@ import {formatLabel} from '../../utils'
 
 const SurgeryTypesTable = ({items = [], visibleRowIndex}) =>
   <div className='table-responsive'>
-    <table className={cn('table', s.surgeryTypesTable)}>
-      <thead>
-      <tr className={s.surgeryTypesTopHeader}>
-        <th colSpan={3}><h6>SURGERY</h6></th>
-      </tr>
-      <tr className={s.surgeryTypesBottomHeader}>
-        <th><h6>RECOMMENDATION</h6></th>
-        <th><h6>TYPE</h6></th>
-        <th className={s.borderRight}><h6>CONFIDENCE</h6></th>
-      </tr>
-      </thead>
-      <tbody>
-      {items[visibleRowIndex] ? (
-        <tr>
-          <td>{items[visibleRowIndex].surgery}</td>
-          <td>{items[visibleRowIndex].type}</td>
-          <td
-            className={s.borderRight}>{items[visibleRowIndex].surgery_confidence_level}{items[visibleRowIndex].type === 'N/A' ? '' : '%'} </td>
-        </tr>
-      ) : (
-        <tr>
-          <td colSpan={7} style={{textAlign: 'center'}}>N/A</td>
-        </tr>
-      )}
-      </tbody>
-    </table>
   </div>
 
 const chartsLabelsOptions = {
@@ -52,30 +26,30 @@ const color_1 = 'rgba(72, 204, 245, 0.75)'
 const color_2 = '#88d0d1'
 const color_3 = '#47cfd1'
 const color_4 = 'rgba(184, 232, 245, 0.5)'
-const color_5 = '#1ac6ff'
+const color_5 = 'rgba(0, 125, 255, 0.75)'
 const color_6 = 'rgba(143, 97, 236, 0.75)'
 const color_7 = '#9df51d'
 const color_8 = '#ff9400'
 const color_9 = '#f51431'
 
-const SurvivalMonthsChart = ({data}) =>
+const BcEstimatedSurvivalChart = ({data}) =>
   <Bar
     data={{
-      labels: data.wo_treatment.labels,
+      labels: data.wo_decision.labels,
       datasets: [
-        ...data.wo_treatment.datasets.map(item => ({
+        ...data.wo_decision.datasets.map(item => ({
           ...item,
           backgroundColor: color_1,
           hoverBackgroundColor: color_1,
           borderColor: white,
-          label: 'without treatment',
+          label: data.wo_decision.chart_label,
         })),
-        ...data.treatment.datasets.map(item => ({
+        ...data.decision.datasets.map(item => ({
           ...item,
-          backgroundColor: color_6,
-          hoverBackgroundColor: color_6,
+          backgroundColor: color_5,
+          hoverBackgroundColor: color_5,
           borderColor: white,
-          label: 'treatment',
+          label: data.decision.chart_label,
         })),
       ]
     }}
@@ -107,7 +81,7 @@ const SurvivalMonthsChart = ({data}) =>
     }}
   />
 
-class BcSurvivalMonths extends React.Component {
+class BcBcEstimatedSurvival extends React.Component {
   state = {
     tab: 0,
   }
@@ -133,10 +107,10 @@ class BcSurvivalMonths extends React.Component {
                 animation={false}
                 className={s.surgeryTypesTabs}
               >
-                <Tab eventKey={0} title='PREFERRED RECOMMENDATION'>
+                <Tab eventKey={0} title='Chemotherapy Decision'>
                   <SurgeryTypesTable items={diagnosis.overall_plans} visibleRowIndex={0}/>
                 </Tab>
-                <Tab eventKey={1} title='ALTERNATIVE RECOMMENDATION'>
+                <Tab eventKey={1} title='Surgery Decision'>
                   <SurgeryTypesTable items={diagnosis.overall_plans} visibleRowIndex={1}/>
                 </Tab>
               </Tabs>
@@ -145,18 +119,18 @@ class BcSurvivalMonths extends React.Component {
           {(!isEmpty(diagnosis.overall_plans)) && (
             <div className={s.chartWrapper}>
               <h3 className={s.chartHeader}>Estimated Survival Rate for your Diagnosis</h3>
-              {!isEmpty(diagnosis.survival_months) && (
+              {!isEmpty(diagnosis.estimated_survival) && (
                 <Row type='flex' gutter={16} className={s.content}>
                   <Col xs={24}>
                     {tab === 0 ? (
-                      <SurvivalMonthsChart data={diagnosis.survival_months.preferred_plan}/>
+                      <BcEstimatedSurvivalChart data={diagnosis.estimated_survival.chemo_decision}/>
                     ) : (
-                      <SurvivalMonthsChart data={diagnosis.survival_months.alternative_plan}/>
+                      <BcEstimatedSurvivalChart data={diagnosis.estimated_survival.surgery_decision}/>
                     )}
                   </Col>
                 </Row>
               )}
-              {isNil(diagnosis.survival_months) && <Spin spinning/>}
+              {isNil(diagnosis.estimated_survival) && <Spin spinning/>}
             </div>
           )}
         </div>
@@ -171,4 +145,4 @@ const mapState = state => ({
 
 const mapDispatch = {}
 
-export default connect(mapState, mapDispatch)(withStyles(s)(BcSurvivalMonths))
+export default connect(mapState, mapDispatch)(withStyles(s)(BcBcEstimatedSurvival))
