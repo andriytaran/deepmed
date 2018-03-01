@@ -49,17 +49,15 @@ def display_group(group):
 
 def get_age_group(age):
     age_group = None
-    if age >= 70:
-        age_group = ["70-74 years", "75-79 years", "80-84 years", "85+ years"]
-    elif age >= 60:
-        age_group = ["60-64 years", "65-69 years"]
-    elif age >= 50:
-        age_group = ["50-54 years", "55-59 years"]
-    elif age >= 40:
-        age_group = ["40-44 years", "45-49 years"]
+    if age >= 60:
+        age_group = ["60-64 years", "65-69 years", "70-74 years",
+                     "75-79 years", "80-84 years", "85+ years"]
+    elif age >= 45:
+        age_group = ["45-49 years", "50-54 years", "55-59 years"]
     elif age >= 0:
         age_group = ["00-04 years", "05-09 years", "10-14 years", "15-19 years",
-                     "20-24 years", "25-29 years", "30-34 years", "35-39 years"]
+                     "20-24 years", "25-29 years", "30-34 years", "35-39 years",
+                     "40-44 years"]
     return age_group
 
 
@@ -1632,12 +1630,21 @@ def chemo_decisions(input_json):
     if totals['>120'] < 500:
         filters = {"$and": [d for d in filters['$and'] if 'grade' not in d]}
         totals = get_totals(filters)
-    treatment = get_data(filters)
     no_chemo = {"$and": [d for d in filters['$and'] if 'chemo' not in d]}
     no_chemo['$and'].append({'chemo': "No"})
     nc_totals = get_totals(no_chemo)
+    if nc_totals['>120'] < 500:
+        filters = {"$and": [d for d in filters['$and'] if 'grade' not in d]}
+        totals = get_totals(filters)
+        no_chemo = {"$and": [d for d in filters['$and'] if 'chemo' not in d]}
+        no_chemo['$and'].append({'chemo': "No"})
+        nc_totals = get_totals(no_chemo)
+    treatment = get_data(filters)
+    pprint(treatment)
+    pprint(totals)
     nc_treatment = get_data(no_chemo)
-
+    pprint(nc_treatment)
+    pprint(nc_totals)
     return survival(treatment, totals, 'Chemo'), survival(nc_treatment, nc_totals, 'no Chemo')
 
 
@@ -1759,12 +1766,17 @@ def surgery_decisions(input_json):
     if mast_totals['>120'] < 500:
         mast_filter = {"$and": [d for d in mast_filter['$and'] if 'grade' not in d]}
         mast_totals = get_totals(mast_filter)
-    mast_treatment = get_data(mast_filter)
     lump_filter = {"$and": [d for d in mast_filter['$and'] if 'surgery' not in d]}
     lump_filter['$and'].append({'surgery': 'Lumpectomy'})
     lump_totals = get_totals(lump_filter)
+    if lump_totals['>120'] < 500:
+        mast_filter = {"$and": [d for d in mast_filter['$and'] if 'grade' not in d]}
+        mast_totals = get_totals(mast_filter)
+        lump_filter = {"$and": [d for d in mast_filter['$and'] if 'surgery' not in d]}
+        lump_filter['$and'].append({'surgery': 'Lumpectomy'})
+        lump_totals = get_totals(lump_filter)
+    mast_treatment = get_data(mast_filter)
     lump_treatment = get_data(lump_filter)
-
     return survival(mast_treatment, mast_totals, 'Mastectomy'), survival(lump_treatment, lump_totals, 'Lumpectomy')
 
 
@@ -1791,8 +1803,8 @@ if __name__ == '__main__':
                       '"1surgery": "Lumpectomy" ' \
                       '}'
     test_diag = '{"sex": "Female", ' \
-                '"age": 75, ' \
-                '"tumor_grade": 1, ' \
+                '"age": 38, ' \
+                '"tumor_grade": 3, ' \
                 '"1er_status": "+", ' \
                 '"1pr_status": "+", ' \
                 '"stage": "IIA", ' \
@@ -1807,6 +1819,7 @@ if __name__ == '__main__':
     # pprint(survival_months(ca_diag_request, 'Mastectomy'))
     # pprint(survival_months2(test_diag))
     pprint(surgery_decisions(test_diag))
+    # pprint(chemo_decisions(test_diag))
     exit()
 
     filter = ca_create_filter(test_diag)

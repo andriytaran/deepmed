@@ -1259,7 +1259,7 @@ def breast_cancer_by_size(input_json, collection=None):
     """
     only_age = {"age": json.loads(input_json)['age']}
     filters = create_filter(json.dumps(only_age))
-    sizes = ['< 1cm', '<2cm', '<3cm', '>3cm', '>5cm', 'Micro']
+    sizes = ['< 1cm', '< 2cm', '< 3cm', '< 5cm', '> 5cm', 'Micro']
     filters['$and'].append({"t-size-cm": {"$in": sizes}})
     result = json.loads(aggregate([
         {"$match": filters},
@@ -1283,13 +1283,13 @@ def breast_cancer_by_size(input_json, collection=None):
     for i, label in enumerate(list(map(lambda x: x['_id']['t-size-cm'], result))):
         if label == '< 1cm':
             data['< 1cm'] += result[i]['percentage']
-        elif label == '<2cm':
+        elif label == '< 2cm':
             data['< 2cm'] += result[i]['percentage']
-        elif label == '<3cm':
+        elif label == '< 3cm':
             data['< 5cm'] += result[i]['percentage']
-        elif label == '>3cm':
+        elif label == '< 5cm':
             data['< 5cm'] += result[i]['percentage']
-        elif label == '>5cm':
+        elif label == '> 5cm':
             data['> 5cm'] += result[i]['percentage']
         elif label == 'Micro':
             data['< 1cm'] += result[i]['percentage']
@@ -1925,9 +1925,9 @@ if __name__ == '__main__':
     # pprint(test1)
     # test2 = surgery_decisions(diag_request, collection=collection)
     # pprint(test2)
-    test3 = survival_months(diag_request, collection=collection)
-    pprint(test3)
-
+    # test3 = survival_months(diag_request, collection=collection)
+    # pprint(test3)
+    pprint(breast_cancer_by_size(diag_request_age_only))
     # test = percent_women_annualy_diagnosed(diag_request, collection)
     # pprint(test)
 
