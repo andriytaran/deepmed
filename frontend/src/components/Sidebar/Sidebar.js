@@ -28,6 +28,7 @@ const menuByModule = {
     items: [
       {routeName: BC_DIAGNOSIS_ROUTE, label: 'Diagnosis', iconComponent: FaHeaderO},
       {routeName: BC_VISUALIZATION_ROUTE, label: 'Visualization', iconComponent: FaHeaderO},
+      {routeName: BC_GLOBAL_STATISTICS_ROUTE, label: 'Global Statistics', iconComponent: FaBarChart},
       {routeName: BC_NATIONAL_STATISTICS_ROUTE, label: 'National Statistics', iconComponent: FaBarChart},
       {routeName: BC_INDIVIDUAL_STATISTICS_ROUTE, label: 'Individual Statistics', iconComponent: FaBarChart},
       {routeName: BC_CUSTOM_ANALYTICS_ROUTE, label: 'Custom Analytics', iconComponent: FaBarChart},
