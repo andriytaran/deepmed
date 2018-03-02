@@ -1807,7 +1807,8 @@ def surgery_decisions(input_json):
         for k, v in f.items():
             if k in ["age-recode-with-1-year-olds", "sex",
                      "breast-adjusted-ajcc-6th-stage-1988",
-                     'grade', 'chemo']:
+                     # 'grade',
+                     'chemo']:
                 mast_filter['$and'].append(f)
     mast_filter['$and'].append({'surgery': 'Single Mastectomy'})
     mast_totals = get_totals(mast_filter)
@@ -1856,8 +1857,8 @@ if __name__ == '__main__':
                 '"1er_status": "+", ' \
                 '"1pr_status": "+", ' \
                 '"stage": "IIA", ' \
-                '"surgery": "Mastectomy", ' \
-                '"chemo": "Yes", ' \
+                '"1surgery": "Mastectomy", ' \
+                '"1chemo": "Yes", ' \
                 '"1radiation": "Yes"}'
 
     # pprint(display_group('surgery'))
@@ -1866,9 +1867,9 @@ if __name__ == '__main__':
     # pprint(survival_months(ca_diag_request, 'radiation'))
     # pprint(survival_months(ca_diag_request, 'Mastectomy'))
     # pprint(survival_months2(test_diag))
-    # pprint(surgery_decisions(test_diag))
+    pprint(surgery_decisions(test_diag))
     # pprint(chemo_decisions(test_diag))
-    # exit()
+    exit()
 
     filter = ca_create_filter(test_diag)
     # filter['$and'].append({"cod-to-site-recode": {"$nin": ['']}})
