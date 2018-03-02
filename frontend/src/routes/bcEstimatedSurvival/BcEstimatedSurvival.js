@@ -53,7 +53,6 @@ const BcEstimatedSurvivalChart = ({data}) =>
         })),
       ]
     }}
-    redraw
     options={{
       legend: {
         position: 'bottom',
