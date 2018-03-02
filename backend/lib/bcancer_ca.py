@@ -232,7 +232,8 @@ def ca_create_filter(input_data, operator='$and'):
 def custom_analytics(input_json, grouping):
     def ca_by_grade(input_json):
         filters = ca_create_filter(input_json)
-        stages = [1.0, 2.0, 3.0, 4.0]
+        stages = [1, 2, 3, 4]
+        filters['$and'] = [d for d in filters['$and'] if 'grade' not in d]
         filters['$and'].append({"grade": {"$in": stages}})
         result = json.loads(aggregate([
             {"$match": filters},
@@ -254,11 +255,11 @@ def custom_analytics(input_json, grouping):
 
         data = {'Grade 1': 0, 'Grade 2': 0, 'Grade 3': 0}
         for i, label in enumerate(list(map(lambda x: x['_id']['grade'], result))):
-            if label == 1.0:
+            if label == 1:
                 data['Grade 1'] += result[i]['percentage']
-            elif label == 2.0:
+            elif label == 2:
                 data['Grade 2'] += result[i]['percentage']
-            elif label in [3.0, 4.0]:
+            elif label in [3, 4]:
                 data['Grade 3'] += result[i]['percentage']
 
         return {
@@ -286,6 +287,7 @@ def custom_analytics(input_json, grouping):
         :return:
         """
         filters = ca_create_filter(input_json)
+        filters['$and'] = [d for d in filters['$and'] if 'breast-adjusted-ajcc-6th-stage-1988' not in d]
         stages = ['I', 'IIA', 'IIB', 'IIIA', 'IIIB', 'IIIC', 'IV']
         filters['$and'].append({"breast-adjusted-ajcc-6th-stage-1988": {"$in": stages}})
         result = json.loads(aggregate([
@@ -331,6 +333,7 @@ def custom_analytics(input_json, grouping):
 
     def ca_by_type(input_json):
         filters = ca_create_filter(input_json)
+        filters['$and'] = [d for d in filters['$and'] if 'type' not in d]
         result = json.loads(aggregate([
             {"$match": filters},
             {"$group": {
@@ -385,7 +388,8 @@ def custom_analytics(input_json, grouping):
         :return: json
         """
         filters = ca_create_filter(input_json)
-        sizes = ['< 1cm', '<2cm', '<3cm', '>3cm', '>5cm', 'Micro']
+        filters['$and'] = [d for d in filters['$and'] if 't-size-cm' not in d]
+        sizes = ['< 1cm', '< 2cm', '< 3cm', '< 5cm', '> 5cm', 'Micro']
         filters['$and'].append({"t-size-cm": {"$in": sizes}})
         result = json.loads(aggregate([
             {"$match": filters},
@@ -407,11 +411,11 @@ def custom_analytics(input_json, grouping):
 
         data = {'0-2cm': 0, '2-5cm': 0, '5cm+': 0}
         for i, label in enumerate(list(map(lambda x: x['_id']['t-size-cm'], result))):
-            if label in ['Micro', '< 1cm', '<2cm']:
+            if label in ['Micro', '< 1cm', '< 2cm']:
                 data['0-2cm'] += result[i]['percentage']
-            elif label in ['<3cm', '>3cm']:
+            elif label in ['< 3cm', '< 5cm']:
                 data['2-5cm'] += result[i]['percentage']
-            elif label == '>5cm':
+            elif label == '> 5cm':
                 data['5cm+'] += result[i]['percentage']
             else:
                 print(label)
@@ -649,6 +653,7 @@ def custom_analytics(input_json, grouping):
         :return: json
         """
         filters = ca_create_filter(input_json)
+        filters['$and'] = [d for d in filters['$and'] if 'cod-to-site-recode' not in d]
         result = json.loads(aggregate([
             {"$match": filters},
             {"$group": {
@@ -784,6 +789,7 @@ def custom_analytics(input_json, grouping):
         :return: json
         """
         filters = ca_create_filter(input_json)
+        filters['$and'] = [d for d in filters['$and'] if 'surgery' not in d]
         excluded = ['None']
         filters['$and'].append({"surgery": {"$nin": excluded}})
         result = json.loads(aggregate([
@@ -1825,10 +1831,10 @@ def surgery_decisions(input_json):
 if __name__ == '__main__':
     # outcomes()
     # exit()
-    ca_diag_request = '{"age": 25, ' \
-                      '"ethnicity": "Asian", ' \
+    ca_diag_request = '{"1age": 25, ' \
+                      '"1ethnicity": "Asian", ' \
                       '"1er_status": "+", ' \
-                      '"1her2_status": "+", ' \
+                      '"her2_status": "+", ' \
                       '"1laterality": "left", ' \
                       '"1num_pos_nodes": 0, ' \
                       '"1pr_status": "+", ' \
@@ -1836,7 +1842,7 @@ if __name__ == '__main__':
                       '"sex": "Female", ' \
                       '"1site": "Upper-Outer", ' \
                       '"1stage": "III", ' \
-                      '"1tumor_grade": 1, ' \
+                      '"tumor_grade": 4, ' \
                       '"1tumor_number": 1, ' \
                       '"1tumor_size": "<1cm", ' \
                       '"1type": "IDC", ' \
@@ -1861,8 +1867,8 @@ if __name__ == '__main__':
     # pprint(survival_months(ca_diag_request, 'Mastectomy'))
     # pprint(survival_months2(test_diag))
     # pprint(surgery_decisions(test_diag))
-    pprint(chemo_decisions(test_diag))
-    exit()
+    # pprint(chemo_decisions(test_diag))
+    # exit()
 
     filter = ca_create_filter(test_diag)
     # filter['$and'].append({"cod-to-site-recode": {"$nin": ['']}})
@@ -1877,10 +1883,10 @@ if __name__ == '__main__':
             "_id": "",
             "count": {"$sum": 1}}},
         {"$sort": SON([("_id", 1)])}]))
-    pprint(count)
+    # pprint(count)
 
     # ca_find_request = '{"ethnicity": "Chinese"}'
     # filters = ca_create_filter(ca_diag_request)
     # print(len(find(filters, limit=100)))
-    # pprint(custom_analytics(ca_diag_request, 'size'))
-    # pprint(custom_analytics(ca_diag_request, 'grade'))
+    pprint(custom_analytics(ca_diag_request, 'size'))
+    pprint(custom_analytics(ca_diag_request, 'grade'))
