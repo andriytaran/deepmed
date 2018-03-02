@@ -69,11 +69,6 @@ const routes = {
           action: require('./bcDiagnosis').default,
         },
         {
-          path: '/breast-cancer/global-statistics',
-          name: BC_GLOBAL_STATISTICS_ROUTE,
-          action: require('./bcGlobalStatistics').default,
-        },
-        {
           path: '/breast-cancer/national-statistics',
           name: BC_NATIONAL_STATISTICS_ROUTE,
           action: require('./bcNationalStatistics').default,
