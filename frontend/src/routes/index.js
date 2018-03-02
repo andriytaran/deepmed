@@ -11,6 +11,7 @@ export const USER_ROUTE = 'user'
 // Breast Cancer
 export const BC_FORM_ROUTE = 'bc-form'
 export const BC_DIAGNOSIS_ROUTE = 'bc-diagnosis'
+export const BC_GLOBAL_STATISTICS_ROUTE = 'bc-global-statistics'
 export const BC_NATIONAL_STATISTICS_ROUTE = 'bc-national-statistics'
 export const BC_INDIVIDUAL_STATISTICS_ROUTE = 'bc-individual-statistics'
 export const BC_SIMILAR_DIAGNOSES_ROUTE = 'bc-similar-diagnoses'
@@ -66,6 +67,11 @@ const routes = {
           path: '/breast-cancer/diagnosis',
           name: BC_DIAGNOSIS_ROUTE,
           action: require('./bcDiagnosis').default,
+        },
+        {
+          path: '/breast-cancer/global-statistics',
+          name: BC_GLOBAL_STATISTICS_ROUTE,
+          action: require('./bcGlobalStatistics').default,
         },
         {
           path: '/breast-cancer/national-statistics',

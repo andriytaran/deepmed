@@ -5,12 +5,14 @@ import s from './Sidebar.css'
 import {Link} from '../../components'
 import {
   BC_CUSTOM_ANALYTICS_ROUTE,
-  BC_DIAGNOSIS_ROUTE, BC_ESTIMATED_SURVIVAL,
+  BC_DIAGNOSIS_ROUTE,
+  BC_ESTIMATED_SURVIVAL,
   BC_FORM_ROUTE,
   BC_INDIVIDUAL_STATISTICS_ROUTE,
+  BC_GLOBAL_STATISTICS_ROUTE,
   BC_NATIONAL_STATISTICS_ROUTE,
   BC_RESOURCES_ROUTE,
-  BC_SIMILAR_DIAGNOSES_ROUTE, BC_SURVIVAL_MONTHS,
+  BC_SIMILAR_DIAGNOSES_ROUTE,
   BC_VISUALIZATION_ROUTE,
   HOME_ROUTE,
 } from '../../routes'
@@ -26,6 +28,7 @@ const menuByModule = {
     items: [
       {routeName: BC_DIAGNOSIS_ROUTE, label: 'Diagnosis', iconComponent: FaHeaderO},
       {routeName: BC_VISUALIZATION_ROUTE, label: 'Visualization', iconComponent: FaHeaderO},
+      {routeName: BC_GLOBAL_STATISTICS_ROUTE, label: 'Global Statistics', iconComponent: FaBarChart},
       {routeName: BC_NATIONAL_STATISTICS_ROUTE, label: 'National Statistics', iconComponent: FaBarChart},
       {routeName: BC_INDIVIDUAL_STATISTICS_ROUTE, label: 'Individual Statistics', iconComponent: FaBarChart},
       {routeName: BC_CUSTOM_ANALYTICS_ROUTE, label: 'Custom Analytics', iconComponent: FaBarChart},
