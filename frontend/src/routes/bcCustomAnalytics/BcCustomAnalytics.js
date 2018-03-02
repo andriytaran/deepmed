@@ -27,7 +27,9 @@ class BcCustomAnalytics extends React.Component {
   changeField = (value, key) => {
     let show = this.state.her2Title
     console.log(value)
-    show = (key === 'her2_status' && ['-', '+'].includes(value))
+    if (key === 'her2_status') {
+      show = (['-', '+'].includes(value))
+    }
     this.setState({
       fields: {
         ...this.state.fields,
@@ -345,7 +347,7 @@ class BcCustomAnalytics extends React.Component {
                     height={200}
                   />
                 )}
-                {(!isEmpty(customAnalytics.custom_analytics) && her2Title === true) && (
+                {(!isEmpty(customAnalytics.custom_analytics) && her2Title === true && customAnalytics.custom_analytics.is_data === true) && (
                   <div className={s.her2Title}>Last 5 years data only</div>
                 )}
                 {((!isEmpty(customAnalytics.custom_analytics) && customAnalytics.custom_analytics.is_data === false)) && (
