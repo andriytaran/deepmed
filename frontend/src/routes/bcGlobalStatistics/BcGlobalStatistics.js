@@ -8,6 +8,7 @@ import reduce from 'lodash/reduce'
 import assign from 'lodash/assign'
 import uniq from 'lodash/uniq'
 import sortBy from 'lodash/sortBy'
+import cn from 'classnames'
 
 const white = '#fff'
 const color_1 = 'rgba(0, 125, 255, 0.75)'
@@ -1153,9 +1154,9 @@ class BcGlobalStatistics extends React.Component {
 
     return (
       <div className={s.container}>
-        <Row gutter={16}>
-          <Col xs={24} md={16}>
-            <div className={s.card}>
+        <Row type='flex' gutter={16}>
+          <Col xs={24} md={16} className={s.col}>
+            <div className={cn(s.card, s.mapCard)}>
               <h2 className={s.cardHeader}>Breast Cancer Incidence per 100,000</h2>
               <div className={s.mapWrapper}>
                 <VectorMap
@@ -1195,9 +1196,9 @@ class BcGlobalStatistics extends React.Component {
                 </div>
               )}
             </div>
-            <Row type='flex' gutter={16} className={s.row}>
-              <Col xs={24} md={12}>
-                <div className={s.card}>
+            <Row type='flex' gutter={16}>
+              <Col xs={24} md={12} className={s.col}>
+                <div className={cn(s.card, s.fullHeight)}>
                   <div className={s.labels}>
                     <div className='row row-condensed'>
                       <div className='col-sm-6'>
@@ -1264,7 +1265,7 @@ class BcGlobalStatistics extends React.Component {
                   </div>
                 </div>
               </Col>
-              <Col xs={24} md={12}>
+              <Col xs={24} md={12} className={s.col}>
                 <div className={s.card}>
                   <ul className={s.list}>
                     <br/>
@@ -1296,7 +1297,7 @@ class BcGlobalStatistics extends React.Component {
             </Row>
             <div className={s.card}>
               <h2 className={s.cardHeader}>Five Year Survival Rate</h2>
-              <Row type='flex' gutter={16} className={s.rowBlocks}>
+              <Row type='flex' gutter={16} className={s.row}>
                 <Col>
                   <div className='display-table-cell display-block-xs'>
                     <div
@@ -1370,8 +1371,8 @@ class BcGlobalStatistics extends React.Component {
               </Row>
             </div>
           </Col>
-          <Col xs={24} md={8}>
-            <div className={s.card}>
+          <Col xs={24} md={8} className={s.col}>
+            <div className={cn(s.card, s.fullHeight)}>
               <h2 className={s.cardHeader}>Breast Cancer Incidence and Mortality per 100 000</h2>
               <HorizontalBar
                 data={{
