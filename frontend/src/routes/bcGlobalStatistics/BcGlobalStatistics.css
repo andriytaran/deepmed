@@ -1,6 +1,7 @@
 @import '../../variables.css';
 
 .col {
+  margin-bottom: var(--margin-md);
 }
 
 .container {
@@ -13,8 +14,14 @@
   padding: 1rem;
   border: 1px solid #f0f0f2;
   border-radius: 5px;
-  height: 100%;
+}
+
+.mapCard {
   margin-bottom: var(--margin-md);
+}
+
+.fullHeight {
+  height: 100%;
 }
 
 .cardHeader {
@@ -22,10 +29,6 @@
 }
 
 .row {
-  margin-bottom: var(--margin-md);
-}
-
-.rowBlocks {
   justify-content: center;
 }
 
