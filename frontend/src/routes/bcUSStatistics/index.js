@@ -1,16 +1,16 @@
 import React from 'react'
-import BcEstimatedSurvival from './BcEstimatedSurvival'
+import BcUSStatistics from './BcUSStatistics'
 import {AppLayout} from '../../components'
 import {setCurrentRouteName} from '../../reducers/global'
+
+const title = 'U.S. Breast Cancer Statistics'
 
 async function action({store, route}) {
   store.dispatch(setCurrentRouteName(route.name))
 
-  const title = 'Estimated Survival'
-
   return {
     title,
-    component: <AppLayout title={title}><BcEstimatedSurvival/></AppLayout>,
+    component: <AppLayout title={title}><BcUSStatistics/></AppLayout>,
   }
 }
 

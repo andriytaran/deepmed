@@ -12,13 +12,13 @@ export const USER_ROUTE = 'user'
 export const BC_FORM_ROUTE = 'bc-form'
 export const BC_DIAGNOSIS_ROUTE = 'bc-diagnosis'
 export const BC_GLOBAL_STATISTICS_ROUTE = 'bc-global-statistics'
-export const BC_NATIONAL_STATISTICS_ROUTE = 'bc-national-statistics'
+export const BC_US_STATISTICS_ROUTE = 'bc-us-statistics'
 export const BC_INDIVIDUAL_STATISTICS_ROUTE = 'bc-individual-statistics'
 export const BC_SIMILAR_DIAGNOSES_ROUTE = 'bc-similar-diagnoses'
 export const BC_CUSTOM_ANALYTICS_ROUTE = 'bc-custom-analytics'
 export const BC_RESOURCES_ROUTE = 'bc-resources'
 export const BC_VISUALIZATION_ROUTE = 'bc-visualization'
-export const BC_ESTIMATED_SURVIVAL = 'bc-estimated-survival'
+export const BC_SURVIVAL_MONTHS = 'bc-survival-months'
 
 // The top-level (parent) route
 const routes = {
@@ -74,9 +74,9 @@ const routes = {
           action: require('./bcGlobalStatistics').default,
         },
         {
-          path: '/breast-cancer/national-statistics',
-          name: BC_NATIONAL_STATISTICS_ROUTE,
-          action: require('./bcNationalStatistics').default,
+          path: '/breast-cancer/us-statistics',
+          name: BC_US_STATISTICS_ROUTE,
+          action: require('./bcUSStatistics').default,
         },
         {
           path: '/breast-cancer/visualization',
@@ -104,9 +104,9 @@ const routes = {
           action: require('./bcCustomAnalytics').default,
         },
         {
-          path: '/breast-cancer/estimated-survival',
-          name: BC_ESTIMATED_SURVIVAL,
-          action: require('./bcEstimatedSurvival').default,
+          path: '/breast-cancer/survival-months',
+          name: BC_SURVIVAL_MONTHS,
+          action: require('./bcSurvivalMonths').default,
         },
       ],
       async action({store, next, pathname}) {

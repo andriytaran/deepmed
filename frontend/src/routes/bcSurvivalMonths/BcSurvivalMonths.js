@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import s from './BcEstimatedSurvival.css'
+import s from './BcSurvivalMonths.css'
 import {Col, Row, Spin} from '../../components'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import cn from 'classnames'
@@ -32,7 +32,7 @@ const color_7 = '#9df51d'
 const color_8 = '#ff9400'
 const color_9 = '#f51431'
 
-const BcEstimatedSurvivalChart = ({data}) =>
+const BcSurvivalMonthsChart = ({data}) =>
   <Bar
     data={{
       labels: data.wo_decision.labels,
@@ -81,7 +81,7 @@ const BcEstimatedSurvivalChart = ({data}) =>
   />
 
 
-class BcBcEstimatedSurvival extends React.Component {
+class BcSurvivalMonths extends React.Component {
   state = {
     tab: 0,
   }
@@ -123,9 +123,9 @@ class BcBcEstimatedSurvival extends React.Component {
                 <Row type='flex' gutter={16} className={s.content}>
                   <Col xs={24}>
                     {tab === 0 ? (
-                      <BcEstimatedSurvivalChart data={diagnosis.estimated_survival.chemo_decision}/>
+                      <BcSurvivalMonthsChart data={diagnosis.estimated_survival.chemo_decision}/>
                     ) : (
-                      <BcEstimatedSurvivalChart data={diagnosis.estimated_survival.surgery_decision}/>
+                      <BcSurvivalMonthsChart data={diagnosis.estimated_survival.surgery_decision}/>
                     )}
                   </Col>
                 </Row>
@@ -145,4 +145,4 @@ const mapState = state => ({
 
 const mapDispatch = {}
 
-export default connect(mapState, mapDispatch)(withStyles(s)(BcBcEstimatedSurvival))
+export default connect(mapState, mapDispatch)(withStyles(s)(BcSurvivalMonths))
