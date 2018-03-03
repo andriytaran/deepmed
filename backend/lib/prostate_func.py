@@ -7,7 +7,7 @@ from pprint import pprint
 MONGODB_HOST = 'localhost'
 MONGODB_PORT = 27017
 DBS_NAME = 'prostate'
-COLLECTION_NAME = 'dataset'
+COLLECTION_NAME = 'dataset2'
 
 
 def aggregate(request, collection=None):
@@ -354,5 +354,5 @@ if __name__ == '__main__':
                    '"1her2_status": "+", ' \
                    '"1ethnicity": "White"}'
 
-    pprint(display_group("other-surgery-2003"))
-    pprint(surgery_decisions(diag_request, collection))
+    pprint(display_group("origin-recode-nhia-hispanic-non-hisp"))
+    # pprint(surgery_decisions(diag_request, collection))
