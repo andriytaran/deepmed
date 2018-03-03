@@ -133,10 +133,6 @@ def psa_recode(document):
     return None
 
 
-def race_recode(document):
-    pass
-
-
 def stage_recode(document):
     if document['stage-2004'] not in ['Blank(s)', None, 'UNK Stage']:
         return document['stage-2004']
@@ -160,7 +156,7 @@ def surgery_recode(document):
 
 def tstage_recode(document):
     if document['t-stage-1998_'] not in ['Blank(s)']:
-        return document['t-stage-1998']
+        return document['t-stage-1998_']
     if document['t-stage-2004'] not in ['Blank(s)', None]:
         return document['t-stage-2004']
     if document['t-stage-2010'] not in ['Blank(s)', None]:
@@ -215,16 +211,16 @@ if __name__ == '__main__':
     # pprint(display_group('race-detail'), width=100)
     # pprint(display_group('origin-recode-nhia-hispanic-non-hisp'), width=100)
 
-    hispanic_filter = {'$and': []}
-    hispanic_filter['$and'].append({"origin-recode-nhia-hispanic-non-hisp": "Spanish-Hispanic-Latino"})
-    count = json.loads(aggregate([
-        {"$match": hispanic_filter},
-        {"$group": {
-            "_id": "",
-            "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}]))
-    pprint(count)
-
+    # hispanic_filter = {'$and': []}
+    # hispanic_filter['$and'].append({"origin-recode-nhia-hispanic-non-hisp": "Spanish-Hispanic-Latino"})
+    # count = json.loads(aggregate([
+    #     {"$match": hispanic_filter},
+    #     {"$group": {
+    #         "_id": "",
+    #         "count": {"$sum": 1}}},
+    #     {"$sort": SON([("_id", 1)])}]))
+    # pprint(count)
+    #
     exit()
 
     # test_documents = []
@@ -246,9 +242,19 @@ if __name__ == '__main__':
     # i = 0
     i = 0
     for document in collection.find():
-        print(document['_id'])
+        # print(document['_id'])
+
+        if 'origin-recode-nhia-hispanic-non-hisp' in document and document[
+            'origin-recode-nhia-hispanic-non-hisp'] == 'Spanish-Hispanic-Latino':
+            if document['race'] in ['White', 'Unknown']:
+                document['race'] = 'Hispanic'
+            if document['race-detail'] in ['White', 'Unknown']:
+                document['race-detail'] = 'Hispanic'
+            if document['raceethnicity'] in ['White', 'Unknown']:
+                document['raceethnicity'] = 'Hispanic'
+            print(document['race'], document['race-detail'])
+
         # pprint(document)
-        # exit()
 
         # print(document['gleason-12'], document['gleason-121'])
         document['gleason'] = gleason_recode(document)
@@ -301,8 +307,3 @@ if __name__ == '__main__':
     print('ALL DONE.')
     exit()
 
-    for document in collection.find():
-        print(document['_id'])
-        document['t-size-mm'] = recode_t_size(document)[0]
-        document['t-size-cm'] = recode_t_size(document)[1]
-        # collection.update_one({'_id': document['_id']}, {"$set": document}, upsert=False)
