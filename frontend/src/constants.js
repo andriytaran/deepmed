@@ -1,7 +1,7 @@
 export const WEEK = 604800
 export const YEAR = 31536000
 
-export const RACES = ['Asian', 'African American', 'Caucasian', 'American Indian/Alaska Native', 'Other']
+export const RACES = ['African American', 'American Indian/Alaska Native', 'Asian', 'Caucasian', 'Hispanic', 'Other']
 
 export const GROUPED_RACES = [
   'African American',
@@ -20,6 +20,7 @@ export const GROUPED_RACES = [
     ]
   },
   'Caucasian',
+  'Hispanic',
   'Other',
 ]
 export const GROUPED_SURVIVAL_MONTHS = [
