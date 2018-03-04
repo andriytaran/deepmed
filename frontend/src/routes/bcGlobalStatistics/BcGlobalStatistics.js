@@ -14,7 +14,7 @@ const white = '#fff'
 const color_1 = 'rgba(0, 125, 255, 0.75)'
 const color_3 = 'rgba(72, 204, 245, 0.75)'
 
-const colors = ['#CEEBFB', '#04A9A9', '#77C2D9', '#59B6F5', '#89BAD9', '#89BAE1']
+const colors = ['#47cfd1', '#47cfd1', '#04a9a9', '#48ccf5', '#77c2d9', '#77c2d9']
 
 const map_data = [
   {
@@ -1165,7 +1165,14 @@ class BcGlobalStatistics extends React.Component {
                   series={{
                     regions: [{
                       values: countries,
-                      scale: colors,
+                      scale: {
+                        '10+': '#47cfd1',
+                        '22+': '#47cfd1',
+                        '40+': '#04a9a9',
+                        '57+': '#48ccf5',
+                        '74+': '#77c2d9',
+                        '92+': '#77c2d9',
+                      }
                     }]
                   }}
                   containerStyle={{width: '100%', height: 500}}
@@ -1186,105 +1193,100 @@ class BcGlobalStatistics extends React.Component {
                 <div className={s.rangesCard}>
                   <p className={s.rangesCardHeader}>Range:</p>
                   <Row type='flex' gutter={4} justify='space-between' align='middle' className={s.rangesCardContent}>
-                    {ranges.map((range, i) =>
-                      <Col key={range} className={s.range}>
-                        <span className={s.rangeIndicator} style={{backgroundColor: colors[i]}}/>
-                        <p className={s.rangeLabel}>{range}</p>
+                      <Col  className={s.range}>
+                        <span className={s.rangeIndicator} style={{backgroundColor: '#47cfd1'}}/>
+                        <p className={s.rangeLabel}>10+</p>
+                        <span className={s.rangeIndicator} style={{backgroundColor: '#04a9a9'}}/>
+                        <p className={s.rangeLabel}>40+</p>
+                        <span className={s.rangeIndicator} style={{backgroundColor: '#48ccf5'}}/>
+                        <p className={s.rangeLabel}>57+</p>
+                        <span className={s.rangeIndicator} style={{backgroundColor: '#77c2d9'}}/>
+                        <p className={s.rangeLabel}>74+</p>
                       </Col>
-                    )}
                   </Row>
                 </div>
               )}
             </div>
             <Row type='flex' gutter={16}>
               <Col xs={24} md={12} className={s.col}>
-                <div className={cn(s.card, s.fullHeight)}>
-                  <div className={s.labels}>
-                    <div className='row row-condensed'>
-                      <div className='col-sm-6'>
-                        <div className='custom-panel custom-panel-condensed no border green-bg push-bot-0'>
-                          <div className='display-table display-table-100'>
-                            <div className='display-table-cell'>
-                              <p className='no-margin text-white small'>
-                                Estimated New<br/>Cases in 2017
-                              </p>
+                <Row>
+                  <div className={cn(s.card, s.fullHeight)}>
+                    <div className={s.labels}>
+                      <div className='row row-condensed'>
+                        <div className='col-sm-6'>
+                          <div className='custom-panel custom-panel-condensed no border green-bg push-bot-0'>
+                            <div className='display-table display-table-100'>
+                              <div className='display-table-cell'>
+                                <p className='no-margin text-white small'>
+                                  Estimated New<br/>Cases in 2017
+                                </p>
+                              </div>
+                              <div className='display-table-cell text-right'>
+                                <p className='no-margin text-white'>
+                                  <strong>1.7m</strong>
+                                </p>
+                              </div>
                             </div>
-                            <div className='display-table-cell text-right'>
-                              <p className='no-margin text-white'>
-                                <strong>1.7m</strong>
-                              </p>
+                          </div>
+                          <div className='custom-panel custom-panel-condensed no border green-bg push-bot-0'>
+                            <div className='display-table display-table-100'>
+                              <div className='display-table-cell'>
+                                <p className='no-margin text-white small'>
+                                  % of All New<br/>Cancer Cases
+                                </p>
+                              </div>
+                              <div className='display-table-cell text-right'>
+                                <p className='no-margin text-white'>
+                                  <strong>25.2%</strong>
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </div>
-                        <div className='custom-panel custom-panel-condensed no border green-bg push-bot-0'>
-                          <div className='display-table display-table-100'>
-                            <div className='display-table-cell'>
-                              <p className='no-margin text-white small'>
-                                % of All New<br/>Cancer Cases
-                              </p>
-                            </div>
-                            <div className='display-table-cell text-right'>
-                              <p className='no-margin text-white'>
-                                <strong>25.2%</strong>
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className='col-sm-6'>
-                        <div className='custom-panel custom-panel-condensed no border blue-bg push-bot-0'>
-                          <div className='display-table display-table-100'>
-                            <div className='display-table-cell'>
-                              <p className='no-margin text-white small'>
-                                Estimated<br/>Deaths in 2017
-                              </p>
-                            </div>
-                            <div className='display-table-cell text-right'>
-                              <p className='no-margin text-white'>
-                                <strong>522,000</strong>
-                              </p>
+                        <div className='col-sm-6'>
+                          <div className='custom-panel custom-panel-condensed no border blue-bg push-bot-0'>
+                            <div className='display-table display-table-100'>
+                              <div className='display-table-cell'>
+                                <p className='no-margin text-white small'>
+                                  Estimated<br/>Deaths in 2017
+                                </p>
+                              </div>
+                              <div className='display-table-cell text-right'>
+                                <p className='no-margin text-white'>
+                                  <strong>522,000</strong>
+                                </p>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className='custom-panel custom-panel-condensed no border blue-bg push-bot-0'>
-                          <div className='display-table display-table-100'>
-                            <div className='display-table-cell'>
-                              <p className='no-margin text-white small'>
-                                % of All<br/>Cancer Deaths
-                              </p>
-                            </div>
-                            <div className='display-table-cell text-right'>
-                              <p className='no-margin text-white'>
-                                <strong>15.0%</strong>
-                              </p>
+                          <div className='custom-panel custom-panel-condensed no border blue-bg push-bot-0'>
+                            <div className='display-table display-table-100'>
+                              <div className='display-table-cell'>
+                                <p className='no-margin text-white small'>
+                                  % of All<br/>Cancer Deaths
+                                </p>
+                              </div>
+                              <div className='display-table-cell text-right'>
+                                <p className='no-margin text-white'>
+                                  <strong>15.0%</strong>
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </Row>
+
               </Col>
               <Col xs={24} md={12} className={s.col}>
                 <div className={s.card}>
                   <ul className={s.list}>
-                    <br/>
-                    <li>
-                      Incidence rates vary greatly worldwide from 19.3 per 100,000 women in Eastern Africa to 89.7 per
-                      100,000
-                      women in Western Europe. In most of the developing regions the incidence rates are below 40 per
-                      100,000.
-                      The lowest incidence rates are found in most African countries but here breast cancer incidence
-                      rates
-                      are also increasing.
-                    </li>
-                    <br/>
                     <li>
                       Breast cancer survival rates vary greatly worldwide, ranging from 80% or over in North America,
                       Sweden
                       and Japan to around 60% in middle-income countries and below 40% in low-income countries.
                     </li>
-                    <br/>
                     <li>
                       The low survival rates in less developed countries can be explained mainly by the lack of early
                       detection programs, resulting in a high proportion of women presenting with late-stage disease, as
@@ -1295,81 +1297,83 @@ class BcGlobalStatistics extends React.Component {
                 </div>
               </Col>
             </Row>
-            <div className={s.card}>
-              <h2 className={s.cardHeader}>Five Year Survival Rate</h2>
-              <Row type='flex' gutter={16} className={s.row}>
-                <Col>
-                  <div className='display-table-cell display-block-xs'>
-                    <div
-                      className='custom-panel custom-panel-condensed gradient-bg text-center push-bot-0'>
-                      <p className='no-margin text-white'><strong>US</strong></p>
-                      <p className='font-size-40 push-top-1 push-bot-1 text-white'>
-                        <strong>89.7%</strong></p>
-                    </div>
-                  </div>
-                </Col>
-                <Col>
-                  <div className='display-table-cell display-block-xs'>
-                    <div
-                      className='custom-panel custom-panel-condensed gradient-bg text-center push-bot-0'>
-                      <p className='no-margin text-white'><strong>Australia</strong></p>
-                      <p className='font-size-40 push-top-1 push-bot-1 text-white'>
-                        <strong>89.5%</strong></p>
-                    </div>
-                  </div>
-                </Col>
-                <Col>
-                  <div className='display-table-cell display-block-xs'>
-                    <div
-                      className='custom-panel custom-panel-condensed gradient-bg text-center push-bot-0'>
-                      <p className='no-margin text-white'><strong>India</strong></p>
-                      <p className='font-size-40 push-top-1 push-bot-1 text-white'>
-                        <strong>66.1%</strong></p>
-                    </div>
-                  </div>
-                </Col>
-                <Col>
-                  <div className='display-table-cell display-block-xs'>
-                    <div
-                      className='custom-panel custom-panel-condensed gradient-bg text-center push-bot-0'>
-                      <p className='no-margin text-white'><strong>China</strong></p>
-                      <p className='font-size-40 push-top-1 push-bot-1 text-white'>
-                        <strong>83.7%</strong></p>
-                    </div>
-                  </div>
-                </Col>
-                <Col>
-                  <div className='display-table-cell display-block-xs'>
-                    <div
-                      className='custom-panel custom-panel-condensed gradient-bg text-center push-bot-0'>
-                      <p className='no-margin text-white'><strong>Japan</strong></p>
-                      <p className='font-size-40 push-top-1 push-bot-1 text-white'>
-                        <strong>89.4%</strong></p>
-                    </div>
-                  </div>
-                </Col>
-                <Col>
-                  <div className='display-table-cell display-block-xs'>
-                    <div
-                      className='custom-panel custom-panel-condensed gradient-bg text-center push-bot-0'>
-                      <p className='no-margin text-white'><strong>Germany</strong></p>
-                      <p className='font-size-40 push-top-1 push-bot-1 text-white'>
-                        <strong>86.0%</strong></p>
-                    </div>
-                  </div>
-                </Col>
-                <Col>
-                  <div className='display-table-cell display-block-xs'>
-                    <div
-                      className='custom-panel custom-panel-condensed gradient-bg text-center push-bot-0'>
-                      <p className='no-margin text-white'><strong>UK</strong></p>
-                      <p className='font-size-40 push-top-1 push-bot-1 text-white'>
-                        <strong>85.6%</strong></p>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-            </div>
+            <Row>
+                <div className={s.card}>
+                  <h2 className={s.cardHeader}>Five Year Survival Rate</h2>
+                  <Row type='flex' gutter={16} className={s.row}>
+                    <Col>
+                      <div className='display-table-cell display-block-xs'>
+                        <div
+                          className='custom-panel custom-panel-condensed gradient-bg text-center push-bot-0'>
+                          <p className='no-margin text-white'><strong>US</strong></p>
+                          <p className='font-size-20 push-top-1 push-bot-1 text-white'>
+                            <strong>89.7%</strong></p>
+                        </div>
+                      </div>
+                    </Col>
+                    <Col>
+                      <div className='display-table-cell display-block-xs'>
+                        <div
+                          className='custom-panel custom-panel-condensed gradient-bg text-center push-bot-0'>
+                          <p className='no-margin text-white'><strong>Australia</strong></p>
+                          <p className='font-size-20 push-top-1 push-bot-1 text-white'>
+                            <strong>89.5%</strong></p>
+                        </div>
+                      </div>
+                    </Col>
+                    <Col>
+                      <div className='display-table-cell display-block-xs'>
+                        <div
+                          className='custom-panel custom-panel-condensed gradient-bg text-center push-bot-0'>
+                          <p className='no-margin text-white'><strong>India</strong></p>
+                          <p className='font-size-20 push-top-1 push-bot-1 text-white'>
+                            <strong>66.1%</strong></p>
+                        </div>
+                      </div>
+                    </Col>
+                    <Col>
+                      <div className='display-table-cell display-block-xs'>
+                        <div
+                          className='custom-panel custom-panel-condensed gradient-bg text-center push-bot-0'>
+                          <p className='no-margin text-white'><strong>China</strong></p>
+                          <p className='font-size-20 push-top-1 push-bot-1 text-white'>
+                            <strong>83.7%</strong></p>
+                        </div>
+                      </div>
+                    </Col>
+                    <Col>
+                      <div className='display-table-cell display-block-xs'>
+                        <div
+                          className='custom-panel custom-panel-condensed gradient-bg text-center push-bot-0'>
+                          <p className='no-margin text-white'><strong>Japan</strong></p>
+                          <p className='font-size-20 push-top-1 push-bot-1 text-white'>
+                            <strong>89.4%</strong></p>
+                        </div>
+                      </div>
+                    </Col>
+                    <Col>
+                      <div className='display-table-cell display-block-xs'>
+                        <div
+                          className='custom-panel custom-panel-condensed gradient-bg text-center push-bot-0'>
+                          <p className='no-margin text-white'><strong>Germany</strong></p>
+                          <p className='font-size-20 push-top-1 push-bot-1 text-white'>
+                            <strong>86.0%</strong></p>
+                        </div>
+                      </div>
+                    </Col>
+                    <Col>
+                      <div className='display-table-cell display-block-xs'>
+                        <div
+                          className='custom-panel custom-panel-condensed gradient-bg text-center push-bot-0'>
+                          <p className='no-margin text-white'><strong>UK</strong></p>
+                          <p className='font-size-20 push-top-1 push-bot-1 text-white'>
+                            <strong>85.6%</strong></p>
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                </div>
+            </Row>
           </Col>
           <Col xs={24} md={8} className={s.col}>
             <div className={cn(s.card, s.fullHeight)}>
