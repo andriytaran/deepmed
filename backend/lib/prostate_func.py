@@ -905,7 +905,7 @@ def distribution_by_gleason_comb(input_json, collection=None):
         'labels': list(map(lambda x: x['_id']['gleason-comb-recode'], result)),
         'datasets': [{
             'data': list(map(lambda x: x['percentage'], result)),
-            'label': "Diagnosed",
+            'label': "Gleason combined",
             'borderColor': '#48ccf5',
             'fill': False
         }]
