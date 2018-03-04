@@ -87,6 +87,32 @@ def get_tumor_number(group):
     return t_number
 
 
+def get_race(race):
+    if race == "White":
+        return "Caucasian"
+    elif race == "Black":
+        return "African American"
+    elif race == "Asian or Pacific Islander":
+        return "Asian"
+    elif race in ['Unknown', 'American Indian/Alaska Native']:
+        return "Other"
+    else:
+        return race
+
+
+def get_t_size_cm(mm):
+    if mm == 0:
+        return 0
+    elif mm < 20:
+        return '< 2cm'
+    elif mm < 50:
+        return '< 5cm'
+    elif 50 <= mm < 888:
+        return '> 5cm'
+    else:
+        return None
+
+
 def get_race_group(race):
     race_group = None
     if race == 'Caucasian':
@@ -154,36 +180,126 @@ def create_filter(input_data, operator='$and'):
         age = get_age_group(input_data['age'])
         filter_list.append({"age-range": {"$in": age}})
     if 'chemo' in input_data.keys():
+        if input_data['chemo'] == 'No':
+            input_data['chemo'] = 'No/Unknown'
         filter_list.append({"chemo": input_data["chemo"]})
     if 'ethnicity' in input_data.keys():
-        filter_list.append({"race-recode-w-b-ai-api": input_data["ethnicity"]})
-    if 'radiation' in input_data.keys():
-        filter_list.append({"radiation": input_data["radiation"]})
-    if 'region' in input_data.keys():
-        filter_list.append({"sum-stage": input_data["region"]})
-    if 'site' in input_data.keys():
-        filter_list.append({"primary-site-labeled": input_data["site"]})
-    if 'stage' in input_data.keys():
-        filter_list.append(
-            {"breast-adjusted-ajcc-6th-stage-1988": input_data["stage"]})
-    if 'tumor_number' in input_data.keys():
-        t_number = get_tumor_number(input_data['tumor_number'])
-        if t_number:
-            filter_list.append({"of-malignant-tumors": t_number})
-    if 'tumor_grade' in input_data.keys():
-        filter_list.append({"grade": input_data["tumor_grade"]})
-    if 'type' in input_data.keys():
-        filter_list.append({"type": input_data["type"]})
-    if 'breast-adjusted-ajcc-6th-stage-1988' in input_data.keys():
-        filter_list.append({"breast-adjusted-ajcc-6th-stage-1988": input_data["breast-adjusted-ajcc-6th-stage-1988"]})
-    if 'chemo' in input_data.keys():
-        filter_list.append({"chemo": input_data["chemo"]})
+        filter_list.append({"race": input_data["ethnicity"]})
+    if 'gleason-pri' in input_data.keys() and 'gleason-sec' in input_data.keys():
+        glpri = int(input_data['gleason-pri'])
+        glsec = int(input_data['gleason-sec'])
+        if glpri == 1:
+            gleason = 10 + glsec
+        elif glpri == 2:
+            gleason = 20 + glsec
+        elif glpri == 3:
+            gleason = 30 + glsec
+        elif glpri == 4:
+            gleason = 40 + glsec
+        elif glpri == 5:
+            gleason = 50 + glsec
+        filter_list.append({"gleason": gleason})
+    if 'pas' in input_data.keys():
+        filter_list.append({"psa-value": input_data["psa"]})
     if 'radiation' in input_data.keys():
         filter_list.append({"radiation": input_data["radiation"]})
     if 'surgery' in input_data.keys():
         filter_list.append({"surgery": input_data["surgery"]})
+    if 'tumor_size_mm' in input_data.keys():
+        t_size_cm = get_t_size_cm(input_data['tumor_size_mm'])
+        filter_list.append({"t-size-cm": t_size_cm})
 
     return {operator: filter_list}
+
+
+def diagnosis(input_json, limit=20, collection=None):
+    """
+    Returned values are grouped by these groups:
+    "ethnicity": "White" -> "Caucasian", "Black" -> "African American", "Asian or Pacific Islander" -> "Asian",
+        ['Unknown', 'American Indian/Alaska Native'] -> "Other"
+    "cod": "Alive" -> "Alive", "Breast" -> "Breast", any_other_value -> "Other"
+    Other values are returned as in database
+    :param input_json: json
+    :param limit: int
+    :return: list
+    """
+
+    def get_race(race):
+        if race == "White":
+            return "Caucasian"
+        elif race == "Black":
+            return "African American"
+        elif race == "Asian or Pacific Islander":
+            return "Asian"
+        elif race in ['Unknown', 'American Indian/Alaska Native']:
+            return "Other"
+        else:
+            return race
+
+    def get_cod(cod):
+        if cod not in ['Alive', 'Breast']:
+            return "Other"
+        else:
+            return cod
+
+    def build_dict(item):
+        return {'age': item['age-recode-with-single-ages-and-85'],
+                'ethnicity': get_race(item['race-recode-w-b-ai-api']),
+                'size': item['t-size-cm'],
+                'grade': item['grade'],
+                'er': item['er-status-recode-breast-cancer-1990'],
+                'pr': item['pr-status-recode-breast-cancer-1990'],
+                'her2': item['derived-her2-recode-2010'],
+                'lat': item['laterality'],
+                'site': item['primary-site-labeled'],
+                'type': item['type'],
+                'stage': item['breast-adjusted-ajcc-6th-stage-1988'],
+                '+nodes': item['regional-nodes-positive-1988'],
+                'surgery': item['surgery'],
+                'chemo': item['chemo'],
+                'radiation': item['radiation'],
+                'year dx': item['year-of-diagnosis'],
+                'survival mos.': item['survival-months'],
+                'cod': get_cod(item['cod-to-site-recode'])}
+
+    filters = create_filter(input_json)
+    dataset = find(filters, limit=limit)
+    results = []
+    for item in dataset:
+        d = build_dict(item)
+        results.append(d)
+
+    if len(results) < 20:
+        # print(len(results))
+        filters['$and'] = [d for d in filters['$and'] if 't-size-cm' not in d]
+        # ts_mm = json.loads(input_json)['tumor_size_in_mm']
+        # ts_min = round(ts_mm * 0.8)
+        # ts_max = round(ts_mm *1.2)
+        # filters['$and'].append({"$and": [{"tumor_size_in_mm": {"$gte": ts_min}},
+        #                                  {"tumor_size_in_mm": {"$lte": ts_max}}]})
+        dataset = find(filters, limit=limit, collection=collection)
+        results = []
+        for item in dataset:
+            d = build_dict(item)
+            results.append(d)
+        if len(results) < 20:
+            filters['$and'] = [d for d in filters['$and'] if 'race-recode-w-b-ai-api' not in d]
+            dataset = find(filters, limit=limit, collection=collection)
+            results = []
+            for item in dataset:
+                d = build_dict(item)
+                results.append(d)
+            if len(results) < 20:
+                filters['$and'] = [d for d in filters['$and'] if 'age-recode-with-single-ages-and-85' not in d]
+                dataset = find(filters, limit=limit, collection=collection)
+                results = []
+                for item in dataset:
+                    d = build_dict(item)
+                    results.append(d)
+                return results
+            return results
+        return results
+    return results
 
 
 def percent_men_annualy_diagnosed(input_json, collection=None):
@@ -627,7 +743,6 @@ def distribution_by_psa(input_json, collection=None):
             "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
         }},
         {"$sort": SON([("percentage", -1)])}], collection))
-    pprint(result)
 
     data = {"0-20ML": 0, "20-40ML": 0, "40-60ML": 0, "60-80ML": 0, ">80ML": 0}
     for i, label in enumerate(list(map(lambda x: x['_id']['psa-value'], result))):
@@ -653,6 +768,150 @@ def distribution_by_psa(input_json, collection=None):
     }
 
 
+def distribution_by_gleason_pri(input_json, collection=None):
+    """
+    prostate cancer breakout by gleason score for this age group - two digit Gleason and single digit Gleason
+    :param input_json:
+    :param collection:
+    :return:
+    """
+    filters = create_filter(input_json)
+    filters['$and'] = [d for d in filters['$and'] if 'gleason' not in d]
+    filters['$and'].append({"gleason": {"$nin": [None, 19, 29, 39, 49, 59]}})
+    result = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "subset": {"$push": "$gleason"}
+        }},
+        {"$unwind": "$subset"},
+        {"$group": {
+            "_id": {"gleason": "$subset", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}], collection))
+
+    data = {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['gleason'], result))):
+        if label in [11, 12, 13, 14, 15]:
+            data['1'] += result[i]['percentage']
+        elif label in [21, 22, 23, 24, 25]:
+            data['2'] += result[i]['percentage']
+        elif label in [31, 32, 33, 34, 35]:
+            data['3'] += result[i]['percentage']
+        elif label in [41, 42, 43, 44, 45]:
+            data['4'] += result[i]['percentage']
+        elif label in [51, 52, 53, 54, 55]:
+            data['5'] += result[i]['percentage']
+
+    return {
+        'labels': list(map(lambda x: x, data.keys())),
+        'datasets': [{
+            'data': list(map(lambda x: x, data.values())),
+            'label': "Gleason primary",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
+def distribution_by_gleason_sec(input_json, collection=None):
+    """
+    prostate cancer breakout by gleason score for this age group - two digit Gleason and single digit Gleason
+    :param input_json:
+    :param collection:
+    :return:
+    """
+    filters = create_filter(input_json)
+    filters['$and'] = [d for d in filters['$and'] if 'gleason' not in d]
+    filters['$and'].append({"gleason": {"$nin": [None, 19, 29, 39, 49, 59]}})
+    result = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "subset": {"$push": "$gleason"}
+        }},
+        {"$unwind": "$subset"},
+        {"$group": {
+            "_id": {"gleason": "$subset", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}], collection))
+
+    data = {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['gleason'], result))):
+        if label in [11, 21, 31, 41, 51]:
+            data['1'] += result[i]['percentage']
+        elif label in [12, 22, 32, 42, 52]:
+            data['2'] += result[i]['percentage']
+        elif label in [13, 23, 33, 43, 53]:
+            data['3'] += result[i]['percentage']
+        elif label in [14, 24, 34, 44, 54]:
+            data['4'] += result[i]['percentage']
+        elif label in [15, 25, 35, 45, 55]:
+            data['5'] += result[i]['percentage']
+
+    return {
+        'labels': list(map(lambda x: x, data.keys())),
+        'datasets': [{
+            'data': list(map(lambda x: x, data.values())),
+            'label': "Gleason secondary",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
+def distribution_by_gleason_comb(input_json, collection=None):
+    """
+    prostate cancer breakout by gleason score for this age group - two digit Gleason and single digit Gleason
+    :param input_json:
+    :param collection:
+    :return:
+    """
+    filters = create_filter(input_json)
+    filters['$and'] = [d for d in filters['$and'] if 'gleason' not in d]
+    filters['$and'].append({"gleason": {"$nin": [None, 19, 29, 39, 49, 59]}})
+    filters['$and'].append({"gleason-comb-recode": {"$nin": [None]}})
+    result = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "total": {"$sum": 1},
+            "subset": {"$push": "$gleason-comb-recode"}
+        }},
+        {"$unwind": "$subset"},
+        {"$group": {
+            "_id": {"gleason-comb-recode": "$subset", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}], collection))
+
+    return {
+        'labels': list(map(lambda x: x['_id']['gleason-comb-recode'], result)),
+        'datasets': [{
+            'data': list(map(lambda x: x['percentage'], result)),
+            'label': "Diagnosed",
+            'borderColor': '#48ccf5',
+            'fill': False
+        }]
+    }
+
+
 if __name__ == '__main__':
     """
     Database groups:
@@ -669,18 +928,51 @@ if __name__ == '__main__':
     mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
     collection = mongo_client[DBS_NAME][COLLECTION_NAME]
 
-    diag_request = '{"1age": 52, ' \
-                   '"sex": "Male", ' \
-                   '"1tumor_grade": 1, ' \
-                   '"1er_status": "+", ' \
-                   '"1pr_status": "+", ' \
-                   '"1tumor_size_in_mm": 22, ' \
-                   '"1num_pos_nodes": 1, ' \
-                   '"1her2_status": "+", ' \
-                   '"1ethnicity": "White"}'
+    # pprint(display_group("gleason-comb-recode"))
 
-    # pprint(display_group("radiation-sequence"))
-    # pprint(display_group("radiation-type"))
+    # exit()
+    """
+    Age, tumor size, Gleason score, ethnicity, PSA, nodes,
+    Sorry Gleason primRy score, Gleason secondary score
+    Not just one
+    We will likely do a three separate charts
+    One for Gleason score number 1
+    One for Gleason score #2
+    And finally a combined Gleason score chart
+    So 34 would be 3 in chart 1, 4 in chart 2, and 7 in chart 3
+    So on Gleason
+    11-55
+    Means the values we be separated
+    Into songpenintegers
+    Single integers
+    So 11 becomes 1 and 1
+    33 would be 3 and 3
+    And then since 11 is 1+1=2
+    Last chart would be 2
+    55 would be 10
+    Etc etc
+    """
+
+    diag_request = '{"1age": 62, ' \
+                   '"1ethnicity": "Hispanic", ' \
+                   '"1gleason-pri": 1, ' \
+                   '"1gleason-sec": 1, ' \
+                   '"1psa": 1, ' \
+                   '"1tumor_size_mm": 1 ' \
+                   '}'
+
+    filters = create_filter(diag_request)
+    # pprint(filters)
+    # count = json.loads(aggregate([
+    #     {"$match": filters},
+    #     {"$group": {
+    #         "_id": "",
+    #         "count": {"$sum": 1}}},
+    #     {"$sort": SON([("_id", 1)])}]))
+    # pprint(count)
+
+    # pprint(display_group("gleason"))
+    # pprint(display_group("gleason-comb-recode"))
     # pprint(display_group("chemo"))
 
-    pprint(distribution_by_psa(diag_request, collection))
+    pprint(distribution_by_gleason_comb(diag_request, collection))
