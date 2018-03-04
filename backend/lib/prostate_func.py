@@ -309,6 +309,7 @@ def percent_men_annualy_diagnosed(input_json, collection=None):
     :param collection:
     :return:
     """
+
     def get_total(year):
         ff = {"$and": [{"year-of-diagnosis": {"$gte": year}},
                        {"year-of-diagnosis": {"$lt": year + 5}}]}
