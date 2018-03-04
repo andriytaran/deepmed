@@ -11,20 +11,28 @@ import assign from 'lodash/assign'
 import uniq from 'lodash/uniq'
 import sortBy from 'lodash/sortBy'
 import isEmpty from 'lodash/isEmpty'
+import {getUSStatistics} from '../../reducers/breastCancer'
+
 
 const colors = ['#47cfd1', '#04a9a9', '#48ccf5', '#77c2d9']
 const chartColors = ['#88d0d1', '#48ccf5']
 const chartLabels = ['Incidence', 'Deaths']
 
 class BcUSStatistics extends React.Component {
+  componentDidMount() {
+    if (isEmpty(this.props.usStatistics)) {
+      this.props.getUSStatistics()
+    }
+  }
+
   render() {
-    const {individualStatistics} = this.props
+    const {usStatistics} = this.props
 
     let states
     let ranges
-    if (individualStatistics.breast_cancer_by_state && individualStatistics.breast_cancer_by_state.length) {
-      states = reduce(individualStatistics.breast_cancer_by_state, (acc, {State, Range}) => assign(acc, {[`US-${State}`]: Range}), {})
-      ranges = sortBy(uniq(individualStatistics.breast_cancer_by_state.map(item => item.Range)), x => x)
+    if (usStatistics.breast_cancer_by_state && usStatistics.breast_cancer_by_state.length) {
+      states = reduce(usStatistics.breast_cancer_by_state, (acc, {State, Range}) => assign(acc, {[`US-${State}`]: Range}), {})
+      ranges = sortBy(uniq(usStatistics.breast_cancer_by_state.map(item => item.Range)), x => x)
     }
 
     return (
@@ -46,7 +54,7 @@ class BcUSStatistics extends React.Component {
                       }]
                     }}
                     onRegionTipShow={(e, el, code) => {
-                      const currentState = individualStatistics.breast_cancer_by_state.find(item => code.includes(item.State)) || {}
+                      const currentState = usStatistics.breast_cancer_by_state.find(item => code.includes(item.State)) || {}
                       el.html(el.html() + `<div>Range: ${currentState.Range}<br/>Rate: ${currentState.Rate}</div>`)
                     }}
                     containerStyle={{width: '100%', height: 500}}
@@ -86,11 +94,11 @@ class BcUSStatistics extends React.Component {
                     <p className='push-top-1 push-bot-2 text-center'>
                       <strong>Number per 100,000 females</strong>
                     </p>
-                    {!isEmpty(individualStatistics.breast_cancer_at_a_glance) ? (
+                    {!isEmpty(usStatistics.breast_cancer_at_a_glance) ? (
                       <Line
                         data={{
-                          ...individualStatistics.breast_cancer_at_a_glance,
-                          datasets: individualStatistics.breast_cancer_at_a_glance.datasets.map((item, i) => ({
+                          ...usStatistics.breast_cancer_at_a_glance,
+                          datasets: usStatistics.breast_cancer_at_a_glance.datasets.map((item, i) => ({
                             ...item,
                             label: [chartLabels[i]],
                             backgroundColor: chartColors[i],
@@ -224,9 +232,9 @@ class BcUSStatistics extends React.Component {
               <div className={s.card}>
                 <p className='push-top-1 push-bot-2 text-center'><strong>Age-Specific Rates of
                   Breast Cancer in the United States</strong></p>
-                {!isEmpty(individualStatistics.breast_cancer_by_age) ? (
+                {!isEmpty(usStatistics.breast_cancer_by_age) ? (
                   <Line
-                    data={individualStatistics.breast_cancer_by_age}
+                    data={usStatistics.breast_cancer_by_age}
                     options={{
                       legend: {
                         display: false,
@@ -311,6 +319,8 @@ const mapState = state => ({
   ...state.breastCancer,
 })
 
-const mapDispatch = {}
+const mapDispatch = {
+  getUSStatistics,
+}
 
 export default connect(mapState, mapDispatch)(withStyles(s)(BcUSStatistics))

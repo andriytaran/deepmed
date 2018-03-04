@@ -21,6 +21,7 @@ import FaHeaderO from 'react-icons/lib/fa/heart-o'
 import FaBarChart from 'react-icons/lib/fa/bar-chart'
 import FaFileO from 'react-icons/lib/fa/file-o'
 import FaLaptop from 'react-icons/lib/fa/laptop'
+import isEmpty from 'lodash/isEmpty'
 
 const menuByModule = {
   bc: {
@@ -41,7 +42,7 @@ const menuByModule = {
 
 class Sidebar extends React.Component {
   render() {
-    const {sidebarOpened, currentRouteName, currentModule} = this.props
+    const {sidebarOpened, currentRouteName, currentModule, diagnosisForm} = this.props
     const menu = menuByModule[currentModule]
     return (
       <nav className={cn(s.sidebar, sidebarOpened && s.opened)}>
@@ -52,23 +53,29 @@ class Sidebar extends React.Component {
             alt='logo'
           />
         </Link>
-        {menu && ![BC_FORM_ROUTE].includes(currentRouteName) && (
+        {menu && (
           <ul className={s.menu}>
-            {menu.items.map(item =>
-              <li
-                key={item.label}
-                className={cn(s.itemWrapper, currentRouteName === item.routeName && s.active)}
-              >
-                <Link to={item.routeName} className={s.item}>
-                  {React.createElement(item.iconComponent, {
-                    className: s.icon
-                  })}
-                  {item.label}
-                </Link>
-              </li>
-            )}
+            {menu.items.map(item => {
+              if (![BC_GLOBAL_STATISTICS_ROUTE, BC_US_STATISTICS_ROUTE].includes(item.routeName) && ([BC_FORM_ROUTE].includes(currentRouteName) || isEmpty(diagnosisForm))) {
+                return null
+              }
+              return (
+                <li
+                  key={item.label}
+                  className={cn(s.itemWrapper, currentRouteName === item.routeName && s.active)}
+                >
+                  <Link to={item.routeName} className={s.item}>
+                    {React.createElement(item.iconComponent, {
+                      className: s.icon
+                    })}
+                    {item.label}
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
         )}
+
       </nav>
     )
   }
@@ -78,6 +85,7 @@ const mapState = state => ({
   sidebarOpened: state.global.sidebarOpened,
   currentRouteName: state.global.currentRouteName,
   currentModule: state.global.currentModule,
+  diagnosisForm: state.breastCancer.diagnosisForm,
 })
 
 const mapDispatch = {}
