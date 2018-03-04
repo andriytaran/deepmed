@@ -206,6 +206,14 @@ def tsize_mm_to_cm(mm):
         return None
 
 
+def radiation_recode(document):
+    if document['radiation-sequence'] not in ['No radiation and/or cancer-directed surgery']:
+        return "Yes"
+    if document['radiation-type'] not in ['None/Unknown']:
+        return "Yes"
+    return "No"
+
+
 if __name__ == '__main__':
     # pprint(display_group('race-1'), width=100)
     # pprint(display_group('race-detail'), width=100)
