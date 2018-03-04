@@ -600,7 +600,7 @@ def prostate_cancer_by_size(input_json, collection=None):
     }
 
 
-def breakout_by_psa_value(input_json, collection=None):
+def distribution_by_psa(input_json, collection=None):
     """
     prostate cancer breakout by gleason score for this age group - two digit Gleason and single digit Gleason
     :param input_json:
@@ -613,15 +613,40 @@ def breakout_by_psa_value(input_json, collection=None):
     result = json.loads(aggregate([
         {"$match": filters},
         {"$group": {
-            "_id": "$psa-value",
-            "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}], collection))
+            "_id": "",
+            "total": {"$sum": 1},
+            "subset": {"$push": "$psa-value"}
+        }},
+        {"$unwind": "$subset"},
+        {"$group": {
+            "_id": {"psa-value": "$subset", "total": "$total"},
+            "count": {"$sum": 1}
+        }},
+        {"$project": {
+            "count": 1,
+            "percentage": {"$multiply": [{"$divide": [100, "$_id.total"]}, "$count"], }
+        }},
+        {"$sort": SON([("percentage", -1)])}], collection))
+    pprint(result)
+
+    data = {"0-20ML": 0, "20-40ML": 0, "40-60ML": 0, "60-80ML": 0, ">80ML": 0}
+    for i, label in enumerate(list(map(lambda x: x['_id']['psa-value'], result))):
+        if label < 200:
+            data['0-20ML'] += result[i]['percentage']
+        elif label < 400:
+            data['20-40ML'] += result[i]['percentage']
+        elif label < 600:
+            data['40-60ML'] += result[i]['percentage']
+        elif label < 800:
+            data['60-80ML'] += result[i]['percentage']
+        elif label <= 980:
+            data['>80ML'] += result[i]['percentage']
 
     return {
-        'labels': list(map(lambda x: x['_id'], result)),
+        'labels': list(map(lambda x: x, data.keys())),
         'datasets': [{
-            'data': list(map(lambda x: x['count'], result)),
-            'label': "Diagnosed",
+            'data': list(map(lambda x: x, data.values())),
+            'label': "Stage",
             'borderColor': '#48ccf5',
             'fill': False
         }]
@@ -658,4 +683,4 @@ if __name__ == '__main__':
     # pprint(display_group("radiation-type"))
     # pprint(display_group("chemo"))
 
-    pprint(breakout_by_psa_value(diag_request, collection))
+    pprint(distribution_by_psa(diag_request, collection))
