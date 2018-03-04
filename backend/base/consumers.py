@@ -591,6 +591,17 @@ class IndividualStatisticsConsumer(JsonWebsocketConsumer):
         }
         self.send_json({'radiation': radiation_response})
 
+        breast_cancer_by_state_response = breast_cancer_by_state2(1)
+        self.send_json(
+            {'breast_cancer_by_state': breast_cancer_by_state_response})
+
+        breast_cancer_at_a_glance_response = breast_cancer_at_a_glance2()
+        self.send_json(
+            {'breast_cancer_at_a_glance': breast_cancer_at_a_glance_response})
+
+        breast_cancer_by_age_response = breast_cancer_by_age(collection)
+        self.send_json({'breast_cancer_by_age': breast_cancer_by_age_response})
+
 
 class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
     serializer_class = DiagnosisDataSerializer
