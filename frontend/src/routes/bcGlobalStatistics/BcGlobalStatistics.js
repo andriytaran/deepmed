@@ -11,8 +11,8 @@ import sortBy from 'lodash/sortBy'
 import cn from 'classnames'
 
 const white = '#fff'
-const color_1 = 'rgba(0, 125, 255, 0.75)'
-const color_3 = 'rgba(72, 204, 245, 0.75)'
+const color_1 = '#48ccf5'
+const color_3 = '#47cfd1'
 
 const colors = ['#47cfd1', '#47cfd1', '#04a9a9', '#48ccf5', '#77c2d9', '#77c2d9']
 

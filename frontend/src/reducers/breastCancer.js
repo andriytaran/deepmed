@@ -18,6 +18,10 @@ export const GET_INDIVIDUAL_STATISTICS_REQUEST = 'Diagnosis.GET_INDIVIDUAL_STATI
 export const GET_INDIVIDUAL_STATISTICS_SUCCESS = 'Diagnosis.GET_INDIVIDUAL_STATISTICS_SUCCESS'
 export const GET_INDIVIDUAL_STATISTICS_FAILURE = 'Diagnosis.GET_INDIVIDUAL_STATISTICS_FAILURE'
 
+export const GET_US_STATISTICS_REQUEST = 'Diagnosis.GET_US_STATISTICS_REQUEST'
+export const GET_US_STATISTICS_SUCCESS = 'Diagnosis.GET_US_STATISTICS_SUCCESS'
+export const GET_US_STATISTICS_FAILURE = 'Diagnosis.GET_US_STATISTICS_FAILURE'
+
 export const GET_RESOURCES_REQUEST = 'Diagnosis.GET_RESOURCES_REQUEST'
 export const GET_RESOURCES_SUCCESS = 'Diagnosis.GET_RESOURCES_SUCCESS'
 export const GET_RESOURCES_FAILURE = 'Diagnosis.GET_RESOURCES_FAILURE'
@@ -32,6 +36,7 @@ const DIAGNOSIS = '/diagnosis/'
 const SIMILAR_DIAGNOSES = '/similar-diagnoses/'
 const INDIVIDUAL_STATISTICS = '/individual-statistics/'
 const CUSTOM_ANALYTICS = '/custom-analytics/'
+const US_STATISTICS = '/us-statistics/'
 
 // ------------------------------------
 // Actions
@@ -66,10 +71,11 @@ export const wsConnect = () => (dispatch, getState) => {
       path: CUSTOM_ANALYTICS,
       query: {token},
       success: (data) => dispatch({type: GET_CUSTOM_ANALYTICS_SUCCESS, data}),
-      failure: () => dispatch({type:GET_CUSTOM_ANALYTICS_FAILURE}),
+      failure: () => dispatch({type: GET_CUSTOM_ANALYTICS_FAILURE}),
     })
   }
 }
+
 
 export const getData = (values) => (dispatch, getState, {history}) => {
   if (process.env.BROWSER) {
@@ -117,6 +123,17 @@ export const getResources = (values) => (dispatch, getState, {fetch}) => {
   })
 }
 
+export const getUSStatistics = () => (dispatch, getState, {fetch}) => {
+  const {token} = dispatch(getToken())
+  dispatch({type: GET_US_STATISTICS_REQUEST})
+  return fetch(`/diagnosis/us-statistics/`, {
+    method: 'GET',
+    token,
+    success: (data) => dispatch({type: GET_US_STATISTICS_SUCCESS, data}),
+    failure: (err) => dispatch({type: GET_US_STATISTICS_FAILURE})
+  })
+}
+
 export const clear = () => ({type: CLEAR})
 
 // ------------------------------------
@@ -128,6 +145,7 @@ const initialState = {
   diagnosis: {},
   similarDiagnoses: {},
   individualStatistics: {},
+  usStatistics: {},
   customAnalytics: {},
   wsConnected: false,
   resources: {},
@@ -170,6 +188,15 @@ export default createReducer(initialState, {
   [GET_SIMILAR_DIAGNOSES_SUCCESS]: (state, {data}) => ({
     similarDiagnoses: {
       ...state.similarDiagnoses,
+      ...data,
+    },
+  }),
+  [GET_US_STATISTICS_REQUEST]: (state, action) => ({
+    usStatistics: {},
+  }),
+  [GET_US_STATISTICS_SUCCESS]: (state, {data}) => ({
+    usStatistics: {
+      ...state.usStatistics,
       ...data,
     },
   }),
