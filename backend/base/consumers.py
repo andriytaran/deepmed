@@ -32,7 +32,8 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
         content['user'] = self.scope['user'].id
         # Remove empty strings
         content = dict((k, v) for k, v in content.items() if v)
-        original_data = content # Fill the form on Diagnosis page.
+        original_data = dict(content)
+        original_data.pop('user', None) # Fill the form on Diagnosis page.
         serializer = self.serializer_class(data=content)
 
         if not serializer.is_valid():
@@ -359,7 +360,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                                    '<3cm'] and \
                     dd.get('her2_status') != '+':
                 chemo_therapy.append({
-                    'plan': 'AC+T',
+                    'plan': 'Adriamycin-Cyclophosphamide+Taxol (AC+T)',
                     'number_of_treatments': [
                         {'name': 'A)', 'value': '4AC, 4T'},
                         {'name': 'B)', 'value': '4AC, 12T'}],
@@ -374,11 +375,21 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
                         ]}
                     ]
                 })
+                chemo_therapy.append({
+                    'plan': 'Fluorouracil-Epirubicin-Cyclophosphamide (FEC)',
+                    'number_of_treatments': [
+                        {'name': 'A)', 'value': '6 FEC'}],
+                    'administration': [
+                        {'name': 'A)', 'values': [
+                            {'name': 'FEC', 'time': 'Every 3 weeks'}
+                        ]}
+                    ]
+                })
             elif chemo_response[0] == 'Yes' and \
                     tumor_size not in ['>5cm', '>3cm', '<3cm'] and \
                     dd.get('her2_status') != '+':
                 chemo_therapy.append({
-                    'plan': 'C+T',
+                    'plan': 'Cyclophosphamide+Taxol (C+T)',
                     'number_of_treatments': [
                         {'name': 'A)', 'value': '4C, 4T'},
                         {'name': 'B)', 'value': '4C, 12T'}],
