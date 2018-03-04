@@ -32,6 +32,7 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
         content['user'] = self.scope['user'].id
         # Remove empty strings
         content = dict((k, v) for k, v in content.items() if v)
+        original_data = content # Fill the form on Diagnosis page.
         serializer = self.serializer_class(data=content)
 
         if not serializer.is_valid():
@@ -326,7 +327,8 @@ class DiagnosisConsumer(JsonWebsocketConsumer):
             dd['tumor_size_in_mm'] = dd.get('tumor_size_in_mm_sd')
             dd['stage'] = dd.get('stage_sd')
 
-            # self.send_json({'diagnosis_form': dd})
+            original_data['stage'] = dd.get('stage_sd')
+            self.send_json({'diagnosis_form': original_data})
 
             # Hormonal Therapy
             hormonal_therapy = []
