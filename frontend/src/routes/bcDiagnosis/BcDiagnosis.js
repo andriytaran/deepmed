@@ -53,6 +53,8 @@ const OverallPlansTable = ({items = [], visibleRowIndex}) =>
     </table>
   </div>
 
+const ChemoPlansOptions = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+
 class BcDiagnosis extends React.Component {
   state = {
     tab: 0,
@@ -341,7 +343,7 @@ class BcDiagnosis extends React.Component {
                     {!isEmpty(diagnosis.chemo_therapy) ? diagnosis.chemo_therapy.map((item, i) =>
                       <tr key={i}>
                         <td><p className='no-margin'><span
-                          className='number-circle blue-circle'>{i + 1}</span> {item.plan}</p></td>
+                          className='number-circle blue-circle'>{ChemoPlansOptions[i]}</span> {item.plan}</p></td>
                         <td>
                           <table>
                             <tbody>
@@ -409,7 +411,8 @@ class BcDiagnosis extends React.Component {
                     <tbody>
                     {showRadiation && !isEmpty(diagnosis.radiation_therapy) ? diagnosis.radiation_therapy.map((item, i) =>
                       <tr key={i}>
-                        <td><p className='no-margin'>{item.name}</p></td>
+                        <td><p className='no-margin'><span
+                          className='number-circle blue-circle'>{i + 1}</span> {item.name}</p></td>
                         <td><p className="no-margin">{item.number_of_treatments}</p></td>
                         <td><p className="no-margin">{item.administration}</p></td>
                       </tr>
@@ -442,7 +445,8 @@ class BcDiagnosis extends React.Component {
                     <tbody>
                     {!isEmpty(diagnosis.hormonal_therapy) ? diagnosis.hormonal_therapy.map((item, i) =>
                       <tr key={i}>
-                        <td><p className='no-margin'>{item.name}</p></td>
+                        <td><p className='no-margin'><span
+                          className='number-circle blue-circle'>{i + 1}</span> {item.name}</p></td>
                         <td><p className="no-margin">{item.number_of_treatments}</p></td>
                         <td><p className="no-margin">{item.administration}</p></td>
                       </tr>
