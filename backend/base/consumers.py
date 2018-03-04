@@ -591,17 +591,6 @@ class IndividualStatisticsConsumer(JsonWebsocketConsumer):
         }
         self.send_json({'radiation': radiation_response})
 
-        breast_cancer_by_state_response = breast_cancer_by_state2(1)
-        self.send_json(
-            {'breast_cancer_by_state': breast_cancer_by_state_response})
-
-        breast_cancer_at_a_glance_response = breast_cancer_at_a_glance2()
-        self.send_json(
-            {'breast_cancer_at_a_glance': breast_cancer_at_a_glance_response})
-
-        breast_cancer_by_age_response = breast_cancer_by_age(collection)
-        self.send_json({'breast_cancer_by_age': breast_cancer_by_age_response})
-
 
 class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
     serializer_class = DiagnosisDataSerializer
@@ -668,6 +657,30 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
             pass
 
         self.send_json({'similar_diagnosis': similar_diagnosis})
+
+
+class USStatisticsConsumer(JsonWebsocketConsumer):
+    def connect(self):
+        # Called on connection. Either call
+        if self.scope['user']:
+            self.accept()
+        else:
+            self.close()
+
+    def receive_json(self, content, **kwargs):
+        mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
+        collection = mongo_client[DBS_NAME][COLLECTION_NAME]
+
+        breast_cancer_by_state_response = breast_cancer_by_state2(1)
+        self.send_json(
+            {'breast_cancer_by_state': breast_cancer_by_state_response})
+
+        breast_cancer_at_a_glance_response = breast_cancer_at_a_glance2()
+        self.send_json(
+            {'breast_cancer_at_a_glance': breast_cancer_at_a_glance_response})
+
+        breast_cancer_by_age_response = breast_cancer_by_age(collection)
+        self.send_json({'breast_cancer_by_age': breast_cancer_by_age_response})
 
 
 class CustomAnalyticsConsumer(JsonWebsocketConsumer):
