@@ -8,7 +8,8 @@ from lib.prostate_func import MONGODB_HOST, MONGODB_PORT, COLLECTION_NAME, \
     DBS_NAME, percent_race_by_age, chemo_decisions, radiation_decisions, \
     prostate_cancer_by_size, distribution_by_psa, \
     distribution_by_gleason_pri, distribution_by_gleason_sec, \
-    distribution_by_gleason_comb
+    distribution_by_gleason_comb, percent_men_annualy_diagnosed, \
+    distribution_by_stage, surgery_decisions
 
 
 class PCIndividualStatisticsConsumer(JsonWebsocketConsumer):
@@ -42,6 +43,20 @@ class PCIndividualStatisticsConsumer(JsonWebsocketConsumer):
 
         mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
         collection = mongo_client[DBS_NAME][COLLECTION_NAME]
+
+        percent_men_annualy_diagnosed_response = \
+            percent_men_annualy_diagnosed(input_json, collection)
+        self.send_json({'percent_men_annualy_diagnosed':
+                            percent_men_annualy_diagnosed_response})
+
+        distribution_by_stage_response = distribution_by_stage(input_json,
+                                                               collection)
+        self.send_json({'distribution_by_stage':
+                            distribution_by_stage_response})
+
+        surgery_decisions_response = surgery_decisions(input_json,
+                                                       collection)
+        self.send_json({'surgery_decisions': surgery_decisions_response})
 
         percent_race_by_age_response = percent_race_by_age(input_json,
                                                            collection)
