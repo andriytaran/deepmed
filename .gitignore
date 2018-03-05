@@ -47,3 +47,6 @@ scripts/
 
 # Vagrant
 .vagrant/
+
+# pem file
+deepmed2.pem

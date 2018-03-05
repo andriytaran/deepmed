@@ -2,6 +2,7 @@ import createReducer, {RESET_STORE} from '../createReducer'
 import {getToken} from './user'
 import {WS_CONNECT, WS_OPEN, WS_SEND} from '../store/socketMiddleware'
 import qs from 'query-string'
+import {PROSTATE_INDIVIDUAL_STATISTICS, GET_PROSTATE_INDIVIDUAL_STATISTICS_SUCCESS, GET_PROSTATE_INDIVIDUAL_STATISTICS_FAILURE} from "./prostateCancer";
 
 // ------------------------------------
 // Constants
@@ -73,6 +74,13 @@ export const wsConnect = () => (dispatch, getState) => {
       success: (data) => dispatch({type: GET_CUSTOM_ANALYTICS_SUCCESS, data}),
       failure: () => dispatch({type: GET_CUSTOM_ANALYTICS_FAILURE}),
     })
+    dispatch({
+      type: WS_CONNECT,
+      path: PROSTATE_INDIVIDUAL_STATISTICS,
+      query: {token},
+      success: (data) => dispatch({type: GET_PROSTATE_INDIVIDUAL_STATISTICS_SUCCESS, data}),
+      failure: () => dispatch({type: GET_PROSTATE_INDIVIDUAL_STATISTICS_FAILURE}),
+    });
   }
 }
 

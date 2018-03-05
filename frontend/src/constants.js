@@ -2,6 +2,7 @@ export const WEEK = 604800
 export const YEAR = 31536000
 
 export const RACES = ['African American', 'American Indian/Alaska Native', 'Asian', 'Caucasian', 'Other']
+export const RACES_FOR_PROSTATE = ['African American', 'American Indian/Alaska Native', 'Asian', 'Caucasian', 'Hispanics', 'Other'];
 
 export const GROUPED_RACES = [
   'African American',

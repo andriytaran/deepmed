@@ -2,9 +2,9 @@ import React from 'react'
 import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import {createForm} from 'rc-form'
-// import {getData} from '../../reducers/breastCancer'
+import {getData} from '../../reducers/prostateCancer'
 import s from './PcForm.css'
-import {RACES, REGIONS, SITES, STAGES, TUMOR_GRADES, TYPES} from '../../constants'
+import {RACES_FOR_PROSTATE, REGIONS, SITES, STAGES, TUMOR_GRADES, TYPES} from '../../constants'
 import messages from '../../components/messages'
 import {Col, Input, InputNumber, Row, Select, Link} from '../../components/index'
 import Button from 'react-bootstrap/lib/Button'
@@ -13,13 +13,13 @@ import {HOME_ROUTE} from '../index'
 class PcForm extends React.Component {
 
   handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        // this.props.getData(values)
+        this.props.getData(values)
       }
     })
-  }
+  };
 
   render() {
     const {getFieldDecorator, getFieldError} = this.props.form
@@ -60,23 +60,23 @@ class PcForm extends React.Component {
           </Row>
           <Row gutter={16}>
             <Col xs={24} sm={12} className={s.col}>
-              {getFieldDecorator('gleason-pri', {
+              {getFieldDecorator('gleason_primary', {
                 initialValue: '',
                 rules: [
                   {required: false, message: messages.required},
                 ]
               })(
-                <Input error={getFieldError('gleason-pri')} label={'Gleason primary score'}/>
+                <Input error={getFieldError('gleason_primary')} label={'Gleason primary score'}/>
               )}
             </Col>
             <Col xs={24} sm={12} className={s.col}>
-              {getFieldDecorator('gleason-sec', {
+              {getFieldDecorator('gleason_secondary', {
                 initialValue: '',
                 rules: [
                   {required: false, message: messages.required},
                 ]
               })(
-                <Input error={getFieldError('gleason-sec')} label={'Gleason secondary score'}/>
+                <Input error={getFieldError('gleason_secondary')} label={'Gleason secondary score'}/>
               )}
             </Col>
           </Row>
@@ -90,7 +90,7 @@ class PcForm extends React.Component {
               })(
                 <Select error={getFieldError('ethnicity')} label={'Ethnicity'}>
                   <option value=''>Select...</option>
-                  {RACES.map((item, i) =>
+                  {RACES_FOR_PROSTATE.map((item, i) =>
                     <option key={i}>{item}</option>
                   )}
                 </Select>
@@ -120,10 +120,10 @@ class PcForm extends React.Component {
 
 const mapState = state => ({
   ...state.prostateCancer,
-})
+});
 
 const mapDispatch = {
-  // getData,
-}
+  getData,
+};
 
 export default connect(mapState, mapDispatch)(createForm()(withStyles(s)(PcForm)))

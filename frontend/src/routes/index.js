@@ -21,6 +21,7 @@ export const BC_VISUALIZATION_ROUTE = 'bc-visualization'
 export const BC_SURVIVAL_MONTHS = 'bc-survival-months'
 // Prostate Cancer
 export const PC_FORM_ROUTE = 'pc-form'
+export const PC_INDIVIDUAL_STATISTICS_ROUTE = 'pc-individual-statistics'
 
 // The top-level (parent) route
 const routes = {
@@ -115,6 +116,11 @@ const routes = {
           path: '/prostate-cancer',
           name: PC_FORM_ROUTE,
           action: require('./pcForm').default,
+        },
+        {
+          path: '/prostate-cancer/individual-statistics',
+          name: PC_INDIVIDUAL_STATISTICS_ROUTE,
+          action: require('./pcIndividualStatistics').default,
         },
       ],
       async action({store, next, pathname}) {
