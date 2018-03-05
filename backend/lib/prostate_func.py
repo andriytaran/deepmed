@@ -891,11 +891,11 @@ if __name__ == '__main__':
     mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
     collection = mongo_client[DBS_NAME][COLLECTION_NAME]
 
-    pprint(display_group("t-size-mm"))
+    # pprint(display_group("t-size-mm"))
 
     # exit()
 
-    diag_request = '{"1age": 54, ' \
+    diag_request = '{"age": 54, ' \
                    '"1ethnicity": "Caucasian", ' \
                    '"1gleason-pri": 3, ' \
                    '"1gleason-sec": 3, ' \
@@ -918,4 +918,4 @@ if __name__ == '__main__':
     # pprint(display_group("gleason-comb-recode"))
     # pprint(display_group("chemo"))
 
-    # pprint(distribution_by_gleason_comb(diag_request, collection))
+    pprint(percent_men_annualy_diagnosed(diag_request, collection))
