@@ -29,6 +29,7 @@ class BreastDiagnosisData(models.Model):
 
 class ProstateDiagnosisData(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
+    age = models.IntegerField(default=18, blank=False, null=False)
     user = models.ForeignKey('accounts.User',
                              related_name='prostate_cancer_diagnoses',
                              on_delete=models.SET_NULL, null=True)

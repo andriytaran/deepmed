@@ -34,6 +34,7 @@ class PCIndividualStatisticsConsumer(JsonWebsocketConsumer):
         serializer.save()
 
         dd = dict(serializer.validated_data)
+        dd.pop('user', None)
         dd['gleason-pri'] = dd.pop('gleason_primary', None)
         dd['gleason-sec'] = dd.pop('gleason_secondary', None)
 
