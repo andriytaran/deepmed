@@ -1377,7 +1377,7 @@ class BcGlobalStatistics extends React.Component {
           </Col>
           <Col xs={24} md={8} className={s.col}>
             <div className={cn(s.card, s.fullHeight)}>
-              <h2 className={s.cardHeader}>Breast Cancer Incidence and Mortality per 100 000</h2>
+              <h2 className={s.cardHeader}>Breast Cancer Incidence and Mortality per 100,000</h2>
               <HorizontalBar
                 data={{
                   labels: bar_chart_data.labels,
