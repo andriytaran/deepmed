@@ -38,13 +38,12 @@ class PCIndividualStatisticsConsumer(JsonWebsocketConsumer):
         dd['gleason-pri'] = dd.pop('gleason_primary', None)
         dd['gleason-sec'] = dd.pop('gleason_secondary', None)
 
-        age = json.dumps({'age': dd.get('age')})
         input_json = json.dumps(dd, ensure_ascii=False)
 
         mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
         collection = mongo_client[DBS_NAME][COLLECTION_NAME]
 
-        percent_race_by_age_response = percent_race_by_age(age, collection)
+        percent_race_by_age_response = percent_race_by_age(input_json, collection)
         self.send_json({'percent_race_by_age': percent_race_by_age_response})
 
         chemo_decisions_response = chemo_decisions(input_json, collection)
