@@ -22,13 +22,6 @@ class Home extends React.Component {
                 </Link>
               </Col>
               <Col>
-                 {/*<span>*/}
-                  {/*<div className={cn(s.module, s.disabled)}>*/}
-                    {/*Prostate Cancer*/}
-                    {/*<br/>*/}
-                    {/*<span className={s.muted}>(Coming soon)</span>*/}
-                  {/*</div>*/}
-                {/*</span>*/}
                 <Link to={PC_FORM_ROUTE}>
                   <div className={s.module}>
                     Prostate Cancer

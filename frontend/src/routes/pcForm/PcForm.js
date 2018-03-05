@@ -11,13 +11,6 @@ import Button from 'react-bootstrap/lib/Button'
 import {HOME_ROUTE} from '../index'
 
 class PcForm extends React.Component {
-  state = {
-    expanded: false,
-  }
-
-  expand = () => {
-    this.setState({ expanded: !this.state.expanded })
-  }
 
   handleSubmit = (e) => {
     e.preventDefault()
@@ -29,7 +22,6 @@ class PcForm extends React.Component {
   }
 
   render() {
-    const {expanded} = this.state
     const {getFieldDecorator, getFieldError} = this.props.form
     return (
       <div className={s.container}>
@@ -74,7 +66,7 @@ class PcForm extends React.Component {
                   {required: false, message: messages.required},
                 ]
               })(
-                <Input error={getFieldError('gleason-pri')} label={'Gleason primRy score'}/>
+                <Input error={getFieldError('gleason-pri')} label={'Gleason primary score'}/>
               )}
             </Col>
             <Col xs={24} sm={12} className={s.col}>
@@ -115,109 +107,6 @@ class PcForm extends React.Component {
               )}
             </Col>
           </Row>
-          {/*hidden fields should be sent*/}
-          <div style={{display: expanded ? 'block' : 'none'}}>
-            <Row gutter={16}>
-              <Col xs={24} sm={12} className={s.col}>
-                {getFieldDecorator('region', {
-                  initialValue: '',
-                  rules: [
-                    {required: false, message: messages.required},
-                  ]
-                })(
-                  <Select error={getFieldError('region')} label={'Region'}>
-                    <option value=''>Select...</option>
-                    {REGIONS.map((item, i) =>
-                      <option key={i} value={item.value}>{item.label}</option>
-                    )}
-                  </Select>
-                )}
-              </Col>
-              <Col xs={24} sm={12} className={s.col}>
-                {getFieldDecorator('laterality', {
-                  initialValue: '',
-                  rules: [
-                    {required: false, message: messages.required},
-                  ]
-                })(
-                  <Select error={getFieldError('laterality')} label={'Laterality'}>
-                    <option value=''>Select...</option>
-                    <option value='left'>Left</option>
-                    <option value='right'>Right</option>
-                  </Select>
-                )}
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col xs={24} sm={12} className={s.col}>
-                {getFieldDecorator('site', {
-                  initialValue: '',
-                  rules: [
-                    {required: false, message: messages.required},
-                  ]
-                })(
-                  <Select error={getFieldError('site')} label={'Site'}>
-                    <option value=''>Select...</option>
-                    {SITES.map((item, i) =>
-                      <option key={i} value={item.value}>{item.label}</option>
-                    )}
-                  </Select>
-                )}
-              </Col>
-              <Col xs={24} sm={12} className={s.col}>
-                {getFieldDecorator('type', {
-                  initialValue: '',
-                  rules: [
-                    {required: false, message: messages.required},
-                  ]
-                })(
-                  <Select error={getFieldError('type')} label={'Type'}>
-                    <option value=''>Select...</option>
-                    {TYPES.map((item, i) =>
-                      <option key={i} value={item.value}>{item.label}</option>
-                    )}
-                  </Select>
-                )}
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col xs={24} sm={12} className={s.col}>
-                {getFieldDecorator('number_of_tumors', {
-                  initialValue: '',
-                  rules: [
-                    {required: false, message: messages.required},
-                  ]
-                })(
-                  <Select error={getFieldError('number_of_tumors')} label={'Number of tumors'}>
-                    <option value=''>Select...</option>
-                    {Array.from(new Array(7), (val, i) =>
-                      <option key={i} value={i+1}>{i+1}</option>
-                    )}
-                  </Select>
-                )}
-              </Col>
-              <Col xs={24} sm={12} className={s.col}>
-                {getFieldDecorator('stage', {
-                  initialValue: '',
-                  rules: [
-                    {required: false, message: messages.required},
-                  ]
-                })(
-                  <Select error={getFieldError('stage')} label={'Stage'}>
-                    <option value=''>Select...</option>
-                    {STAGES.map((item, i) =>
-                      <option key={i} value={item.value}>{item.label}</option>
-                    )}
-                  </Select>
-                )}
-              </Col>
-            </Row>
-          </div>
-          {!expanded && (
-            <div className={s.advancedDetailsBtnWrapper}>
-              <a onClick={this.expand} className={s.advancedDetailsBtn}>Advanced Details</a>
-            </div>
-          )}
           <div className={s.actions}>
             <Button type='submit' bsStyle='primary'>
               Analyze
