@@ -397,7 +397,7 @@ def percent_race_by_age(input_json, collection=None):
     :return:
     """
     filters = create_filter(input_json)
-    filters['and'] = [d for d in filters['$and'] if 'race' not in d]
+    filters['$and'] = [d for d in filters['$and'] if 'race' not in d]
     result = json.loads(aggregate([
         {"$match": filters},
         {"$group": {
@@ -607,62 +607,6 @@ def radiation_decisions(input_json, collection=None):
         'datasets': [{
             'data': list(map(lambda x: x['percentage'], result)),
             'label': "Radiation",
-            'borderColor': '#48ccf5',
-            'fill': False
-        }]
-    }
-
-
-def breakout_by_gleason(input_json, collection=None):
-    """
-    prostate cancer breakout by gleason score for this age group - two digit Gleason and single digit Gleason
-    :param input_json:
-    :param collection:
-    :return:
-    """
-    filters = create_filter(input_json)
-    filters['$and'] = [d for d in filters['$and'] if 'gleason' not in d]
-    filters['$and'].append({"gleason": {"$nin": [None, 19, 29, 39, 49, 59]}})
-    result = json.loads(aggregate([
-        {"$match": filters},
-        {"$group": {
-            "_id": "$gleason",
-            "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}], collection))
-
-    return {
-        'labels': list(map(lambda x: x['_id'], result)),
-        'datasets': [{
-            'data': list(map(lambda x: x['count'], result)),
-            'label': "Diagnosed",
-            'borderColor': '#48ccf5',
-            'fill': False
-        }]
-    }
-
-
-def breakout_by_gleason_comb(input_json, collection=None):
-    """
-    prostate cancer breakout by gleason score for this age group - two digit Gleason and single digit Gleason
-    :param input_json:
-    :param collection:
-    :return:
-    """
-    filters = create_filter(input_json)
-    filters['$and'] = [d for d in filters['$and'] if 'gleason-comb-recode' not in d]
-    filters['$and'].append({"gleason-comb-recode": {"$nin": [None]}})
-    result = json.loads(aggregate([
-        {"$match": filters},
-        {"$group": {
-            "_id": "$gleason-comb-recode",
-            "count": {"$sum": 1}}},
-        {"$sort": SON([("_id", 1)])}], collection))
-
-    return {
-        'labels': list(map(lambda x: x['_id'], result)),
-        'datasets': [{
-            'data': list(map(lambda x: x['count'], result)),
-            'label': "Diagnosed",
             'borderColor': '#48ccf5',
             'fill': False
         }]
@@ -953,12 +897,12 @@ if __name__ == '__main__':
 
     # exit()
 
-    diag_request = '{"age": 54, ' \
-                   '"ethnicity": "Caucasian", ' \
-                   '"gleason-pri": 3, ' \
-                   '"gleason-sec": 3, ' \
-                   '"psa": 1, ' \
-                   '"tumor_size_mm": 32 ' \
+    diag_request = '{"1age": 54, ' \
+                   '"1ethnicity": "Caucasian", ' \
+                   '"1gleason-pri": 3, ' \
+                   '"1gleason-sec": 3, ' \
+                   '"1psa": 1, ' \
+                   '"1tumor_size_mm": 32 ' \
                    '}'
 
     filters = create_filter(diag_request)
@@ -975,4 +919,4 @@ if __name__ == '__main__':
     # pprint(display_group("gleason-comb-recode"))
     # pprint(display_group("chemo"))
 
-    # pprint(distribution_by_gleason_comb(diag_request, collection))
+    pprint(distribution_by_gleason_comb(diag_request, collection))
