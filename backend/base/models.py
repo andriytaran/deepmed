@@ -36,7 +36,7 @@ class ProstateDiagnosisData(models.Model):
     sex = models.CharField(max_length=64, blank=False, null=False,
                            default='Male')
     ethnicity = models.CharField(max_length=64, blank=False, null=False)
-    tumor_size_in_mm = models.IntegerField(blank=True, null=True, default=0)
+    tumor_size_mm = models.IntegerField(blank=True, null=True, default=0)
     gleason_primary = models.IntegerField(blank=True, null=True, default=0)
     gleason_secondary = models.IntegerField(blank=True, null=True, default=0)
     psa = models.IntegerField(blank=True, null=True, default=0)
