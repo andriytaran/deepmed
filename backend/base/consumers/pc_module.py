@@ -6,7 +6,7 @@ from pymongo import MongoClient
 from base.serializers import ProstateDiagnosisSerializer
 from lib.prostate_func import MONGODB_HOST, MONGODB_PORT, COLLECTION_NAME, \
     DBS_NAME, percent_race_by_age, chemo_decisions, radiation_decisions, \
-    breakout_by_gleason, prostate_cancer_by_size, distribution_by_psa, \
+    prostate_cancer_by_size, distribution_by_psa, \
     distribution_by_gleason_pri, distribution_by_gleason_sec, \
     distribution_by_gleason_comb
 
@@ -43,7 +43,8 @@ class PCIndividualStatisticsConsumer(JsonWebsocketConsumer):
         mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
         collection = mongo_client[DBS_NAME][COLLECTION_NAME]
 
-        percent_race_by_age_response = percent_race_by_age(input_json, collection)
+        percent_race_by_age_response = percent_race_by_age(input_json,
+                                                           collection)
         self.send_json({'percent_race_by_age': percent_race_by_age_response})
 
         chemo_decisions_response = chemo_decisions(input_json, collection)
@@ -52,10 +53,6 @@ class PCIndividualStatisticsConsumer(JsonWebsocketConsumer):
         radiation_decisions_response = \
             radiation_decisions(input_json, collection)
         self.send_json({'radiation_decisions': radiation_decisions_response})
-
-        breakout_by_gleason_response = \
-            breakout_by_gleason(input_json, collection)
-        self.send_json({'breakout_by_gleason': breakout_by_gleason_response})
 
         prostate_cancer_by_size_response = \
             prostate_cancer_by_size(input_json, collection)
