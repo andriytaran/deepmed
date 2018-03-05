@@ -184,6 +184,10 @@ def create_filter(input_data, operator='$and'):
             input_data['chemo'] = 'No/Unknown'
         filter_list.append({"chemo": input_data["chemo"]})
     if 'ethnicity' in input_data.keys():
+        if input_data['ethnicity'] == 'Caucasian':
+            input_data['ethnicity'] = 'White'
+        if input_data['ethnicity'] == 'African American':
+            input_data['ethnicity'] = 'Black'
         filter_list.append({"race": input_data["ethnicity"]})
     if 'gleason-pri' in input_data.keys() and 'gleason-sec' in input_data.keys():
         glpri = int(input_data['gleason-pri'])
@@ -199,7 +203,7 @@ def create_filter(input_data, operator='$and'):
         elif glpri == 5:
             gleason = 50 + glsec
         filter_list.append({"gleason": gleason})
-    if 'pas' in input_data.keys():
+    if 'psa' in input_data.keys():
         filter_list.append({"psa-value": input_data["psa"]})
     if 'radiation' in input_data.keys():
         filter_list.append({"radiation": input_data["radiation"]})
@@ -932,48 +936,27 @@ if __name__ == '__main__':
     # pprint(display_group("gleason-comb-recode"))
 
     # exit()
-    """
-    Age, tumor size, Gleason score, ethnicity, PSA, nodes,
-    Sorry Gleason primRy score, Gleason secondary score
-    Not just one
-    We will likely do a three separate charts
-    One for Gleason score number 1
-    One for Gleason score #2
-    And finally a combined Gleason score chart
-    So 34 would be 3 in chart 1, 4 in chart 2, and 7 in chart 3
-    So on Gleason
-    11-55
-    Means the values we be separated
-    Into songpenintegers
-    Single integers
-    So 11 becomes 1 and 1
-    33 would be 3 and 3
-    And then since 11 is 1+1=2
-    Last chart would be 2
-    55 would be 10
-    Etc etc
-    """
 
-    diag_request = '{"1age": 62, ' \
-                   '"1ethnicity": "Hispanic", ' \
-                   '"1gleason-pri": 1, ' \
-                   '"1gleason-sec": 1, ' \
-                   '"1psa": 1, ' \
-                   '"1tumor_size_mm": 1 ' \
+    diag_request = '{"age": 58, ' \
+                   '"ethnicity": "Caucasian", ' \
+                   '"gleason-pri": 3, ' \
+                   '"gleason-sec": 3, ' \
+                   '"1psa": 3, ' \
+                   '"1tumor_size_mm": 32 ' \
                    '}'
 
     filters = create_filter(diag_request)
-    # pprint(filters)
-    # count = json.loads(aggregate([
-    #     {"$match": filters},
-    #     {"$group": {
-    #         "_id": "",
-    #         "count": {"$sum": 1}}},
-    #     {"$sort": SON([("_id", 1)])}]))
-    # pprint(count)
+    pprint(filters)
+    count = json.loads(aggregate([
+        {"$match": filters},
+        {"$group": {
+            "_id": "",
+            "count": {"$sum": 1}}},
+        {"$sort": SON([("_id", 1)])}]))
+    pprint(count)
 
     # pprint(display_group("gleason"))
     # pprint(display_group("gleason-comb-recode"))
     # pprint(display_group("chemo"))
 
-    pprint(distribution_by_gleason_comb(diag_request, collection))
+    # pprint(distribution_by_gleason_comb(diag_request, collection))
