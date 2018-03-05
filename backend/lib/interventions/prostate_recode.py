@@ -155,12 +155,23 @@ def surgery_recode(document):
 
 
 def tstage_recode(document):
+    def group_t(t):
+        if t in ['T1NOS', 'T1a', 'T1b', 'T1c', 'T1x']:
+            return 'T1'
+        elif t in ['T2NOS', 'T2a', 'T2b', 'T2c', 'T2x']:
+            return 'T2'
+        elif t in ['T3', 'T3NOS', 'T3a', 'T3b']:
+            return 'T3'
+        elif t == 'T4':
+            return 'T4'
+        return None
+
     if document['t-stage-1998_'] not in ['Blank(s)']:
-        return document['t-stage-1998_']
+        return group_t(document['t-stage-1998_'])
     if document['t-stage-2004'] not in ['Blank(s)', None]:
-        return document['t-stage-2004']
+        return group_t(document['t-stage-2004'])
     if document['t-stage-2010'] not in ['Blank(s)', None]:
-        return document['t-stage-2010']
+        return group_t(document['t-stage-2010'])
     return None
 
 
@@ -169,18 +180,10 @@ def t_size_recode(document):
     if size not in ['Blank(s)', 999, 888]:
         if size < 990:
             return size
-        elif size in [990, 991]:
-            return '< 1cm'
-        elif size == 992:
+        elif size in [990, 991, 992]:
             return '< 2cm'
-        elif size == 993:
-            return '< 3cm'
-        elif size == 994:
-            return '< 4cm'
-        elif size == 995:
-            return '< 5cm'
-        elif size == 989:
-            return '> 5cm'
+        elif size in [993, 994, 995, 989]:
+            return '> 2cm'
     return None
 
 
@@ -190,18 +193,14 @@ def tsize_mm_to_cm(mm):
             return 0
         elif mm < 20:
             return '< 2cm'
-        elif mm < 50:
-            return '< 5cm'
-        elif 50 <= mm < 888:
-            return '> 5cm'
+        elif 20 <= mm < 888:
+            return '> 2cm'
         else:
             return None
     if mm in ['< 1cm', '< 2cm']:
         return '< 2cm'
-    elif mm in ['< 3cm', '< 4cm', '< 5cm']:
-        return '< 5cm'
-    elif mm == '> 5cm':
-        return '> 5cm'
+    elif mm in ['< 3cm', '< 4cm', '< 5cm', '> 5cm']:
+        return '> 2cm'
     else:
         return None
 
