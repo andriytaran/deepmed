@@ -113,6 +113,21 @@ def get_t_size_cm(mm):
         return None
 
 
+def get_psa_group(psa):
+    if psa < 200:
+        return {"$lt": 200}
+    elif psa < 400:
+        return {"$gte": 200, "$lt": 400}
+    elif psa < 600:
+        return {"$gte": 400, "$lt": 600}
+    elif psa < 800:
+        return {"$gte": 600, "$lt": 800}
+    elif psa >= 800:
+        return {"$gte": 800, "$lte": 980}
+    else:
+        return None
+
+
 def get_race_group(race):
     race_group = None
     if race == 'Caucasian':
@@ -204,7 +219,8 @@ def create_filter(input_data, operator='$and'):
             gleason = 50 + glsec
         filter_list.append({"gleason": gleason})
     if 'psa' in input_data.keys():
-        filter_list.append({"psa-value": input_data["psa"]})
+        psa_group = get_psa_group(input_data['psa'])
+        filter_list.append({"psa-value": psa_group})
     if 'radiation' in input_data.keys():
         filter_list.append({"radiation": input_data["radiation"]})
     if 'surgery' in input_data.keys():
@@ -937,12 +953,12 @@ if __name__ == '__main__':
 
     # exit()
 
-    diag_request = '{"age": 58, ' \
+    diag_request = '{"age": 54, ' \
                    '"ethnicity": "Caucasian", ' \
                    '"gleason-pri": 3, ' \
                    '"gleason-sec": 3, ' \
-                   '"1psa": 3, ' \
-                   '"1tumor_size_mm": 32 ' \
+                   '"psa": 1, ' \
+                   '"tumor_size_mm": 32 ' \
                    '}'
 
     filters = create_filter(diag_request)
