@@ -105,10 +105,8 @@ def get_t_size_cm(mm):
         return 0
     elif mm < 20:
         return '< 2cm'
-    elif mm < 50:
-        return '< 5cm'
-    elif 50 <= mm < 888:
-        return '> 5cm'
+    elif 20 <= mm < 888:
+        return '> 2cm'
     else:
         return None
 
@@ -893,7 +891,7 @@ if __name__ == '__main__':
     mongo_client = MongoClient(MONGODB_HOST, MONGODB_PORT)
     collection = mongo_client[DBS_NAME][COLLECTION_NAME]
 
-    # pprint(display_group("gleason-comb-recode"))
+    pprint(display_group("t-size-mm"))
 
     # exit()
 
@@ -907,6 +905,7 @@ if __name__ == '__main__':
 
     filters = create_filter(diag_request)
     pprint(filters)
+    filters = {"m-stage": {"$nin": [None]}}
     count = json.loads(aggregate([
         {"$match": filters},
         {"$group": {
@@ -919,4 +918,4 @@ if __name__ == '__main__':
     # pprint(display_group("gleason-comb-recode"))
     # pprint(display_group("chemo"))
 
-    pprint(distribution_by_gleason_comb(diag_request, collection))
+    # pprint(distribution_by_gleason_comb(diag_request, collection))
