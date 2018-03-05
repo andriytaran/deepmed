@@ -44,3 +44,6 @@ scripts/
 
 # Django
 ./backend/deepmed/local_settings.py
+
+# Vagrant
+.vagrant/

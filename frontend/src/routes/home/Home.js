@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles'
 import s from './Home.css'
 import {Row, Col, Link} from '../../components'
-import {BC_FORM_ROUTE} from '../../routes'
+import {BC_FORM_ROUTE, PC_FORM_ROUTE} from '../../routes'
 import cn from 'classnames'
 
 class Home extends React.Component {
@@ -22,13 +22,11 @@ class Home extends React.Component {
                 </Link>
               </Col>
               <Col>
-                <span>
-                  <div className={cn(s.module, s.disabled)}>
+                <Link to={PC_FORM_ROUTE}>
+                  <div className={s.module}>
                     Prostate Cancer
-                    <br/>
-                    <span className={s.muted}>(Coming soon)</span>
                   </div>
-                </span>
+                </Link>
               </Col>
               <Col>
                 <span>

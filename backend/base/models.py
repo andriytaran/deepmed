@@ -25,3 +25,18 @@ class BreastDiagnosisData(models.Model):
     number_of_tumors = models.IntegerField(blank=True, null=True, default=0)
     region = models.CharField(max_length=64, blank=True, null=True,
                               default='unk')
+
+
+class ProstateDiagnosisData(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    age = models.IntegerField(default=18, blank=False, null=False)
+    user = models.ForeignKey('accounts.User',
+                             related_name='prostate_cancer_diagnoses',
+                             on_delete=models.SET_NULL, null=True)
+    sex = models.CharField(max_length=64, blank=False, null=False,
+                           default='Male')
+    ethnicity = models.CharField(max_length=64, blank=False, null=False)
+    tumor_size_mm = models.IntegerField(blank=True, null=True, default=0)
+    gleason_primary = models.IntegerField(blank=True, null=True, default=0)
+    gleason_secondary = models.IntegerField(blank=True, null=True, default=0)
+    psa = models.IntegerField(blank=True, null=True, default=0)
