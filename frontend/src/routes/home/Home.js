@@ -22,11 +22,19 @@ class Home extends React.Component {
                 </Link>
               </Col>
               <Col>
-                <Link to={PC_FORM_ROUTE}>
-                  <div className={s.module}>
+                 <span>
+                  <div className={cn(s.module, s.disabled)}>
                     Prostate Cancer
+                    <br/>
+                    <span className={s.muted}>(Coming soon)</span>
                   </div>
-                </Link>
+                </span>
+                {/*Commented this for fix on production*/}
+                {/*<Link to={PC_FORM_ROUTE}>*/}
+                  {/*<div className={s.module}>*/}
+                    {/*Prostate Cancer*/}
+                  {/*</div>*/}
+                {/*</Link>*/}
               </Col>
               <Col>
                 <span>
