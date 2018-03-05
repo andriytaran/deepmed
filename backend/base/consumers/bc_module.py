@@ -15,7 +15,7 @@ from lib.dataset import percent_women_by_type, breast_cancer_by_grade, \
     breast_cancer_at_a_glance2, breast_cancer_by_age, \
     percent_women_annualy_diagnosed, chemotherapy_filter, radiation_filter, \
     MONGODB_HOST, MONGODB_PORT, COLLECTION_NAME, DBS_NAME
-from .ML.predictions import make_pred
+# from .ML.predictions import make_pred
 
 
 class DiagnosisConsumer(JsonWebsocketConsumer):
@@ -642,7 +642,8 @@ class SimilarDiagnosisConsumer(JsonWebsocketConsumer):
                 dd.get('her2_status')
             ]
 
-            similar_diagnosis = make_pred(simdx_args, 'simdx')
+            # similar_diagnosis = make_pred(simdx_args, 'simdx')
+            similar_diagnosis = []
 
             for obj in similar_diagnosis:
                 if obj.get('Race_group') == 'White':
