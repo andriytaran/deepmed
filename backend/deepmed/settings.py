@@ -105,8 +105,8 @@ SOCIAL_AUTH_GOOGLE_OAUTH_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.email'
 ]
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '916189985780-4a2bv7esbslbhbnvm4nq7jnt0iflmsij.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'zIouW4NErvFitRnxmwvkl-Qo'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '#####'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '#####'
 
 # -----------------
 # CORS
